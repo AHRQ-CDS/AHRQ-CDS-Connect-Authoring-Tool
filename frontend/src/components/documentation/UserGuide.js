@@ -60,8 +60,8 @@ const UserGuide = () => {
         <div>
           Authoring is based on defining elements using a broad type, such as Condition, and applying one or more value
           sets and codes to specify a more specific concept, such as Diabetes. These elements can be further refined
-          using expression modifiers to indicate a specific status, a most recent value, a comparison against a specific
-          value, and more.
+          using modifiers to indicate a specific status, a most recent value, a comparison against a specific value, and
+          more.
         </div>
         <div>
           For an in-depth tutorial on using the CDS Authoring Tool, watch{' '}
@@ -408,9 +408,9 @@ const UserGuide = () => {
                   </ul>
                 </li>
                 <li>
-                  <strong>Modify the results</strong> using "expression modifiers" to further filter the results (e.g.,
-                  "Verified"), get a specific property of the result (e.g., "Quantity Value"), or test the result (e.g.,
-                  "&gt; 130 mg/dL").
+                  <strong>Modify the results</strong> by building a custom modifier or selecting built-in expression
+                  modifiers that further filter the results (e.g., "Verified"), get a specific property of the result
+                  (e.g., "Quantity Value"), or test the result (e.g., "&gt; 130 mg/dL").
                 </li>
               </ol>
             </div>
@@ -473,6 +473,10 @@ const UserGuide = () => {
                   </li>
                   <li>
                     <strong>Procedure</strong>: Instances of the FHIR Procedure resource type
+                  </li>
+                  <li>
+                    <strong>ServiceRequest</strong>: Instances of the FHIR ServiceRequest resource type, available only
+                    in FHIR R4
                   </li>
                 </ul>
                 Click on the choice corresponding to the type of data this element should be based on.
@@ -779,35 +783,28 @@ const UserGuide = () => {
             <div className={styles.h4Wrapper}>
               <h4 id="Modify_Results">3.1.8 Modify Results</h4>
               <div>
-                Once you have the core element defined, including associated value sets and codes (if applicable),
-                expression modifiers may be added to alter the element's return type. For elements with FHIR-based types
-                (e.g., Condition, Observation, etc.), the return-type will be a list of items matching that type (e.g.,
-                List of Conditions). In some cases, the default return type is incompatible with the context in which it
-                is used and should be modified to meet the requirements of the context. In other cases, the return type
-                may be compatible, but the author may want to further filter the results.
+                Once you have defined the core element, including associated value sets and codes (if applicable), you
+                can further filter the results or change the result type by applying modifiers. Authors may build their
+                own modifier or select a built-in modifier from a list. The options available to the author differ
+                depending on the element's return type. For elements with FHIR-based types (e.g., Condition,
+                Observation, etc.), the initial return type is a list of items matching that type (e.g., List of
+                Conditions). As modifiers are added to the element, the return type may change. For example, an author
+                can use the "Exists" modifier to change an element's return type to a "Boolean" value in order use the
+                element as inclusion criteria.
               </div>
               <div>
-                CDS Authors can use "modifier expressions" to further define or narrow an element's intent. For example,
-                if you have a "Condition" element associated with a "Diabetes" value set, its initial return type will
-                be: "List of Diabetes". You can then apply the "Confirmed" expression modifier to filter the results to
-                only those with a confirmed clinical status, and finally apply the "Exists" expression modifier to check
-                that at least one result for this query exists in the patient's record. Since the return type of the
-                "Exists" expression modifier is "Boolean", this satisfies the requirement for boolean return types in
-                the Inclusions and Exclusions tabs.
-              </div>
-              <div>
-                To apply an expression modifier to an element, click on the "Add Modifiers" button near the bottom of
-                the element box. When you do this, a context menu will be displayed prompting a selection between the
-                options 'Select Modifiers' and 'Build New Modifier'. Selecting modifiers allows for the use of a library
-                of expression modifiers for common use cases. Building a new modifier allows for the easy implementation
-                of modifiers that require custom functionality. Section 3.1.9 covers the selection of 'predefined'
-                modifiers. Section 3.1.10 covers the usage of the expression modifier builder tool.
+                To apply a modifier to an element, click on the "Add Modifiers" button near the bottom of the element
+                box. When you do this, a context menu will be displayed prompting a selection between the options
+                'Select Modifiers' and 'Build New Modifier'. Selecting modifiers allows authors to choose from a library
+                of built-in modifiers. Building a new modifier allows for more detailed control over the fields,
+                operations, and parameters used to filter the element's results. Section 3.1.9 covers the selection of
+                built-in modifiers. Section 3.1.10 covers how to build custom modifiers.
               </div>
 
               <div>
                 <img
                   alt=""
-                  src={screenshotUrl('Modifier_Modal')}
+                  src={screenshotUrl('Modifier_Modal_Select_Modifier')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block"
                 />
               </div>
@@ -816,33 +813,16 @@ const UserGuide = () => {
             <div className={styles.h4Wrapper}>
               <h4 id="Modify_Results_Select">3.1.9 Select Modifiers</h4>
               <div>
-                The CDS Authoring Tool comes pre-loaded with a variety of expression modifiers for many different common
-                situations. CDS Authors can use "expression modifiers" to further define or narrow an element's intent.
-                To see the available modifiers for your current element, click the 'Select Modfiers' button within the
-                Modifiers context menu. This will display the modifier selection menu.
+                The CDS Authoring Tool comes pre-loaded with a variety of modifiers for many different common
+                situations. CDS Authors can use modifiers to further define or narrow an element's intent. To see the
+                available modifiers for your current element, click the 'Select Modfiers' button within the Modifiers
+                context menu. This will display the modifier selection menu.
               </div>
               <div>
-                Listed in the header of the modifier selection context menu are the element's expression phrase and its
-                calculated return type. The element's expression phrase provides a human readable sentence that tries to
-                describe the element you have constructed so far. The element's calculated return type will
-                automatically update to provide context on how expression modifier(s) truly 'modify' your expression's
-                return type. Applying the 'Average Observation Value' Modifier to a List of Observations yields the
-                following change to the return type.
-              </div>
-
-              <div>
-                <img
-                  alt=""
-                  src={screenshotUrl('Modifier_Select_Header')}
-                  className="img-fluid img-thumbnail rounded mx-auto d-block"
-                />
-              </div>
-              <div>
-                By clicking the dropdown within this menu, you will be able to see all eligible predefined modifiers
-                available for direct use on your element's current return type. You may also successively chain
-                modifiers within this menu. When you have finished adding your expression modifiers you may press the
-                'Add' button to escape the expression modifiers context menu. Thereafter you will notice that your
-                modifier expressions have been applied to the element.
+                By clicking the dropdown within this menu, you can see all of the eligible built-in modifiers that are
+                available for use with the current return type. You may also successively chain modifiers within this
+                menu. When you have finished adding your modifiers, press the 'Add' button to apply the changes and go
+                back to the main element editor.
               </div>
               <div>
                 <img
@@ -852,12 +832,12 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                For some expression modifiers, you may be asked to provide additional information about the operation
-                you would like to perform. One such example of this is comparing a quantity of your choice against your
-                element. Shown below is an added instance of the 'Value Comparison' expression modifier. Note that the
-                'Value Comparison' modifier is applied onto the 'Quantity' type returned by the 'Average Observation
-                Value' expression modifier. The checkmark icon next to the new return type of 'Boolean' indicates that
-                you have successfully created a valid element for inclusion or exclusion.
+                For some modifiers, you may be asked to provide additional information about the operation you would
+                like to perform. For example, you may need to enter a quantity value to compare against an element's
+                result quantity. In the example below, a 'Value Comparison' modifier has been applied to the 'Quantity'
+                type returned by the 'Average Observation Value' modifier. The checkmark icon next to the new return
+                type of 'Boolean' indicates that the new return type meets the requirements of the given context (e.g.,
+                inclusion criteria).
               </div>
               <div>
                 <img
@@ -866,41 +846,37 @@ const UserGuide = () => {
                   className="img-fluid img-thumbnail rounded mx-auto d-block"
                 />
               </div>
-            </div>
-
-            <div>
-              If you need to remove expression modifiers, you must remove them one at a time, starting with the last
-              one. To remove an expression modifier, click on the "X" on the far right hand side of the expression
-              modifier's row in the element's content. It is currently not possible to directly remove expression
-              modifiers in the middle of the expression modifier list because this might change the current return type
-              at that point and render the rest of the expression modifier list invalid.
-            </div>
-            <div>
-              <img
-                alt=""
-                src={screenshotUrl('Modifier_Templates')}
-                className="img-fluid img-thumbnail rounded mx-auto d-block"
-              />
+              <div>
+                Since modifiers form a chain of operations, authors can only remove the last modifier or a modifier that
+                does not change the previous return type. This preserves the integrity of the chain of operations. To
+                remove a modifier, click on the "X" on the far right hand side of the modifier's row in the element's
+                content.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Modifier_Templates')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
             </div>
 
             <div className={styles.h4Wrapper}>
               <h4 id="Modifier_Builder">3.1.10 Build Modifiers</h4>
               <div>
-                While the CDS Authoring Tool's library of predefined expression modifiers is extremely robust on its
-                own, there are simply certain situations where more precise control is necessary or desired. The
-                Authoring Tool has a facility for users to create custom expression modifiers and use them alongside its
-                predefined expression modifier collection. Though other features of the tool may provide the greatest
-                flexibility (External CQL), the modifier builder serves as a middle-of-the-road complexity option for
-                intermediate users.
+                While the CDS Authoring Tool provides a robust set of built-in modifiers, some authors may require (or
+                prefer) more precise control over the mechanics of the modifier. Authors can accomplish this by building
+                their own custom modifiers. While building custom modifiers is not as flexible as importing external
+                CQL, it is much simpler and is well-suited for intermediate level users.
               </div>
               <div>
-                To get started, open the expression modifiers context menu by pressing the 'Add Modifiers' button on
-                your element; then click the 'Build New Modifier' button.
+                To build a custom modifier, open the modifiers context menu by pressing the 'Add Modifiers' button on an
+                element; then click the 'Build New Modifier' button.
               </div>
               <div>
                 <img
                   alt=""
-                  src={screenshotUrl('Modifier_Modal')}
+                  src={screenshotUrl('Modifier_Modal_Build_Modifier')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block"
                 />
               </div>
@@ -917,81 +893,67 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                Once a FHIR® version has been selected, the modifier builder will be displayed. At the top of the
-                context menu, a banner containing a human readable expression as well as the element's return type will
-                be displayed.
+                Once a FHIR® version has been selected, the modifier builder will be displayed. A top-level group is
+                shown with options to add a new rule or add a new group. Rules represent specific field-based criteria
+                to filter on, while groups allow for rules to be combined and nested using boolean logic (and/or). A
+                pink background indicates that a rule is incomplete or invalid.
               </div>
               <div>
                 <img
                   alt=""
-                  src={screenshotUrl('Modifier_Select_Header')}
+                  src={screenshotUrl('Modifier_New_Modifier')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block"
                 />
               </div>
               <div>
-                Custom modifier expressions follow a treelike structure, and are built out of smaller building blocks
-                called Rules. A Rule simply dictates what criteria a particular property of your element must match in
-                order to be included. Rules may also be combined with And/Or logic to illustrate more complex behavior.
-                For example, finding all Conditions that have onset in the last 10 weeks OR a status of 'active' OR
-                'recurring' is fairly trivial. Rules may also be put into groups.
+                To add a rule to the modifier, click the 'Add rule' link and then select a property from the dropdown
+                list. The list of properties to choose from is based on the return type of the element. The CDS
+                Authoring Tool does not support every possible property for the given type, but supports many of the
+                properties commonly used in CDS use cases. Once you have chosen a property, choose from the list of
+                operators that are available for that property.
               </div>
               <div>
                 <img
                   alt=""
-                  src={screenshotUrl('Modifier_Builder_Example')}
+                  src={screenshotUrl('Modifier_Choose_Operator')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block"
                 />
               </div>
               <div>
-                A Rule consists of a subject, an action, and sometimes additional data that you must enter. Most rules
-                have been written such that when all applicable fields are satisfied, the clause will resemble a human
-                readable version of the assembled logic. Like with the Authoring Tool's collection of predefined
-                expression modifiers, there also exists a collection of rules, each tailored to a particular input type.
-                The tool automatically determines and shows you only the operators that are applicable in a given
-                situation. To add a rule you must first select the property that you wish to interact with. The
-                below-pictured property dropdown lists selectable properties of the Condition type. You may notice that
-                some properties are prefixed with a property-choice name. This simply means that the base property you
-                are targeting can automatically be interpreted as different types for different use cases.
+                After a field and operator have been chosen, the rule form will be updated to collect any additional
+                information that is needed. The available inputs will differ depending on the field and operator. Once
+                they have been properly specified, the background will no longer be pink, indicating that the rule is
+                now valid. You may continue to add rules in this manner.
               </div>
               <div>
                 <img
                   alt=""
-                  src={screenshotUrl('Modifier_Builder_Property_Dropdown')}
+                  src={screenshotUrl('Modifier_Rules')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block"
                 />
               </div>
               <div>
-                Once the target property is selected, another dropdown will appear allowing you to select the operation
-                you would like to perform. The operation you select may prompt you for some extra information. The
-                custom expression modifier below would return the list of all Conditions with a code from "Maternal High
-                Risk Conditions" that involve a patient older than 45 years old.
+                Sometimes elements may require more complex criteria with nested groups. For example, a modifier may
+                need to specify 'A and B and (C or D)'. This type of boolean logic can be accomplished via groups. To
+                add a new group, click the 'Add group' link. Select 'AND' or 'OR' depending on whether all the rules in
+                the group must be satisfied or if it is sufficient for only one (or more) rules to be satisfied. Rules
+                are added to nested groups in the same way they are added to the top-level group of the modifier.
               </div>
               <div>
                 <img
                   alt=""
-                  src={screenshotUrl('Modifier_Builder_Rule_Example')}
+                  src={screenshotUrl('Modifier_Full_Example')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block"
                 />
               </div>
               <div>
-                A Group is a list of zero or more Rules whose values are combined using AND / OR statements. When used
-                as a child element, a group's return type will be aggregated and packaged as an input to its parent
-                element. When one group is inside of another, the larger group can only 'see' the smaller group as one
-                input. In algebra, parentheses group the operations that are performed first (e.g. (4 + 1) x 5 = 25) --
-                Groups have the same function except that they operate over the results of the rules you choose.
+                To save the modifier and apply it to the element, click the 'Add' button. Once you've built a custom
+                modifier, you can edit it by clicking the pencil icon next to the modifier text in the element editor.
               </div>
               <div>
-                It is important to note that the most advantageous times to utilize custom expression modifiers. One
-                such time is when trying to search or query through a list of elements belonging to a FHIR-based type
-                (e.g. Condition, Observation, Procedure, etc.). An important fact is that a custom expression modifier
-                can only filter elements of a list, and cannot perform aggregation/reduction (e.g. Change the return
-                type from a List of Observations to Observation). This happens to be the case because custom expression
-                modifiers use a CQL language construct called a 'Query'. The most important distinction between a query
-                operation and an aggregation/reduction operation is that the former returns a list containing any
-                natural number of elements (including zero!) and the latter always returns a singular element. While
-                certain aggregator/reducer expression modifiers may be selected within the expression modifier context
-                menu (See the above sections), aggregation/reduction is not possible within the expression modifier
-                builder.
+                The ability to build custom modifiers is a new feature of the CDS Authoring Tool. In its current
+                iteration, custom modifiers can only filter lists of FHIR resource instances. Future versions may
+                provide additional capabilities such as sorting and returning specific properties.
               </div>
             </div>
           </div>
@@ -1371,10 +1333,10 @@ const UserGuide = () => {
               </div>
               <div>
                 If the base element does not have the return type required by its context (for example, if it is used in
-                the Inclusions tab but does not have a boolean return type), you can add expression modifiers to it in
-                much the same way as you would any element. In this case, the expression modifiers added to the use of
-                the base element will not affect the original definition of the base element in the Base Elements tab.
-                This allows base elements to used in a broad set of contexts in differing ways.
+                the Inclusions tab but does not have a boolean return type), you can add modifiers to it in much the
+                same way as you would any element. In this case, the modifiers added to the use of the base element will
+                not affect the original definition of the base element in the Base Elements tab. This allows base
+                elements to used in a broad set of contexts in differing ways.
               </div>
               <div>
                 When a Base Element has been used, the definition of the element in the Base Elements tab will show
@@ -1401,10 +1363,10 @@ const UserGuide = () => {
                 In order to remove the expression, first delete all uses of the Base Element in the artifact.
               </div>
               <div>
-                In addition, expression modifiers cannot be added to base elements that are being used, unless the
-                expression modifier does not change the overall return type of the element. If the expression modifier
-                would change the return type of the base element, then you must first remove all uses of the Base
-                Element in the artifact before you can add the expression modifier.
+                In addition, modifiers cannot be added to base elements that are being used, unless the modifier does
+                not change the overall return type of the element. If the modifier would change the return type of the
+                base element, then you must first remove all uses of the Base Element in the artifact before you can add
+                the modifier.
               </div>
             </div>
           </div>
@@ -1606,8 +1568,8 @@ const UserGuide = () => {
               </div>
               <div>
                 If the parameter does not have the return type required by its context (for example, if it is used in
-                the Inclusions tab but does not have a boolean return type), you can add expression modifiers to it in
-                much the same way as you would any element.
+                the Inclusions tab but does not have a boolean return type), you can add modifiers to it in much the
+                same way as you would any element.
               </div>
               <div>
                 <img
@@ -1762,7 +1724,7 @@ const UserGuide = () => {
             <div>
               Note that uploading a CQL library does not make it editable in the CDS Authoring Tool. The External CQL
               library is considered read-only. Authors, however, can use External CQL library elements as the basis of
-              authored elements and apply further expression modifiers to customize them for their artifacts.
+              authored elements and apply further modifiers to customize them for their artifacts.
             </div>
 
             <div className={styles.h4Wrapper}>
@@ -1871,9 +1833,9 @@ const UserGuide = () => {
               <div>
                 After selecting the External CQL definition, parameter, or function, its name and return type will be
                 reflected in the element's expression phrase and listed in the element's metadata using the label
-                "External CQL Element". If you wish (or if required), you can add expression modifiers to the element in
-                much the same way as you would any element. In this case, the expression modifiers added to the use of
-                the External CQL element will not affect the original definition of the External CQL element.
+                "External CQL Element". If you wish (or if required), you can add modifiers to the element in much the
+                same way as you would any element. In this case, the modifiers added to the use of the External CQL
+                element will not affect the original definition of the External CQL element.
               </div>
               <div>
                 <img
@@ -1920,11 +1882,11 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Using_External_CQL_Expression_Modifiers">3.13.4 Using External CQL Expression Modifiers</h4>
+              <h4 id="Using_External_CQL_Expression_Modifiers">3.13.4 Using External CQL Modifiers</h4>
               <div>
-                In certain situations, authors can use functions from External CQL libraries as expression modifiers on
-                elements in an artifact. An external function can be used to modify an element in this way if all of the
-                following conditions are met:
+                In certain situations, authors can use functions from External CQL libraries as modifiers on elements in
+                an artifact. An external function can be used to modify an element in this way if all of the following
+                conditions are met:
                 <ul>
                   <li>The function has at least one argument.</li>
                   <li>The first argument of the function matches the return type of the element.</li>
@@ -1951,10 +1913,10 @@ const UserGuide = () => {
                     </ul>
                   </li>
                 </ul>
-                If these conditions are met, the expression modifier will appear just like any other after selecting the
-                "Add Expression" button. The expression will be labeled with the function's name and the library's name,
-                as well as a book icon <MenuBookIcon fontSize="small" aria-hidden="true" /> to indicate that it is from
-                an External CQL library.
+                If these conditions are met, the modifier will appear just like any other after selecting the "Add
+                Expression" button. The expression will be labeled with the function's name and the library's name, as
+                well as a book icon <MenuBookIcon fontSize="small" aria-hidden="true" /> to indicate that it is from an
+                External CQL library.
               </div>
               <div>
                 <img
@@ -1964,12 +1926,12 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                Once an External CQL expression modifier is selected, it is displayed on the element just like any other
-                expression modifier. The return type of the element will now be the return type of the External CQL
-                function. If the External CQL function only has one argument, then the expression modifier is complete
-                and no further action is required because this argument will be populated by the existing element. If
-                the function has additional arguments, then the expression modifier will populate with editors that will
-                allow you to select an argument source and an appropriate value for that source.
+                Once an External CQL modifier is selected, it is displayed on the element just like any other modifier.
+                The return type of the element will now be the return type of the External CQL function. If the External
+                CQL function only has one argument, then the modifier is complete and no further action is required
+                because this argument will be populated by the existing element. If the function has additional
+                arguments, then the modifier will populate with editors that will allow you to select an argument source
+                and an appropriate value for that source.
               </div>
               <div>
                 <img
@@ -2003,7 +1965,7 @@ const UserGuide = () => {
                 External CQL library as an argument to an external function of another.
               </div>
               <div>
-                Similarly to when an External CQL element is used, when an External CQL expression modifier is used, its
+                Similarly to when an External CQL element is used, when an External CQL modifier is used, its
                 corresponding External CQL library cannot be deleted until the modifier is removed.
               </div>
             </div>

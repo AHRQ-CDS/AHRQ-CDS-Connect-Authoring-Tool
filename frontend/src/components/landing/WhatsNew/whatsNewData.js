@@ -4,6 +4,22 @@ import React from 'react';
 const whatsNewData = [
   {
     id: 1,
+    name: 'Build Modifiers',
+    ariaLabel: 'Build Modifiers',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-build-modifiers.png`,
+    description: (
+      <>
+        Authors can now build their own modifiers by defining sets of rules using resource properties and operators.
+        This capability provides authors with more precise control over the criteria used to filter element data. Rules
+        can be combined into groups to represent complex boolean criteria using 'and' and 'or'. As part of this feature,
+        the user interface for selecting built-in modifiers has also been updated.
+      </>
+    ),
+    linkText: 'Build Modifiers Documentation',
+    link: `${process.env.PUBLIC_URL}/documentation#Modifier_Builder`
+  },
+  {
+    id: 2,
     name: 'Recommendation Links',
     ariaLabel: 'Recommendation Links',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-rec-links.png`,
@@ -19,7 +35,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Adding_Links_to_Recommendations`
   },
   {
-    id: 2,
+    id: 3,
     name: 'Summary Tab & More',
     ariaLabel: 'Summary Tab & More',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-summary.png`,
@@ -35,7 +51,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Summary`
   },
   {
-    id: 3,
+    id: 4,
     name: 'Sort & Duplicate Artifacts',
     ariaLabel: 'Sort & Duplicate Artifacts',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-artifacts.png`,
@@ -48,21 +64,6 @@ const whatsNewData = [
     ),
     linkText: 'Documentation',
     link: `${process.env.PUBLIC_URL}/documentation#Managing_Artifacts`
-  },
-  {
-    id: 4,
-    name: 'External CQL Functions',
-    ariaLabel: 'External CQL Functions',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-external-modifiers.png`,
-    description: (
-      <>
-        External CQL functions can now be used as expression modifiers on the elements of an artifact. This allows CDS
-        Authors to more easily and effectively extend the functionality of the CDS Authoring Tool to suit their specific
-        needs.
-      </>
-    ),
-    linkText: 'Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation#Using_External_CQL_Expression_Modifiers`
   }
 ];
 
