@@ -1,6 +1,12 @@
 const Templates = require('../data/formTemplates');
 const ValueSets = require('../data/valueSets');
 const conversionsELMFile = require('../data/library_helpers/ELMFiles/AT_Internal_CDS_Connect_Conversions.json');
+const queryResources = {
+  dstu2_resources: require('../data/query_builder/dstu2_resources.json'),
+  stu3_resources: require('../data/query_builder/stu3_resources.json'),
+  r4_resources: require('../data/query_builder/r4_resources.json'),
+  operators: require('../data/query_builder/operators.json')
+};
 
 // If new functions are added to AT_Internal_CDS_Connect_Conversions and a separate description is desired,
 // add a key value pair to the following object with the descripton: function_name : function_description
@@ -10,7 +16,11 @@ module.exports = {
   getTemplates,
   getValueSets,
   getOneValueSet,
-  getConversionFunctions
+  getConversionFunctions,
+  getDSTU2Resources,
+  getSTU3Resources,
+  getR4Resources,
+  getResourceOperators
 };
 
 // Returns all ValueSets saved
@@ -57,4 +67,20 @@ function getConversionFunctions(request, result) {
     return { name: `Convert.${def.name}`, description };
   });
   result.json(convertFunctions);
+}
+
+function getDSTU2Resources(request, result) {
+  result.json(queryResources['dstu2_resources']);
+}
+
+function getSTU3Resources(request, result) {
+  result.json(queryResources['stu3_resources']);
+}
+
+function getR4Resources(request, result) {
+  result.json(queryResources['r4_resources']);
+}
+
+function getResourceOperators(request, result) {
+  result.json(queryResources['operators']);
 }

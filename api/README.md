@@ -56,6 +56,22 @@ For local development, a `config/local.json` file can also be used to override c
 
 Lastly, most aspects of config can also be overridden via specific environment variables. See the `config.js` configuration schema for the relevant environment variable names.
 
+### Updating Modifier Templates
+
+This project uses EJS templates to generate CQL files. These files are all located in the subdirectories of `api/data/cql` and can be updated according to changes in CQL.
+
+To add a rule template to `api/data/cql/rules` for an operator in the query builder, follow these steps:
+
+1. Create a file for this template in `api/data/cql/rules`
+2. Find the corresponding operator in `api/data/query_builder/operators.json` and update its `operatorTemplate` field to equal the name of the template file
+3. For every rule template that's created, add a test to `api/test/handlers/cqlHandler/basicTests.js`
+
+Note that if any new operator needs to be added to the `api/data/query_builder/operators.json` file, if there is a `userSelectedOperand` that requires a concept value or a valueset value, the field's name *must* match the following:
+
+- `conceptValue` for a singular concept
+- `conceptValues` for a list of concepts
+- `valueset` for a valueset
+
 ### Migrations
 
 As the project evolves over time, the database schema may change in ways that require existing data to be transformed. This project uses the [mongodb-migrations](https://www.npmjs.com/package/mongodb-migrations) to support database migrations. Migration scripts are stored in the `migrations` folder.

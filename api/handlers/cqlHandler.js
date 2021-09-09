@@ -12,13 +12,22 @@ const request = require('request');
 const Busboy = require('busboy');
 const { exportCQL, importCQL, RawCQL } = require('cql-merge');
 
+const queryResources = {
+  dstu2_resources: require('../data/query_builder/dstu2_resources.json'),
+  stu3_resources: require('../data/query_builder/stu3_resources.json'),
+  r4_resources: require('../data/query_builder/r4_resources.json'),
+  operators: require('../data/query_builder/operators.json')
+};
+
 const templatePath = './data/cql/templates';
 const specificPath = './data/cql/specificTemplates';
 const modifierPath = './data/cql/modifiers';
+const rulePath = './data/cql/rules';
 const artifactPath = './data/cql/artifact.ejs';
 const specificMap = loadTemplates(specificPath);
 const templateMap = loadTemplates(templatePath);
 const modifierMap = loadTemplates(modifierPath);
+const ruleMap = loadTemplates(rulePath);
 // Each library will be included. Aliases are optional.
 
 const getCQLValueString = externalCQLArgument => {
@@ -108,6 +117,32 @@ const includeLibrariesMap = {
   '1.0.2': includeLibrariesDstu2,
   '3.0.0': includeLibrariesStu3,
   '4.0.0': includeLibrariesR4
+};
+
+const queryResourceMap = {
+  list_of_observations: 'Observation',
+  list_of_conditions: 'Condition',
+  list_of_medication_statements: 'MedicationStatement',
+  list_of_medication_requests: 'MedicationRequest',
+  list_of_procedures: 'Procedure',
+  list_of_allergy_intolerances: 'AllergyIntolerance',
+  list_of_encounters: 'Encounter',
+  list_of_immunizations: 'Immunization',
+  list_of_devices: 'Device',
+  list_of_service_requests: 'ServiceRequest'
+};
+
+const queryAliasMap = {
+  list_of_observations: 'Ob',
+  list_of_conditions: 'Co',
+  list_of_medication_statements: 'MS',
+  list_of_medication_requests: 'MR',
+  list_of_procedures: 'Pr',
+  list_of_allergy_intolerances: 'AI',
+  list_of_encounters: 'En',
+  list_of_immunizations: 'Im',
+  list_of_devices: 'De',
+  list_of_service_requests: 'SR'
 };
 
 // A flag to hold the FHIR version, so that it can be used
@@ -1035,78 +1070,241 @@ function sanitizeCQLString(cqlString) {
   return _.replace(cqlString, /'/g, "\\'");
 }
 
+// Recurse down the tree of a modifier built in the query builder
+function checkRules(
+  rule,
+  value_name,
+  inputType,
+  codeSystemMap,
+  codeMap,
+  conceptMap,
+  resourceMap,
+  isRoot = false,
+  isFirstModifier = false
+) {
+  // Leaf node
+  // TODO: Refactor to remove use of rule.ruleType.  We support it for now mainly because all
+  // of the operator template tests assume rule.ruleType and many of them are already in flight
+  // in other PRs.  So for now, the code supports either way: rule.operator or rule.ruleType.
+  if (rule.operator && rule.operator.id) {
+    rule.ruleType = rule.operator.id;
+  }
+  if (rule.ruleType) {
+    const operator = queryResources.operators.operators.find(op => op.id === rule.ruleType);
+    if (!operator) {
+      console.error(`Operator could not be found for rule: ${rule.ruleType}`);
+      return;
+    }
+    const ruleToRender = ruleMap[operator.operatorTemplate];
+    if (!operator.operatorTemplate) {
+      console.error(`No template found for operator: ${operator.name}`);
+      return;
+    }
+    let resources;
+    switch (fhirTarget.version) {
+      case '1.0.2':
+        resources = queryResources.dstu2_resources.resources;
+        break;
+      case '3.0.0':
+        resources = queryResources.stu3_resources.resources;
+        break;
+      default:
+        resources = queryResources.r4_resources.resources;
+        break;
+    }
+    const inputTypeResource = queryResourceMap[inputType];
+    const resource = resources.find(
+      r => r.name === inputTypeResource || (r.name === 'MedicationOrder' && inputTypeResource === 'MedicationRequest')
+    );
+
+    let resourceProperty = rule.resourceProperty;
+    let resourcePropertyInfo = resource.properties.find(p => p.name === resourceProperty);
+    let typeSpecifier;
+    if (resourcePropertyInfo != null) {
+      typeSpecifier = resourcePropertyInfo.typeSpecifier;
+    } else {
+      // It's a choice type, so get the typeSpecifier from the specific choice
+      const choiceProperties = resource.properties.filter(p => p.typeSpecifier.type === 'ChoiceTypeSpecifier');
+      for (const p of choiceProperties) {
+        const matchingChoice = p.typeSpecifier.elementType.find(c => c.name === resourceProperty);
+        if (matchingChoice) {
+          typeSpecifier = matchingChoice.typeSpecifier;
+          // Choice types need to be cast in STU3/R4
+          if (fhirTarget.version !== '1.0.2') {
+            resourceProperty = `${p.name} as ${typeSpecifier.elementType}`;
+          }
+          resourcePropertyInfo = p;
+          break;
+        }
+      }
+    }
+
+    // Handle codes that need to be added to the top of the CQL file
+    const concepts = [];
+    // First: User-specified concepts (w/ arbitrary systems)
+    if (rule.conceptValue || rule.conceptValues) {
+      const conceptValues = rule.conceptValues || [rule.conceptValue];
+      const codes = conceptValues.map(c => {
+        return { code: c.code, codeSystem: { name: c.system, id: c.uri }, display: c.display };
+      });
+      buildConceptObjectForCodes(codes, concepts);
+    }
+    // Then predefined concepts w/ predefined systems
+    if (
+      rule.codeValue &&
+      resourcePropertyInfo &&
+      resourcePropertyInfo.predefinedSystem &&
+      typeSpecifier.elementType !== 'FHIR.code'
+    ) {
+      const codes = rule.codeValue.map(c => {
+        return {
+          code: c,
+          codeSystem: {
+            name: resourcePropertyInfo.predefinedSystem.name,
+            id: resourcePropertyInfo.predefinedSystem.url
+          },
+          // convert codes like social-history to "Social History" and entered-in-error to "Entered in Error"
+          display: c
+            .split('-')
+            .map(s => (s !== 'in' ? _.upperFirst(s) : s))
+            .join(' ')
+        };
+      });
+      buildConceptObjectForCodes(codes, concepts);
+    }
+    // Then add the concepts to the CQL document and collect the concept names (in case they changed)
+    const codeNames = concepts.map(concept => addConcepts(concept, codeSystemMap, codeMap, conceptMap).name);
+    // Handle ValueSets that need to be added at the top of the CQL file
+    if (rule.valueset) {
+      rule.valueset.name = `${rule.valueset.name.replace(/"/g, '\\"')} VS`;
+      const count = getCountForUniqueExpressionName(rule.valueset, resourceMap, 'name', 'oid');
+      if (count > 0) {
+        rule.valueset.name = `${rule.valueset.name}_${count}`;
+      }
+      resourceMap.set(rule.valueset.name, rule.valueset);
+    }
+
+    return ejs.render(ruleToRender, {
+      ...rule,
+      value_name,
+      resourceProperty,
+      typeSpecifier,
+      codeNames
+    });
+  }
+
+  // Conjunction at root level
+  if (isRoot) {
+    const alias = queryAliasMap[inputType] || 'ALIAS';
+    const statements = rule.rules.map(r =>
+      checkRules(r, alias, inputType, codeSystemMap, codeMap, conceptMap, resourceMap)
+    );
+    return ejs.render(ruleMap['RootTemplate'], {
+      value_name,
+      alias,
+      isFirstModifier,
+      statements,
+      conjunctionType: rule.conjunctionType
+    });
+  }
+
+  // Conjunction within tree
+  const statements = rule.rules.map(r =>
+    checkRules(r, value_name, inputType, codeSystemMap, codeMap, conceptMap, resourceMap)
+  );
+  return ejs.render(ruleMap['GroupTemplate'], { statements, conjunctionType: rule.conjunctionType });
+}
+
 // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or".
 function applyModifiers(values = [], modifiers = []) {
   // default modifiers to []
   return values
     .map(value => {
       let newValue = value;
-      modifiers.forEach(modifier => {
-        if (fhirTarget.version.startsWith('1.0.')) {
-          if (modifier.id === 'ActiveMedicationRequest') modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';
-          if (modifier.id === 'LookBackMedicationRequest') modifier.cqlLibraryFunction = 'C3F.MedicationOrderLookBack';
-        }
-        if (!modifier.cqlLibraryFunction && modifier.values && modifier.values.templateName) {
-          modifier.cqlLibraryFunction = modifier.values.templateName;
-        }
-        let modifierContext = {
-          cqlLibraryFunction: modifier.cqlLibraryFunction,
-          value_name: newValue,
-          values: { value: null }
-        };
-        if (modifier.values && modifier.type === 'ExternalModifier') {
-          modifier.values.value.forEach(value => {
-            let system = _.get(value, 'system', '').replace(/'/g, "\\'");
-            let uri = _.get(value, 'uri', '').replace(/'/g, "\\'");
-            if (system && uri) {
-              this.codeSystemMap.set(system, { name: system, id: uri });
-            }
-          });
-        }
-        // Modifiers that add new value sets, will have a valueSet attribute on values.
-        if (modifier.values && modifier.values.valueSet) {
-          modifier.values.valueSet.name = `${modifier.values.valueSet.name.replace(/"/g, '\\"')} VS`;
-          // Add the value set to the resourceMap to be included and referenced
-          const count = getCountForUniqueExpressionName(modifier.values.valueSet, this.resourceMap, 'name', 'oid');
-          if (count > 0) {
-            modifier.values.valueSet.name = `${modifier.values.valueSet.name}_${count}`;
+      modifiers.forEach((modifier, index) => {
+        // Is a modifier built in the query builder
+        if (modifier.where) {
+          // A query builder modifier will always have exactly one input type
+          const inputType = modifier.inputTypes[0];
+          newValue = checkRules(
+            modifier.where,
+            newValue,
+            inputType,
+            this.codeSystemMap,
+            this.codeMap,
+            this.conceptMap,
+            this.resourceMap,
+            modifier.returnType,
+            index === 0
+          );
+        } else {
+          if (fhirTarget.version.startsWith('1.0.')) {
+            if (modifier.id === 'ActiveMedicationRequest') modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';
+            if (modifier.id === 'LookBackMedicationRequest')
+              modifier.cqlLibraryFunction = 'C3F.MedicationOrderLookBack';
           }
-          modifier.cqlTemplate = 'CheckInclusionInVS';
-        }
-        if (modifier.values && modifier.values.code) {
-          let concepts = [];
-          buildConceptObjectForCodes([modifier.values.code], concepts);
-          concepts.forEach(concept => {
-            modifier.values.code = addConcepts(concept, this.codeSystemMap, this.codeMap, this.conceptMap);
-          });
-          modifier.cqlTemplate = 'CheckEquivalenceToCode';
-        }
-        if (modifier.values) {
-          if (modifier.values.unit) modifier.values.unit = modifier.values.unit.replace(/'/g, "\\'");
-          if (modifier.values.value && Array.isArray(modifier.values.value)) {
-            modifierContext.values = {
-              value: modifier.values.value.map((value, index) => {
-                if (index === 0) return null;
-                if (value && value.argSource && value.selected) {
-                  if (value.argSource === 'editor' && value.type) {
-                    return getCQLValueString(value);
-                  } else if (value.argSource === 'parameter' && value.elementName) {
-                    return { ...value, str: `"${value.elementName}"` };
-                  } else if (value.argSource === 'baseElement' && value.elementName) {
-                    return { ...value, str: `"${value.elementName}"` };
-                  } else if (value.argSource === 'externalCql' && value.elementName && value.elementType) {
-                    return value.elementType === 'function' ? `${value.elementName}()` : value.elementName;
+          if (!modifier.cqlLibraryFunction && modifier.values && modifier.values.templateName) {
+            modifier.cqlLibraryFunction = modifier.values.templateName;
+          }
+          let modifierContext = {
+            cqlLibraryFunction: modifier.cqlLibraryFunction,
+            value_name: newValue,
+            values: { value: null }
+          };
+          if (modifier.values && modifier.type === 'ExternalModifier') {
+            modifier.values.value.forEach(value => {
+              let system = _.get(value, 'system', '').replace(/'/g, "\\'");
+              let uri = _.get(value, 'uri', '').replace(/'/g, "\\'");
+              if (system && uri) {
+                this.codeSystemMap.set(system, { name: system, id: uri });
+              }
+            });
+          }
+          // Modifiers that add new value sets, will have a valueSet attribute on values.
+          if (modifier.values && modifier.values.valueSet) {
+            modifier.values.valueSet.name = `${modifier.values.valueSet.name.replace(/"/g, '\\"')} VS`;
+            // Add the value set to the resourceMap to be included and referenced
+            const count = getCountForUniqueExpressionName(modifier.values.valueSet, this.resourceMap, 'name', 'oid');
+            if (count > 0) {
+              modifier.values.valueSet.name = `${modifier.values.valueSet.name}_${count}`;
+            }
+            modifier.cqlTemplate = 'CheckInclusionInVS';
+          }
+          if (modifier.values && modifier.values.code) {
+            let concepts = [];
+            buildConceptObjectForCodes([modifier.values.code], concepts);
+            concepts.forEach(concept => {
+              modifier.values.code = addConcepts(concept, this.codeSystemMap, this.codeMap, this.conceptMap);
+            });
+            modifier.cqlTemplate = 'CheckEquivalenceToCode';
+          }
+          if (modifier.values) {
+            if (modifier.values.unit) modifier.values.unit = modifier.values.unit.replace(/'/g, "\\'");
+            if (modifier.values.value && Array.isArray(modifier.values.value)) {
+              modifierContext.values = {
+                value: modifier.values.value.map((value, index) => {
+                  if (index === 0) return null;
+                  if (value && value.argSource && value.selected) {
+                    if (value.argSource === 'editor' && value.type) {
+                      return getCQLValueString(value);
+                    } else if (value.argSource === 'parameter' && value.elementName) {
+                      return { ...value, str: `"${value.elementName}"` };
+                    } else if (value.argSource === 'baseElement' && value.elementName) {
+                      return { ...value, str: `"${value.elementName}"` };
+                    } else if (value.argSource === 'externalCql' && value.elementName && value.elementType) {
+                      return value.elementType === 'function' ? `${value.elementName}()` : value.elementName;
+                    }
                   }
-                }
-                return null;
-              })
-            };
-          } else modifierContext.values = modifier.values;
+                  return null;
+                })
+              };
+            } else modifierContext.values = modifier.values;
+          }
+          if (!(modifier.cqlTemplate in modifierMap)) {
+            console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);
+          }
+          newValue = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext);
         }
-        if (!(modifier.cqlTemplate in modifierMap)) {
-          console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);
-        }
-        newValue = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext);
       });
       return newValue;
     })
@@ -1249,6 +1447,8 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
       code.code = code.code.replace(/'/g, "\\'").replace(/"/g, '\\"');
       code.display = code.display.replace(/'/g, "\\'");
       code.codeSystem.id = code.codeSystem.id.replace(/'/g, "\\'");
+      // If the codeName variable is ever modified, make sure to update the templates
+      // in api/data/cql/rules that use similar logic (such as codeConceptMatchesConcept)
       const codeName = code.display && code.display.length < 60 ? code.display.replace(/"/g, '\\"') : code.code;
       const concept = {
         name: `${code.codeSystem.name} ${code.code} Concept`,

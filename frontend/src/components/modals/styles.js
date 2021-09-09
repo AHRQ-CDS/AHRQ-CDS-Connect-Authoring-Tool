@@ -11,6 +11,27 @@ export default makeStyles(
       flexDirection: 'column',
       minHeight: '300px'
     },
+    header: {
+      borderBottom: `1px solid ${theme.palette.common.grayLighter}`,
+      padding: '0 1em 10px 1em',
+      margin: 0
+    },
+    headerIndicator: {
+      borderLeft: `3px solid ${theme.palette.common.blue}`,
+      padding: '0 20px',
+      margin: '10px 0'
+    },
+    headerIndicatorHighlight: {
+      borderColor: theme.palette.common.blueHighlight
+    },
+    headerIndicatorLabel: {
+      fontWeight: 'bold',
+      marginRight: '10px'
+    },
+    headerTag: {
+      alignItems: 'center',
+      display: 'flex'
+    },
     list: {
       backgroundColor: theme.palette.common.blueDarker,
       fontSize: '0.8em',

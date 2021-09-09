@@ -785,14 +785,6 @@ const reduxState = {
     externalCQLLibraryParents: {},
     externalCqlList: []
   },
-  modifiers: {
-    modifierMap: {},
-    modifiersByInputType: {},
-    loadModifiers: {
-      isLoadingModifiers: null,
-      loadModifiersStatus: null
-    }
-  },
   navigation: {
     activeTab: 0,
     scrollToId: null

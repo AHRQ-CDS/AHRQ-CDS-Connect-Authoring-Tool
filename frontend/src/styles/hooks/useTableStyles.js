@@ -8,9 +8,6 @@ export default makeStyles(
         marginLeft: '10px'
       }
     },
-    noWrapCell: {
-      whiteSpace: 'nowrap'
-    },
     noWrapRow: {
       '& .MuiTableCell-root': {
         whiteSpace: 'nowrap'

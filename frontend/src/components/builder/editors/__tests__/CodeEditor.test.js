@@ -35,11 +35,49 @@ describe('<CodeEditor />', () => {
       userEvent.click(screen.getByRole('button', { name: 'Select' }));
 
       expect(handleUpdateEditor).toBeCalledWith({
+        id: expect.any(String),
         system: 'SNOMED',
         uri: 'http://snomed.info/sct',
         code: '123',
         display: '',
         str: `Code '123' from "SNOMED"`
+      });
+    });
+
+    it('can add more than one code', () => {
+      const handleUpdateEditor = jest.fn();
+      const { getByText } = renderComponent({ handleUpdateEditor });
+
+      expect(getByText('Add Code')).toBeInTheDocument();
+
+      userEvent.click(screen.getByRole('button'));
+      fireEvent.change(screen.getByRole('textbox', { name: 'Code' }), { target: { value: '123' } });
+      userEvent.click(screen.getByRole('button', { name: 'Code system ​' }));
+      userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
+      userEvent.click(screen.getByRole('button', { name: 'Select' }));
+
+      userEvent.click(screen.getByRole('button'));
+      fireEvent.change(screen.getByRole('textbox', { name: 'Code' }), { target: { value: '456' } });
+      userEvent.click(screen.getByRole('button', { name: 'Code system ​' }));
+      userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
+      userEvent.click(screen.getByRole('button', { name: 'Select' }));
+
+      expect(handleUpdateEditor).toBeCalledWith({
+        id: expect.any(String),
+        system: 'SNOMED',
+        uri: 'http://snomed.info/sct',
+        code: '123',
+        display: '',
+        str: `Code '123' from "SNOMED"`
+      });
+
+      expect(handleUpdateEditor).toBeCalledWith({
+        id: expect.any(String),
+        system: 'SNOMED',
+        uri: 'http://snomed.info/sct',
+        code: '456',
+        display: '',
+        str: `Code '456' from "SNOMED"`
       });
     });
   });
@@ -64,6 +102,7 @@ describe('<CodeEditor />', () => {
       userEvent.click(screen.getByRole('button', { name: 'Select' }));
 
       expect(handleUpdateEditor).toBeCalledWith({
+        id: expect.any(String),
         system: 'SNOMED',
         uri: 'http://snomed.info/sct',
         code: '123',

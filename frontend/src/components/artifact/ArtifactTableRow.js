@@ -1,12 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { IconButton, Link, TableCell, Tooltip } from '@material-ui/core';
+import { IconButton, Link, TableCell } from '@material-ui/core';
 import { Delete as DeleteIcon, Edit as EditIcon, FileCopy as CopyIcon } from '@material-ui/icons';
 
 import ArtifactModal from './ArtifactModal';
 import { DeleteConfirmationModal } from 'components/modals';
+import { Tooltip } from 'components/elements';
 import { renderDate } from 'utils/dates';
+import fhirVersionMap from 'data/fhirVersionMap';
 import artifactProps from 'prop-types/artifact';
 import { useButtonStyles, useTextStyles } from 'styles/hooks';
 
@@ -33,12 +35,14 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
       </TableCell>
 
       <TableCell>{artifact.version}</TableCell>
+      <TableCell>{fhirVersionMap[artifact.fhirVersion]}</TableCell>
       <TableCell>{renderDate(artifact.updatedAt)}</TableCell>
       <TableCell>{renderDate(artifact.createdAt)}</TableCell>
 
-      <TableCell align="right" style={{ whiteSpace: 'nowrap' }}>
-        <Tooltip title="Edit Info" arrow>
+      <TableCell align="right" className={textStyles.noWrap}>
+        <Tooltip title="Edit Info">
           <IconButton
+            aria-label="edit info"
             className={buttonStyles.iconButton}
             color="primary"
             onClick={() => setShowArtifactModal(true)}
@@ -48,8 +52,9 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
           </IconButton>
         </Tooltip>
 
-        <Tooltip title="Duplicate" arrow>
+        <Tooltip title="Duplicate">
           <IconButton
+            aria-label="duplicate"
             className={buttonStyles.iconButton}
             color="primary"
             onClick={() => handleDuplicateArtifact(artifact)}
@@ -59,8 +64,9 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
           </IconButton>
         </Tooltip>
 
-        <Tooltip title="Delete" arrow>
+        <Tooltip title="Delete">
           <IconButton
+            aria-label="delete"
             className={buttonStyles.iconButton}
             color="secondary"
             onClick={() => setShowDeleteConfirmationModal(true)}
@@ -88,6 +94,7 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
           <>
             <div>Name: {artifact.name}</div>
             <div>Version: {artifact.version}</div>
+            <div>FHIR Version: {artifact.fhirVersion}</div>
           </>
         </DeleteConfirmationModal>
       )}

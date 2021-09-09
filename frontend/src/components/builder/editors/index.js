@@ -4,3 +4,4 @@ export { default as DateTimeEditor } from './DateTimeEditor';
 export { default as NumberEditor } from './NumberEditor';
 export { default as QuantityEditor } from './QuantityEditor';
 export { default as StringEditor } from './StringEditor';
+export { default as ValueSetEditor } from './ValueSetEditor';

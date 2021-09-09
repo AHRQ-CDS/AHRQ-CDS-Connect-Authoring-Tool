@@ -1,0 +1,1 @@
+<%-value_name%>.<%-resourceProperty%> between <%-lowQuantity.quantity%> '<%-lowQuantity.unit || '1'%>' and <%-highQuantity.quantity%> '<%-highQuantity.unit || '1'%>'

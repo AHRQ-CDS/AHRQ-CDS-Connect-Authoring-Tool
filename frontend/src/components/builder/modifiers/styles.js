@@ -2,6 +2,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   theme => ({
+    customModifier: {
+      alignItems: 'flex-start',
+      display: 'flex',
+      justifyContent: 'space-between'
+    },
     dateTimeInput: {
       '& .MuiIconButton-root': {
         padding: '20px 5px'
@@ -11,11 +16,11 @@ export default makeStyles(
       display: 'flex',
       alignItems: 'center',
       flexWrap: 'wrap',
-      padding: '10px 0',
+      padding: '9px 0',
       width: '100%'
     },
     modifierButton: {
-      marginTop: '-30px'
+      marginTop: '-38px'
     },
     modifierHeader: {
       display: 'flex',

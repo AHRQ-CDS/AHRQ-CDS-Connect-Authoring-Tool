@@ -25,7 +25,7 @@ const TestResults = ({ artifact, handleOnClose, patientsExecuted, results }) => 
 
   return (
     <Paper className={styles.testResults}>
-      <IconButton className={styles.closeButton} onClick={handleOnClose}>
+      <IconButton aria-label="close" className={styles.closeButton} onClick={handleOnClose}>
         <CloseIcon />
       </IconButton>
 

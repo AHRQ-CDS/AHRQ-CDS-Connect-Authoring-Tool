@@ -26,7 +26,14 @@ const convertDateTimeForCQL = (newValues, isInterval, isTime) => {
   return date || time ? { date, time, str: date ? (time ? `@${date}T${time}` : `@${date}`) : null } : null;
 };
 
-const DateTimeEditor = ({ errors, handleUpdateEditor, isInterval = false, isTime = false, value }) => {
+const DateTimeEditor = ({
+  errors,
+  fullWidth = true,
+  handleUpdateEditor,
+  isInterval = false,
+  isTime = false,
+  value
+}) => {
   const fieldStyles = useFieldStyles();
 
   const handleChange = (newValue, inputType) => {
@@ -47,7 +54,7 @@ const DateTimeEditor = ({ errors, handleUpdateEditor, isInterval = false, isTime
   };
 
   return (
-    <div className={fieldStyles.fieldInputFullWidth} id="date-time-editor">
+    <div className={fullWidth ? fieldStyles.fieldInputFullWidth : fieldStyles.fieldInputLg} id="date-time-editor">
       <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
         {!isTime && (
           <DatePicker
@@ -86,13 +93,14 @@ const DateTimeEditor = ({ errors, handleUpdateEditor, isInterval = false, isTime
 };
 
 DateTimeEditor.propTypes = {
-  handleUpdateEditor: PropTypes.func.isRequired,
-  isInterval: PropTypes.bool,
-  isTime: PropTypes.bool,
   errors: PropTypes.shape({
     incompleteInput: PropTypes.bool
   }),
-  value: PropTypes.object
+  fullWidth: PropTypes.bool,
+  handleUpdateEditor: PropTypes.func.isRequired,
+  isInterval: PropTypes.bool,
+  isTime: PropTypes.bool,
+  value: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 };
 
 export default DateTimeEditor;

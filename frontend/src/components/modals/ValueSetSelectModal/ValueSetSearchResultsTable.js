@@ -70,14 +70,16 @@ const ValueSetSearchResultsTable = ({ keyword, setSearchCount, setSelectedValueS
                   </TableCell>
                   <TableCell>{valueSet.steward}</TableCell>
                   <TableCell>
-                    {valueSet.codeCount}
-                    <IconButton
-                      aria-label="View Value Set"
-                      color="primary"
-                      onClick={event => handleViewValueSetDetails(event, { name: valueSet.name, oid: valueSet.oid })}
-                    >
-                      <VisibilityIcon fontSize="small" />
-                    </IconButton>
+                    <div className={textStyles.noWrap}>
+                      {valueSet.codeCount}
+                      <IconButton
+                        aria-label="View Value Set"
+                        color="primary"
+                        onClick={event => handleViewValueSetDetails(event, { name: valueSet.name, oid: valueSet.oid })}
+                      >
+                        <VisibilityIcon fontSize="small" />
+                      </IconButton>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

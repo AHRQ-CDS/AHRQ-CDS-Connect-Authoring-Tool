@@ -249,7 +249,7 @@ export class Builder extends Component {
   };
 
   // subpop_index is an optional parameter, for determining which tree within subpop we are referring to
-  updateInstanceModifiers = (treeName, modifiers, path, subpopIndex, updatedReturnType = null) => {
+  updateInstanceModifiers = async (treeName, modifiers, path, subpopIndex, updatedReturnType = null) => {
     const tree = _.cloneDeep(this.props.artifact[treeName]);
     const valuePath = _.isNumber(subpopIndex) ? tree[subpopIndex] : tree;
     const target = findValueAtPath(valuePath, path);
@@ -258,8 +258,8 @@ export class Builder extends Component {
     if (updatedReturnType) {
       valuePath.returnType = updatedReturnType;
     }
-
-    this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
+    await this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
+    this.updateFHIRVersion();
   };
 
   showELMErrorModal = () => {
@@ -294,10 +294,12 @@ export class Builder extends Component {
 
   updateFHIRVersion = () => {
     const { artifact, externalCqlList, updateAndSaveArtifact } = this.props;
+    const allInstances = this.getAllInstancesInAllTrees();
     const hasExternalCql =
       externalCqlList && Boolean(externalCqlList.find(cqlLibrary => cqlLibrary.linkedArtifactId === artifact._id));
-    const hasServiceRequest = this.instancesInclude(this.getAllInstancesInAllTrees(), 'Service Request');
-    if (hasExternalCql & !hasServiceRequest) return;
+    const hasServiceRequest = this.instancesInclude(allInstances, 'Service Request');
+    const hasCustomModifier = allInstances.some(({ modifiers }) => modifiers?.some(({ where }) => where));
+    if ((hasExternalCql && !hasServiceRequest) || hasCustomModifier) return;
 
     let updatedArtifact = _.cloneDeep(artifact);
     updatedArtifact.fhirVersion = hasServiceRequest ? '4.0.0' : '';
@@ -910,7 +912,7 @@ const BuilderWithQuery = props => {
   return (
     <Builder
       externalCqlList={externalCqlListQuery.data ?? []}
-      isLoadingModifiers={modifiersQuery.isFetching}
+      isLoadingModifiers={modifiersQuery.isLoading}
       modifierMap={modifiersQuery.data?.modifierMap ?? {}}
       modifiersByInputType={modifiersQuery.data?.modifiersByInputType ?? {}}
       {...props}

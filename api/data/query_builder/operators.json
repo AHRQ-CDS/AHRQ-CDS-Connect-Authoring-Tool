@@ -1,0 +1,988 @@
+{
+  "implicitConversionInfo": {
+    "FHIRToSystem": {
+      "FHIR.boolean": "System.Boolean",
+      "FHIR.integer": "System.Integer",
+      "FHIR.decimal": "System.Decimal",
+      "FHIR.date": "System.Date",
+      "FHIR.dateTime": "System.DateTime",
+      "FHIR.time": "System.Time",
+      "FHIR.string": "System.String",
+      "FHIR.Quantity": "System.Quantity",
+      "FHIR.Ratio": "System.Ratio",
+      "FHIR.Any": "System.Any",
+      "FHIR.Coding": "System.Code",
+      "FHIR.CodeableConcept": "System.Concept",
+      "FHIR.Period": "Interval<System.DateTime>",
+      "FHIR.Range": "Interval<System.Quantity>"
+    }
+  },
+  "operators": [
+    {
+      "id": "isTrueFalse",
+      "name": "Is True/False?",
+      "displayName": "",
+      "description": "Check to see if a boolean is true or false",
+      "operatorTemplate": "isTrueFalse",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["System.Boolean"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "booleanValue",
+          "preLabel": "is",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Boolean"
+          }
+        }
+      ]
+    },
+    {
+      "id": "isNull",
+      "name": "Is Null",
+      "description": "Check to see if the element is null",
+      "operatorTemplate": "isNull",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["System.Any"]
+      }
+    },
+    {
+      "id": "isNotNull",
+      "name": "Is Not Null",
+      "description": "Check to see if the element is not null",
+      "operatorTemplate": "isNotNull",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["System.Any"]
+      }
+    },
+    {
+      "id": "listIsEmpty",
+      "name": "Is (Not) Empty",
+      "displayName": "list",
+      "description": "Check to see if a list is empty",
+      "operatorTemplate": "listIsEmpty",
+      "primaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["System.Any"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "notSelectorValue",
+          "name": "List",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "exists", "label": "Is Not Empty" },
+            { "value": "not exists", "label": "Is Empty" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "listLengthComparison",
+      "name": "Compare Length",
+      "displayName": "",
+      "description": "Perform a numeric comparison on the length of a list",
+      "operatorTemplate": "listLengthComparison",
+      "primaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["System.Any"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "comparisonOperator",
+          "name": "Comparison",
+          "preLabel": "is",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "<", "label": "less than" },
+            { "value": ">", "label": "greater than" },
+            { "value": "<=", "label": "less than or equal to" },
+            { "value": ">=", "label": "greater than or equal to" },
+            { "value": "=", "label": "equal to" }
+          ]
+        },
+        {
+          "id": "comparisonValue",
+          "type": "editor",
+          "postLabel": "element(s)",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Integer"
+          }
+        }
+      ]
+    },
+    {
+      "id": "codeConceptMatchesConcept",
+      "name": "Matches",
+      "description": "Check to see if a code, coding, or codable concept matches given concept",
+      "operatorTemplate": "codeConceptMatchesConcept",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "conceptValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Concept"
+          }
+        }
+      ]
+    },
+    {
+      "id": "codeConceptNotMatchesConcept",
+      "name": "Does Not Match",
+      "description": "Check to see if a code, coding, or codable concept does not match a given concept",
+      "operatorTemplate": "codeConceptNotMatchesConcept",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "conceptValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Concept"
+          }
+        }
+      ]
+    },
+    {
+      "id": "codeConceptInListOfConcept",
+      "name": "Matches One of",
+      "description": "Check to see if a code, coding, or codable concept matches an element of a list of concepts",
+      "operatorTemplate": "codeConceptInListOfConcept",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "conceptValues",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "ListTypeSpecifier",
+            "editorType": "System.Concept"
+          }
+        }
+      ]
+    },
+    {
+      "id": "codeConceptNotInListOfConcept",
+      "name": "Does Not Match Any of",
+      "description": "Check to see if a code, coding, or codable concept does not match any element of a list of concepts",
+      "operatorTemplate": "codeConceptNotInListOfConcept",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "conceptValues",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "ListTypeSpecifier",
+            "editorType": "System.Concept"
+          }
+        }
+      ]
+    },
+    {
+      "id": "codeConceptInValueSet",
+      "name": "Is in Value Set",
+      "description": "Check to see if a code, coding, or codable concept is within a valueset",
+      "operatorTemplate": "codeConceptInValueSet",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "valueset",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "valueset"
+          }
+        }
+      ]
+    },
+    {
+      "id": "codeConceptNotInValueSet",
+      "name": "Is Not in Value Set",
+      "description": "Check to see if a code, coding, or codable concept is not within a valueset",
+      "operatorTemplate": "codeConceptNotInValueSet",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "valueset",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "valueset"
+          }
+        }
+      ]
+    },
+    {
+      "id": "listCodeConceptContainsConcept",
+      "name": "Contains",
+      "description": "Check to see if a list of System.Code or System.Concept contains a Concept",
+      "operatorTemplate": "listCodeConceptContainsConcept",
+      "primaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "conceptValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Concept"
+          }
+        }
+      ]
+    },
+    {
+      "id": "listCodeConceptIsPerfectSubsetOfListConcept",
+      "name": "Has Only Codes in",
+      "description": "Check to see if a list of System.Code or System.Concept is a perfect subset of another list of System.Concept",
+      "operatorTemplate": "listCodeConceptIsPerfectSubsetOfListConcept",
+      "primaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "conceptValues",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "ListTypeSpecifier",
+            "editorType": "System.Concept"
+          }
+        }
+      ]
+    },
+    {
+      "id": "listCodeConceptIntersectsListConcept",
+      "name": "Has at Least One Code in",
+      "description": "Check to see if a list of System.Code or System.Concept intersects (some elements match) another list of System.Concept",
+      "operatorTemplate": "listCodeConceptIntersectsListConcept",
+      "primaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "conceptValues",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "ListTypeSpecifier",
+            "editorType": "System.Concept"
+          }
+        }
+      ]
+    },
+    {
+      "id": "listCodeConceptNotIntersectsListConcept",
+      "name": "Has No Codes in",
+      "description": "Check to see if a list of System.Code or System.Concept does not intersect (no elements match) another list of System.Concept",
+      "operatorTemplate": "listCodeConceptNotIntersectsListConcept",
+      "primaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "secondaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "conceptValues",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "ListTypeSpecifier",
+            "editorType": "System.Concept"
+          }
+        }
+      ]
+    },
+    {
+      "id": "listCodeConceptIsPerfectSubsetOfValueset",
+      "name": "Has Only Codes in Value Set",
+      "description": "",
+      "operatorTemplate": "listCodeConceptIsPerfectSubsetOfValueset",
+      "primaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "valueset",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "valueset"
+          }
+        }
+      ]
+    },
+    {
+      "id": "listCodeConceptIntersectsValueset",
+      "name": "Has at Least One Code in Value Set",
+      "description": "Check to see if a list of System.Code or System.Concept intersects (some elements match) elements of a valueset",
+      "operatorTemplate": "listCodeConceptIntersectsValueset",
+      "primaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "valueset",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "valueset"
+          }
+        }
+      ]
+    },
+    {
+      "id": "listCodeConceptNotIntersectsValueset",
+      "name": "Has No Codes in Value Set",
+      "description": "Check to see if a list of System.Code or System.Concept does not intersect (no elements match) elements of a valueset",
+      "operatorTemplate": "listCodeConceptNotIntersectsValueset",
+      "primaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "valueset",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "valueset"
+          }
+        }
+      ]
+    },
+    {
+      "id": "predefinedConceptComparisonSingular",
+      "note": "Used for single (NamedTypeSpecifier) System.Concept (FHIR.ValueCodeableConcept) and System.Code (FHIR.Coding)",
+      "name": "Matches Standard Code in",
+      "description": "Check to see if a predefined concept matches an element in a list of predefined concepts",
+      "operatorTemplate": "predefinedConceptComparisonSingular",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "codeValue",
+          "type": "selector",
+          "selectionRequiresPredefinedCodes": true
+        }
+      ]
+    },
+    {
+      "id": "predefinedConceptComparisonPlural",
+      "note": "Used for plural (ListTypeSpecifier) FHIR.code",
+      "name": "Has at Least One Standard Code in",
+      "description": "Check to see if a predefined concept matches an element in a list of predefined concepts",
+      "operatorTemplate": "predefinedConceptComparisonPlural",
+      "primaryOperand": {
+        "typeSpecifier": "ListTypeSpecifier",
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "codeValue",
+          "type": "selector",
+          "selectionRequiresPredefinedCodes": true
+        }
+      ]
+    },
+    {
+      "id": "dateWithinLast",
+      "name": "Occurred Within Last",
+      "description": "Check if the operand time type happened within the user specified duration ago",
+      "operatorTemplate": "dateWithinLast",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["System.Date"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "durationValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Integer"
+          }
+        },
+        {
+          "id": "timeUnit",
+          "name": "Time Unit",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "years", "label": "year(s)" },
+            { "value": "months", "label": "month(s)" },
+            { "value": "weeks", "label": "week(s)" },
+            { "value": "days", "label": "day(s)" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dateOccurredMoreThan",
+      "name": "Occurred More Than",
+      "description": "Check if the operand time type occurred more than the user specified duration ago",
+      "operatorTemplate": "dateOccurredMoreThan",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["System.Date"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "durationValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Integer"
+          }
+        },
+        {
+          "id": "timeUnit",
+          "name": "Time Unit",
+          "postLabel": "ago",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "years", "label": "year(s)" },
+            { "value": "months", "label": "month(s)" },
+            { "value": "weeks", "label": "week(s)" },
+            { "value": "days", "label": "day(s)" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dateTimeWithinLast",
+      "name": "Occurred Within Last",
+      "description": "Check if the operand time type happened within the user specified duration ago",
+      "operatorTemplate": "dateTimeWithinLast",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.instant", "System.DateTime"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "durationValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Integer"
+          }
+        },
+        {
+          "id": "timeUnit",
+          "name": "Time Unit",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "years", "label": "year(s)" },
+            { "value": "months", "label": "month(s)" },
+            { "value": "weeks", "label": "week(s)" },
+            { "value": "days", "label": "day(s)" },
+            { "value": "hours", "label": "hour(s)" },
+            { "value": "minutes", "label": "minute(s)" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dateTimeOccurredMoreThan",
+      "name": "Occurred More Than",
+      "description": "Check if the operand time type occurred more than the user specified duration ago",
+      "operatorTemplate": "dateTimeOccurredMoreThan",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.instant", "System.DateTime"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "durationValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Integer"
+          }
+        },
+        {
+          "id": "timeUnit",
+          "name": "Time Unit",
+          "postLabel": "ago",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "years", "label": "year(s)" },
+            { "value": "months", "label": "month(s)" },
+            { "value": "weeks", "label": "week(s)" },
+            { "value": "days", "label": "day(s)" },
+            { "value": "hours", "label": "hour(s)" },
+            { "value": "minutes", "label": "minute(s)" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dateTimeOccurred",
+      "name": "Occurred Before/After",
+      "displayName": "occurred",
+      "description": "Check if the operand time type did or did not occur within the user specified time",
+      "operatorTemplate": "dateTimeOccurred",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.instant", "System.DateTime"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "when",
+          "name": "When",
+          "type": "selector",
+          "selectionValues": ["Before", "On or Before", "After", "On or After"]
+        },
+        {
+          "id": "userSpecifiedDateTime",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.DateTime",
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dateTimeIntervalComparison",
+      "name": "(Start | End) Occurred",
+      "displayName": "",
+      "description": "Check if the operand time type occurred on or after the user specified time",
+      "operatorTemplate": "dateTimeIntervalComparison",
+      "primaryOperand": {
+        "typeSpecifier": "IntervalTypeSpecifier",
+        "elementTypes": ["System.DateTime", "System.Date"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "userSpecifiedIndex",
+          "name": "Starts/Ends",
+          "type": "selector",
+          "selectionValues": ["Starts", "Ends"]
+        },
+        {
+          "id": "when",
+          "name": "When",
+          "type": "selector",
+          "selectionValues": ["Before", "On or Before", "After", "On or After"]
+        },
+        {
+          "id": "userSpecifiedDateTime",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.DateTime",
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dateTimeIntervalOverlaps",
+      "name": "Overlaps",
+      "description": "Check if the operand Interval overlaps another",
+      "operatorTemplate": "dateTimeIntervalOverlaps",
+      "primaryOperand": {
+        "typeSpecifier": "IntervalTypeSpecifier",
+        "elementTypes": ["System.DateTime", "System.Date"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "userSpecifiedTimeInterval",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "IntervalTypeSpecifier",
+            "editorType": "System.DateTime",
+            "requiredFields": ["firstDate", "secondDate"],
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dateTimeIntervalContains",
+      "name": "Contains",
+      "description": "Check if the operand Interval contains a date/time",
+      "operatorTemplate": "dateTimeIntervalContains",
+      "primaryOperand": {
+        "typeSpecifier": "IntervalTypeSpecifier",
+        "elementTypes": ["System.DateTime", "System.Date"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "userSpecifiedDateTime",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.DateTime",
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dateTimeIntervalNotContains",
+      "name": "Does Not Contain",
+      "description": "Check if the operand Interval does not contain a date/time",
+      "operatorTemplate": "dateTimeIntervalNotContains",
+      "primaryOperand": {
+        "typeSpecifier": "IntervalTypeSpecifier",
+        "elementTypes": ["System.DateTime", "System.Date"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "userSpecifiedDateTime",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.DateTime",
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dateTimeOccursBetween",
+      "name": "Occurred Between",
+      "description": "Check if the operand time type occurs between ",
+      "operatorTemplate": "dateTimeOccursBetween",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.instant", "System.DateTime"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "beginDateTime",
+          "type": "editor",
+          "postLabel": "and",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.DateTime",
+            "requiredFields": ["date"],
+            "displayField": "str"
+          }
+        },
+        {
+          "id": "endDateTime",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.DateTime",
+            "requiredFields": ["date"],
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "quantityComparison",
+      "name": "Compare",
+      "displayName": "",
+      "description": "Compare two quantities with the same unit",
+      "operatorTemplate": "quantityComparison",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["System.Quantity"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "comparisonOperator",
+          "name": "Comparison",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "<", "label": "less than" },
+            { "value": ">", "label": "greater than" },
+            { "value": "<=", "label": "less than or equal to" },
+            { "value": ">=", "label": "greater than or equal to" },
+            { "value": "=", "label": "equal to" }
+          ]
+        },
+        {
+          "id": "quantity",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity"],
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "quantityIsBetweenQuantities",
+      "name": "Is Between",
+      "description": "Check to see if a given quantity value falls between two others",
+      "operatorTemplate": "quantityIsBetweenQuantities",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["System.Quantity"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "lowQuantity",
+          "postLabel": "and",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity"],
+            "displayField": "str"
+          }
+        },
+        {
+          "id": "highQuantity",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity"],
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "quantityIntervalComparison",
+      "name": "Compare High/Low",
+      "displayName": "",
+      "description": "Compare either the high or low value from an interval quantity to a number",
+      "operatorTemplate": "quantityIntervalComparison",
+      "primaryOperand": {
+        "typeSpecifier": "IntervalTypeSpecifier",
+        "elementTypes": ["System.Quantity"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "intervalComponent",
+          "name": "Low/High",
+          "type": "selector",
+          "selectionValues": ["Low", "High"]
+        },
+        {
+          "id": "comparisonOperator",
+          "name": "Comparison",
+          "type": "selector",
+          "preLabel": "is",
+          "selectionValues": [
+            { "value": "<", "label": "less than" },
+            { "value": ">", "label": "greater than" },
+            { "value": "<=", "label": "less than or equal to" },
+            { "value": ">=", "label": "greater than or equal to" },
+            { "value": "=", "label": "equal to" }
+          ]
+        },
+        {
+          "id": "comparisonOperand",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity"],
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "quantityIntervalOverlapsQuantityInterval",
+      "name": "Overlaps",
+      "description": "Check to see if two intervals overlap or not",
+      "operatorTemplate": "quantityIntervalOverlapsQuantityInterval",
+      "primaryOperand": {
+        "typeSpecifier": "IntervalTypeSpecifier",
+        "elementTypes": ["System.Quantity"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "numericInterval",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "IntervalTypeSpecifier",
+            "editorType": "System.Quantity",
+            "requiredFields": ["firstQuantity", "secondQuantity"],
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "quantityIntervalContainsQuantity",
+      "name": "Contains",
+      "description": "Check to see if a number is contained by an interval",
+      "operatorTemplate": "quantityIntervalContainsQuantity",
+      "primaryOperand": {
+        "typeSpecifier": "IntervalTypeSpecifier",
+        "elementTypes": ["System.Quantity"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "number",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity"],
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "quantityIntervalNotContainsQuantity",
+      "name": "Does Not Contain",
+      "description": "Check to see if a number is contained by an interval",
+      "operatorTemplate": "quantityIntervalNotContainsQuantity",
+      "primaryOperand": {
+        "typeSpecifier": "IntervalTypeSpecifier",
+        "elementTypes": ["System.Quantity"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "number",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity"],
+            "displayField": "str"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ageIsBetweenAges",
+      "name": "Is Between",
+      "description": "Compare two age quantities",
+      "operatorTemplate": "ageIsBetweenAges",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.Age"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "lowAgeValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Integer"
+          }
+        },
+        {
+          "id": "lowTimeUnit",
+          "name": "Time Unit",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "years", "label": "year(s)" },
+            { "value": "months", "label": "month(s)" },
+            { "value": "weeks", "label": "week(s)" },
+            { "value": "days", "label": "day(s)" },
+            { "value": "hours", "label": "hour(s)" },
+            { "value": "minutes", "label": "minute(s)" }
+          ]
+        },
+        {
+          "id": "highAgeValue",
+          "type": "editor",
+          "preLabel": "and",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Integer"
+          }
+        },
+        {
+          "id": "highTimeUnit",
+          "name": "Time Unit",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "years", "label": "year(s)" },
+            { "value": "months", "label": "month(s)" },
+            { "value": "weeks", "label": "week(s)" },
+            { "value": "days", "label": "day(s)" },
+            { "value": "hours", "label": "hour(s)" },
+            { "value": "minutes", "label": "minute(s)" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ageComparison",
+      "name": "Compare",
+      "displayName": "",
+      "description": "Compare two age quantities",
+      "operatorTemplate": "ageComparison",
+      "primaryOperand": {
+        "typeSpecifier": "NamedTypeSpecifier",
+        "elementTypes": ["FHIR.Age"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "comparisonOperator",
+          "name": "Comparison",
+          "preLabel": "is",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "<", "label": "less than" },
+            { "value": ">", "label": "greater than" },
+            { "value": "<=", "label": "less than or equal to" },
+            { "value": ">=", "label": "greater than or equal to" },
+            { "value": "=", "label": "equal to" }
+          ]
+        },
+        {
+          "id": "ageValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Integer"
+          }
+        },
+        {
+          "id": "timeUnit",
+          "name": "Time Unit",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "years", "label": "year(s)" },
+            { "value": "months", "label": "month(s)" },
+            { "value": "weeks", "label": "week(s)" },
+            { "value": "days", "label": "day(s)" },
+            { "value": "hours", "label": "hour(s)" },
+            { "value": "minutes", "label": "minute(s)" }
+          ]
+        }
+      ]
+    }
+  ]
+}

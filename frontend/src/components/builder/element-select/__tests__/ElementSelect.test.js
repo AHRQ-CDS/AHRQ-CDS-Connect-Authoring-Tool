@@ -300,6 +300,7 @@ describe('<ElementSelect />', () => {
       expect(handleAddElement).toBeCalledWith(element);
     });
 
+    jest.setTimeout(10000);
     it('selects a code option and calls handleAddElement with the correct element', async () => {
       const code = '123-4';
 

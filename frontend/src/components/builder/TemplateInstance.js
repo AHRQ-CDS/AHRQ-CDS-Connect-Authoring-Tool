@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, IconButton } from '@material-ui/core';
 import {
+  Build as WrenchIcon,
   ChatBubble as ChatBubbleIcon,
   Check as CheckIcon,
   Close as CloseIcon,
@@ -10,7 +11,6 @@ import {
   List as ListIcon,
   LocalHospital as LocalHospitalIcon,
   Lock as LockIcon,
-  MenuBook as MenuBookIcon,
   Sms as SmsIcon
 } from '@material-ui/icons';
 import clsx from 'clsx';
@@ -20,11 +20,10 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
-import { getTypeByCqlArgument } from './editors/utils.js';
-
 import {
   CodeSelectModal,
   DeleteConfirmationModal,
+  ModifierModal,
   ValueSetSelectModal,
   VSACAuthenticationModal
 } from 'components/modals';
@@ -73,7 +72,7 @@ export default class TemplateInstance extends Component {
       showComment: false,
       showConfirmDeleteModal: false,
       showElement: true,
-      showModifiers: false,
+      showModifierModal: false,
       showValueSetSelectModal: false,
       showVSACAuthenticationModal: false
     };
@@ -228,21 +227,6 @@ export default class TemplateInstance extends Component {
     this.setState({ relevantModifiers });
   };
 
-  handleModifierSelected = modifierId => {
-    let selectedModifier = _.cloneDeep(this.props.modifierMap[modifierId]);
-    if (selectedModifier?.type && selectedModifier.type === 'ExternalModifier') {
-      if (selectedModifier?.arguments) {
-        selectedModifier.values.value = selectedModifier.arguments.map((argValue, index) => {
-          if (index === 0) return null;
-          return { argSource: 'editor', type: getTypeByCqlArgument(argValue) };
-        });
-      }
-    }
-    const modifiers = (this.props.templateInstance.modifiers || []).concat(selectedModifier);
-    this.setState({ showModifiers: false });
-    this.setAppliedModifiers(modifiers);
-  };
-
   handleRemoveModifier = index => {
     const newModifiers = _.cloneDeep(this.props.templateInstance.modifiers);
     if (index > -1) newModifiers.splice(index, 1);
@@ -250,9 +234,10 @@ export default class TemplateInstance extends Component {
   };
 
   handleUpdateModifier = (index, values) => {
-    const modifiers = this.props.templateInstance.modifiers;
-    _.assign(modifiers[index].values, values);
-    this.setAppliedModifiers(modifiers);
+    const newModifiers = _.cloneDeep(this.props.templateInstance.modifiers);
+    if (values[0]?.where) newModifiers[index] = values[0];
+    else newModifiers[index].values = { ...newModifiers[index].values, ...values };
+    this.setAppliedModifiers(newModifiers);
   };
 
   handleSelectCode = codeData => {
@@ -330,44 +315,30 @@ export default class TemplateInstance extends Component {
   };
 
   renderModifierSelect = () => {
-    if (this.props.templateInstance.cannotHaveModifiers) return null;
-    if (this.props.isLoadingModifiers) return <div>Loading modifiers...</div>;
+    const { disableAddElement, isLoadingModifiers, templateInstance } = this.props;
+    const { relevantModifiers, showModifierModal } = this.state;
+    if (isLoadingModifiers) return <div>Loading modifiers...</div>;
 
-    if (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0) {
-      const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableAddElement;
-
+    if (relevantModifiers.length > 0) {
       return (
         <div className="modifier-select">
-          <div className="modifier__selection">
-            <Button
-              color="primary"
-              disabled={!allModifiersValid(this.props.templateInstance.modifiers)}
-              onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
-              variant="contained"
-            >
-              Add expression
-            </Button>
+          <Button
+            color="primary"
+            disabled={!allModifiersValid(templateInstance.modifiers)}
+            onClick={() => this.setState({ showModifierModal: true })}
+            variant="contained"
+            startIcon={<WrenchIcon />}
+          >
+            Add Modifiers
+          </Button>
 
-            {this.state.showModifiers &&
-              this.state.relevantModifiers
-                .filter(modifier => !baseElementIsInUse || modifier.returnType === this.state.returnType)
-                .map(modifier => (
-                  <Button
-                    className="modifier-select-button"
-                    key={modifier.id}
-                    onClick={() => this.handleModifierSelected(modifier.id)}
-                    variant="contained"
-                  >
-                    {modifier.type === 'ExternalModifier' && <MenuBookIcon fontSize="small" />} {modifier.name}
-                  </Button>
-                ))}
-          </div>
-
-          {this.state.showModifiers && baseElementIsInUse && (
-            <div className="notification">
-              <FontAwesomeIcon icon={faExclamationCircle} />
-              Limited expressions displayed because return type cannot change while in use.
-            </div>
+          {showModifierModal && (
+            <ModifierModal
+              elementInstance={templateInstance}
+              handleUpdateModifiers={this.setAppliedModifiers}
+              handleCloseModal={() => this.setState({ showModifierModal: false })}
+              hasLimitedModifiers={Boolean(this.isBaseElementUsed() || disableAddElement)}
+            />
           )}
         </div>
       );
@@ -565,7 +536,6 @@ export default class TemplateInstance extends Component {
             baseElementIsUsed={baseElementIsUsed}
             elementInstance={templateInstance}
             handleRemoveModifier={this.handleRemoveModifier}
-            handleSelectValueSet={this.handleSelectValueSet}
             handleUpdateModifier={this.handleUpdateModifier}
           />
         )}
@@ -583,7 +553,7 @@ export default class TemplateInstance extends Component {
 
     return (
       <div className="card-element__footer">
-        {this.renderModifierSelect()}
+        {!templateInstance.cannotHaveModifiers && this.renderModifierSelect()}
 
         {/* Base element uses will have _vsac included in the id, but should not support additional VS and codes */}
         {templateInstance.id && templateInstance.id.includes('_vsac') && templateInstance.type !== 'baseElement' && (
@@ -794,7 +764,6 @@ TemplateInstance.propTypes = {
   getPath: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   otherInstances: PropTypes.array.isRequired,
   parameters: PropTypes.array.isRequired,

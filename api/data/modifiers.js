@@ -28,6 +28,7 @@ const elementLists = [
   'list_of_times',
   'list_of_others'
 ];
+
 const everyElement = elementLists.concat([
   'boolean',
   'system_quantity',

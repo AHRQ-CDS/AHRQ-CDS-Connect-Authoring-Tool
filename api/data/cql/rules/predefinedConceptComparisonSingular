@@ -1,0 +1,15 @@
+<%
+  if (typeSpecifier.elementType === 'FHIR.code') {
+    if (codeValue.length === 1) { -%>
+<%-value_name%>.<%-resourceProperty%> = '<%-codeValue[0]%>'<%
+    } else { -%>
+<%-value_name%>.<%-resourceProperty%> in {<%- codeValue.map(c => `'${c}'`).join(', ') %>}<%
+    }
+  } else {
+    if (codeNames.length === 1) { -%>
+<%-value_name%>.<%-resourceProperty%> ~ "<%-codeNames[0]%>"<%
+    } else { -%>
+exists (({<%- codeNames.map(c => `"${c}"`).join(', ') %>}) CODE where <%-value_name%>.<%-resourceProperty%> ~ CODE)<%
+    }
+  }
+%>

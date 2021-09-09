@@ -22,7 +22,10 @@ export function getReturnType(startingReturnType, modifiers = []) {
 
   for (let index = modifiers.length - 1; index >= 0; index--) {
     const modifier = modifiers[index];
-    if (validateModifier(modifier) === null) {
+    // Check to see if the modifier is a user-built one.
+    if (modifier.where) {
+      returnType = modifier.returnType;
+    } else if (validateModifier(modifier) === null) {
       returnType = modifier.returnType;
       break;
     }

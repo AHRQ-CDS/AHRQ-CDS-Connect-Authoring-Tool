@@ -4,7 +4,7 @@ const fieldsProps = {
   id: PropTypes.string,
   name: PropTypes.string,
   type: PropTypes.string,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
+  value: PropTypes.oneOfType([PropTypes.array, PropTypes.string, PropTypes.number, PropTypes.object])
 };
 
 const parametersProps = {
@@ -13,7 +13,7 @@ const parametersProps = {
   type: PropTypes.string,
   uniqueId: PropTypes.string,
   usedBy: PropTypes.array,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
+  value: PropTypes.oneOfType([PropTypes.array, PropTypes.string, PropTypes.number, PropTypes.object])
 };
 
 const expTreeProps = {

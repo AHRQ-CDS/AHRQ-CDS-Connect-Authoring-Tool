@@ -48,7 +48,7 @@ const RecommendationCard = ({ depth, label, linkId, recommendation, text }) => {
         </div>
 
         {recommendation && (
-          <IconButton onClick={handleLinkToElement}>
+          <IconButton aria-label="link" onClick={handleLinkToElement}>
             <LinkIcon />
           </IconButton>
         )}

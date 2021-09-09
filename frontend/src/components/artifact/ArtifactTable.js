@@ -5,14 +5,17 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Table
 import ArtifactTableRow from './ArtifactTableRow';
 import { sortByName, sortByVersion, sortByDateEdited, sortByDateCreated } from 'utils/sort';
 import artifactProps from 'prop-types/artifact';
+import { useTextStyles } from 'styles/hooks';
 
 const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleDuplicateArtifact, handleUpdateArtifact }) => {
-  const [selectedColumnIndex, setSelectedColumnIndex] = useState(2);
+  const [selectedColumnIndex, setSelectedColumnIndex] = useState(3);
   const [sortAsc, setSortAsc] = useState(true);
+  const textStyles = useTextStyles();
 
   const columns = [
     { columnName: 'Artifact Name', columnSortHandler: sortByName },
     { columnName: 'Version', columnSortHandler: sortByVersion },
+    { columnName: 'FHIR Version', columnSortHandler: sortByVersion },
     { columnName: 'Last Changed', columnSortHandler: sortByDateEdited },
     { columnName: 'Date Created', columnSortHandler: sortByDateCreated }
   ];
@@ -36,10 +39,10 @@ const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleDuplicateArtifac
               <TableCell key={index}>
                 <TableSortLabel
                   id={index}
+                  className={textStyles.noWrap}
                   direction={selectedColumnIndex !== index || sortAsc ? 'asc' : 'desc'}
                   active={selectedColumnIndex === index}
                   onClick={() => handleRequestSort(index)}
-                  style={{ whiteSpace: 'nowrap' }}
                 >
                   {column.columnName}
                 </TableSortLabel>

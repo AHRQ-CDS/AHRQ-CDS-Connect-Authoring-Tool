@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, IconButton, Tooltip } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import { Help as HelpIcon } from '@material-ui/icons';
 
+import { Tooltip } from 'components/elements';
 import useStyles from './styles';
 
 const HelpLink = ({ linkPath, showText, tooltipTitle = 'View Documentation' }) => {
@@ -23,8 +24,9 @@ const HelpLink = ({ linkPath, showText, tooltipTitle = 'View Documentation' }) =
           <HelpIcon /> HELP
         </Button>
       ) : (
-        <Tooltip title={tooltipTitle} arrow>
+        <Tooltip title={tooltipTitle}>
           <IconButton
+            aria-label="help"
             className={styles.helpLink}
             href={`${process.env.PUBLIC_URL}/${linkPath}`}
             rel="noopener noreferrer"

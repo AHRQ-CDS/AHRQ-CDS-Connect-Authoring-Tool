@@ -31,7 +31,7 @@ const SummaryHeader = ({ handleOpenArtifactModal }) => {
           ))}
         </div>
 
-        <IconButton onClick={handleOpenArtifactModal}>
+        <IconButton aria-label="edit" onClick={handleOpenArtifactModal}>
           <EditIcon fontSize="small" />
         </IconButton>
       </CardContent>

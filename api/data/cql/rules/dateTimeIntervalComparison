@@ -1,0 +1,1 @@
+<%-value_name%>.<%-resourceProperty%> <%-userSpecifiedIndex == 'Starts' ? 'starts' : 'ends'%> <%-when.toLowerCase()%> <%-userSpecifiedDateTime.str%>

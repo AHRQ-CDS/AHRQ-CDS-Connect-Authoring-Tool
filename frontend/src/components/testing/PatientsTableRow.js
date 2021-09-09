@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useQueryClient } from 'react-query';
-import { Button, Checkbox, TableRow, TableCell, Tooltip } from '@material-ui/core';
+import { Button, Checkbox, TableRow, TableCell } from '@material-ui/core';
 import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@material-ui/icons';
 
 import PatientCard from './PatientCard';
 import PatientDetailsModal from './modals/PatientDetailsModal';
 import { DeleteConfirmationModal } from 'components/modals';
+import { Tooltip } from 'components/elements';
 import { deletePatient } from 'queries/testing';
 import { renderDate } from 'utils/dates';
 import { getPatientBirthDate, getPatientGender, getPatientFullName, getPatientVersion } from 'utils/patients';
@@ -25,24 +26,19 @@ const PatientsTableRow = ({ isDisabled, isSelected, patient, togglePatient }) =>
   return (
     <TableRow>
       <TableCell>
-        {isDisabled ? (
-          <Tooltip
-            arrow
-            title="To select this patient, first deselect all patients of other FHIR versions."
-            placement="top"
-          >
-            <span>
-              <Checkbox color="primary" inputProps={{ 'aria-label': patientName }} disabled />
-            </span>
-          </Tooltip>
-        ) : (
+        <Tooltip
+          condition={isDisabled}
+          placement="top"
+          title="To select this patient, first deselect all patients of other FHIR versions."
+        >
           <Checkbox
-            color="primary"
-            inputProps={{ 'aria-label': patientName }}
             checked={isSelected}
+            color="primary"
+            disabled={isDisabled}
+            inputProps={{ 'aria-label': patientName }}
             onChange={togglePatient}
           />
-        )}
+        </Tooltip>
       </TableCell>
 
       <TableCell>{patientName}</TableCell>
@@ -61,24 +57,17 @@ const PatientsTableRow = ({ isDisabled, isSelected, patient, togglePatient }) =>
           View
         </Button>
 
-        {isSelected ? (
-          <Tooltip arrow title="To delete this patient, first deselect it." placement="top">
-            <span>
-              <Button color="secondary" disabled startIcon={<DeleteIcon />} variant="contained">
-                Delete
-              </Button>
-            </span>
-          </Tooltip>
-        ) : (
+        <Tooltip condition={isSelected} placement="top" title="To delete this patient, first deselect it.">
           <Button
             color="secondary"
+            disabled={isSelected}
             onClick={() => setConfirmDeleteModal(true)}
             startIcon={<DeleteIcon />}
             variant="contained"
           >
             Delete
           </Button>
-        )}
+        </Tooltip>
 
         {showPatientDetailsModal && (
           <PatientDetailsModal handleCloseModal={() => setShowPatientDetailsModal(false)} patient={patient} />

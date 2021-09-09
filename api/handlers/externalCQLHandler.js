@@ -855,13 +855,32 @@ function singlePost(req, res) {
   }
 }
 
-const getArtifactFHIRVersion = artifact => {
+const artifactHasCustomModifiers = artifact => {
   const parseElementTree = instance => {
-    return (
-      instance.childInstances &&
+    if (!instance.childInstances) return instance.modifiers && instance.modifiers.some(({ where }) => Boolean(where));
+
+    return Boolean(
       instance.childInstances.some(child =>
-        child.conjunction ? parseElementTree(child) : child.name === 'Service Request'
+        child.conjunction ? parseElementTree(child) : child.modifiers.some(({ where }) => Boolean(where))
       )
+    );
+  };
+
+  return (
+    parseElementTree(artifact.expTreeInclude) ||
+    parseElementTree(artifact.expTreeExclude) ||
+    artifact.subpopulations.some(subpopulation => parseElementTree(subpopulation)) ||
+    artifact.baseElements.some(baseElement => parseElementTree(baseElement))
+  );
+};
+
+const artifactHasServiceRequest = artifact => {
+  const parseElementTree = instance => {
+    return Boolean(
+      instance.childInstances &&
+        instance.childInstances.some(child =>
+          child.conjunction ? parseElementTree(child) : child.name === 'Service Request'
+        )
     );
   };
 
@@ -885,13 +904,7 @@ const getArtifactFHIRVersion = artifact => {
     else if (conjunctions.includes(instance.name)) serviceRequestFound |= this.parseElementTree(instance);
   });
 
-  if (serviceRequestFound) {
-    let artifactCopy = _.cloneDeep(artifact);
-    artifactCopy.fhirVersion = '4.0.0';
-    return '4.0.0';
-  } else {
-    return '';
-  }
+  return serviceRequestFound;
 };
 
 // Delete a single external CQL library
@@ -906,22 +919,28 @@ function singleDelete(req, res) {
         CQLLibrary.find({ user: req.user.uid, linkedArtifactId }, (error, libraries) => {
           if (error) res.status(500).send(error);
           else {
-            let currentFHIRVersion = getCurrentFHIRVersion(libraries);
+            let currentFHIRVersion;
             Artifact.findById(linkedArtifactId, (error, response) => {
               if (error) res.status(500).send(error);
-              else if (response && getArtifactFHIRVersion(response) === '4.0.0') {
-                currentFHIRVersion = '4.0.0';
-              }
-
-              Artifact.update(
-                { user: req.user.uid, _id: linkedArtifactId },
-                { fhirVersion: currentFHIRVersion },
-                (error, response) => {
-                  if (error) res.status(500).send(error);
-                  else if (response.n === 0) res.sendStatus(404);
-                  else res.status(200);
+              else if (response) {
+                if (artifactHasServiceRequest(response)) {
+                  currentFHIRVersion = '4.0.0';
+                } else if (artifactHasCustomModifiers(response)) {
+                  currentFHIRVersion = response.fhirVersion;
+                } else {
+                  currentFHIRVersion = getCurrentFHIRVersion(libraries);
                 }
-              );
+
+                Artifact.update(
+                  { user: req.user.uid, _id: linkedArtifactId },
+                  { fhirVersion: currentFHIRVersion },
+                  (error, response) => {
+                    if (error) res.status(500).send(error);
+                    else if (response.n === 0) res.sendStatus(404);
+                    else res.status(200);
+                  }
+                );
+              }
             });
           }
         });

@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, TableCell, Tooltip } from '@material-ui/core';
+import { IconButton, TableCell } from '@material-ui/core';
 import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@material-ui/icons';
 
 import ExternalCqlDetailsModal from './ExternalCqlDetailsModal';
 import { DeleteConfirmationModal } from 'components/modals';
+import { Tooltip } from 'components/elements';
 import { renderDate } from 'utils/dates';
-import { useButtonStyles } from 'styles/hooks';
+import { useButtonStyles, useTextStyles } from 'styles/hooks';
 
 const ExternalCqlTableRow = ({ disableDeleteMessage, library, handleDeleteLibrary }) => {
   const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
   const [showViewDetailsModal, setShowViewDetailsModal] = useState(false);
   const buttonStyles = useButtonStyles();
+  const textStyles = useTextStyles();
 
   const getFhirVersion = version => {
     if (version === '1.0.2') return '1.0.2 (DSTU2)';
@@ -27,9 +29,10 @@ const ExternalCqlTableRow = ({ disableDeleteMessage, library, handleDeleteLibrar
       <TableCell>{getFhirVersion(library.fhirVersion)}</TableCell>
       <TableCell>{renderDate(library.updatedAt)}</TableCell>
 
-      <TableCell align="right" style={{ whiteSpace: 'nowrap' }}>
-        <Tooltip title="View Details" arrow>
+      <TableCell align="right" className={textStyles.noWrap}>
+        <Tooltip title="View Details">
           <IconButton
+            aria-label="view details"
             className={buttonStyles.iconButton}
             color="primary"
             onClick={() => setShowViewDetailsModal(true)}
@@ -39,19 +42,17 @@ const ExternalCqlTableRow = ({ disableDeleteMessage, library, handleDeleteLibrar
           </IconButton>
         </Tooltip>
 
-        <Tooltip title={disableDeleteMessage ? disableDeleteMessage : 'Delete'} arrow>
-          <span>
-            <IconButton
-              className={buttonStyles.iconButton}
-              color="secondary"
-              disabled={Boolean(disableDeleteMessage)}
-              onClick={() => setShowDeleteConfirmationModal(true)}
-              variant="contained"
-              aria-label="Delete"
-            >
-              <DeleteIcon />
-            </IconButton>
-          </span>
+        <Tooltip title={disableDeleteMessage ? disableDeleteMessage : 'Delete'}>
+          <IconButton
+            aria-label="delete"
+            className={buttonStyles.iconButton}
+            color="secondary"
+            disabled={Boolean(disableDeleteMessage)}
+            onClick={() => setShowDeleteConfirmationModal(true)}
+            variant="contained"
+          >
+            <DeleteIcon />
+          </IconButton>
         </Tooltip>
       </TableCell>
 

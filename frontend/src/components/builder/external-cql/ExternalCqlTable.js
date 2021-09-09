@@ -8,12 +8,14 @@ import ExternalCqlTableRow from './ExternalCqlTableRow';
 import { loadArtifact, saveArtifact } from 'actions/artifacts';
 import { deleteExternalCql } from 'queries/external-cql';
 import { sortByName, sortByVersion, sortByDateEdited } from 'utils/sort';
+import { useTextStyles } from 'styles/hooks';
 
 const ExternalCqlTable = ({ externalCqlList }) => {
   const [selectedColumnIndex, setSelectedColumnIndex] = useState(3);
   const [sortAsc, setSortAsc] = useState(true);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
+  const textStyles = useTextStyles();
   const artifact = useSelector(state => state.artifacts.artifact);
   const librariesInUse = useSelector(state => state.artifacts.librariesInUse);
   const deleteMutation = useMutation(deleteExternalCql, {
@@ -74,10 +76,10 @@ const ExternalCqlTable = ({ externalCqlList }) => {
               <TableCell key={index}>
                 <TableSortLabel
                   id={index}
+                  className={textStyles.noWrap}
                   direction={selectedColumnIndex !== index || sortAsc ? 'asc' : 'desc'}
                   active={selectedColumnIndex === index}
                   onClick={() => handleRequestSort(index)}
-                  style={{ whiteSpace: 'nowrap' }}
                 >
                   {column.columnName}
                 </TableSortLabel>

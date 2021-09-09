@@ -4,3 +4,6 @@ export { default as HelpLink } from './HelpLink';
 export { default as KeyValueList } from './KeyValueList';
 export { default as Link } from './Link';
 export { default as Modal } from './Modal';
+export { default as MultipleSelect } from './MultipleSelect';
+export { default as ToggleSwitch } from './ToggleSwitch';
+export { default as Tooltip } from './Tooltip';

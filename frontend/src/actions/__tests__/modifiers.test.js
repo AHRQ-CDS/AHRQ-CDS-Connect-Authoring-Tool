@@ -5,7 +5,7 @@ import nock from 'nock';
 import * as actions from '../modifiers';
 import * as types from '../types';
 
-import mockModifiers from '../../mocks/mockModifiers';
+import mockModifiers from '../../mocks/modifiers/mockModifiers';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

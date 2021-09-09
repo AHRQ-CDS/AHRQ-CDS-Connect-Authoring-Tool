@@ -1,0 +1,1 @@
+AllTrue(<%-value_name%>.<%-resourceProperty%> CODE return CODE in "<%-valueset.name%>")

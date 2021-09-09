@@ -20,7 +20,7 @@ describe('<NumberEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor });
 
-      fireEvent.change(screen.getByRole('textbox'), { target: { value: '0' } });
+      fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '0' } });
 
       expect(handleUpdateEditor).toBeCalledWith('0');
     });
@@ -29,7 +29,7 @@ describe('<NumberEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, value: '1' });
 
-      fireEvent.change(screen.getByRole('textbox'), { target: { value: '' } });
+      fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '' } });
 
       expect(handleUpdateEditor).toBeCalledWith(null);
     });
@@ -46,16 +46,35 @@ describe('<NumberEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isDecimal: true });
 
-      fireEvent.change(screen.getByRole('textbox'), { target: { value: '0.1' } });
+      fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '0.1' } });
 
       expect(handleUpdateEditor).toBeCalledWith({ decimal: '0.1', str: '0.1' });
+    });
+
+    it('calls handleUpdateEditor with valid decimal having trailing zero', () => {
+      const handleUpdateEditor = jest.fn();
+      renderComponent({ handleUpdateEditor, isDecimal: true });
+
+      fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '0.0' } });
+
+      expect(handleUpdateEditor).toBeCalledWith({ decimal: '0.0', str: '0.0' });
+    });
+
+    it('calls handleUpdateEditor with valid decimal having multiple trailing zeros', () => {
+      // NOTE: This test exists because there *was* a bug w/ multiple trailing zeros
+      const handleUpdateEditor = jest.fn();
+      renderComponent({ handleUpdateEditor, isDecimal: true });
+
+      fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '0.000' } });
+
+      expect(handleUpdateEditor).toBeCalledWith({ decimal: '0.000', str: '0.000' });
     });
 
     it('calls handleUpdateEditor with valid integer', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isDecimal: true });
 
-      fireEvent.change(screen.getByRole('textbox'), { target: { value: '0' } });
+      fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '0' } });
 
       expect(handleUpdateEditor).toBeCalledWith({ decimal: '0', str: '0.0' });
     });
@@ -64,7 +83,7 @@ describe('<NumberEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isDecimal: true, value: { decimal: '1.0', str: '1.0' } });
 
-      fireEvent.change(screen.getByRole('textbox'), { target: { value: '' } });
+      fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '' } });
 
       expect(handleUpdateEditor).toBeCalledWith(null);
     });
@@ -81,7 +100,7 @@ describe('<NumberEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isInterval: true });
 
-      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '0' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[0], { target: { value: '0' } });
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstInteger: '0',
@@ -94,7 +113,7 @@ describe('<NumberEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isInterval: true });
 
-      fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: '1' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[1], { target: { value: '1' } });
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstInteger: null,
@@ -111,7 +130,7 @@ describe('<NumberEditor />', () => {
         value: { firstInteger: '0', secondInteger: null, str: 'Interval[0,null]' }
       });
 
-      fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: '1' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[1], { target: { value: '1' } });
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstInteger: '0',
@@ -128,7 +147,7 @@ describe('<NumberEditor />', () => {
         value: { firstInteger: '0', secondInteger: null, str: 'Interval[0,null]' }
       });
 
-      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[0], { target: { value: '' } });
 
       expect(handleUpdateEditor).toBeCalledWith(null);
     });
@@ -145,7 +164,7 @@ describe('<NumberEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isInterval: true, isDecimal: true });
 
-      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '0.0' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[0], { target: { value: '0.0' } });
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstDecimal: '0.0',
@@ -158,7 +177,7 @@ describe('<NumberEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isInterval: true, isDecimal: true });
 
-      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '0' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[0], { target: { value: '0' } });
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstDecimal: '0',
@@ -171,7 +190,7 @@ describe('<NumberEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isInterval: true, isDecimal: true });
 
-      fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: '1.0' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[1], { target: { value: '1.0' } });
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstDecimal: null,
@@ -184,7 +203,7 @@ describe('<NumberEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isInterval: true, isDecimal: true });
 
-      fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: '1' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[1], { target: { value: '1' } });
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstDecimal: null,
@@ -202,7 +221,7 @@ describe('<NumberEditor />', () => {
         value: { firstDecimal: '0.0', secondDecimal: null, str: 'Interval[0.0,null]' }
       });
 
-      fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: '1.0' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[1], { target: { value: '1.0' } });
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstDecimal: '0.0',
@@ -220,7 +239,7 @@ describe('<NumberEditor />', () => {
         value: { firstDecimal: '0', secondDecimal: null, str: 'Interval[0.0,null]' }
       });
 
-      fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: '1' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[1], { target: { value: '1' } });
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstDecimal: '0',
@@ -238,7 +257,7 @@ describe('<NumberEditor />', () => {
         value: { firstDecimal: '0.0', secondDecimal: null, str: 'Interval[0.0,null]' }
       });
 
-      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '' } });
+      fireEvent.change(screen.getAllByRole('spinbutton')[0], { target: { value: '' } });
 
       expect(handleUpdateEditor).toBeCalledWith(null);
     });

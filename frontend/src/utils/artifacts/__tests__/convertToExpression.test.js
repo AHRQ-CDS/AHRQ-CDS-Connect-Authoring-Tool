@@ -1,5 +1,5 @@
 import convertToExpression from '../convertToExpression';
-import mockModifierList from '../../../mocks/mockModifiers';
+import mockModifierList from 'mocks/modifiers/mockModifiers';
 
 function getModifier(name, values) {
   let modifier = mockModifierList.find(m => m.id === name);

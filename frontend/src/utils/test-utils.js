@@ -2,16 +2,20 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import configureStore from '../store/configureStore';
+import lightTheme from 'styles/theme';
 
 const ProviderWrapper = ({ children }) => (
   <MemoryRouter>
     <Provider store={configureStore()}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <QueryClientProvider client={new QueryClient()}>{children}</QueryClientProvider>
+        <QueryClientProvider client={new QueryClient()}>
+          <ThemeProvider theme={lightTheme}>{children}</ThemeProvider>
+        </QueryClientProvider>
       </MuiPickersUtilsProvider>
     </Provider>
   </MemoryRouter>

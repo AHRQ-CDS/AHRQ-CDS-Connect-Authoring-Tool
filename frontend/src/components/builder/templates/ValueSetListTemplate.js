@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { IconButton, Tooltip } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { Close as CloseIcon, Visibility as VisibilityIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
 import { ValueSetSelectModal } from 'components/modals';
+import { Tooltip } from 'components/elements';
 import { useFieldStyles } from 'styles/hooks';
 
 const ValueSetListTemplate = ({ handleDeleteValueSet, valueSets }) => {
@@ -32,24 +33,19 @@ const ValueSetListTemplate = ({ handleDeleteValueSet, valueSets }) => {
               <div className={fieldStyles.fieldDisplay}>{` ${valueSet.name} (${valueSet.oid})`}</div>
 
               <div className={clsx(fieldStyles.fieldButtons, fieldStyles.fieldButtonsAlignCenter)}>
-                {!Boolean(vsacApiKey) && (
-                  <Tooltip arrow title="Authenticate VSAC to view details" placement="left">
-                    <span>
-                      <IconButton aria-label="View Value Set" disabled color="primary">
-                        <VisibilityIcon fontSize="small" />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                )}
-
-                {Boolean(vsacApiKey) && (
-                  <IconButton aria-label="View Value Set" color="primary" onClick={() => handleViewValueSet(valueSet)}>
+                <Tooltip condition={!Boolean(vsacApiKey)} placement="left" title="Authenticate VSAC to view details">
+                  <IconButton
+                    aria-label="View Value Set"
+                    color="primary"
+                    disabled={!Boolean(vsacApiKey)}
+                    onClick={() => handleViewValueSet(valueSet)}
+                  >
                     <VisibilityIcon fontSize="small" />
                   </IconButton>
-                )}
+                </Tooltip>
 
                 <IconButton
-                  aria-label={`delete value set ${valueSet.name}`}
+                  aria-label={`Delete Value Set ${valueSet.name}`}
                   color="primary"
                   onClick={() => handleDeleteValueSet(valueSet)}
                 >

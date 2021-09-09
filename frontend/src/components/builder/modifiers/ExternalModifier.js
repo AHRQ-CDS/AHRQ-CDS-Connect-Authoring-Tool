@@ -12,11 +12,10 @@ const ExternalModifier = ({ argumentTypes, handleUpdateModifier, modifierArgumen
   const spacingStyles = useSpacingStyles();
   const styles = useStyles();
 
-  const assignValue = (newValue, index) => {
-    const valuesClone = _.cloneDeep(values);
-    valuesClone[index] = newValue;
-
-    handleUpdateModifier({ value: valuesClone });
+  const assignValue = (newValue, argIndex) => {
+    let updatedValues = _.cloneDeep(values);
+    updatedValues[argIndex] = newValue;
+    handleUpdateModifier({ value: updatedValues });
   };
 
   useEffect(() => {
@@ -34,17 +33,17 @@ const ExternalModifier = ({ argumentTypes, handleUpdateModifier, modifierArgumen
 
       <div className={clsx(spacingStyles.indent, spacingStyles.fullWidth)} data-testid="editors">
         {modifierArguments.length > 1 &&
-          modifierArguments.map((modifierArg, index) => {
+          modifierArguments.map((modifierArg, argIndex) => {
             // We don't want the modifier input arguments to include the first function argument
-            if (index === 0) return null;
+            if (argIndex === 0) return null;
 
             return (
               <ArgumentsTemplate
-                key={index}
+                key={argIndex}
                 argumentLabel={modifierArg.name}
-                argumentType={argumentTypes[index].calculated}
-                argumentValue={values[index]}
-                handleUpdateArgument={newValue => assignValue(newValue, index)}
+                argumentType={argumentTypes[argIndex].calculated}
+                argumentValue={values[argIndex]}
+                handleUpdateArgument={newValue => assignValue(newValue, argIndex)}
                 isNested
               />
             );

@@ -162,6 +162,6 @@ export default class ExpressionPhrase extends Component {
 
 ExpressionPhrase.propTypes = {
   baseElements: PropTypes.array.isRequired,
-  class: PropTypes.string.isRequired,
+  class: PropTypes.string,
   instance: PropTypes.object.isRequired
 };

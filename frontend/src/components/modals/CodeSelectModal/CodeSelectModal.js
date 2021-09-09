@@ -13,11 +13,11 @@ import { Modal } from 'components/elements';
 import validateCode from 'queries/validateCode';
 import useStyles from '../styles';
 
-const CodeSelectModal = ({ handleCloseModal, handleSelectCode }) => {
+const CodeSelectModal = ({ handleCloseModal, handleSelectCode, initialValue }) => {
   const { mutateAsync, isLoading, isSuccess, isIdle, data: codeData } = useMutation(validateCode);
-  const [code, setCode] = useState('');
-  const [codeSystem, setCodeSystem] = useState(null);
-  const [otherCodeSystem, setOtherCodeSystem] = useState('');
+  const [code, setCode] = useState(initialValue?.code || '');
+  const [codeSystem, setCodeSystem] = useState(initialValue?.codeSystem?.name || null);
+  const [otherCodeSystem, setOtherCodeSystem] = useState(initialValue?.otherCodeSystem || '');
   const codeRef = useLatest(code);
   const codeSystemRef = useLatest(codeSystem);
   const otherCodeSystemRef = useLatest(otherCodeSystem);
@@ -56,6 +56,7 @@ const CodeSelectModal = ({ handleCloseModal, handleSelectCode }) => {
       handleCloseModal={handleCloseModal}
       handleSaveModal={handleSaveCodeSelection}
       hasCancelButton
+      hasEnterKeySubmit={false}
       Header={
         <CodeSelectModalHeader
           code={code}

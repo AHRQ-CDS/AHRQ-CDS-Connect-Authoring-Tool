@@ -28,15 +28,13 @@ const ExternalCQLTemplate = ({ externalCqlArguments, handleUpdateExternalCqlArgu
       )}
 
       {externalCqlArguments?.map((cqlArgument, index) => (
-        <>
-          <ArgumentsTemplate
-            key={index}
-            argumentLabel={cqlArgument.name}
-            argumentType={getTypeByCqlArgument(cqlArgument)}
-            argumentValue={externalCqlArguments[index].value}
-            handleUpdateArgument={newValue => handleSelectExternalCqlArgument(newValue, index)}
-          />
-        </>
+        <ArgumentsTemplate
+          key={index}
+          argumentLabel={cqlArgument.name}
+          argumentType={getTypeByCqlArgument(cqlArgument)}
+          argumentValue={externalCqlArguments[index].value}
+          handleUpdateArgument={newValue => handleSelectExternalCqlArgument(newValue, index)}
+        />
       ))}
     </div>
   );
