@@ -58,7 +58,8 @@ resources.forEach(resource => {
               propertyToPush['predefinedSystem'] = property.predefinedConceptSystem['r2'];
             }
             propertyToPush['predefinedCodes'] = property.predefinedConceptCodes['r2'];
-            propertyToPush['allowsCustomCodes'] = property.allowsCustomCodes ? true : false;
+            propertyToPush['allowsCustomCodes'] =
+              property.allowsCustomCodes && property.allowsCustomCodes['r2'] ? true : false;
             property.predefinedConceptCodes['r2'].forEach(predefCode => {
               console.log('\t\t-', predefCode);
             });

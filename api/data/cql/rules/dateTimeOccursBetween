@@ -1,1 +1,10 @@
-<%-value_name%>.<%-resourceProperty%> in Interval[<%-beginDateTime.str%>, <%-endDateTime.str%>]
+<%
+  if (
+    (typeSpecifier.elementType === 'FHIR.dateTime' || typeSpecifier.elementType === 'FHIR.instant')
+    && beginDateTime.time == null
+    && endDateTime.time == null) { -%>
+ToDate((<%-value_name%>.<%-resourceProperty%>).value) in Interval[<%-beginDateTime.str%>, <%-endDateTime.str%>]<%
+  } else { -%>
+<%-value_name%>.<%-resourceProperty%> in Interval[<%-beginDateTime.str%>, <%-endDateTime.str%>]<%
+  }
+%>

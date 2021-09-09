@@ -231,6 +231,16 @@ const supportedResourceProperties = [
           r3: true,
           r4: true
         },
+        predefinedConceptSystem: {
+          r3: {
+            name: 'V3 Act Code',
+            url: 'http://hl7.org/fhir/v3/ActCode'
+          },
+          r4: {
+            name: 'V3 Act Code',
+            url: 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+          }
+        },
         predefinedConceptCodes: {
           r2: ['inpatient', 'outpatient', 'ambulatory', 'emergency', 'home', 'field', 'daytime', 'virtual', 'other'],
           r3: ['AMB', 'EMER', 'FLD', 'HH', 'IMP', 'ACUTE', 'NONAC', 'OBSENC', 'PRENC', 'SS', 'VR'],
@@ -335,6 +345,11 @@ const supportedResourceProperties = [
           r2: true,
           r3: true,
           r4: false
+        },
+        predefinedConceptCodes: {
+          r2: [],
+          r3: ['y', 'n', 'unk', 'na'],
+          r4: []
         }
       }
     ]

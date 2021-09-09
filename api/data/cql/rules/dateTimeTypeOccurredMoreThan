@@ -1,1 +1,0 @@
-<%-value_name%>.<%-resourceProperty%> more than <%-durationValue.decimal%> <%-timeUnit%> before Now()

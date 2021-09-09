@@ -1,6 +1,6 @@
 import * as changeCase from 'change-case';
 
-export const changeToCase = (string, desiredCase) => {
+export const changeToCase = (string, desiredCase, options) => {
   const acceptedCases = [
     'camelCase', // test string => testString
     'capitalCase', // test string => Test String
@@ -15,7 +15,7 @@ export const changeToCase = (string, desiredCase) => {
     'snakeCase' // test string => test_string
   ];
 
-  if (acceptedCases.indexOf(desiredCase) > -1) return changeCase[desiredCase](string) || string;
+  if (acceptedCases.indexOf(desiredCase) > -1) return changeCase[desiredCase](string, options) || string;
 
   return null;
 };

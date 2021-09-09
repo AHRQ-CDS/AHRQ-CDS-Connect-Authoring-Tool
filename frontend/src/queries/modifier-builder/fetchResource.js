@@ -7,8 +7,7 @@ export const resourceMap = {
   list_of_devices: { name: 'Device', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
   list_of_encounters: { name: 'Encounter', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
   list_of_immunizations: { name: 'Immunization', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
-  list_of_medication_orders: { name: 'MedicationOrder', supportedVersions: ['1.0.2'] },
-  list_of_medication_requests: { name: 'MedicationRequest', supportedVersions: ['3.0.0', '4.0.0'] },
+  list_of_medication_requests: { name: 'MedicationRequest', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
   list_of_medication_statements: { name: 'MedicationStatement', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
   list_of_observations: { name: 'Observation', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
   list_of_procedures: { name: 'Procedure', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
@@ -16,7 +15,10 @@ export const resourceMap = {
 };
 
 const fetchResource = async (fhirVersion, elementInstanceReturnType) => {
-  const resourceName = resourceMap[elementInstanceReturnType].name;
+  let resourceName = resourceMap[elementInstanceReturnType].name;
+  if (resourceName === 'MedicationRequest' && fhirVersion === '1.0.2') {
+    resourceName = 'MedicationOrder';
+  }
   const resourceResponse = await axios.get(
     `${process.env.REACT_APP_API_URL}/query/resources/${resourceName}?fhirVersion=${fhirVersion}`
   );

@@ -1112,7 +1112,10 @@ function checkRules(
         resources = queryResources.r4_resources.resources;
         break;
     }
-    const resource = resources.find(r => r.name === queryResourceMap[inputType]);
+    const inputTypeResource = queryResourceMap[inputType];
+    const resource = resources.find(
+      r => r.name === inputTypeResource || (r.name === 'MedicationOrder' && inputTypeResource === 'MedicationRequest')
+    );
 
     let resourceProperty = rule.resourceProperty;
     let resourcePropertyInfo = resource.properties.find(p => p.name === resourceProperty);

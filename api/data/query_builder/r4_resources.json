@@ -279,6 +279,10 @@
             "type": "NamedTypeSpecifier",
             "elementType": "FHIR.Coding"
           },
+          "predefinedSystem": {
+            "name": "V3 Act Code",
+            "url": "http://terminology.hl7.org/CodeSystem/v3-ActCode"
+          },
           "predefinedCodes": ["AMB", "EMER", "FLD", "HH", "IMP", "ACUTE", "NONAC", "OBSENC", "PRENC", "SS", "VR"],
           "allowsCustomCodes": true
         },

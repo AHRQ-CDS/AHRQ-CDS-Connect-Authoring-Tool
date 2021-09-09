@@ -242,7 +242,7 @@
             "virtual",
             "other"
           ],
-          "allowsCustomCodes": true
+          "allowsCustomCodes": false
         },
         {
           "name": "period",
