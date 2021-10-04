@@ -38,7 +38,7 @@ import { ArtifactModal } from 'components/artifact';
 import { ErrorStatement } from 'components/builder/error-statement';
 import { ExternalCql } from 'components/builder/external-cql';
 import { Parameters } from 'components/builder/parameters';
-import Recommendations from 'components/builder/Recommendations';
+import { Recommendations } from 'components/builder/recommendations';
 import Subpopulations from 'components/builder/Subpopulations';
 
 import { fetchExternalCqlList } from 'queries/external-cql';
@@ -73,7 +73,6 @@ export class Builder extends Component {
       showArtifactModal: false,
       showELMErrorModal: false,
       showMenu: false,
-      uniqueIdCounter: 0,
       downloadMenuAnchorElement: null
     };
   }
@@ -331,10 +330,6 @@ export class Builder extends Component {
   };
 
   // ----------------------------------------------------------------------- //
-
-  incrementUniqueIdCounter = () => {
-    this.setState({ uniqueIdCounter: this.state.uniqueIdCounter + 1 });
-  };
 
   updateRecsSubpop = (newName, uniqueId) => {
     const recs = _.cloneDeep(this.props.artifact.recommendations);
@@ -648,7 +643,7 @@ export class Builder extends Component {
       templates,
       vsacApiKey
     } = this.props;
-    const { showArtifactModal, showELMErrorModal, uniqueIdCounter } = this.state;
+    const { showArtifactModal, showELMErrorModal } = this.state;
 
     let namedParameters = [];
     if (artifact) {
@@ -769,19 +764,12 @@ export class Builder extends Component {
                   <div className="workspace-blurb">
                     Specify the text-based recommendations that should be delivered to the clinician when a patient
                     meets the eligible criteria as defined in the artifact. Examples might include recommendations to
-                    order a medication, perform a test, or provide the patient educational materials.
+                    order a medication, perform a test, or provide the patient educational materials. Only the first
+                    eligible recommendation will be delivered.
                     <HelpLink linkPath="documentation#Recommendations" />
                   </div>
 
-                  <Recommendations
-                    artifact={artifact}
-                    templates={templates}
-                    updateRecommendations={this.updateRecommendations}
-                    updateSubpopulations={this.updateSubpopulations}
-                    setActiveTab={this.props.setActiveTab}
-                    uniqueIdCounter={uniqueIdCounter}
-                    incrementUniqueIdCounter={this.incrementUniqueIdCounter}
-                  />
+                  <Recommendations handleUpdateRecommendations={this.updateRecommendations} />
                 </TabPanel>
 
                 <TabPanel>

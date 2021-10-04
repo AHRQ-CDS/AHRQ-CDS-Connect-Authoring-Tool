@@ -1439,10 +1439,10 @@ const UserGuide = () => {
               </div>
               <div>
                 To associate a recommendation with subpopulations, click the "Add subpopulation" button. This will
-                display a section above the recommendation text where you can select a subpopulation or you can create a
-                new subpopulation using the "New subpopulation" link. After selecting a subpopulation, you can
-                optionally select another subpopulation. The recommendation will only be delivered if the patient meets
-                every subpopulation criteria that has been associated with the recommendation.
+                display a section above the recommendation text where you can select a subpopulation. After selecting a
+                subpopulation, you can optionally select another subpopulation. The recommendation will only be
+                delivered if the patient meets every subpopulation criteria that has been associated with the
+                recommendation.
               </div>
             </div>
 

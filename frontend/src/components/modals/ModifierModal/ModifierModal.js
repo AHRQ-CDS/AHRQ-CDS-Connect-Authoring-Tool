@@ -91,7 +91,7 @@ const ModifierModal = ({
             <span>or</span>
 
             <Tooltip
-              condition={hasModifiers || !typeSupportedByBuilder}
+              enabled={hasModifiers || !typeSupportedByBuilder}
               title={hasModifiers ? 'Cannot add a custom modifier to another modifier' : 'Return type not supported'}
             >
               <Button

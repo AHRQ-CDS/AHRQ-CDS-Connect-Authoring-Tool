@@ -27,7 +27,7 @@ const PatientsTableRow = ({ isDisabled, isSelected, patient, togglePatient }) =>
     <TableRow>
       <TableCell>
         <Tooltip
-          condition={isDisabled}
+          enabled={isDisabled}
           placement="top"
           title="To select this patient, first deselect all patients of other FHIR versions."
         >
@@ -57,7 +57,7 @@ const PatientsTableRow = ({ isDisabled, isSelected, patient, togglePatient }) =>
           View
         </Button>
 
-        <Tooltip condition={isSelected} placement="top" title="To delete this patient, first deselect it.">
+        <Tooltip enabled={isSelected} placement="top" title="To delete this patient, first deselect it.">
           <Button
             color="secondary"
             disabled={isSelected}

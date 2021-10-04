@@ -2,6 +2,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   {
+    alignCenter: {
+      alignItems: 'center'
+    },
     flex: {
       display: 'flex'
     },
@@ -40,6 +43,9 @@ export default makeStyles(
     },
     flexCol4: {
       width: '25%'
+    },
+    spaceBetween: {
+      justifyContent: 'space-between'
     }
   },
   { name: 'Flex' }

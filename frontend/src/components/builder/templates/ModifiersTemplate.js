@@ -61,7 +61,7 @@ const ModifierTemplate = ({
       </div>
 
       <div className={fieldStyles.fieldButtons}>
-        <Tooltip condition={!canBeRemoved} placement="left" title={tooltipText}>
+        <Tooltip enabled={!canBeRemoved} placement="left" title={tooltipText}>
           <IconButton
             aria-label="remove expression"
             disabled={!canBeRemoved}

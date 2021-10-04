@@ -1,6 +1,7 @@
 /* Polyfills for IE 11 */
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
+import './setupImmer';
 
 import React from 'react';
 import { render } from 'react-dom';
@@ -16,7 +17,7 @@ import '@fontsource/open-sans/latin-700-italic.css';
 import '@fontsource/open-sans/latin-800-italic.css';
 import './styles/App.scss';
 
-/* setup redux store */
+// setup redux store
 const store = configureStore();
 window.store = store;
 

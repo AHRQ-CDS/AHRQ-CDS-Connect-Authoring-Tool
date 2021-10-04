@@ -22,6 +22,7 @@ const UcumField = ({ handleChangeUnit, unit }) => {
     <Autocomplete
       getOptionLabel={option => option?.label || option || ''}
       getOptionSelected={(option, value) => option.value === value}
+      freeSolo
       loading={isLoading}
       noOptionsText="Search..."
       onChange={handleChangeUnit}

@@ -33,7 +33,7 @@ const ValueSetListTemplate = ({ handleDeleteValueSet, valueSets }) => {
               <div className={fieldStyles.fieldDisplay}>{` ${valueSet.name} (${valueSet.oid})`}</div>
 
               <div className={clsx(fieldStyles.fieldButtons, fieldStyles.fieldButtonsAlignCenter)}>
-                <Tooltip condition={!Boolean(vsacApiKey)} placement="left" title="Authenticate VSAC to view details">
+                <Tooltip enabled={!Boolean(vsacApiKey)} placement="left" title="Authenticate VSAC to view details">
                   <IconButton
                     aria-label="View Value Set"
                     color="primary"

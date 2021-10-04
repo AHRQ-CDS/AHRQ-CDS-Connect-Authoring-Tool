@@ -45,7 +45,7 @@ const ModifierSelectorRow = ({
             {validationWarning && <Alert severity="error">{validationWarning}</Alert>}
 
             <div className={styles.deleteButton}>
-              <Tooltip condition={!canBeRemoved} placement="left" title={tooltipText}>
+              <Tooltip enabled={!canBeRemoved} placement="left" title={tooltipText}>
                 <IconButton
                   aria-label="delete modifier"
                   color="primary"
