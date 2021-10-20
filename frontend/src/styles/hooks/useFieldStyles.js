@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 export default makeStyles(
   theme => ({
@@ -12,14 +12,6 @@ export default makeStyles(
     field: {
       display: 'flex',
       width: '100%'
-    },
-    fieldButtons: {
-      alignItems: 'flex-start',
-      display: 'flex',
-      whiteSpace: 'nowrap'
-    },
-    fieldButtonsAlignCenter: {
-      alignItems: 'center'
     },
     fieldCard: {
       position: 'relative',
@@ -36,16 +28,6 @@ export default makeStyles(
       flexDirection: 'column',
       alignItems: 'flex-end',
       marginTop: '1em'
-    },
-    fieldDetails: {
-      borderBottom: `3px solid ${theme.palette.common.grayLighter}`,
-      display: 'flex',
-      padding: '10px 0',
-      width: '100%'
-    },
-    fieldDetailsLast: {
-      border: 'none',
-      marginBottom: '20px'
     },
     fieldDisplay: {
       alignItems: 'center',
@@ -67,12 +49,6 @@ export default makeStyles(
       justifyContent: 'space-between',
       width: '100%'
     },
-    fieldInputGroupContainer: {
-      width: '100%'
-    },
-    fieldInputGroupJustifyLeft: {
-      justifyContent: 'flex-start'
-    },
     fieldInputLg: {
       minWidth: '300px',
       maxWidth: '350px'
@@ -92,10 +68,6 @@ export default makeStyles(
     fieldInputXl: {
       minWidth: '400px',
       maxWidth: '450px'
-    },
-    fieldInputXxl: {
-      minWidth: '910px',
-      maxWidth: '960px'
     },
     fieldLabel: {
       fontSize: '0.95em',
@@ -118,34 +90,12 @@ export default makeStyles(
       maxWidth: '7em',
       minWidth: '7em'
     },
-    fieldLabelShort: {
-      marginTop: '0px',
-      paddingBottom: '3px'
-    },
     fieldLabelTall: {
       marginTop: '20px'
-    },
-    fieldLabelTaller: {
-      marginTop: '30px'
-    },
-    fieldLabelWithInput: {
-      marginTop: '15px'
-    },
-    footer: {
-      color: theme.palette.common.grayLight,
-      fontSize: '0.7em',
-      textAlign: 'right',
-      whiteSpace: 'nowrap'
     },
     helperText: {
       fontSize: '0.7em',
       color: theme.palette.common.gray
-    },
-    nestedField: {
-      display: 'block'
-    },
-    nestedFieldLabel: {
-      textAlign: 'left'
     }
   }),
   { name: 'Fields', index: 1 }

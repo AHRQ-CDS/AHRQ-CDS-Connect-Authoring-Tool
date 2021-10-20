@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 export default makeStyles(
   theme => ({
@@ -27,7 +27,7 @@ export default makeStyles(
     },
     tocWrapper: {
       width: '74%',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         width: '100%'
       }
     },
@@ -37,7 +37,7 @@ export default makeStyles(
       padding: '8px',
       width: '25%',
       right: '10px',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         display: 'none'
       },
       '& .is-active-link::before': {

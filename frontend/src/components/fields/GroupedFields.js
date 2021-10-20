@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from 'react';
 import { FieldArray } from 'formik';
-import { Button, IconButton, Paper } from '@material-ui/core';
-import { Add as AddIcon, Close as CloseIcon } from '@material-ui/icons';
+import { Button, IconButton, Paper } from '@mui/material';
+import { Add as AddIcon, Close as CloseIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
@@ -17,7 +17,7 @@ const FastGroupedField = memo(({ name, index, remove, fields }) => {
   return (
     <Paper className={styles.fieldGroupContainer}>
       <div className={styles.fieldGroupCloseButton}>
-        <IconButton aria-label="close" color="primary" onClick={handleRemove}>
+        <IconButton aria-label="close" color="primary" onClick={handleRemove} size="large">
           <CloseIcon />
         </IconButton>
       </div>

@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardContent, IconButton } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { Close as CloseIcon } from '@material-ui/icons';
+import { Alert, Card, CardContent, IconButton } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import { ModifierForm } from 'components/builder/modifiers';
@@ -51,6 +50,7 @@ const ModifierSelectorRow = ({
                   color="primary"
                   disabled={!canBeRemoved}
                   onClick={handleRemoveModifier}
+                  size="large"
                 >
                   <CloseIcon fontSize="small" />
                 </IconButton>

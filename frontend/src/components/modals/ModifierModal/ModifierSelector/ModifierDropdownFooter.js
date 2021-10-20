@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuBook as MenuBookIcon } from '@material-ui/icons';
+import { MenuBook as MenuBookIcon } from '@mui/icons-material';
 
 const ModifierDropdownFooter = () => (
   <>

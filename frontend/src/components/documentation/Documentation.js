@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Tabs, Tab } from '@material-ui/core';
+import { AppBar, Tabs, Tab } from '@mui/material';
 import clsx from 'clsx';
 
 import DataTypeGuide from './DataTypeGuide';
@@ -38,7 +38,14 @@ const Documentation = () => {
       <div className={spacingStyles.globalPadding}>
         <div className={clsx(styles.tabBar, spacingStyles.fullBleed)}>
           <AppBar position="static">
-            <Tabs value={value} onChange={handleChange} aria-label="documentation tabs" variant="fullWidth">
+            <Tabs
+              indicatorColor="secondary"
+              textColor="inherit"
+              value={value}
+              onChange={handleChange}
+              aria-label="documentation tabs"
+              variant="fullWidth"
+            >
               <Tab className={styles.tab} label="User Guide" {...a11yProps(0)} />
               <Tab className={styles.tab} label="Data Types" {...a11yProps(1)} />
             </Tabs>

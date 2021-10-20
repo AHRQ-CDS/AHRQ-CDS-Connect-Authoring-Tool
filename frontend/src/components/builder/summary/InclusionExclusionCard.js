@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { Card, CardContent, IconButton } from '@material-ui/core';
-import { Link as LinkIcon } from '@material-ui/icons';
+import { Card, CardContent, IconButton } from '@mui/material';
+import { Link as LinkIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import { setActiveTab, setScrollToId } from 'actions/navigation';
@@ -62,7 +62,7 @@ const InclusionExclusionCard = ({
             ))}
           </div>
 
-          <IconButton aria-label="link" onClick={handleLinkToElement}>
+          <IconButton aria-label="link" color="primary" onClick={handleLinkToElement} size="large">
             <LinkIcon />
           </IconButton>
         </CardContent>

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardContent, CardHeader } from '@material-ui/core';
+import { Card, CardContent, CardHeader } from '@mui/material';
 
 import { EditorsTemplate } from 'components/builder/templates';
 import { useTextStyles } from 'styles/hooks';
@@ -22,7 +22,7 @@ const TestingParameter = ({ handleUpdateParameter, parameter }) => {
       />
 
       <CardContent>
-        <EditorsTemplate handleUpdateEditor={handleUpdateParameter} label="Value" isNested type={type} value={value} />
+        <EditorsTemplate handleUpdateEditor={handleUpdateParameter} label="Value" type={type} value={value} />
       </CardContent>
     </Card>
   );

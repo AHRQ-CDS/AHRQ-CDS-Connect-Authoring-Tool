@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import classnames from 'classnames';
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import {
   ChatBubble as ChatBubbleIcon,
   Close as CloseIcon,
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
   Sms as SmsIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
@@ -448,6 +448,7 @@ export default class ListGroup extends Component {
                   className={clsx(hasComment && 'has-comment')}
                   color="primary"
                   onClick={this.toggleComment}
+                  size="large"
                 >
                   {hasComment ? <SmsIcon fontSize="small" /> : <ChatBubbleIcon fontSize="small" />}
                 </IconButton>
@@ -457,6 +458,7 @@ export default class ListGroup extends Component {
                 aria-label={`hide ${name}`}
                 color="primary"
                 onClick={isExpanded ? this.collapse : this.expand}
+                size="large"
               >
                 {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
               </IconButton>
@@ -467,6 +469,7 @@ export default class ListGroup extends Component {
                   color="primary"
                   disabled={baseElementListUsed}
                   onClick={() => this.openConfirmDeleteModal(instance.uniqueId)}
+                  size="large"
                 >
                   <CloseIcon fontSize="small" />
                 </IconButton>

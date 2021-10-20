@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import { Check as CheckIcon, Lock as LockIcon } from '@material-ui/icons';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Check as CheckIcon, Lock as LockIcon } from '@mui/icons-material';
 
 import PatientsTableRow from './PatientsTableRow';
 import ExecuteCQLModal from './modals/ExecuteCQLModal';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardActions, CardContent, CardHeader } from '@material-ui/core';
+import { Card, CardActions, CardContent, CardHeader } from '@mui/material';
 
 import ElementCardHeader from './ElementCardHeader';
 import ElementCardHeaderActions from './ElementCardHeaderActions';

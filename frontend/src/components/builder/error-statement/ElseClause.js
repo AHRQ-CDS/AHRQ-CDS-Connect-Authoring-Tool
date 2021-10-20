@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField } from '@mui/material';
 import clsx from 'clsx';
 import _ from 'lodash';
 
@@ -49,13 +49,13 @@ const ElseClause = ({ handleUpdateErrorStatement, statement }) => {
       <div className={styles.errorStatementContent}>
         <TextField
           fullWidth
+          hiddenLabel
           inputProps={{ 'data-testid': 'else-clause-textfield' }}
           multiline
           name="text"
           onChange={event => handleUpdateElseClause(event.target.value)}
           placeholder="If none of the conditions hold..."
           value={statement.elseClause}
-          variant="outlined"
         />
       </div>
     </div>

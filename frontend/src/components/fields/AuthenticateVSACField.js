@@ -2,9 +2,8 @@ import React, { memo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLatest } from 'react-use';
 import { useMutation } from 'react-query';
-import { Button, CircularProgress, TextField } from '@material-ui/core';
-import { Check as CheckIcon, Lock as LockIcon } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
+import { Alert, Button, CircularProgress, TextField } from '@mui/material';
+import { Check as CheckIcon, Lock as LockIcon } from '@mui/icons-material';
 
 import { Link } from 'components/elements';
 import { setVSACApiKey } from 'actions/vsac';
@@ -61,7 +60,6 @@ const AuthenticateVSACField = () => {
           onChange={event => setApiKey(event.target.value)}
           type="password"
           value={apiKey}
-          variant="outlined"
         />
 
         {isError && (

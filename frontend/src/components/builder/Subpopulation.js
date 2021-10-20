@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { IconButton } from '@material-ui/core';
-import { Close as CloseIcon, ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { Close as CloseIcon, ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
@@ -147,6 +147,7 @@ export default class Subpopulation extends Component {
                   aria-label={`${isExpanded ? 'hide' : 'show'} ${subpopulation.subpopulationName}`}
                   color="primary"
                   onClick={isExpanded ? this.collapse : this.expand}
+                  size="large"
                 >
                   {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
                 </IconButton>
@@ -157,6 +158,7 @@ export default class Subpopulation extends Component {
                     color="primary"
                     disabled={subpopulationUsed}
                     onClick={this.openConfirmDeleteModal}
+                    size="large"
                   >
                     <CloseIcon fontSize="small" />
                   </IconButton>

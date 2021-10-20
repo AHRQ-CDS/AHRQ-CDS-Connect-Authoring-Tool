@@ -1,7 +1,6 @@
 import React, { memo, useCallback } from 'react';
 import { FastField, useFormikContext } from 'formik';
-import { TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete, TextField } from '@mui/material';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
@@ -23,7 +22,7 @@ const FormikSelect = ({ field: { name, value, onChange }, form: { setFieldValue 
       id={name}
       onChange={handleChange}
       options={options}
-      renderInput={params => <TextField {...params} label={value ? null : 'Select...'} variant="outlined" />}
+      renderInput={params => <TextField {...params} hiddenLabel={Boolean(value)} label={value ? null : 'Select...'} />}
       value={selectedOption}
     />
   );

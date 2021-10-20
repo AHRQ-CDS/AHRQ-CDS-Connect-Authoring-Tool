@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert } from '@material-ui/lab';
+import { Alert, Stack } from '@mui/material';
 import _ from 'lodash';
 
 import { ArgumentsTemplate } from 'components/builder/templates';
@@ -20,7 +20,7 @@ const ExternalCQLTemplate = ({ externalCqlArguments, handleUpdateExternalCqlArgu
   };
 
   return (
-    <div id="external-cql-template">
+    <Stack>
       {!allArgumentsComplete() && (
         <Alert severity="warning">
           All fields for standalone External CQL functions are required. Enter valid values for each field.
@@ -36,7 +36,7 @@ const ExternalCQLTemplate = ({ externalCqlArguments, handleUpdateExternalCqlArgu
           handleUpdateArgument={newValue => handleSelectExternalCqlArgument(newValue, index)}
         />
       ))}
-    </div>
+    </Stack>
   );
 };
 

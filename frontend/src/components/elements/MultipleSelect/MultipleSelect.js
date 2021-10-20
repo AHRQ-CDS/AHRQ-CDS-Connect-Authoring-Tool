@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from '@material-ui/core';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import { TextField } from '@mui/material';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 
-const MultipleSelect = ({ allowCustomInput = false, label, onChange, options, value }) => {
+const MultipleSelect = ({ allowCustomInput = false, label, onChange, options, value, ...props }) => {
   const filter = createFilterOptions();
 
   const filterOptions = (options, params) => {
@@ -29,10 +29,10 @@ const MultipleSelect = ({ allowCustomInput = false, label, onChange, options, va
           {...params}
           label={label}
           placeholder={allowCustomInput ? 'Select or type custom option...' : 'Select...'}
-          variant="outlined"
         />
       )}
       value={value || []}
+      {...props}
     />
   );
 };

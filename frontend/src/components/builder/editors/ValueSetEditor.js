@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Button, IconButton } from '@material-ui/core';
-import { Edit as EditIcon, LocalHospital as LocalHospitalIcon } from '@material-ui/icons';
+import { Button, IconButton } from '@mui/material';
+import { Edit as EditIcon, LocalHospital as LocalHospitalIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import { ValueSetSelectModal, VSACAuthenticationModal } from 'components/modals';
@@ -28,7 +28,12 @@ const ValueSetEditor = ({ handleUpdateEditor, value }) => {
             </span>
           </div>
 
-          <IconButton aria-label="edit value set" color="primary" onClick={() => setShowValueSetSelectModal(true)}>
+          <IconButton
+            aria-label="edit value set"
+            color="primary"
+            onClick={() => setShowValueSetSelectModal(true)}
+            size="large"
+          >
             <EditIcon />
           </IconButton>
         </div>

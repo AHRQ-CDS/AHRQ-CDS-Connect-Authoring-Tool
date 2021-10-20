@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { FastField, useFormikContext } from 'formik';
-import { TextField as MuiTextField } from '@material-ui/core';
+import { TextField as MuiTextField } from '@mui/material';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
@@ -14,6 +14,7 @@ const MuiFastField = ({ field: { name, value, onChange, onBlur }, form: { touche
     error={touched[name] && Boolean(errors[name])}
     fullWidth
     helperText={touched[name] && errors[name]}
+    hiddenLabel
     multiline
     name={name}
     onBlur={onBlur}

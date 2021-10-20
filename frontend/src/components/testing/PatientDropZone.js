@@ -1,9 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useMutation, useQueryClient } from 'react-query';
-import { CircularProgress } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { CloudUpload as CloudUploadIcon } from '@material-ui/icons';
+import { Alert, CircularProgress } from '@mui/material';
+import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import PatientVersionModal from './modals/PatientVersionModal';

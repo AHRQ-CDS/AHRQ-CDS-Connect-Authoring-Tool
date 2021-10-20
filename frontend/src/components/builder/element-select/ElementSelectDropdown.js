@@ -1,28 +1,20 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Alert } from '@material-ui/lab';
-import { Lock as LockIcon, NotInterested as NotInterestedIcon, VpnKey as VpnKeyIcon } from '@material-ui/icons';
+import { Alert } from '@mui/material';
+import { Lock as LockIcon, NotInterested as NotInterestedIcon, VpnKey as VpnKeyIcon } from '@mui/icons-material';
 import _ from 'lodash';
 
 import ElementOption from './ElementOption';
 import { Dropdown } from 'components/elements';
-import { useFieldStyles, useSpacingStyles } from 'styles/hooks';
+import { useSpacingStyles } from 'styles/hooks';
 
 const ElementSelectDropdown = ({ handleSelectOption, isDisabled, label, options, showFooter, value }) => {
-  const fieldStyles = useFieldStyles();
   const spacingStyles = useSpacingStyles();
   const dropdownId = useMemo(() => _.uniqueId('element-select-'), []);
 
   return (
     <Dropdown
       id={dropdownId}
-      className={fieldStyles.fieldInputXl}
-      label={label}
-      message={isDisabled && <Alert severity="error">Cannot add element when Base Element List in use.</Alert>}
-      onChange={event => handleSelectOption(event.target.value)}
-      options={isDisabled ? [] : options}
-      renderItem={option => <ElementOption option={option} />}
-      value={value}
       Footer={
         showFooter && (
           <div>
@@ -47,6 +39,13 @@ const ElementSelectDropdown = ({ handleSelectOption, isDisabled, label, options,
           </div>
         )
       }
+      label={label}
+      message={isDisabled && <Alert severity="error">Cannot add element when Base Element List in use.</Alert>}
+      onChange={event => handleSelectOption(event.target.value)}
+      options={isDisabled ? [] : options}
+      renderItem={option => <ElementOption option={option} />}
+      sx={{ width: '400px' }}
+      value={value}
     />
   );
 };

@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 export default makeStyles(
   theme => ({
@@ -7,11 +7,12 @@ export default makeStyles(
       paddingBottom: '10px !important'
     },
     tab: {
+      borderRadius: '5px',
       color: theme.palette.common.white,
       marginRight: '15px',
-      borderRadius: '5px',
-      textTransform: 'none',
+      minWidth: '160px',
       opacity: 1,
+      textTransform: 'none',
       '&:hover, &:focus': {
         color: theme.palette.common.white,
         textDecoration: 'none'
@@ -19,10 +20,10 @@ export default makeStyles(
       '&:hover, &.active': {
         backgroundColor: theme.palette.common.ahrqGray
       },
-      [theme.breakpoints.down('lg')]: {
+      [theme.breakpoints.down('xl')]: {
         minWidth: '130px'
       },
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         minWidth: '100px'
       }
     }

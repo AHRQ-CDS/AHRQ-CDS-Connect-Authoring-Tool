@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { CircularProgress } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Alert, CircularProgress } from '@mui/material';
 import clsx from 'clsx';
 
 import { Dropdown } from 'components/elements';

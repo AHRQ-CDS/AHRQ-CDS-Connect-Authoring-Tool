@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Button, TextField } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Alert, Button, TextField } from '@mui/material';
 
 import { Dropdown, Link } from 'components/elements';
 import codeSystemOptions from 'data/codeSystemOptions';
@@ -50,7 +49,6 @@ const CodeSelectModalHeader = ({
             label="Code"
             onChange={event => setCode(event.target.value)}
             value={code}
-            variant="outlined"
           />
 
           <Dropdown
@@ -70,7 +68,6 @@ const CodeSelectModalHeader = ({
               label="System URI"
               onChange={event => setOtherCodeSystem(event.target.value)}
               value={otherCodeSystem}
-              variant="outlined"
             />
           )}
 

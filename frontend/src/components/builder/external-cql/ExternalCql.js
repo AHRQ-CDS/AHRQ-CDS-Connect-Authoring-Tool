@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 
 import ExternalCqlDropZone from './ExternalCqlDropZone';
 import ExternalCqlTable from './ExternalCqlTable';

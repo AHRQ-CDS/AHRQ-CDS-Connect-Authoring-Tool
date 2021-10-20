@@ -74,6 +74,7 @@ const ExecuteCQLModal = ({ patients, handleCloseModal, handleExecuteCQL }) => {
 
         <Dropdown
           id="select-artifact"
+          hiddenLabel={Boolean(artifactToExecute)}
           label={artifactToExecute ? null : 'Select...'}
           onChange={event => selectArtifactToExecute(event.target.value)}
           options={artifactOptions}

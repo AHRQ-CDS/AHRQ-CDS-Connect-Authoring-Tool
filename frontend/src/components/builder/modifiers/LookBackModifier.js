@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import clsx from 'clsx';
 
 import { Dropdown } from 'components/elements';
@@ -42,7 +42,6 @@ const LookBackModifier = ({ handleUpdateModifier, unit, value }) => {
         }}
         type="number"
         value={value == null ? '' : value}
-        variant="outlined"
       />
 
       <Dropdown

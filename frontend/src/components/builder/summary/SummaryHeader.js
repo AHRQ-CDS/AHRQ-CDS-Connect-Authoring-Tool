@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { useSpacingStyles } from 'styles/hooks';
 import { useSelector } from 'react-redux';
 import { renderDate } from 'utils/dates';
-import { Card, CardContent, IconButton } from '@material-ui/core';
-import { Edit as EditIcon } from '@material-ui/icons';
+import { Card, CardContent, IconButton } from '@mui/material';
+import { Edit as EditIcon } from '@mui/icons-material';
 import useStyles from './styles';
 
 const SummaryHeader = ({ handleOpenArtifactModal }) => {
@@ -31,7 +31,7 @@ const SummaryHeader = ({ handleOpenArtifactModal }) => {
           ))}
         </div>
 
-        <IconButton aria-label="edit" onClick={handleOpenArtifactModal}>
+        <IconButton aria-label="edit" color="primary" onClick={handleOpenArtifactModal} size="large">
           <EditIcon fontSize="small" />
         </IconButton>
       </CardContent>

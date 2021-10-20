@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import {
   ChatBubble as ChatBubbleIcon,
   Close as CloseIcon,
@@ -9,7 +9,7 @@ import {
   FormatIndentDecrease as FormatIndentDecreaseIcon,
   FormatIndentIncrease as FormatIndentIncreaseIcon,
   Sms as SmsIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
@@ -218,17 +218,17 @@ export default class ConjunctionGroup extends Component {
     const selectOptions = options === 'listOperations' ? this.listOperations : this.types;
 
     return (
-      <div className="card-group__conjunction-select">
-        <Dropdown
-          id="conjunction-select"
-          label={instance.name ? null : 'Select one'}
-          onChange={event => this.handleTypeChange(event, selectOptions)}
-          options={selectOptions}
-          value={instance.name}
-          valueKey="id"
-          labelKey="name"
-        />
-      </div>
+      <Dropdown
+        id="conjunction-select"
+        hiddenLabel={Boolean(instance.name)}
+        label={instance.name ? null : 'Select one'}
+        labelKey="name"
+        onChange={event => this.handleTypeChange(event, selectOptions)}
+        options={selectOptions}
+        sx={{ margin: '20px 0', width: '12em' }}
+        value={instance.name}
+        valueKey="id"
+      />
     );
   };
 
@@ -242,6 +242,7 @@ export default class ConjunctionGroup extends Component {
             color="primary"
             disabled={this.props.disableAddElement}
             onClick={() => this.outdentClickHandler(instance)}
+            size="large"
           >
             <FormatIndentDecreaseIcon fontSize="small" />
           </IconButton>
@@ -256,6 +257,7 @@ export default class ConjunctionGroup extends Component {
           color="primary"
           disabled={this.props.disableAddElement}
           onClick={() => this.indentClickHandler(instance)}
+          size="large"
         >
           <FormatIndentIncreaseIcon fontSize="small" />
         </IconButton>
@@ -322,12 +324,18 @@ export default class ConjunctionGroup extends Component {
                   className={clsx(hasComment && 'has-comment')}
                   color="primary"
                   onClick={this.toggleComment}
+                  size="large"
                 >
                   {hasComment ? <SmsIcon fontSize="small" /> : <ChatBubbleIcon fontSize="small" />}
                 </IconButton>
               )}
 
-              <IconButton aria-label={`hide ${elementNameField.name}`} color="primary" onClick={this.showHideGroupBody}>
+              <IconButton
+                aria-label={`hide ${elementNameField.name}`}
+                color="primary"
+                onClick={this.showHideGroupBody}
+                size="large"
+              >
                 {showGroup ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
               </IconButton>
 
@@ -337,6 +345,7 @@ export default class ConjunctionGroup extends Component {
                   color="primary"
                   disabled={disableAddElement}
                   onClick={this.openConfirmDeleteModal}
+                  size="large"
                 >
                   <CloseIcon fontSize="small" />
                 </IconButton>

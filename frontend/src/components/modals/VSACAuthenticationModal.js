@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { useMutation } from 'react-query';
 import { useLatest } from 'react-use';
-import { TextField } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { TextField } from '@mui/material';
+import { Alert } from '@mui/material';
 
 import { Link, Modal } from 'components/elements';
 import { setVSACApiKey } from 'actions/vsac';
@@ -79,7 +79,6 @@ const VSACAuthenticationModal = ({ handleCloseModal }) => {
             onChange={event => setApiKey(event.target.value)}
             type="password"
             value={apiKey}
-            variant="outlined"
           />
 
           {isError && (

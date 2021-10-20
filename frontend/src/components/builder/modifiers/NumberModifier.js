@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import clsx from 'clsx';
 
 import { useFieldStyles } from 'styles/hooks';
@@ -26,7 +26,6 @@ const NumberModifier = ({ handleUpdateModifier, name, value }) => {
         type="number"
         onChange={event => handleOnChange(event.target.value)}
         value={value || value === 0 ? value : ''}
-        variant="outlined"
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import ModifierModalHeader from './ModifierModalHeader';

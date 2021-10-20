@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tooltip as MuiTooltip } from '@material-ui/core';
+import { Tooltip as MuiTooltip } from '@mui/material';
 
 const Tooltip = ({ children, enabled = true, ...tooltipProps }) =>
   enabled ? (

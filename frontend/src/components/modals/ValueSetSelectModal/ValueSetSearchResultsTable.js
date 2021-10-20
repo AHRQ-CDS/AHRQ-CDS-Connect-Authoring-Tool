@@ -2,8 +2,8 @@ import React, { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
-import { Visibility as VisibilityIcon } from '@material-ui/icons';
 import {
+  Alert,
   CircularProgress,
   IconButton,
   Table,
@@ -12,8 +12,8 @@ import {
   TableContainer,
   TableHead,
   TableRow
-} from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+} from '@mui/material';
+import { Visibility as VisibilityIcon } from '@mui/icons-material';
 
 import searchVSACByKeyword from 'queries/searchVSACByKeyword';
 import { useInteractiveStyles, useTextStyles } from 'styles/hooks';
@@ -76,6 +76,7 @@ const ValueSetSearchResultsTable = ({ keyword, setSearchCount, setSelectedValueS
                         aria-label="View Value Set"
                         color="primary"
                         onClick={event => handleViewValueSetDetails(event, { name: valueSet.name, oid: valueSet.oid })}
+                        size="large"
                       >
                         <VisibilityIcon fontSize="small" />
                       </IconButton>

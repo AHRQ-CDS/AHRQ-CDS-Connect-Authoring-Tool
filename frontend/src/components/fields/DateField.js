@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback } from 'react';
-import { Checkbox, FormControlLabel } from '@material-ui/core';
+import { Checkbox, FormControlLabel } from '@mui/material';
 import { useField, useFormikContext } from 'formik';
 import clsx from 'clsx';
 

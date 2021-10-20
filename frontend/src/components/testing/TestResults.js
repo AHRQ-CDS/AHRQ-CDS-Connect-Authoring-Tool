@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, Paper } from '@material-ui/core';
-import { Close as CloseIcon } from '@material-ui/icons';
+import { IconButton, Paper } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 
 import TestResultsSection from './TestResultsSection';
 import { KeyValueList } from 'components/elements';
@@ -25,7 +25,7 @@ const TestResults = ({ artifact, handleOnClose, patientsExecuted, results }) => 
 
   return (
     <Paper className={styles.testResults}>
-      <IconButton aria-label="close" className={styles.closeButton} onClick={handleOnClose}>
+      <IconButton aria-label="close" className={styles.closeButton} onClick={handleOnClose} size="large">
         <CloseIcon />
       </IconButton>
 

@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQueryClient } from 'react-query';
 import { useDropzone } from 'react-dropzone';
-import { CircularProgress } from '@material-ui/core';
-import { CloudUpload as CloudUploadIcon } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
+import { Alert, CircularProgress } from '@mui/material';
+import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import { Modal } from 'components/elements';

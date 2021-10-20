@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, TableCell } from '@material-ui/core';
-import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@material-ui/icons';
+import { IconButton, TableCell } from '@mui/material';
+import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
 
 import ExternalCqlDetailsModal from './ExternalCqlDetailsModal';
 import { DeleteConfirmationModal } from 'components/modals';
@@ -37,6 +37,7 @@ const ExternalCqlTableRow = ({ disableDeleteMessage, library, handleDeleteLibrar
             color="primary"
             onClick={() => setShowViewDetailsModal(true)}
             variant="contained"
+            size="large"
           >
             <VisibilityIcon />
           </IconButton>
@@ -50,6 +51,7 @@ const ExternalCqlTableRow = ({ disableDeleteMessage, library, handleDeleteLibrar
             disabled={Boolean(disableDeleteMessage)}
             onClick={() => setShowDeleteConfirmationModal(true)}
             variant="contained"
+            size="large"
           >
             <DeleteIcon />
           </IconButton>

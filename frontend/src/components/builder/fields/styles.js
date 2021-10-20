@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 export default makeStyles(
   theme => ({
@@ -23,7 +23,7 @@ export default makeStyles(
     },
     fieldInput: {
       marginRight: '10px',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         margin: '5px 5px 5px 0'
       },
       '&.helper-text': {

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLatest } from 'react-use';
-import { List as ListIcon } from '@material-ui/icons';
+import { List as ListIcon } from '@mui/icons-material';
 
 import ValueSetDetailsTable from './ValueSetDetailsTable';
 import ValueSetSearchResultsTable from './ValueSetSearchResultsTable';

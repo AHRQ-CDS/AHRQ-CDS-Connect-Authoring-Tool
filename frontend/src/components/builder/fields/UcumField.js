@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { TextField, CircularProgress } from '@material-ui/core';
-import { Search as SearchIcon } from '@material-ui/icons';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete, CircularProgress, TextField } from '@mui/material';
+import { Search as SearchIcon } from '@mui/icons-material';
 
 import fetchUnitsOfMeasure from 'queries/fetchUnitsOfMeasure';
 
@@ -20,9 +19,9 @@ const UcumField = ({ handleChangeUnit, unit }) => {
 
   return (
     <Autocomplete
-      getOptionLabel={option => option?.label || option || ''}
-      getOptionSelected={(option, value) => option.value === value}
       freeSolo
+      getOptionLabel={option => option?.label || option || ''}
+      isOptionEqualToValue={(option, value) => option.value === value}
       loading={isLoading}
       noOptionsText="Search..."
       onChange={handleChangeUnit}
@@ -33,7 +32,6 @@ const UcumField = ({ handleChangeUnit, unit }) => {
         <TextField
           {...params}
           label="Unit"
-          variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -45,6 +43,7 @@ const UcumField = ({ handleChangeUnit, unit }) => {
           }}
         />
       )}
+      sx={{ width: { xs: '200px', xxl: '300px' } }}
       value={unit || null}
     />
   );

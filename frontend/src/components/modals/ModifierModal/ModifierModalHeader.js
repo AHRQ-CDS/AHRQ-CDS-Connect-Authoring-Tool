@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Card, CardContent } from '@material-ui/core';
-import { ArrowForward as ArrowForwardIcon, Check as CheckIcon } from '@material-ui/icons';
+import { Card, CardContent } from '@mui/material';
+import { ArrowForward as ArrowForwardIcon, Check as CheckIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import ExpressionPhrase from 'components/builder/ExpressionPhrase';

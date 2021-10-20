@@ -2,8 +2,8 @@ import React, { useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useToggle } from 'react-use';
-import { Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
-import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
+import { Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@mui/material';
+import { ArrowDropDown as ArrowDropDownIcon } from '@mui/icons-material';
 
 import { Modal } from 'components/elements';
 import { logoutUser } from 'actions/auth';

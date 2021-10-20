@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
-import { Alert } from '@material-ui/lab';
-import { ArrowForward as ArrowForwardIcon } from '@material-ui/icons';
-import { IconButton } from '@material-ui/core';
-import { ArrowBackIos as ArrowBackIosIcon } from '@material-ui/icons';
+import { Alert, IconButton } from '@mui/material';
+import { ArrowBackIos as ArrowBackIosIcon, ArrowForward as ArrowForwardIcon } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -75,7 +73,7 @@ const ModifierSelector = ({
       <div className={styles.navHeader}>
         <div className={styles.navHeaderGroup}>
           <div className={styles.navHeaderButtons}>
-            <IconButton aria-label="go back" onClick={handleGoBack}>
+            <IconButton aria-label="go back" onClick={handleGoBack} size="large">
               <ArrowBackIosIcon fontSize="small" />
             </IconButton>
 

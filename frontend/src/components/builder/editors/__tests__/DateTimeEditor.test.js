@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, userEvent, screen } from 'utils/test-utils';
+import { changeDate, changeTime, render, screen } from 'utils/test-utils';
 import DateTimeEditor from '../DateTimeEditor';
 
 describe('<DateTimeEditor />', () => {
@@ -11,12 +11,10 @@ describe('<DateTimeEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isTime: true });
 
-      userEvent.click(screen.getByRole('button', { name: 'change time' }));
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
+      changeTime('10:00:00');
       expect(handleUpdateEditor).toBeCalledWith({
-        time: expect.stringMatching(/^\d{2}:\d{2}:\d{2}$/),
-        str: expect.stringMatching(/^@T\d{2}:\d{2}:\d{2}$/)
+        str: '@T10:00:00',
+        time: '10:00:00'
       });
     });
   });
@@ -26,13 +24,11 @@ describe('<DateTimeEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor });
 
-      userEvent.click(screen.getByRole('button', { name: 'change date' }));
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
+      changeDate('01/01/2020');
       expect(handleUpdateEditor).toBeCalledWith({
-        date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+        date: '2020-01-01',
         time: null,
-        str: expect.stringMatching(/^@\d{4}-\d{2}-\d{2}$/)
+        str: '@2020-01-01'
       });
     });
 
@@ -43,17 +39,15 @@ describe('<DateTimeEditor />', () => {
         value: { date: '2020-01-01', time: null, str: '@2020-01-01' }
       });
 
-      userEvent.click(screen.getByRole('button', { name: 'change time' }));
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
+      changeTime('10:00:00');
       expect(handleUpdateEditor).toBeCalledWith({
-        date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
-        time: expect.stringMatching(/^\d{2}:\d{2}:\d{2}$/),
-        str: expect.stringMatching(/^@\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/)
+        date: '2020-01-01',
+        time: '10:00:00',
+        str: '@2020-01-01T10:00:00'
       });
     });
 
-    it('shows warning with only time', async () => {
+    it('shows warning with only time', () => {
       renderComponent({ errors: { incompleteInput: true } });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -65,15 +59,13 @@ describe('<DateTimeEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isInterval: true });
 
-      userEvent.click(screen.getAllByRole('button', { name: 'change date' })[0]);
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
+      changeDate('01/01/2020');
       expect(handleUpdateEditor).toBeCalledWith({
-        firstDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+        firstDate: '2020-01-01',
         firstTime: null,
         secondDate: null,
         secondTime: null,
-        str: expect.stringMatching(/^Interval\[@\d{4}-\d{2}-\d{2},null\]$/)
+        str: 'Interval[@2020-01-01,null]'
       });
     });
 
@@ -91,15 +83,13 @@ describe('<DateTimeEditor />', () => {
         }
       });
 
-      userEvent.click(screen.getAllByRole('button', { name: 'change time' })[0]);
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
+      changeTime('10:00:00');
       expect(handleUpdateEditor).toBeCalledWith({
-        firstDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
-        firstTime: expect.stringMatching(/^\d{2}:\d{2}:\d{2}$/),
+        firstDate: '2020-01-01',
+        firstTime: '10:00:00',
         secondDate: null,
         secondTime: null,
-        str: expect.stringMatching(/^Interval\[@\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2},null\]$/)
+        str: 'Interval[@2020-01-01T10:00:00,null]'
       });
     });
 
@@ -107,15 +97,13 @@ describe('<DateTimeEditor />', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isInterval: true });
 
-      userEvent.click(screen.getAllByRole('button', { name: 'change date' })[1]);
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
+      changeDate('01/01/2020', 1);
       expect(handleUpdateEditor).toBeCalledWith({
         firstDate: null,
         firstTime: null,
-        secondDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+        secondDate: '2020-01-01',
         secondTime: null,
-        str: expect.stringMatching(/^Interval\[null,@\d{4}-\d{2}-\d{2}\]$/)
+        str: 'Interval[null,@2020-01-01]'
       });
     });
 
@@ -133,15 +121,13 @@ describe('<DateTimeEditor />', () => {
         }
       });
 
-      userEvent.click(screen.getAllByRole('button', { name: 'change time' })[1]);
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
+      changeTime('10:00:00', 1);
       expect(handleUpdateEditor).toBeCalledWith({
         firstDate: null,
         firstTime: null,
-        secondDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
-        secondTime: expect.stringMatching(/^\d{2}:\d{2}:\d{2}$/),
-        str: expect.stringMatching(/^Interval\[null,@\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\]$/)
+        secondDate: '2020-01-01',
+        secondTime: '10:00:00',
+        str: 'Interval[null,@2020-01-01T10:00:00]'
       });
     });
 
@@ -159,15 +145,13 @@ describe('<DateTimeEditor />', () => {
         }
       });
 
-      userEvent.click(screen.getAllByRole('button', { name: 'change date' })[1]);
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
+      changeDate('02/01/2020', 1);
       expect(handleUpdateEditor).toBeCalledWith({
-        firstDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+        firstDate: '2020-01-01',
         firstTime: null,
-        secondDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+        secondDate: '2020-02-01',
         secondTime: null,
-        str: expect.stringMatching(/^Interval\[@\d{4}-\d{2}-\d{2},@\d{4}-\d{2}-\d{2}\]$/)
+        str: 'Interval[@2020-01-01,@2020-02-01]'
       });
     });
 
@@ -178,24 +162,20 @@ describe('<DateTimeEditor />', () => {
         isInterval: true,
         value: {
           firstDate: '2020-01-01',
-          firstTime: '12:00:00',
+          firstTime: '10:00:00',
           secondDate: '2020-02-01',
           secondTime: null,
           str: 'Interval[@2020-01-01T12:00:00,@2020-02-01]'
         }
       });
 
-      userEvent.click(screen.getAllByRole('button', { name: 'change time' })[1]);
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
+      changeTime('11:00:00', 1);
       expect(handleUpdateEditor).toBeCalledWith({
-        firstDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
-        firstTime: expect.stringMatching(/^\d{2}:\d{2}:\d{2}$/),
-        secondDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
-        secondTime: expect.stringMatching(/^\d{2}:\d{2}:\d{2}$/),
-        str: expect.stringMatching(
-          /^Interval\[@\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2},@\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\]$/
-        )
+        firstDate: '2020-01-01',
+        firstTime: '10:00:00',
+        secondDate: '2020-02-01',
+        secondTime: '11:00:00',
+        str: 'Interval[@2020-01-01T10:00:00,@2020-02-01T11:00:00]'
       });
     });
 

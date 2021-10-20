@@ -1,24 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { Remove as DashIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import { Alert, Stack, TextField } from '@mui/material';
+import { Remove as DashIcon } from '@mui/icons-material';
 
 import { isInteger } from 'utils/numbers';
-import { useFieldStyles } from 'styles/hooks';
 
 const NumberEditor = ({
   errors,
-  fullWidth = true,
   handleUpdateEditor,
   isDecimal = false,
   isInterval = false,
   label = 'Value',
   value
 }) => {
-  const fieldStyles = useFieldStyles();
-
   let firstValue = value || '';
   if (isInterval && isDecimal) firstValue = value?.firstDecimal || '';
   if (isInterval && !isDecimal) firstValue = value?.firstInteger || '';
@@ -55,45 +49,41 @@ const NumberEditor = ({
   };
 
   return (
-    <div className={fullWidth ? fieldStyles.fieldInputFullWidth : fieldStyles.fieldInputSm} id="number-editor">
-      <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
+    <Stack>
+      <Stack alignItems="center" direction="row">
         <TextField
-          className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputMd)}
           fullWidth
           label={label}
           onChange={event =>
             handleChange(event.target.value, isInterval ? (isDecimal ? 'firstDecimal' : 'firstInteger') : null)
           }
+          sx={{ width: { xs: '150px', xxl: '200px' } }}
           type="number"
           value={firstValue}
-          variant="outlined"
         />
 
         {isInterval && (
           <>
-            <DashIcon className={fieldStyles.fieldInput} />
+            <DashIcon sx={{ margin: '0 10px' }} />
 
-            <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
-              <TextField
-                className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputMd)}
-                fullWidth
-                label="Value"
-                onChange={event =>
-                  handleChange(event.target.value, isInterval ? (isDecimal ? 'secondDecimal' : 'secondInteger') : null)
-                }
-                type="number"
-                value={secondValue}
-                variant="outlined"
-              />
-            </div>
+            <TextField
+              fullWidth
+              label="Value"
+              onChange={event =>
+                handleChange(event.target.value, isInterval ? (isDecimal ? 'secondDecimal' : 'secondInteger') : null)
+              }
+              sx={{ width: { xs: '150px', xxl: '200px' } }}
+              type="number"
+              value={secondValue}
+            />
           </>
         )}
-      </div>
+      </Stack>
 
       {errors?.invalidInput && (
         <Alert severity="error">Warning: The entered value is not a valid {isDecimal ? 'Decimal' : 'Integer'}.</Alert>
       )}
-    </div>
+    </Stack>
   );
 };
 
@@ -101,7 +91,6 @@ NumberEditor.propTypes = {
   errors: PropTypes.shape({
     invalidInput: PropTypes.bool
   }),
-  fullWidth: PropTypes.bool,
   handleUpdateEditor: PropTypes.func.isRequired,
   isDecimal: PropTypes.bool,
   isInterval: PropTypes.bool,

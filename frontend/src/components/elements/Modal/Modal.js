@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import {
   Button,
   CircularProgress,
@@ -10,8 +10,8 @@ import {
   DialogTitle,
   IconButton,
   Typography
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { lightTheme, darkTheme } from 'styles/theme';
 import useStyles from './styles';
@@ -51,57 +51,59 @@ const Modal = ({
   };
 
   return (
-    <ThemeProvider theme={modalTheme}>
-      <Dialog
-        fullWidth
-        maxWidth={maxWidth}
-        onClose={handleCloseModal}
-        onKeyDown={hasEnterKeySubmit ? e => enterKeyCheck(handleSaveModal, null, e) : null}
-        open={isOpen}
-      >
-        <DialogTitle disableTypography>
-          <Typography variant="body1" data-testid={title}>
-            {title}
-          </Typography>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={modalTheme}>
+        <Dialog
+          fullWidth
+          maxWidth={maxWidth}
+          onClose={handleCloseModal}
+          onKeyDown={hasEnterKeySubmit ? e => enterKeyCheck(handleSaveModal, null, e) : null}
+          open={isOpen}
+        >
+          <DialogTitle>
+            <Typography variant="body1" data-testid={title}>
+              {title}
+            </Typography>
 
-          <div>
-            <div className={styles.titleIcon}>{hasTitleIcon && TitleIcon}</div>
+            <div>
+              <div className={styles.titleIcon}>{hasTitleIcon && TitleIcon}</div>
 
-            <IconButton aria-label="close" className={styles.closeButton} onClick={handleCloseModal}>
-              <CloseIcon />
-            </IconButton>
-          </div>
-        </DialogTitle>
+              <IconButton aria-label="close" className={styles.closeButton} onClick={handleCloseModal} size="large">
+                <CloseIcon />
+              </IconButton>
+            </div>
+          </DialogTitle>
 
-        <DialogContent className={styles.header}>{Header}</DialogContent>
-        <DialogContent>{children && children}</DialogContent>
+          <DialogContent className={styles.header}>{Header}</DialogContent>
+          <DialogContent>{children && children}</DialogContent>
 
-        <DialogActions>
-          {Footer || <div></div>}
+          <DialogActions>
+            {Footer || <div></div>}
 
-          <div className={styles.footerButtons}>
-            {hasCancelButton && (
-              <Button className={styles.cancelButton} onClick={handleCloseModal} variant="text">
-                {closeButtonText}
-              </Button>
-            )}
+            <div className={styles.footerButtons}>
+              {hasCancelButton && (
+                <Button className={styles.cancelButton} onClick={handleCloseModal} variant="text">
+                  {closeButtonText}
+                </Button>
+              )}
 
-            {!hideSubmitButton && (
-              <Button
-                color={theme === 'dark' ? 'default' : 'primary'}
-                disabled={submitDisabled || isLoading}
-                form="modal-form"
-                onClick={handleSaveModal}
-                startIcon={isLoading && <CircularProgress size={20} />}
-                variant="contained"
-              >
-                {submitButtonText}
-              </Button>
-            )}
-          </div>
-        </DialogActions>
-      </Dialog>
-    </ThemeProvider>
+              {!hideSubmitButton && (
+                <Button
+                  color={theme === 'dark' ? 'inherit' : 'primary'}
+                  disabled={submitDisabled || isLoading}
+                  form="modal-form"
+                  onClick={handleSaveModal}
+                  startIcon={isLoading && <CircularProgress size={20} />}
+                  variant="contained"
+                >
+                  {submitButtonText}
+                </Button>
+              )}
+            </div>
+          </DialogActions>
+        </Dialog>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

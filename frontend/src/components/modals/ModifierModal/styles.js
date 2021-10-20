@@ -1,15 +1,8 @@
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
+import { alpha } from '@mui/material/styles';
 
 export default makeStyles(
   theme => ({
-    alignIcon: {
-      alignSelf: 'flex-start',
-      marginTop: '0'
-    },
-    clearRuleButton: {
-      alignSelf: 'center',
-      marginLeft: '10px'
-    },
     deleteButton: {
       position: 'absolute',
       right: '10px',
@@ -122,7 +115,7 @@ export default makeStyles(
       backgroundColor: theme.palette.common.white
     },
     rulesCardGroupIncomplete: {
-      backgroundColor: fade(theme.palette.common.redLight, 0.15)
+      backgroundColor: alpha(theme.palette.common.redLight, 0.15)
     },
     tag: {
       alignItems: 'center',

@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { Button, CircularProgress } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { Add as AddIcon } from '@material-ui/icons';
+import { Alert, Button, CircularProgress } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import ArtifactModal from './ArtifactModal';

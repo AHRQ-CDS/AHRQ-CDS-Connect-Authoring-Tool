@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import {
   AccountCircle as AccountCircleIcon,
   Check as CheckIcon,
   Close as CloseIcon,
   ExpandMore as ExpandMoreIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { KeyValueList } from 'components/elements';
 import useStyles from './styles';

@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { IconButton } from '@material-ui/core';
+import { Box, IconButton } from '@mui/material';
 import {
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDropUp as ArrowDropUpIcon,
   ChatBubble as ChatBubbleIcon,
   Clear as ClearIcon,
   Sms as SmsIcon
-} from '@material-ui/icons';
-import clsx from 'clsx';
+} from '@mui/icons-material';
 
 import { Tooltip } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
-import useStyles from './styles';
 
 const RecommendationActions = ({
   canMoveDown,
@@ -25,7 +23,6 @@ const RecommendationActions = ({
   text
 }) => {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
-  const styles = useStyles();
   const isMovable = canMoveUp || canMoveDown;
 
   const deleteRecommendation = () => {
@@ -34,12 +31,13 @@ const RecommendationActions = ({
   };
 
   return (
-    <div className={styles.recommendationCardActions}>
+    <Box position="absolute" right="20px" top="20px">
       <Tooltip title={showComment ? 'Hide Comment' : 'Show Comment'}>
         <IconButton
           aria-label={showComment ? 'hide comment' : 'show comment'}
-          className={clsx(comment !== '' && styles.buttonHighlight)}
+          color="primary"
           onClick={() => setShowComment(!showComment)}
+          sx={{ color: comment !== '' && 'common.blueHighlight' }}
         >
           {comment !== '' ? <SmsIcon fontSize="small" /> : <ChatBubbleIcon fontSize="small" />}
         </IconButton>
@@ -50,6 +48,7 @@ const RecommendationActions = ({
           <Tooltip enabled={canMoveUp} title="Move Up">
             <IconButton
               aria-label="move up recommendation"
+              color="primary"
               disabled={!canMoveUp}
               onClick={() => handleMoveRecommendation('up')}
             >
@@ -60,6 +59,7 @@ const RecommendationActions = ({
           <Tooltip enabled={canMoveDown} title="Move Down">
             <IconButton
               aria-label="move down recommendation"
+              color="primary"
               disabled={!canMoveDown}
               onClick={() => handleMoveRecommendation('down')}
             >
@@ -69,7 +69,7 @@ const RecommendationActions = ({
         </>
       )}
 
-      <IconButton aria-label="delete recommendation" onClick={() => setShowConfirmDeleteModal(true)}>
+      <IconButton aria-label="delete recommendation" color="primary" onClick={() => setShowConfirmDeleteModal(true)}>
         <ClearIcon fontSize="small" />
       </IconButton>
 
@@ -82,7 +82,7 @@ const RecommendationActions = ({
           <>{text === '' ? <i>Blank recommendation</i> : text}</>
         </DeleteConfirmationModal>
       )}
-    </div>
+    </Box>
   );
 };
 

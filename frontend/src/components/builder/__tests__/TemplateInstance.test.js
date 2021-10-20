@@ -386,7 +386,7 @@ describe('<TemplateInstance />', () => {
       expect(screen.getByText(/observation:/i)).toBeInTheDocument();
 
       // Only the current elements expressions are listed
-      expect(document.getElementById('modifiers-template')).toHaveTextContent('Modifiers:Exists');
+      expect(document.getElementById('modifiers-template')).toHaveTextContent('Exists');
 
       // All expressions and VS included in the phrase
       expect(container.querySelector('.expression-logic')).toHaveTextContent(

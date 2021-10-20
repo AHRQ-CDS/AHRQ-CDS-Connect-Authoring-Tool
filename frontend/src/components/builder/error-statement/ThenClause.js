@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import clsx from 'clsx';
 import _ from 'lodash';
 
@@ -30,13 +30,13 @@ const ThenClause = ({ handleUpdateErrorStatement, ifThenClauseIndex, statementId
       <div className={styles.errorStatementContent}>
         <TextField
           fullWidth
+          hiddenLabel
           inputProps={{ 'data-testid': 'then-clause-textfield' }}
           multiline
           name="text"
           onChange={event => handleUpdateThenClause(event.target.value)}
           placeholder="Describe your error..."
           value={thenClause}
-          variant="outlined"
         />
       </div>
     </div>

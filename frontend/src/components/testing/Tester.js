@@ -1,8 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useQuery, useMutation } from 'react-query';
-import { CircularProgress } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Alert, CircularProgress } from '@mui/material';
 
 import PatientDropZone from './PatientDropZone';
 import PatientsTable from './PatientsTable';

@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import { Divider, Stack } from '@mui/material';
 
+import ElementCardLabel from 'components/elements/ElementCard/ElementCardLabel';
 import { Dropdown, ElementCard } from 'components/elements';
 import { ElementExpressionPhrase } from 'components/elements/ElementCard';
 import { EditorsTemplate, ReferenceTemplate } from 'components/builder/templates';
 import { parameterHasDuplicateName, parameterHasChangedUse } from './utils';
 import { getEditorErrors } from 'components/builder/editors/utils';
 import { startsWithVowel, valueToString } from 'utils/strings';
-import { useFieldStyles } from 'styles/hooks';
 
 const typeOptions = [
   { value: 'boolean', label: 'Boolean' },
@@ -35,7 +35,6 @@ const Parameter = ({
   setShowAllContent,
   showAllContent
 }) => {
-  const fieldStyles = useFieldStyles();
   const { comment, name, type, uniqueId, usedBy, value } = parameter;
   const { errors, hasErrors } = getEditorErrors(type, value);
   const valueStr = valueToString(value);
@@ -86,7 +85,7 @@ const Parameter = ({
       showAllContent={showAllContent}
       titleField={{ id: uniqueId, value: name }}
     >
-      <>
+      <Stack divider={<Divider flexItem sx={{ marginLeft: '230px' }} />}>
         {parameterIsUsed &&
           [...new Set(usedBy)].map(parameterUseId => (
             <ReferenceTemplate
@@ -97,27 +96,29 @@ const Parameter = ({
             />
           ))}
 
-        <div className={fieldStyles.field}>
-          <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall)}>Parameter Type:</div>
+        <Stack alignItems="center" flexDirection="row" ml="20px" my={1}>
+          <ElementCardLabel label="Parameter Type" />
 
           <Dropdown
-            className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}
             disabled={parameterIsUsed}
+            hiddenLabel={Boolean(type)}
             label={type ? null : 'Parameter type'}
             onChange={event => handleUpdateType(event.target.value)}
             options={typeOptions}
+            sx={{ my: 1, width: { xs: '200px', xxl: '300px' } }}
             value={type}
           />
-        </div>
+        </Stack>
 
         <EditorsTemplate
           errors={errors}
           handleUpdateEditor={newValue => handleUpdateParameter({ ...parameter, value: newValue })}
           label="Default Value"
+          sx={{ ml: '20px' }}
           type={type}
           value={value}
         />
-      </>
+      </Stack>
     </ElementCard>
   );
 };

@@ -1,9 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Button, CircularProgress, TextField } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
+import { Alert, Button, CircularProgress, TextField } from '@mui/material';
+import { ErrorOutlineOutlined as ErrorOutlineOutlinedIcon } from '@mui/icons-material';
 import _ from 'lodash';
 
 import { Modal } from 'components/elements';
@@ -92,7 +91,6 @@ const Login = () => {
               label="username"
               onChange={handleChangeUsername}
               value={username}
-              variant="outlined"
             />
 
             <TextField
@@ -102,7 +100,6 @@ const Login = () => {
               onChange={handleChangePassword}
               type="password"
               value={password}
-              variant="outlined"
             />
 
             {authStatus === 'loginFailure' && <Alert severity="error">{authStatusText}</Alert>}

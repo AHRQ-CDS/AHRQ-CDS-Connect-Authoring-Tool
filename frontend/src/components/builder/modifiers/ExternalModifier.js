@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { MenuBook as MenuBookIcon } from '@material-ui/icons';
+import { MenuBook as MenuBookIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 import _ from 'lodash';
 

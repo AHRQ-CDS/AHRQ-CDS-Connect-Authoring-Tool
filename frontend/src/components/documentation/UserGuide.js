@@ -9,7 +9,7 @@ import {
   Visibility as VisibilityIcon,
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEye,

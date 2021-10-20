@@ -1,24 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Check as CheckIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import { Stack } from '@mui/material';
+import { Check as CheckIcon } from '@mui/icons-material';
 
-import { useFieldStyles } from 'styles/hooks';
+import ElementCardLabel from 'components/elements/ElementCard/ElementCardLabel';
 
-const ReturnTypeTemplate = ({ returnType, returnTypeIsValid }) => {
-  const fieldStyles = useFieldStyles();
+const ReturnTypeTemplate = ({ returnType, returnTypeIsValid }) => (
+  <Stack direction="row" my={1}>
+    <ElementCardLabel label="Return Type" />
 
-  return (
-    <div className={fieldStyles.field} id="return-type-template">
-      <div className={fieldStyles.fieldLabel}>Return Type:</div>
-
-      <div className={clsx(fieldStyles.fieldDetails, fieldStyles.fieldDetailsLast)}>
-        {returnTypeIsValid && <CheckIcon fontSize="small" />}
-        {returnType}
-      </div>
-    </div>
-  );
-};
+    <Stack alignItems="center" direction="row" mb={1}>
+      {returnTypeIsValid && <CheckIcon fontSize="small" sx={{ marginRight: '5px' }} />}
+      {returnType}
+    </Stack>
+  </Stack>
+);
 
 ReturnTypeTemplate.propTypes = {
   returnType: PropTypes.string.isRequired,

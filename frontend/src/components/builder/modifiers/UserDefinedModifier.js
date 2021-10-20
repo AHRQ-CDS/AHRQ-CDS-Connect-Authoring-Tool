@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import propTypes from 'prop-types';
-import { IconButton } from '@material-ui/core';
-import { Edit as EditIcon } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { Edit as EditIcon } from '@mui/icons-material';
 
 import { ModifierModal } from 'components/modals';
 import makeStyles from './styles';
@@ -14,7 +14,7 @@ const UserDefinedModifier = ({ elementInstance, handleUpdateModifier, label, mod
     <div className={modifierStyles.customModifier}>
       <div className={modifierStyles.modifierMargin}>{label}</div>
 
-      <IconButton aria-label="edit" onClick={() => setShowModifierModal(true)}>
+      <IconButton aria-label="edit" onClick={() => setShowModifierModal(true)} size="large">
         <EditIcon color="primary" fontSize="small" />
       </IconButton>
 

@@ -1,28 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton } from '@material-ui/core';
-import { Close as CloseIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import { Box, Divider, IconButton, Stack } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 
-import { useFieldStyles } from 'styles/hooks';
+import ElementCardLabel from 'components/elements/ElementCard/ElementCardLabel';
 
-const CodeListTemplate = ({ codes, handleDeleteCode }) => {
-  const fieldStyles = useFieldStyles();
+const CodeListTemplate = ({ codes, handleDeleteCode }) => (
+  <div id="code-list-template">
+    {codes.map((code, index) => (
+      <Stack key={`code-${index}`} direction="row" mb={1}>
+        <ElementCardLabel id="code-label" label={`Code${codes.length > 1 ? ` ${index + 1}` : ''}`} mt="6px" />
 
-  return (
-    <div id="code-list-template">
-      {codes.map((code, index) => (
-        <div key={`code-${index}`} className={fieldStyles.field}>
-          <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall)} id="code-label">
-            Code{codes.length > 1 && ` ${index + 1}`}:
-          </div>
+        <Stack width="100%">
+          <Stack alignItems="center" direction="row" justifyContent="space-between" mb={1}>
+            {`${code.codeSystem.name} (${code.code}) ${code.display === '' ? '' : ` - ${code.display}`}`}
 
-          <div className={fieldStyles.fieldDetails}>
-            <div className={fieldStyles.fieldDisplay}>
-              {`${code.codeSystem.name} (${code.code}) ${code.display === '' ? '' : ` - ${code.display}`}`}
-            </div>
-
-            <div className={clsx(fieldStyles.fieldButtons, fieldStyles.fieldButtonsAlignCenter)}>
+            <Box>
               <IconButton
                 aria-label={`delete code ${code.codeSystem.name} (${code.code})`}
                 color="primary"
@@ -30,13 +23,15 @@ const CodeListTemplate = ({ codes, handleDeleteCode }) => {
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
+            </Box>
+          </Stack>
+
+          <Divider />
+        </Stack>
+      </Stack>
+    ))}
+  </div>
+);
 
 CodeListTemplate.propTypes = {
   codes: PropTypes.array.isRequired,

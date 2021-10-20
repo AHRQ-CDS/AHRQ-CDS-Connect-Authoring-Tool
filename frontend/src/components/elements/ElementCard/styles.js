@@ -1,10 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 export default makeStyles(
   theme => ({
-    buttonHighlight: {
-      color: theme.palette.common.blueHighlight
-    },
     collapsedErrors: {
       display: 'inline-block',
       marginLeft: '170px'
@@ -33,29 +30,6 @@ export default makeStyles(
     },
     expressionType: {
       fontWeight: 700
-    },
-    titleField: {
-      margin: '0 10px',
-      width: '100%'
-    },
-    titleGroup: {
-      alignItems: 'center',
-      display: 'flex'
-    },
-    titleLabel: {
-      fontSize: '0.8em',
-      fontWeight: 600,
-      marginRight: '1em',
-      minWidth: '150px',
-      textAlign: 'right'
-    },
-    warningGroup: {
-      '& div': {
-        alignItems: 'center',
-        display: 'flex',
-        height: '50px',
-        margin: '10px'
-      }
     }
   }),
   { name: 'ElementCard', index: 1 }

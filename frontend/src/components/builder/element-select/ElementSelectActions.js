@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Button, CardActions } from '@material-ui/core';
+import { Button, CardActions } from '@mui/material';
 import {
   Check as CheckIcon,
   List as ListIcon,
   LocalHospital as LocalHospitalIcon,
   Lock as LockIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { CodeSelectModal, ValueSetSelectModal, VSACAuthenticationModal } from 'components/modals';
 

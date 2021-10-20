@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Button, IconButton } from '@material-ui/core';
-import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { Button, IconButton } from '@mui/material';
+import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 
@@ -54,13 +54,13 @@ const Parameters = ({ handleUpdateParameters }) => {
       {parameters.length > 1 && (
         <div className={tabStyles.tabButtons}>
           <Tooltip title="Expand All">
-            <IconButton aria-label="expand all" onClick={() => setShowAllContent(true)}>
+            <IconButton aria-label="expand all" onClick={() => setShowAllContent(true)} size="large">
               <ExpandMoreIcon fontSize="small" />
             </IconButton>
           </Tooltip>
 
           <Tooltip title="Collapse All">
-            <IconButton aria-label="collapse all" onClick={() => setShowAllContent(false)}>
+            <IconButton aria-label="collapse all" onClick={() => setShowAllContent(false)} size="large">
               <ExpandLessIcon fontSize="small" />
             </IconButton>
           </Tooltip>

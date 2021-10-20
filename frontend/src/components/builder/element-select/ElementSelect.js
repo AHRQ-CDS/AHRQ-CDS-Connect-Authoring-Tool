@@ -2,8 +2,8 @@ import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
-import { Card, CardContent, IconButton } from '@material-ui/core';
-import { Close as CloseIcon } from '@material-ui/icons';
+import { Card, CardContent, IconButton } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 import pluralize from 'pluralize';
 import _ from 'lodash';
 
@@ -168,7 +168,7 @@ const ElementSelect = ({ excludeListOperations = false, handleAddElement, isDisa
           </div>
 
           {selectedOption && (
-            <IconButton aria-label="close" onClick={() => handleClearOptions()}>
+            <IconButton aria-label="close" onClick={() => handleClearOptions()} size="large">
               <CloseIcon />
             </IconButton>
           )}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, IconButton } from '@material-ui/core';
+import { Button, IconButton } from '@mui/material';
 import {
   Build as WrenchIcon,
   ChatBubble as ChatBubbleIcon,
@@ -12,7 +12,7 @@ import {
   LocalHospital as LocalHospitalIcon,
   Lock as LockIcon,
   Sms as SmsIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import clsx from 'clsx';
 import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -680,12 +680,18 @@ export default class TemplateInstance extends Component {
                 className={clsx(hasComment && 'has-comment')}
                 color="primary"
                 onClick={this.toggleComment}
+                size="large"
               >
                 {hasComment ? <SmsIcon fontSize="small" /> : <ChatBubbleIcon fontSize="small" />}
               </IconButton>
             )}
 
-            <IconButton aria-label={`hide ${templateInstance.name}`} color="primary" onClick={this.showHideElementBody}>
+            <IconButton
+              aria-label={`hide ${templateInstance.name}`}
+              color="primary"
+              onClick={this.showHideElementBody}
+              size="large"
+            >
               {showElement ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
             </IconButton>
 
@@ -695,6 +701,7 @@ export default class TemplateInstance extends Component {
                 color="primary"
                 disabled={baseElementUsed || baseElementInUsedList}
                 onClick={this.openConfirmDeleteModal}
+                size="large"
               >
                 <CloseIcon fontSize="small" />
               </IconButton>

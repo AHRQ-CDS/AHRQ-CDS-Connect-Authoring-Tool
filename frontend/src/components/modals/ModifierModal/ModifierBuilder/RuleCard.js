@@ -1,19 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { IconButton } from '@material-ui/core';
-import { Clear as ClearIcon } from '@material-ui/icons';
+import { IconButton, Stack } from '@mui/material';
+import { Clear as ClearIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import OperandTemplate from './OperandTemplate';
 import { Dropdown } from 'components/elements';
 import { fetchOperators } from 'queries/modifier-builder';
 import ruleIsComplete from './utils/ruleIsComplete';
-import { useFieldStyles } from 'styles/hooks';
 import useStyles from '../styles';
 
 const RuleCard = ({ handleRemoveRule, handleUpdateRule, resourceOptions, rule }) => {
-  const fieldStyles = useFieldStyles();
   const styles = useStyles();
   const { resourceProperty, operator } = rule;
   const ruleOption = resourceProperty ? resourceOptions.find(({ value }) => value === resourceProperty) : null;
@@ -54,9 +52,8 @@ const RuleCard = ({ handleRemoveRule, handleUpdateRule, resourceOptions, rule })
       <div className={clsx(styles.line, styles.lineHorizontal, styles.lineHorizontalRule)}></div>
       <div className={clsx(styles.line, styles.lineVertical)}></div>
 
-      <div className={clsx(styles.rule, styles.indent)} data-testid="modifier-rule">
+      <Stack alignItems="center" direction="row" flexWrap="wrap" ml="50px" width="100%" data-testid="modifier-rule">
         <Dropdown
-          className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXl)}
           label="Property"
           onChange={event => handleUpdateRule({ id: rule.id, resourceProperty: event.target.value })}
           options={resourceOptions}
@@ -64,12 +61,12 @@ const RuleCard = ({ handleRemoveRule, handleUpdateRule, resourceOptions, rule })
             renderValue: renderPropertySelectValue,
             SelectDisplayProps: { 'data-testid': 'property-select' }
           }}
+          sx={{ marginRight: '10px', width: { xs: '300px', xxl: '400px' } }}
           value={resourceProperty}
         />
 
         {resourceProperty && operatorsQuery.isSuccess && (
           <Dropdown
-            className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXl)}
             label="Operator"
             labelKey="name"
             onChange={event =>
@@ -81,6 +78,7 @@ const RuleCard = ({ handleRemoveRule, handleUpdateRule, resourceOptions, rule })
             }
             options={operatorOptions}
             SelectProps={{ SelectDisplayProps: { 'data-testid': 'operator-select' } }}
+            sx={{ marginRight: '10px', width: { xs: '250px', xxl: '300px' } }}
             value={operator?.id}
             valueKey="id"
           />
@@ -94,13 +92,13 @@ const RuleCard = ({ handleRemoveRule, handleUpdateRule, resourceOptions, rule })
             selectedOperands={operator.userSelectedOperands}
           />
         )}
-      </div>
+      </Stack>
 
-      <div className={styles.alignIcon}>
-        <IconButton aria-label="remove rule" className={styles.clearRuleButton} onClick={handleRemoveRule}>
-          <ClearIcon />
+      <Stack alignSelf="flex-start" mr={1}>
+        <IconButton aria-label="remove rule" onClick={handleRemoveRule}>
+          <ClearIcon fontSize="small" />
         </IconButton>
-      </div>
+      </Stack>
     </div>
   );
 };

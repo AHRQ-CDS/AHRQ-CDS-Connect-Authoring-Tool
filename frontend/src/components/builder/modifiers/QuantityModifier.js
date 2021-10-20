@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import clsx from 'clsx';
 
 import UcumField from 'components/builder/fields/UcumField';
@@ -28,7 +28,6 @@ const QuantityModifier = ({ handleUpdateModifier, name, unit, value }) => {
         label="Value"
         onChange={event => handleChange(event.target.value, 'quantity')}
         value={value || value === 0 ? value : ''}
-        variant="outlined"
         id="quantity-modifier"
       />
 

@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@mui/material/styles';
 import deepmerge from 'deepmerge';
 
 const breakpoints = {
@@ -69,312 +69,359 @@ const typography = {
 
 const materialUiOverridesBase = {
   MuiAccordion: {
-    root: {
-      boxShadow: 'none'
-    }
-  },
-  MuiAccordionSummary: {
-    root: {
-      borderRadius: '5px',
-      '&:hover': {
-        backgroundColor: colors.grayLighter
-      },
-      '&.Mui-expanded': {
-        backgroundColor: colors.grayLighter,
-        minHeight: 'inherit'
-      }
-    },
-    content: {
-      margin: '0',
-      '&.Mui-expanded': {
-        margin: '0'
-      }
-    }
-  },
-  MuiAlert: {
-    root: {
-      alignItems: 'center'
-    },
-    message: {
-      textAlign: 'left'
-    }
-  },
-  MuiAutocomplete: {
-    inputRoot: {
-      '&[class*="MuiOutlinedInput-root"]': {
-        '& $input': {
-          padding: '5px',
-          '@media (max-width: 1440px)': {
-            padding: '1.5px'
-          }
-        }
-      }
-    },
-    option: {
-      fontSize: '0.8em'
-    },
-    popupIndicatorOpen: {
-      transform: 'none'
-    }
-  },
-  MuiButton: {
-    root: {
-      padding: '8px 24px',
-      border: '1px solid transparent',
-      borderRadius: 0,
-      '&:focus': {
-        outline: 'none'
-      },
-      '&:hover': {
-        borderColor: 'transparent'
-      }
-    },
-    text: {
-      padding: '8px 24px'
-    },
-    contained: {
-      backgroundColor: colors.white,
-      borderColor: colors.grayLighter,
-      '&:hover': {
-        backgroundColor: colors.grayLighter
-      }
-    },
-    containedPrimary: {
-      borderColor: colors.blue,
-      '&:hover': {
-        backgroundColor: colors.white,
-        color: colors.blue,
-        borderColor: colors.blue
-      },
-      '&.Mui-disabled': {
-        borderColor: 'transparent'
-      }
-    },
-    containedSecondary: {
-      borderColor: colors.red,
-      '&:hover': {
-        backgroundColor: colors.white,
-        color: colors.red,
-        borderColor: colors.red
-      },
-      '&.Mui-disabled': {
-        borderColor: 'transparent'
-      }
-    }
-  },
-  MuiButtonBase: {
-    root: {
-      boxShadow: 'none',
-      height: 'inherit',
-      '&:hover': {
+    styleOverrides: {
+      root: {
         boxShadow: 'none'
       }
     }
   },
+  MuiAccordionSummary: {
+    styleOverrides: {
+      root: {
+        borderRadius: '5px',
+        '&:hover': {
+          backgroundColor: colors.grayLighter
+        },
+        '&.Mui-expanded': {
+          backgroundColor: colors.grayLighter,
+          minHeight: 'inherit'
+        }
+      },
+      content: {
+        margin: '0',
+        '&.Mui-expanded': {
+          margin: '0'
+        }
+      }
+    }
+  },
+  MuiAlert: {
+    styleOverrides: {
+      root: {
+        alignItems: 'center'
+      },
+      message: {
+        textAlign: 'left'
+      }
+    }
+  },
+  MuiAutocomplete: {
+    styleOverrides: {
+      option: {
+        fontSize: '0.8em'
+      },
+      popupIndicatorOpen: {
+        transform: 'none'
+      }
+    }
+  },
+  MuiButton: {
+    styleOverrides: {
+      root: {
+        padding: '8px 24px',
+        border: '1px solid transparent',
+        borderRadius: 0,
+        '&:focus': {
+          outline: 'none'
+        },
+        '&:hover': {
+          borderColor: 'transparent'
+        }
+      },
+      text: {
+        padding: '8px 24px'
+      },
+      containedInherit: {
+        backgroundColor: colors.white,
+        borderColor: colors.grayLighter,
+        '&:hover': {
+          backgroundColor: colors.grayLighter
+        }
+      },
+      containedPrimary: {
+        backgroundColor: colors.blue,
+        borderColor: colors.blue,
+        '&:hover': {
+          backgroundColor: colors.white,
+          color: colors.blue,
+          borderColor: colors.blue
+        },
+        '&.Mui-disabled': {
+          borderColor: 'transparent'
+        }
+      },
+      containedSecondary: {
+        backgroundColor: colors.red,
+        borderColor: colors.red,
+        '&:hover': {
+          backgroundColor: colors.white,
+          color: colors.red,
+          borderColor: colors.red
+        },
+        '&.Mui-disabled': {
+          borderColor: 'transparent'
+        }
+      }
+    }
+  },
+  MuiButtonBase: {
+    styleOverrides: {
+      root: {
+        boxShadow: 'none',
+        height: 'inherit',
+        '&:hover': {
+          boxShadow: 'none'
+        }
+      }
+    }
+  },
   MuiCard: {
-    root: {
-      backgroundColor: colors.grayLightest,
-      margin: '1em 0'
+    styleOverrides: {
+      root: {
+        backgroundColor: colors.grayLightest,
+        margin: '1em 0'
+      }
     }
   },
   MuiCardActions: {
-    root: {
-      borderTop: `1px solid ${colors.grayLighter}`,
-      padding: '20px'
+    styleOverrides: {
+      root: {
+        borderTop: `1px solid ${colors.grayLighter}`,
+        padding: '20px'
+      }
     }
   },
   MuiCardContent: {
-    root: {
-      padding: '1em'
+    styleOverrides: {
+      root: {
+        padding: '1em'
+      }
     }
   },
   MuiCardHeader: {
-    root: {
-      borderBottom: `1px solid ${colors.grayLighter}`,
-      padding: '20px'
-    },
-    title: {
-      fontSize: '1.2em',
-      marginLeft: '20px'
-    },
-    action: {
-      marginTop: '10px'
+    styleOverrides: {
+      root: {
+        borderBottom: `1px solid ${colors.grayLighter}`,
+        padding: '20px'
+      },
+      title: {
+        fontSize: '1.2em',
+        marginLeft: '20px'
+      },
+      action: {
+        marginTop: '10px'
+      }
     }
   },
   MuiDialogActions: {
-    root: {
-      borderTop: variables.border.globalBorder,
-      padding: `1em ${variables.spacing.globalPadding}`,
-      justifyContent: 'space-between'
+    styleOverrides: {
+      root: {
+        borderTop: variables.border.globalBorder,
+        padding: `1em ${variables.spacing.globalPadding}`,
+        justifyContent: 'space-between'
+      }
     }
   },
   MuiDialogContent: {
-    root: {
-      padding: variables.spacing.globalPadding
+    styleOverrides: {
+      root: {
+        padding: variables.spacing.globalPadding
+      }
     }
   },
   MuiDialogTitle: {
-    root: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      borderBottom: variables.border.globalBorder,
-      padding: `1em ${variables.spacing.globalPadding}`
+    styleOverrides: {
+      root: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        borderBottom: variables.border.globalBorder,
+        padding: `1em ${variables.spacing.globalPadding}`
+      }
     }
   },
   MuiFormLabel: {
-    root: {
-      opacity: '0.7',
+    styleOverrides: {
+      root: {
+        opacity: '0.7',
 
-      '&$focused, &$filled': {
-        opacity: '1'
+        '&.Mui-focused, &.Mui-filled': {
+          opacity: '1'
+        }
       }
     }
   },
   MuiIconButton: {
-    root: {
-      '&:focus': {
-        outline: 'none'
+    styleOverrides: {
+      root: {
+        '&:focus': {
+          outline: 'none'
+        }
       }
     }
   },
   MuiInputBase: {
-    root: {
-      backgroundColor: colors.white
-    }
-  },
-  MuiInputLabel: {
-    outlined: {
-      transform: 'translate(14px, 16px) scale(1)',
-      '@media (max-width: 1440px)': {
-        transform: 'translate(14px, 10px) scale(1)'
+    styleOverrides: {
+      root: {
+        backgroundColor: colors.white
+      },
+      hiddenLabel: {
+        '& fieldset': {
+          top: 0
+        },
+        '& legend': {
+          display: 'none'
+        }
       }
     }
   },
   MuiLink: {
-    root: {
-      color: colors.blueLink
+    defaultProps: {
+      underline: 'hover'
+    },
+    styleOverrides: {
+      root: {
+        color: colors.blueLink
+      }
     }
   },
   MuiListSubheader: {
-    sticky: {
-      backgroundColor: colors.white,
-      color: colors.grayLight
-    }
-  },
-  MuiOutlinedInput: {
-    input: {
-      padding: '14px',
-      '@media (max-width: 1440px)': {
-        padding: '10px'
+    styleOverrides: {
+      sticky: {
+        backgroundColor: colors.white,
+        color: colors.grayLight
       }
     }
   },
   MuiPaper: {
-    root: {
-      backgroundColor: colors.white
+    styleOverrides: {
+      root: {
+        backgroundColor: colors.white
+      }
     }
   },
   MuiPickersBasePicker: {
-    pickerView: {
-      maxWidth: 'inherit'
-    }
-  },
-  MuiSelect: {
-    root: {
-      padding: '14px 16px',
-      '@media (max-width: 1440px)': {
-        padding: '10px 16px'
-      }
-    },
-    icon: {
-      top: 'calc(50% - 14px)',
-      '@media (max-width: 1440px)': {
-        top: 'calc(50% - 10px)'
+    styleOverrides: {
+      pickerView: {
+        maxWidth: 'inherit'
       }
     }
   },
   MuiTableCell: {
-    head: {
-      whiteSpace: 'nowrap'
+    styleOverrides: {
+      head: {
+        whiteSpace: 'nowrap'
+      }
+    }
+  },
+  MuiTextField: {
+    defaultProps: {
+      margin: 'dense',
+      size: 'small'
     }
   },
   MuiTooltip: {
-    arrow: {
-      color: colors.black
-    },
-    tooltip: {
-      backgroundColor: colors.black,
-      fontSize: '0.8em'
+    styleOverrides: {
+      arrow: {
+        color: colors.black
+      },
+      tooltip: {
+        backgroundColor: colors.black,
+        fontSize: '0.8em'
+      }
     }
   }
 };
 
 const materialUiOverridesDark = {
   MuiButton: {
-    contained: {
-      backgroundColor: colors.white,
-      '&:hover': {
-        backgroundColor: colors.blue,
-        color: colors.white,
-        borderColor: colors.white
+    styleOverrides: {
+      colorInherit: {
+        color: colors.blue,
+        '&:hover': {
+          color: colors.blue
+        },
+        '&.Mui-disabled': {
+          color: colors.grayLight
+        }
       },
-      '&$disabled': {
+      contained: {
         backgroundColor: colors.white,
-        color: colors.black
+        '&:hover': {
+          backgroundColor: colors.blue,
+          color: colors.white,
+          borderColor: colors.white
+        },
+        '&.Mui-disabled': {
+          backgroundColor: colors.gray,
+          borderColor: colors.gray,
+          color: colors.black
+        }
       }
     }
   },
   MuiIconButton: {
-    root: {
-      color: colors.grayLighter,
-      '&:hover': {
-        backgroundColor: colors.blueLight
+    styleOverrides: {
+      root: {
+        color: colors.grayLighter,
+        '&:hover': {
+          backgroundColor: colors.blueLight
+        }
       }
     }
   },
   MuiInputBase: {
-    root: {
-      backgroundColor: 'transparent'
-    },
-    input: {
-      '&:-webkit-autofill': {
-        WebkitBoxShadow: `0 0 0 100px ${colors.blueLink} inset`,
-        WebkitTextFillColor: colors.white,
-        borderTopLeftRadius: 'inherit',
-        borderTopRightRadius: 'inherit'
+    styleOverrides: {
+      root: {
+        backgroundColor: 'transparent'
+      },
+      input: {
+        '&:-webkit-autofill': {
+          WebkitBoxShadow: `0 0 0 100px ${colors.blueLink} inset`,
+          WebkitTextFillColor: colors.white,
+          borderTopLeftRadius: 'inherit',
+          borderTopRightRadius: 'inherit'
+        }
       }
     }
   },
   MuiInputLabel: {
-    root: {
-      color: colors.white,
-      '&.Mui-focused': {
-        color: colors.white
+    styleOverrides: {
+      root: {
+        color: colors.white,
+        '&.Mui-focused': {
+          color: colors.white
+        }
       }
     }
   },
   MuiLink: {
-    root: {
-      color: colors.white,
-      fontWeight: 'bold',
-      '&:hover, &:focus': {
-        color: colors.white
+    styleOverrides: {
+      root: {
+        color: colors.white,
+        fontWeight: 'bold',
+        '&:hover, &:focus': {
+          color: colors.white
+        }
       }
     }
   },
   MuiOutlinedInput: {
-    root: {
-      '&$focused $notchedOutline': {
+    styleOverrides: {
+      root: {
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: colors.white
+        }
+      },
+      notchedOutline: {
         borderColor: colors.white
       }
-    },
-    notchedOutline: {
-      borderColor: colors.white
     }
   },
   MuiPaper: {
-    root: {
-      backgroundColor: colors.blue
+    styleOverrides: {
+      root: {
+        backgroundColor: colors.blue
+      }
     }
   }
 };
@@ -413,20 +460,20 @@ const paletteDark = {
   }
 };
 
-const lightTheme = createMuiTheme({
-  breakpoints: { ...breakpoints },
-  typography: { ...typography },
-  palette: { ...paletteBase },
-  overrides: { ...materialUiOverridesBase },
-  variables: { ...variables }
+const lightTheme = createTheme({
+  breakpoints,
+  components: materialUiOverridesBase,
+  palette: paletteBase,
+  typography,
+  variables
 });
 
-const darkTheme = createMuiTheme({
-  breakpoints: { ...breakpoints },
-  typography: { ...typography },
+const darkTheme = createTheme({
+  breakpoints,
+  components: deepmerge(materialUiOverridesBase, materialUiOverridesDark),
   palette: deepmerge(paletteBase, paletteDark),
-  overrides: deepmerge(materialUiOverridesBase, materialUiOverridesDark),
-  variables: { ...variables }
+  typography,
+  variables
 });
 
 export default lightTheme;

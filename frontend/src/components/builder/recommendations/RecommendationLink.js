@@ -1,69 +1,55 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, TextField } from '@material-ui/core';
-import { Clear as ClearIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import { IconButton, Stack, TextField } from '@mui/material';
+import { Clear as ClearIcon } from '@mui/icons-material';
 
 import { Dropdown } from 'components/elements';
-import { useFieldStyles, useFlexStyles } from 'styles/hooks';
-import useStyles from './styles';
 
 const linkOptions = [
   { label: 'absolute', value: 'absolute' },
   { label: 'smart', value: 'smart' }
 ];
 
-const RecommendationLink = ({ handleChangeLink, handleDeleteLink, label, link }) => {
-  const fieldStyles = useFieldStyles();
-  const flexStyles = useFlexStyles();
-  const styles = useStyles();
+const RecommendationLink = ({ handleChangeLink, handleDeleteLink, label, link }) => (
+  <Stack my={2}>
+    <Stack alignItems="center" direction="row" justifyContent="space-between">
+      {label}
+      <IconButton aria-label="remove link" color="primary" onClick={handleDeleteLink}>
+        <ClearIcon fontSize="small" />
+      </IconButton>
+    </Stack>
 
-  return (
-    <div className={styles.recommendationInput}>
-      <div className={clsx(flexStyles.flex, flexStyles.alignCenter, flexStyles.spaceBetween)}>
-        {label}
-        <IconButton aria-label="remove link" color="primary" onClick={handleDeleteLink}>
-          <ClearIcon fontSize="small" />
-        </IconButton>
-      </div>
+    <Stack direction="row">
+      <Dropdown
+        label="Link Type"
+        onChange={event => handleChangeLink('type', event.target.value)}
+        options={linkOptions}
+        sx={{ marginRight: '10px', width: '200px' }}
+        value={link.type}
+      />
 
-      <div className={clsx(fieldStyles.field, styles.linkInput)}>
-        <Dropdown
-          className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
-          InputProps={{ className: styles.linkDropdown }}
-          label="Link Type"
-          onChange={event => handleChangeLink('type', event.target.value)}
-          options={linkOptions}
-          value={link.type}
-        />
+      <TextField
+        fullWidth
+        hiddenLabel
+        multiline
+        onChange={event => handleChangeLink('label', event.target.value)}
+        placeholder="Link Text"
+        value={link.label}
+      />
+    </Stack>
 
-        <TextField
-          className={clsx(fieldStyles.fieldInput, styles.linkText)}
-          fullWidth
-          label={null}
-          multiline
-          onChange={event => handleChangeLink('label', event.target.value)}
-          placeholder="Link Text"
-          value={link.label}
-          variant="outlined"
-        />
-      </div>
-
-      <div className={fieldStyles.field}>
-        <TextField
-          className={clsx(fieldStyles.fieldInput, styles.linkText)}
-          fullWidth
-          label={null}
-          multiline
-          onChange={event => handleChangeLink('url', event.target.value)}
-          placeholder="Link Address"
-          value={link.url}
-          variant="outlined"
-        />
-      </div>
-    </div>
-  );
-};
+    <Stack direction="row">
+      <TextField
+        fullWidth
+        hiddenLabel
+        multiline
+        onChange={event => handleChangeLink('url', event.target.value)}
+        placeholder="Link Address"
+        value={link.url}
+      />
+    </Stack>
+  </Stack>
+);
 
 RecommendationLink.propTypes = {
   handleChangeLink: PropTypes.func.isRequired,

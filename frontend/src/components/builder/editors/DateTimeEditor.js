@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Remove as DashIcon } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
-import clsx from 'clsx';
+import { Alert, Box, Stack } from '@mui/material';
+import { Remove as DashIcon } from '@mui/icons-material';
 
 import { DatePicker, TimePicker } from 'components/elements/Pickers';
 import {
@@ -11,7 +10,6 @@ import {
   convertPickerDateToCQL,
   convertPickerTimeToCQL
 } from 'utils/dates';
-import { useFieldStyles } from 'styles/hooks';
 
 const convertDateTimeForCQL = (newValues, isInterval, isTime) => {
   const { date, time, firstDate, firstTime, secondDate, secondTime } = newValues;
@@ -34,8 +32,6 @@ const DateTimeEditor = ({
   isTime = false,
   value
 }) => {
-  const fieldStyles = useFieldStyles();
-
   const handleChange = (newValue, inputType) => {
     if (newValue && Number.isNaN(newValue.valueOf())) return;
 
@@ -54,13 +50,15 @@ const DateTimeEditor = ({
   };
 
   return (
-    <div className={fullWidth ? fieldStyles.fieldInputFullWidth : fieldStyles.fieldInputLg} id="date-time-editor">
-      <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
+    <Stack sx={{ width: fullWidth ? '100%' : { xs: '300px', xxl: '400px' } }}>
+      <Stack direction="row">
         {!isTime && (
-          <DatePicker
-            onChange={newValue => handleChange(newValue, isInterval ? 'firstDate' : 'date')}
-            value={convertDateForPicker(isInterval ? value?.firstDate : value?.date)}
-          />
+          <Box mr={2}>
+            <DatePicker
+              onChange={newValue => handleChange(newValue, isInterval ? 'firstDate' : 'date')}
+              value={convertDateForPicker(isInterval ? value?.firstDate : value?.date)}
+            />
+          </Box>
         )}
 
         <TimePicker
@@ -69,10 +67,10 @@ const DateTimeEditor = ({
         />
 
         {isInterval && <DashIcon />}
-      </div>
+      </Stack>
 
       {isInterval && (
-        <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
+        <Stack direction="row">
           {!isTime && (
             <DatePicker
               onChange={newValue => handleChange(newValue, 'secondDate')}
@@ -84,11 +82,11 @@ const DateTimeEditor = ({
             onChange={newValue => handleChange(newValue, 'secondTime')}
             value={convertTimeForPicker(value?.secondTime)}
           />
-        </div>
+        </Stack>
       )}
 
       {errors?.incompleteInput && <Alert severity="error">Warning: A DateTime must have at least a date.</Alert>}
-    </div>
+    </Stack>
   );
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, FormControlLabel, TextField } from '@material-ui/core';
+import { Checkbox, FormControlLabel, TextField } from '@mui/material';
 import clsx from 'clsx';
 
 import { useFieldStyles, useFlexStyles } from 'styles/hooks';
@@ -27,7 +27,6 @@ const NumberField = ({ field, handleUpdateField, isInteger = false }) => {
         onChange={handleChangeValue}
         type="number"
         value={field.value || ''}
-        variant="outlined"
       />
 
       {field.exclusive && (

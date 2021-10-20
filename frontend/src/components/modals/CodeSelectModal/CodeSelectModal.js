@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useMutation } from 'react-query';
 import { useLatest } from 'react-use';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 
 import CodeDetailsTable from './CodeDetailsTable';
 import CodeSelectModalFooter from './CodeSelectModalFooter';

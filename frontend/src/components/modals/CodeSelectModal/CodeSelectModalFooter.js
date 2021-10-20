@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 
 const CodeSelectModalFooter = ({ isValidCode }) => (
   <div>

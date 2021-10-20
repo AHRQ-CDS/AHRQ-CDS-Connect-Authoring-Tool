@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
-import { Checkbox, FormControlLabel } from '@material-ui/core';
-import { Remove as DashIcon } from '@material-ui/icons';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import { Remove as DashIcon } from '@mui/icons-material';
 import { useField, useFormikContext } from 'formik';
 import clsx from 'clsx';
 

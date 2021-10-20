@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Inspector from 'react-inspector';
-import { Divider } from '@material-ui/core';
+import { Divider } from '@mui/material';
 
 import PatientCard from '../PatientCard';
 import PatientDataSection from '../PatientDataSection';

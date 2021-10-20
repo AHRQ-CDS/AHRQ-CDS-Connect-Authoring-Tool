@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { IconButton } from '@material-ui/core';
-import { Close as CloseIcon, Visibility as VisibilityIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import { Box, Divider, IconButton, Stack } from '@mui/material';
+import { Close as CloseIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
 
+import ElementCardLabel from 'components/elements/ElementCard/ElementCardLabel';
 import { ValueSetSelectModal } from 'components/modals';
 import { Tooltip } from 'components/elements';
-import { useFieldStyles } from 'styles/hooks';
 
 const ValueSetListTemplate = ({ handleDeleteValueSet, valueSets }) => {
   const [showValueSetViewModal, setShowValueSetViewModal] = useState(false);
   const [valueSetToView, setValueSetToView] = useState(null);
   const vsacApiKey = useSelector(state => state.vsac.apiKey);
-  const fieldStyles = useFieldStyles();
 
   const handleViewValueSet = valueSet => {
     setValueSetToView(valueSet);
@@ -21,18 +19,20 @@ const ValueSetListTemplate = ({ handleDeleteValueSet, valueSets }) => {
   };
 
   return (
-    <>
+    <div id="value-set-list-template">
       {valueSets.map((valueSet, index) => (
-        <div key={`value-set-${index}`} id="value-set-list-template">
-          <div className={fieldStyles.field}>
-            <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall)} id="value-set-label">
-              Value Set{valueSets.length > 1 ? ` ${index + 1}` : ''}:
-            </div>
+        <Stack key={`value-set-${index}`} direction="row" mb={1}>
+          <ElementCardLabel
+            id="value-set-label"
+            label={`Value Set${valueSets.length > 1 ? ` ${index + 1}` : ''}`}
+            mt="6px"
+          />
 
-            <div className={fieldStyles.fieldDetails}>
-              <div className={fieldStyles.fieldDisplay}>{` ${valueSet.name} (${valueSet.oid})`}</div>
+          <Stack width="100%">
+            <Stack alignItems="center" direction="row" justifyContent="space-between" mb={1}>
+              {` ${valueSet.name} (${valueSet.oid})`}
 
-              <div className={clsx(fieldStyles.fieldButtons, fieldStyles.fieldButtonsAlignCenter)}>
+              <Box>
                 <Tooltip enabled={!Boolean(vsacApiKey)} placement="left" title="Authenticate VSAC to view details">
                   <IconButton
                     aria-label="View Value Set"
@@ -51,20 +51,22 @@ const ValueSetListTemplate = ({ handleDeleteValueSet, valueSets }) => {
                 >
                   <CloseIcon fontSize="small" />
                 </IconButton>
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Stack>
 
-          {showValueSetViewModal && (
-            <ValueSetSelectModal
-              handleCloseModal={() => setShowValueSetViewModal(false)}
-              readOnly
-              savedValueSet={valueSetToView}
-            />
-          )}
-        </div>
+            <Divider />
+          </Stack>
+        </Stack>
       ))}
-    </>
+
+      {showValueSetViewModal && (
+        <ValueSetSelectModal
+          handleCloseModal={() => setShowValueSetViewModal(false)}
+          readOnly
+          savedValueSet={valueSetToView}
+        />
+      )}
+    </div>
   );
 };
 

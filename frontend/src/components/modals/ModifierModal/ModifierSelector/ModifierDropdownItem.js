@@ -1,6 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import { MenuBook as MenuBookIcon } from '@material-ui/icons';
+import { MenuBook as MenuBookIcon } from '@mui/icons-material';
 
 const ModifierDropdownItem = ({ option }) => {
   return (

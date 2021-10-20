@@ -289,7 +289,7 @@ describe('<ModifierModal />', () => {
       userEvent.click(await screen.findByRole('option', { name: 'Not' }));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(2);
       expect(
-        screen.getByTitle('Cannot remove expression because return type does not match next input type.')
+        screen.getByLabelText('Cannot remove expression because return type does not match next input type.')
       ).toBeInTheDocument();
 
       userEvent.click(screen.queryAllByRole('button', { name: /delete modifier/i })[0]);
@@ -360,14 +360,14 @@ describe('<ModifierModal />', () => {
       renderComponent({ elementInstance: instanceTree.childInstances[0] });
 
       expect(screen.getByRole('button', { name: /build new modifier/i })).toBeDisabled();
-      expect(screen.getByTitle('Return type not supported')).toBeInTheDocument();
+      expect(screen.getByLabelText('Return type not supported')).toBeInTheDocument();
     });
 
     it('cannot navigate to the Build Modifier view if the element already has a modifier ', () => {
       renderComponent({ elementInstance: genericInstanceWithModifiers });
 
       expect(screen.getByRole('button', { name: /build new modifier/i })).toBeDisabled();
-      expect(screen.getByTitle('Cannot add a custom modifier to another modifier')).toBeInTheDocument();
+      expect(screen.getByLabelText('Cannot add a custom modifier to another modifier')).toBeInTheDocument();
     });
 
     it('can add a rule', async () => {

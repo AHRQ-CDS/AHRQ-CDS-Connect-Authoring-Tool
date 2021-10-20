@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { IconButton } from '@material-ui/core';
-import { Close as CloseIcon } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 import _ from 'lodash';
 
@@ -73,6 +73,7 @@ const IfConditionSelect = ({
     <>
       <Dropdown
         className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXl)}
+        hiddenLabel={Boolean(selectedOption?.value)}
         id={`condition-${statement.id}`}
         label={selectedOption?.value ? null : 'Choose if condition'}
         onChange={event => handleUpdateIfCondition(event.target.value)}
@@ -86,6 +87,7 @@ const IfConditionSelect = ({
           color="primary"
           onClick={() => handleDeleteIfThenClause()}
           variant="contained"
+          size="large"
         >
           <CloseIcon />
         </IconButton>

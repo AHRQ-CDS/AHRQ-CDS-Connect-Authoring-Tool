@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import clsx from 'clsx';
 
 import { useFieldStyles } from 'styles/hooks';
@@ -20,7 +20,6 @@ const StringModifier = ({ handleUpdateModifier, name, value }) => {
         label="Value"
         onChange={event => handleUpdateModifier({ value: event.target.value })}
         value={value || ''}
-        variant="outlined"
       />
     </div>
   );

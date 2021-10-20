@@ -1,15 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, CardActions, CardContent, CardHeader, TextField } from '@material-ui/core';
+import { Box, Button, Card, CardActions, CardContent, CardHeader, TextField } from '@mui/material';
 import produce from 'immer';
 import { v4 as uuidv4 } from 'uuid';
-import clsx from 'clsx';
 
 import RecommendationActions from './RecommendationActions';
 import RecommendationField from './RecommendationField';
 import RecommendationLink from './RecommendationLink';
 import RecommendationSubpopulations from './RecommendationSubpopulations';
-import useStyles from './styles';
 
 const updateRecommendation = produce((recommendation, field, value) => {
   recommendation[field] = value;
@@ -37,7 +35,6 @@ const Recommendation = ({
   const [showRationale, setShowRationale] = useState(rationale !== '');
   const [showComment, setShowComment] = useState(false);
   const [showAddSubpopulation, setShowAddSubpopulation] = useState(false);
-  const styles = useStyles();
 
   const subpopulationOptions = useMemo(
     () =>
@@ -81,9 +78,8 @@ const Recommendation = ({
             text={text}
           />
         }
-        className={styles.recommendationCardHeader}
         subheader={
-          <div className={styles.recommendationCardHeaderContent}>
+          <Box my={2}>
             {(subpopulations.length > 0 || showAddSubpopulation) && (
               <RecommendationSubpopulations
                 artifactSubpopulations={artifactSubpopulations}
@@ -97,43 +93,41 @@ const Recommendation = ({
               />
             )}
             Recommend...
-            <div className={clsx(styles.recommendationInput, styles.recommendationInputHeader)}>
+            <Box my={1}>
               <TextField
                 fullWidth
-                label={null}
+                hiddenLabel
                 multiline
                 onChange={event =>
                   handleUpdateRecommendation(updateRecommendation(recommendation, 'text', event.target.value))
                 }
                 placeholder="Describe your recommendation"
                 value={text}
-                variant="outlined"
               />
-            </div>
+            </Box>
             {showComment && (
-              <>
+              <Box my={2}>
                 Comment...
-                <div className={clsx(styles.recommendationInput, styles.recommendationInputHeader)}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    onChange={event =>
-                      handleUpdateRecommendation(updateRecommendation(recommendation, 'comment', event.target.value))
-                    }
-                    placeholder="Add an optional comment"
-                    value={comment}
-                    variant="outlined"
-                  />
-                </div>
-              </>
+                <TextField
+                  fullWidth
+                  hiddenLabel
+                  multiline
+                  onChange={event =>
+                    handleUpdateRecommendation(updateRecommendation(recommendation, 'comment', event.target.value))
+                  }
+                  placeholder="Add an optional comment"
+                  value={comment}
+                />
+              </Box>
             )}
-          </div>
+          </Box>
         }
+        sx={{ padding: '20px 40px', position: 'relative' }}
       />
 
-      <CardContent className={styles.recommendationCardContent}>
+      <CardContent sx={{ padding: '0 40px' }}>
         {showRationale && (
-          <div className={styles.recommendationInput}>
+          <Box my={1}>
             <RecommendationField
               handleChangeField={event =>
                 handleUpdateRecommendation(updateRecommendation(recommendation, 'rationale', event.target.value))
@@ -143,7 +137,7 @@ const Recommendation = ({
               placeholder="Describe the rationale for your recommendation"
               value={rationale}
             />
-          </div>
+          </Box>
         )}
 
         {links.map((link, index) => (

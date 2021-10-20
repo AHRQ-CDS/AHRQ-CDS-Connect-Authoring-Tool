@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 
 import { getCurrentUser } from 'actions/auth';
 import setErrorMessage from 'actions/errors';

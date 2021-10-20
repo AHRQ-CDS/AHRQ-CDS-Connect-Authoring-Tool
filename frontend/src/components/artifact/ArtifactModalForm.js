@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, useFormikContext } from 'formik';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import clsx from 'clsx';
 
 import { TextField } from 'components/fields';

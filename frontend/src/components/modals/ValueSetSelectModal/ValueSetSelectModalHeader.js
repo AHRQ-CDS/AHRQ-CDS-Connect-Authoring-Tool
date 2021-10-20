@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLatest } from 'react-use';
-import { Button, IconButton, TextField } from '@material-ui/core';
-import { ArrowBackIos as ArrowBackIosIcon } from '@material-ui/icons';
+import { Button, IconButton, TextField } from '@mui/material';
+import { ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 
 import useStyles from '../styles';
 
@@ -27,7 +27,7 @@ const ValueSetSelectModalHeader = ({ goBack, onSearch, readOnly, selectedValueSe
     <div className={styles.searchContainer}>
       {!readOnly && selectedValueSet && (
         <div>
-          <IconButton aria-label="Back" className={styles.iconButton} color="primary" onClick={goBack}>
+          <IconButton aria-label="Back" className={styles.iconButton} color="primary" onClick={goBack} size="large">
             <ArrowBackIosIcon fontSize="small" />
           </IconButton>
         </div>
@@ -41,7 +41,6 @@ const ValueSetSelectModalHeader = ({ goBack, onSearch, readOnly, selectedValueSe
           label={selectedValueSet ? 'Value set' : 'Value set keyword'}
           onChange={handleChange}
           value={selectedValueSet ? `${selectedValueSet.name} (${selectedValueSet.oid})` : searchValue}
-          variant="outlined"
         />
 
         {!readOnly && !selectedValueSet && (

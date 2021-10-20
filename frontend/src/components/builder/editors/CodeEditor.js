@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Button, IconButton, Paper } from '@material-ui/core';
-import { Close as CloseIcon, LocalHospital as LocalHospitalIcon, Lock as LockIcon } from '@material-ui/icons';
+import { Button, IconButton, Paper } from '@mui/material';
+import { Close as CloseIcon, LocalHospital as LocalHospitalIcon, Lock as LockIcon } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import clsx from 'clsx';
 
@@ -70,7 +70,7 @@ const CodeEditorPaper = ({ handleDeleteCode, handleSelectCode, isList, value }) 
   return (
     <Paper className={fieldStyles.fieldCard}>
       <div className={fieldStyles.fieldCardCloseButton}>
-        <IconButton aria-label="close" color="primary" onClick={() => handleDeleteCode(value)}>
+        <IconButton aria-label="close" color="primary" onClick={() => handleDeleteCode(value)} size="large">
           <CloseIcon />
         </IconButton>
       </div>

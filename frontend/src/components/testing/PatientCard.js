@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { AccountCircle as AccountCircleIcon } from '@material-ui/icons';
+import { AccountCircle as AccountCircleIcon } from '@mui/icons-material';
 
 import { getPatientAge, getPatientFullName, getPatientGender } from 'utils/patients';
 import useStyles from './styles';

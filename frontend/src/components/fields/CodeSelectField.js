@@ -2,8 +2,7 @@ import React, { memo, useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useMutation } from 'react-query';
 import { useLatest, usePrevious } from 'react-use';
-import { Button, CircularProgress } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Alert, Button, CircularProgress } from '@mui/material';
 import { useField } from 'formik';
 
 import codeSystemOptions from 'data/codeSystemOptions';

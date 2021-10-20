@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useQueryClient } from 'react-query';
-import { Button, Checkbox, TableRow, TableCell } from '@material-ui/core';
-import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@material-ui/icons';
+import { Button, Checkbox, TableRow, TableCell } from '@mui/material';
+import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
 
 import PatientCard from './PatientCard';
 import PatientDetailsModal from './modals/PatientDetailsModal';

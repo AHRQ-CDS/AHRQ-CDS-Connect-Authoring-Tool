@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Button } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Alert, Button } from '@mui/material';
 import clsx from 'clsx';
 import _ from 'lodash';
 

@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
-import { IconButton } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { Close as CloseIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import { Alert, Divider, IconButton, Stack } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 
+import ElementCardLabel from 'components/elements/ElementCard/ElementCardLabel';
 import { ModifierForm } from 'components/builder/modifiers';
 import { Tooltip } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
@@ -14,7 +13,6 @@ import { fetchModifiers } from 'queries/modifiers';
 import { validateModifier } from 'utils/instances';
 import { changeToCase } from 'utils/strings';
 import { modifierCanBeRemoved } from 'components/builder/modifiers/utils';
-import { useFieldStyles } from 'styles/hooks';
 
 const ModifierTemplate = ({
   baseElementIsUsed,
@@ -31,7 +29,6 @@ const ModifierTemplate = ({
     enabled: query.artifactId != null
   });
   const modifierMap = modifiersQuery.data?.modifierMap ?? {};
-  const fieldStyles = useFieldStyles();
 
   // Reset values on modifiers that were not previously set or saved in the database
   if (!modifier.values && modifierMap[modifier.id] && modifierMap[modifier.id].values) {
@@ -48,8 +45,8 @@ const ModifierTemplate = ({
   };
 
   return (
-    <div className={fieldStyles.fieldDetails}>
-      <div className={fieldStyles.fieldGroup}>
+    <Stack id="modifiers-template" width="100%">
+      <Stack direction="row" justifyContent="space-between">
         <ModifierForm
           elementInstance={elementInstance}
           handleUpdateModifier={modifier => handleUpdateModifier(index, modifier)}
@@ -57,21 +54,26 @@ const ModifierTemplate = ({
           modifier={modifier}
         />
 
-        {validationWarning && <Alert severity="error">{validationWarning}</Alert>}
-      </div>
-
-      <div className={fieldStyles.fieldButtons}>
         <Tooltip enabled={!canBeRemoved} placement="left" title={tooltipText}>
           <IconButton
             aria-label="remove expression"
             disabled={!canBeRemoved}
             color="primary"
             onClick={() => setShowDeleteConfirmationModal(true)}
+            sx={{ marginTop: '5px' }}
           >
             <CloseIcon fontSize="small" />
           </IconButton>
         </Tooltip>
-      </div>
+      </Stack>
+
+      {validationWarning && (
+        <Alert severity="error" sx={{ marginBottom: '10px' }}>
+          {validationWarning}
+        </Alert>
+      )}
+
+      <Divider />
 
       {showDeleteConfirmationModal && (
         <DeleteConfirmationModal
@@ -85,19 +87,18 @@ const ModifierTemplate = ({
           </>
         </DeleteConfirmationModal>
       )}
-    </div>
+    </Stack>
   );
 };
 
 const ModifiersTemplate = ({ baseElementIsUsed, elementInstance, handleRemoveModifier, handleUpdateModifier }) => {
   const { modifiers } = elementInstance;
-  const fieldStyles = useFieldStyles();
 
   return (
-    <div className={fieldStyles.field} id="modifiers-template">
-      <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall)}>Modifiers:</div>
+    <Stack direction="row">
+      <ElementCardLabel label="Modifiers" mt="10px" />
 
-      <div className={fieldStyles.fieldGroup}>
+      <Stack width="100%">
         {modifiers.map((modifier, index) => (
           <ModifierTemplate
             key={index}
@@ -110,8 +111,8 @@ const ModifiersTemplate = ({ baseElementIsUsed, elementInstance, handleRemoveMod
             modifier={modifier}
           />
         ))}
-      </div>
-    </div>
+      </Stack>
+    </Stack>
   );
 };
 

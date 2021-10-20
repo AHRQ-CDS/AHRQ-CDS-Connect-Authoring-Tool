@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { InsertDriveFile as InsertDriveFileIcon } from '@material-ui/icons';
+import { InsertDriveFile as InsertDriveFileIcon } from '@mui/icons-material';
 
 import ExternalCqlDetailsModalSection from './ExternalCqlDetailsModalSection';
 import { KeyValueList, Modal } from 'components/elements';

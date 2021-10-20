@@ -1,32 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardTimePicker } from '@material-ui/pickers';
-import { Schedule as TimeIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import { TextField } from '@mui/material';
+import { TimePicker as MuiTimePicker } from '@mui/lab';
+import { Schedule as TimeIcon } from '@mui/icons-material';
 
-import { useFieldStyles } from 'styles/hooks';
-import useStyles from './styles';
-
-const TimePicker = ({ onChange, value }) => {
-  const fieldStyles = useFieldStyles();
-  const styles = useStyles();
-
-  return (
-    <KeyboardTimePicker
-      className={clsx(styles.picker, fieldStyles.fieldInput, fieldStyles.fieldInputMd)}
-      format="HH:mm:ss"
-      inputVariant="outlined"
-      KeyboardButtonProps={{ 'aria-label': 'change time' }}
-      keyboardIcon={<TimeIcon />}
-      label="Time"
-      margin="normal"
-      onChange={onChange}
-      placeholder="hh:mm:ss"
-      value={value}
-      views={['hours', 'minutes', 'seconds']}
-    />
-  );
-};
+const TimePicker = ({ onChange, value }) => (
+  <MuiTimePicker
+    inputFormat="HH:mm:ss"
+    keyboardIcon={<TimeIcon />}
+    label="Time"
+    onChange={onChange}
+    OpenPickerButtonProps={{ 'aria-label': 'change time', sx: { height: '40px', width: '40px' } }}
+    renderInput={props => <TextField {...props} />}
+    value={value}
+    views={['hours', 'minutes', 'seconds']}
+  />
+);
 
 TimePicker.propTypes = {
   onChange: PropTypes.func.isRequired,

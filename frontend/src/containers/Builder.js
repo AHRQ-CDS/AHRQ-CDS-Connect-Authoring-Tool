@@ -5,7 +5,7 @@ import { connect, useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
 import { bindActionCreators } from 'redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Button, IconButton, Menu, MenuItem } from '@mui/material';
 import {
   CheckCircle as CheckCircleIcon,
   Edit as EditIcon,
@@ -13,7 +13,7 @@ import {
   GetApp as GetAppIcon,
   MenuBook as MenuBookIcon,
   Save as SaveIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import _ from 'lodash';
 
 import loadTemplates from 'actions/templates';
@@ -454,7 +454,7 @@ export class Builder extends Component {
     return (
       <header className="builder__header" aria-label="Workspace Header">
         <h2 className="builder__heading">
-          <IconButton aria-label="edit" onClick={this.openArtifactModal}>
+          <IconButton aria-label="edit" onClick={this.openArtifactModal} size="large">
             <EditIcon />
           </IconButton>
 
@@ -466,6 +466,7 @@ export class Builder extends Component {
             <Button
               aria-controls="download-menu"
               aria-haspopup="true"
+              color="inherit"
               onClick={this.handleClickDownloadMenu}
               startIcon={<GetAppIcon />}
               variant="contained"
@@ -494,6 +495,7 @@ export class Builder extends Component {
             </Menu>
 
             <Button
+              color="inherit"
               onClick={() => this.handleSaveArtifact(artifact, artifact)}
               startIcon={<SaveIcon />}
               variant="contained"

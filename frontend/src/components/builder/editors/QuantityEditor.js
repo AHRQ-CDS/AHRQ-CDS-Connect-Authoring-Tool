@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { Remove as DashIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import { Alert, Stack, TextField } from '@mui/material';
+import { Remove as DashIcon } from '@mui/icons-material';
 
 import UcumField from 'components/builder/fields/UcumField';
 import { isInteger } from 'utils/numbers';
@@ -37,15 +35,14 @@ const QuantityEditor = ({ errors, handleUpdateEditor, isInterval, value }) => {
   };
 
   return (
-    <div className={fieldStyles.fieldInputFullWidth} id="quantity-editor">
-      <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
+    <Stack>
+      <Stack alignItems="center" direction="row">
         <TextField
-          className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXs)}
           fullWidth
           label="Value"
           onChange={event => handleChange(event.target.value, isInterval ? 'firstQuantity' : 'quantity')}
+          sx={{ marginRight: '10px', width: { xs: '100px', xxl: '150px' } }}
           value={isInterval ? value?.firstQuantity || '' : value?.quantity || ''}
-          variant="outlined"
         />
 
         {isInterval && (
@@ -53,23 +50,17 @@ const QuantityEditor = ({ errors, handleUpdateEditor, isInterval, value }) => {
             <DashIcon className={fieldStyles.fieldInput} />
 
             <TextField
-              className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
               fullWidth
               label="Value"
               onChange={event => handleChange(event.target.value, 'secondQuantity')}
+              sx={{ marginRight: '10px', width: { xs: '100px', xxl: '150px' } }}
               value={value?.secondQuantity || ''}
-              variant="outlined"
             />
           </>
         )}
 
-        <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
-          <UcumField
-            handleChangeUnit={(event, option) => handleChange(option?.value, 'unit')}
-            unit={value?.unit || ''}
-          />
-        </div>
-      </div>
+        <UcumField handleChangeUnit={(event, option) => handleChange(option?.value, 'unit')} unit={value?.unit || ''} />
+      </Stack>
 
       {errors?.invalidInput && (
         <Alert severity="error">Warning: The Quantity's numerical value must be a valid Decimal.</Alert>
@@ -78,7 +69,7 @@ const QuantityEditor = ({ errors, handleUpdateEditor, isInterval, value }) => {
       {errors?.incompleteInput && (
         <Alert severity="error">Warning: A Quantity must have at least a numerical value.</Alert>
       )}
-    </div>
+    </Stack>
   );
 };
 

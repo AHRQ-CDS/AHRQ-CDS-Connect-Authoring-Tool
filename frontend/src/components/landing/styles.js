@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import backgroundImage from './cds-connect-background.jpg';
 
 const buttonStyles = (theme, color) => {
@@ -116,7 +116,7 @@ export default makeStyles(
       display: 'flex',
       alignItems: 'center',
       margin: '20px 0 60px',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
         alignItems: 'center',
         '& img': {
@@ -129,7 +129,7 @@ export default makeStyles(
       '& img': {
         width: '30em',
         border: `1px solid ${theme.palette.common.grayLight}`,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
           width: '100%'
         }
       }
@@ -151,7 +151,7 @@ export default makeStyles(
       justifyContent: 'space-between',
       margin: '60px 0',
       fontSize: '0.9em',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         flexWrap: 'wrap'
       }
     },
@@ -160,10 +160,10 @@ export default makeStyles(
       '& a': {
         fontWeight: 'bold'
       },
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         flex: '0 1 calc(50% - 1em)'
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         flex: '0 1 100%'
       }
     },

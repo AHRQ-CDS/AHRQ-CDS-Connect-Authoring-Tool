@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import { Stack } from '@mui/material';
 
+import ElementCardLabel from 'components/elements/ElementCard/ElementCardLabel';
 import {
   BooleanEditor,
   CodeEditor,
@@ -11,20 +12,17 @@ import {
   StringEditor,
   ValueSetEditor
 } from 'components/builder/editors';
-import { useFieldStyles } from 'styles/hooks';
 
 const EditorsTemplate = ({
   errors,
   handleUpdateEditor,
   isInterval = false,
   isList = false,
-  isNested = false,
   label,
   type,
-  value
+  value,
+  ...props
 }) => {
-  const fieldStyles = useFieldStyles();
-
   const editor = (() => {
     switch (type) {
       case 'boolean':
@@ -98,19 +96,11 @@ const EditorsTemplate = ({
   })();
 
   return (
-    <div className={clsx(fieldStyles.field, isNested && fieldStyles.nestedField)} id="editors-template">
-      {label && (
-        <div
-          className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall, isNested && fieldStyles.nestedFieldLabel)}
-        >
-          {label}:
-        </div>
-      )}
+    <Stack alignItems="center" flexDirection="row" {...props}>
+      {label && <ElementCardLabel label={label} />}
 
-      <div className={fieldStyles.fieldInputGroupContainer}>
-        <div className={fieldStyles.fieldInputGroup}>{editor}</div>
-      </div>
-    </div>
+      {editor}
+    </Stack>
   );
 };
 
@@ -119,7 +109,6 @@ EditorsTemplate.propTypes = {
   handleUpdateEditor: PropTypes.func.isRequired,
   isInterval: PropTypes.bool,
   isList: PropTypes.bool,
-  isNested: PropTypes.bool,
   label: PropTypes.string,
   type: PropTypes.string.isRequired,
   value: PropTypes.any

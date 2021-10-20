@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { IconButton, Link, TableCell } from '@material-ui/core';
-import { Delete as DeleteIcon, Edit as EditIcon, FileCopy as CopyIcon } from '@material-ui/icons';
+import { IconButton, Link, TableCell } from '@mui/material';
+import { Delete as DeleteIcon, Edit as EditIcon, FileCopy as CopyIcon } from '@mui/icons-material';
 
 import ArtifactModal from './ArtifactModal';
 import { DeleteConfirmationModal } from 'components/modals';

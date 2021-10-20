@@ -1,35 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, TextField } from '@material-ui/core';
-import { Clear as ClearIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import { IconButton, Stack, TextField } from '@mui/material';
+import { Clear as ClearIcon } from '@mui/icons-material';
 
-import { useFlexStyles } from 'styles/hooks';
+const RecommendationField = ({ handleChangeField, handleDeleteField, label, placeholder, value }) => (
+  <Stack my={2}>
+    <Stack alignItems="center" direction="row" justifyContent="space-between">
+      {label}
+      <IconButton aria-label="remove field" color="primary" onClick={handleDeleteField}>
+        <ClearIcon fontSize="small" />
+      </IconButton>
+    </Stack>
 
-const RecommendationField = ({ handleChangeField, handleDeleteField, label, placeholder, value }) => {
-  const flexStyles = useFlexStyles();
-
-  return (
-    <>
-      <div className={clsx(flexStyles.flex, flexStyles.alignCenter, flexStyles.spaceBetween)}>
-        {label}
-        <IconButton aria-label="remove field" color="primary" onClick={handleDeleteField}>
-          <ClearIcon fontSize="small" />
-        </IconButton>
-      </div>
-
-      <TextField
-        fullWidth
-        label={null}
-        multiline
-        onChange={handleChangeField}
-        placeholder={placeholder}
-        value={value}
-        variant="outlined"
-      />
-    </>
-  );
-};
+    <TextField fullWidth hiddenLabel multiline onChange={handleChangeField} placeholder={placeholder} value={value} />
+  </Stack>
+);
 
 RecommendationField.propTypes = {
   handleChangeField: PropTypes.func.isRequired,

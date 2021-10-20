@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { produce } from 'immer';
-import { Button, Card, IconButton } from '@material-ui/core';
-import { Clear as ClearIcon } from '@material-ui/icons';
+import { Button, Card, IconButton } from '@mui/material';
+import { Clear as ClearIcon } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import clsx from 'clsx';
 
@@ -76,7 +76,12 @@ const ConjunctionCard = ({ depth, handleRemoveConjunction, handleUpdateConjuncti
         </div>
 
         {handleRemoveConjunction && (
-          <IconButton aria-label="remove group" className={styles.deleteButton} onClick={handleRemoveConjunction}>
+          <IconButton
+            aria-label="remove group"
+            className={styles.deleteButton}
+            onClick={handleRemoveConjunction}
+            size="large"
+          >
             <ClearIcon />
           </IconButton>
         )}

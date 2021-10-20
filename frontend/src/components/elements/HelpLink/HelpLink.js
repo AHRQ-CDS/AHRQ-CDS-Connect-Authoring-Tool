@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, IconButton } from '@material-ui/core';
-import { Help as HelpIcon } from '@material-ui/icons';
+import { Button, IconButton } from '@mui/material';
+import { Help as HelpIcon } from '@mui/icons-material';
 
 import { Tooltip } from 'components/elements';
 import useStyles from './styles';

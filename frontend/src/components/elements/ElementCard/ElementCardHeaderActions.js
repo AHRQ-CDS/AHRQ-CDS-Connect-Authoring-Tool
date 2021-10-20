@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import {
   ChatBubble as ChatBubbleIcon,
   Clear as ClearIcon,
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
   Sms as SmsIcon
-} from '@material-ui/icons';
-import clsx from 'clsx';
+} from '@mui/icons-material';
 
 import { DeleteConfirmationModal } from 'components/modals';
 import { Tooltip } from 'components/elements';
 import { changeToCase } from 'utils/strings';
-import useStyles from './styles';
 
 const ElementCardHeaderActions = ({
   disableDeleteMessage,
@@ -27,7 +25,6 @@ const ElementCardHeaderActions = ({
   titleValue
 }) => {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
-  const styles = useStyles();
 
   const handleDeleteElement = () => {
     handleDelete();
@@ -40,8 +37,9 @@ const ElementCardHeaderActions = ({
         <Tooltip title={showComment ? 'Hide Comment' : 'Show Comment'}>
           <IconButton
             aria-label={showComment ? 'hide comment' : 'show comment'}
-            className={clsx(hasComment && styles.buttonHighlight)}
+            color="primary"
             onClick={handleToggleComment}
+            sx={{ color: hasComment && 'common.blueHighlight' }}
           >
             {hasComment ? <SmsIcon fontSize="small" /> : <ChatBubbleIcon fontSize="small" />}
           </IconButton>
@@ -49,7 +47,7 @@ const ElementCardHeaderActions = ({
       )}
 
       <Tooltip title={showContent ? 'Collapse' : 'Expand'}>
-        <IconButton aria-label={showContent ? 'collapse' : 'expand'} onClick={handleToggleContent}>
+        <IconButton aria-label={showContent ? 'collapse' : 'expand'} color="primary" onClick={handleToggleContent}>
           {showContent ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
         </IconButton>
       </Tooltip>
@@ -57,6 +55,7 @@ const ElementCardHeaderActions = ({
       <Tooltip title={disableDeleteMessage || 'Delete'}>
         <IconButton
           aria-label="delete"
+          color="primary"
           disabled={Boolean(disableDeleteMessage)}
           onClick={() => setShowConfirmDeleteModal(true)}
         >

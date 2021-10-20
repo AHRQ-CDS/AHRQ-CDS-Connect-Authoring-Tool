@@ -2,24 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
-import { Block as BlockIcon } from '@material-ui/icons';
-import clsx from 'clsx';
+import { Box, Divider, Stack } from '@mui/material';
+import { Block as BlockIcon } from '@mui/icons-material';
 
 import EditorsTemplate from './EditorsTemplate';
+import ElementCardLabel from 'components/elements/ElementCard/ElementCardLabel';
 import { Dropdown } from 'components/elements';
 import { isSupportedEditorType } from 'components/builder/editors/utils';
 import { getBaseElementById, getBaseElementName, getBaseElementsByType } from 'components/builder/base-elements/utils';
 import { getParameterById, getParametersByType } from 'components/builder/parameters/utils';
 import { getExternalCqlByType } from 'components/builder/external-cql/utils';
 import { fetchExternalCqlList } from 'queries/external-cql';
-import { useFieldStyles, useSpacingStyles } from 'styles/hooks';
 import { changeToCase } from 'utils/strings';
 
 const ArgumentTemplate = ({ argumentLabel, argumentType, argumentValue, handleUpdateArgument, isNested }) => {
   const artifact = useSelector(state => state.artifacts.artifact);
   const { baseElements, parameters } = artifact;
-  const fieldStyles = useFieldStyles();
-  const spacingStyles = useSpacingStyles();
   const query = { artifactId: artifact._id };
   const { data: externalCqlList } = useQuery(['externalCql', query], () => fetchExternalCqlList(query), {
     enabled: artifact._id != null
@@ -91,37 +89,31 @@ const ArgumentTemplate = ({ argumentLabel, argumentType, argumentValue, handleUp
   };
 
   return (
-    <div className={clsx(fieldStyles.field, isNested && fieldStyles.nestedField)} id="argument-template">
-      <div
-        className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTaller, isNested && fieldStyles.nestedFieldLabel)}
-      >
-        {argumentLabel}:
-      </div>
+    <Stack direction="row">
+      <ElementCardLabel label={argumentLabel} mt="15px" />
 
-      <div className={clsx(fieldStyles.fieldDetails, fieldStyles.nestedField)}>
-        <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
-          <Dropdown
-            label="Argument Source"
-            onChange={event => handleSelectArgument(event.target.value)}
-            options={sourceOptions}
-            value={argumentValue?.argSource || ''}
-            renderItem={option => (
+      <Stack width="100%">
+        <Dropdown
+          Footer={
+            sourceOptions.some(sourceOption => sourceOption.isDisabled) && (
               <>
-                {option.label}
-                {option.isDisabled && <BlockIcon className={spacingStyles.marginLeft} fontSize="small" />}
+                <BlockIcon fontSize="small" sx={{ marginRight: '5px' }} />
+                No available elements
               </>
-            )}
-            Footer={
-              sourceOptions.some(sourceOption => sourceOption.isDisabled) && (
-                <div>
-                  <BlockIcon className={spacingStyles.marginRight} fontSize="small" />
-                  No available elements
-                </div>
-              )
-            }
-          />
-        </div>
-
+            )
+          }
+          label="Argument Source"
+          onChange={event => handleSelectArgument(event.target.value)}
+          options={sourceOptions}
+          renderItem={option => (
+            <>
+              {option.label}
+              {option.isDisabled && <BlockIcon fontSize="small" />}
+            </>
+          )}
+          sx={{ width: { xs: '200px', xxl: '300px' } }}
+          value={argumentValue?.argSource || ''}
+        />
         {argumentValue?.argSource === 'editor' && (
           <EditorsTemplate
             handleUpdateEditor={newSelection => handleUpdateArgument({ ...argumentValue, selected: newSelection })}
@@ -129,68 +121,61 @@ const ArgumentTemplate = ({ argumentLabel, argumentType, argumentValue, handleUp
             value={argumentValue?.selected}
           />
         )}
-
         {(argumentValue?.argSource === 'baseElement' || argumentValue?.argSource === 'parameter') && (
-          <div className={spacingStyles.marginTop}>
-            <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
-              <Dropdown
-                label={argumentValue.argSource === 'baseElement' ? 'Base Element' : 'Parameter'}
-                onChange={event => {
-                  handleUpdateArgument({
-                    ...argumentValue,
-                    selected: event.target.value,
-                    elementName:
-                      argumentValue.argSource === 'baseElement'
-                        ? getBaseElementName(getBaseElementById(baseElements, event.target.value))
-                        : getParameterById(parameters, event.target.value).name
-                  });
-                }}
-                options={argumentValue.argSource === 'baseElement' ? matchingBaseElements : matchingParameters}
-                value={argumentValue?.selected || ''}
-              />
-            </div>
-          </div>
+          <Dropdown
+            label={argumentValue.argSource === 'baseElement' ? 'Base Element' : 'Parameter'}
+            onChange={event => {
+              handleUpdateArgument({
+                ...argumentValue,
+                selected: event.target.value,
+                elementName:
+                  argumentValue.argSource === 'baseElement'
+                    ? getBaseElementName(getBaseElementById(baseElements, event.target.value))
+                    : getParameterById(parameters, event.target.value).name
+              });
+            }}
+            options={argumentValue.argSource === 'baseElement' ? matchingBaseElements : matchingParameters}
+            sx={{ width: { xs: '400px', xxl: '600px' } }}
+            value={argumentValue?.selected || ''}
+          />
         )}
-
         {argumentValue?.argSource === 'externalCql' && (
-          <div className={spacingStyles.marginTop}>
-            <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
-              <Dropdown
-                label="External CQL Library"
-                onChange={event => {
-                  handleUpdateArgument({
-                    ...argumentValue,
-                    selected: event.target.value
-                  });
-                }}
-                options={getLibraryOptions(matchingExternalCQL)}
-                value={argumentValue?.selected || ''}
-              />
-            </div>
-          </div>
+          <Dropdown
+            label="External CQL Library"
+            onChange={event => {
+              handleUpdateArgument({
+                ...argumentValue,
+                selected: event.target.value
+              });
+            }}
+            options={getLibraryOptions(matchingExternalCQL)}
+            sx={{ width: { xs: '400px', xxl: '600px' } }}
+            value={argumentValue?.selected || ''}
+          />
         )}
         {argumentValue?.argSource === 'externalCql' && argumentValue?.selected && argumentValue?.selected !== '' && (
-          <div className={spacingStyles.marginTop}>
-            <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
-              <Dropdown
-                label="Definition, function, or parameter"
-                onChange={event => {
-                  handleUpdateArgument({
-                    ...argumentValue,
-                    elementName: event.target.value,
-                    elementType: matchingExternalCQL.find(elem => elem.value === event.target.value).type
-                  });
-                }}
-                options={matchingExternalCQL.filter(elem => elem.library === argumentValue.selected)}
-                value={argumentValue?.elementName || ''}
-              />
-            </div>
-          </div>
+          <Dropdown
+            label="Definition, function, or parameter"
+            onChange={event => {
+              handleUpdateArgument({
+                ...argumentValue,
+                elementName: event.target.value,
+                elementType: matchingExternalCQL.find(elem => elem.value === event.target.value).type
+              });
+            }}
+            options={matchingExternalCQL.filter(elem => elem.library === argumentValue.selected)}
+            sx={{ width: { xs: '400px', xxl: '600px' } }}
+            value={argumentValue?.elementName || ''}
+          />
         )}
 
-        <div className={fieldStyles.footer}>Argument Type: {changeToCase(argumentType, 'capitalCase')}</div>
-      </div>
-    </div>
+        <Box color="common.grayLight" fontSize="0.7em" textAlign="right">
+          Argument Type: {changeToCase(argumentType, 'capitalCase')}
+        </Box>
+
+        <Divider sx={{ marginBottom: '10px' }} />
+      </Stack>
+    </Stack>
   );
 };
 

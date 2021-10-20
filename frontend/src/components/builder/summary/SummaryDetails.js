@@ -57,7 +57,7 @@ const SummaryDetails = ({ summaryType, summaryDetails }) => {
               parentOperand={summaryDetails.operand}
               showOperand={index !== 0}
               summaryType={summaryType}
-              text={child.elementName}
+              text={child.elementName || ''}
             />
           ))}
     </div>

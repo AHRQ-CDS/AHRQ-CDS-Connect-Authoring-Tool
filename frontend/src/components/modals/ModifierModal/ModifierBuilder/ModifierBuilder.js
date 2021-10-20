@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { CircularProgress, IconButton } from '@material-ui/core';
-import { ArrowBackIos as ArrowBackIosIcon } from '@material-ui/icons';
+import { CircularProgress, IconButton } from '@mui/material';
+import { ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 
 import ConjunctionCard from './ConjunctionCard';
 import getResourceOptions from './utils/getResourceOptions';
@@ -50,7 +50,7 @@ const ModifierBuilder = ({
         <div className={styles.navHeaderGroup}>
           <div className={styles.navHeaderButtons}>
             {!modifierToEdit && (
-              <IconButton aria-label="go back" onClick={handleGoBack}>
+              <IconButton aria-label="go back" onClick={handleGoBack} size="large">
                 <ArrowBackIosIcon fontSize="small" />
               </IconButton>
             )}

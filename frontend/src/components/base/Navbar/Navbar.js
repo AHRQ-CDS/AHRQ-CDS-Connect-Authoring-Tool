@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Tab, Tabs } from '@material-ui/core';
+import { Tab, Tabs } from '@mui/material';
 import clsx from 'clsx';
 
 import { onVisitExternalForm } from 'utils/handlers';
@@ -58,9 +58,10 @@ const Navbar = ({ isAuthenticated }) => {
       </div>
 
       <Tabs
-        value={tabNavigationValue({ pathname, isAuthenticated })}
         className={clsx(styles.tabs, spacingStyles.fullBleed)}
         TabIndicatorProps={{ style: { display: 'none' } }}
+        textColor="inherit"
+        value={tabNavigationValue({ pathname, isAuthenticated })}
       >
         <Navtab label="Home" index={0} value="/" exact />
 

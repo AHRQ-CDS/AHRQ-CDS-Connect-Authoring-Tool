@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { ThemeProvider } from '@material-ui/core/styles';
-import DateFnsUtils from '@date-io/date-fns';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
 import App from './App';
 import { Artifact } from 'components/artifact';
@@ -27,30 +27,32 @@ const queryClient = new QueryClient({
 
 const Root = ({ store }) => (
   <Provider store={store}>
-    <ThemeProvider theme={lightTheme}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <QueryClientProvider client={queryClient}>
-          <App>
-            <Switch>
-              <Route exact path="/">
-                <Landing />
-              </Route>
-              <PrivateRoute path="/build/:id" component={Builder} />
-              <PrivateRoute path="/build" component={Builder} />
-              <PrivateRoute path="/artifacts" component={Artifact} />
-              <PrivateRoute path="/testing" component={Tester} />
-              <Route path="/documentation">
-                <Documentation />
-              </Route>
-              <Redirect from="/userguide" to="/documentation" />
-              <Route path="*">
-                <ErrorPage errorType="notFound" />
-              </Route>
-            </Switch>
-          </App>
-        </QueryClientProvider>
-      </MuiPickersUtilsProvider>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={lightTheme}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <QueryClientProvider client={queryClient}>
+            <App>
+              <Switch>
+                <Route exact path="/">
+                  <Landing />
+                </Route>
+                <PrivateRoute path="/build/:id" component={Builder} />
+                <PrivateRoute path="/build" component={Builder} />
+                <PrivateRoute path="/artifacts" component={Artifact} />
+                <PrivateRoute path="/testing" component={Tester} />
+                <Route path="/documentation">
+                  <Documentation />
+                </Route>
+                <Redirect from="/userguide" to="/documentation" />
+                <Route path="*">
+                  <ErrorPage errorType="notFound" />
+                </Route>
+              </Switch>
+            </App>
+          </QueryClientProvider>
+        </LocalizationProvider>
+      </ThemeProvider>
+    </StyledEngineProvider>
   </Provider>
 );
 

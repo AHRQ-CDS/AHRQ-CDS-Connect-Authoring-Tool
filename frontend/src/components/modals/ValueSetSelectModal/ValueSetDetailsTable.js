@@ -2,8 +2,16 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
-import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import {
+  Alert,
+  CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material';
 
 import fetchValueSetDetails from 'queries/fetchValueSetDetails';
 import { useTextStyles } from 'styles/hooks';

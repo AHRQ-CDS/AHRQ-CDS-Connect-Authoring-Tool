@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 export default makeStyles(
   theme => ({
@@ -13,16 +13,16 @@ export default makeStyles(
     },
     globalPadding: {
       margin: 'auto',
-      [theme.breakpoints.down('xl')]: {
+      [theme.breakpoints.up('xl')]: {
         width: '1170px'
       },
-      [theme.breakpoints.down('lg')]: {
+      [theme.breakpoints.down('xl')]: {
         width: '970px'
       },
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         width: '750px'
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         width: '100%'
       }
     },

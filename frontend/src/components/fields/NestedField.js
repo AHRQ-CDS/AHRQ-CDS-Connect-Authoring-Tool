@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Field } from 'formik';
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
