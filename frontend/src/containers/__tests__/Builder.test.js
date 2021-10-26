@@ -25,8 +25,6 @@ mockModifiers.forEach(modifier => {
   });
 });
 
-jest.setTimeout(20000);
-
 const defaultState = {
   ...reduxState,
   artifacts: {
@@ -175,7 +173,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 10000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -190,7 +188,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstObservation');
         expect(modifier.name).toEqual('First');
-      }, 10000);
+      });
     });
 
     describe('Test AverageObservationValue modifier.', () => {
@@ -199,7 +197,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 10000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -216,7 +214,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('AverageObservationValue');
         expect(modifier.name).toEqual('Average Observation Value');
-      }, 10000);
+      });
     });
 
     describe('Test FirstCondition Modifier.', () => {
@@ -225,7 +223,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 10000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -240,7 +238,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstCondition');
         expect(modifier.name).toEqual('First');
-      }, 10000);
+      });
     });
 
     describe('Test FirstProcedure Modifier.', () => {
@@ -249,7 +247,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 10000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -264,7 +262,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstProcedure');
         expect(modifier.name).toEqual('First');
-      }, 10000);
+      });
     });
 
     describe('Test FirstImmunization Modifier.', () => {
@@ -273,7 +271,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 10000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -288,7 +286,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstImmunization');
         expect(modifier.name).toEqual('First');
-      }, 10000);
+      });
     });
   });
 });

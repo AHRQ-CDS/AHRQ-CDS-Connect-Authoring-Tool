@@ -97,7 +97,7 @@
     "_start-prod": "node server.js",
     "start-prod": "run-s build _start-prod",
     "test": "react-scripts test",
-    "test-ci": "CI=1 react-scripts test --color --silent --coverage --collectCoverageFrom='[\"server.js\", \"src/**/*.{js,jsx}\", \"!src/index.js\", \"!src/mocks/**/*.js\", \"!src/setupTests.js\", \"!src/utils/test-utils.js\", \"!src/utils/test_fixtures.js\", \"!src/utils/test_helpers.js\", \"!src/**/__tests__/*.js\"]'",
+    "test-ci": "CI=1 react-scripts test --silent --coverage=false --maxWorkers=2",
     "eject": "react-scripts eject",
     "format": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
     "lint:css": "stylelint 'src/styles/**/*.scss'",

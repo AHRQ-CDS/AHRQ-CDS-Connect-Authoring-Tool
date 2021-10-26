@@ -1,4 +1,5 @@
 **/.git
+**/.husky
 **/node_modules
 /api/config/local.*
 /api/config/*.xls

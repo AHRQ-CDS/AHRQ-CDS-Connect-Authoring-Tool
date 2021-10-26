@@ -463,7 +463,7 @@ describe('<ModifierModal />', () => {
 
       userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
       userEvent.click(screen.getByRole('button', { name: /r4/i }));
-      await waitForElementToBeRemoved(screen.getByRole('progressbar'));
+      await waitForElementToBeRemoved(screen.getByRole('progressbar'), { timeout: 30000 });
       userEvent.click(screen.getByRole('button', { name: /add rule/i }));
       userEvent.click(screen.getByTestId('property-select'));
       const clinicalStatusOption = await screen.findByRole('option', { name: 'Clinical Status' });

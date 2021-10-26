@@ -220,7 +220,7 @@ describe('<TemplateInstance />', () => {
     it('cannot add modifiers that change the return type if in use in the artifact', async () => {
       renderBaseElementComponent();
 
-      userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 5000 }))[0]);
+      userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
       const modal = within(await screen.findByRole('dialog'));
       userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
       userEvent.click(modal.getByLabelText('Select modifier...'));
