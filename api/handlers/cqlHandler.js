@@ -1554,7 +1554,7 @@ function objConvert(req, res, callback) {
 // that calls this function requires that argument to be present
 function validateELM(artifact, artifactJson, externalLibs, writeStream, callback) {
   const artifacts = [artifactJson, ...externalLibs];
-  convertToElm(artifacts, (err, elmFiles) => {
+  convertToElm(artifacts, false, (err, elmFiles) => {
     if (err) {
       callback(err);
       return;
@@ -1599,7 +1599,7 @@ function writeZip(artifact, artifactJson, externalLibs, writeStream, callback /*
   //convert the artifact to a CPG Publishable Library
   convertToCPGPL(artifact).then(function (cpgString) {
     // We must first convert to ELM before packaging up
-    convertToElm(artifacts, (err, elmFiles) => {
+    convertToElm(artifacts, true, (err, elmFiles) => {
       if (err) {
         callback(err);
         return;
@@ -1627,7 +1627,7 @@ function writeZip(artifact, artifactJson, externalLibs, writeStream, callback /*
       });
       elmFiles.forEach(e => {
         archive.append(e.content.replace(/\r\n|\r|\n/g, '\r\n'), {
-          name: `${e.name}.json`
+          name: e.content.startsWith('<') ? `${e.name}.xml` : `${e.name}.json`
         });
       });
 
@@ -1645,7 +1645,7 @@ function writeZip(artifact, artifactJson, externalLibs, writeStream, callback /*
   });
 }
 
-function convertToElm(artifacts, callback /* (error, elmFiles) */) {
+function convertToElm(artifacts, getXML, callback /* (error, elmFiles) */) {
   // If CQL-to-ELM is disabled, this function should basically be a no-op
   if (!config.get('cqlToElm.active')) {
     callback(null, []);
@@ -1670,13 +1670,13 @@ function convertToElm(artifacts, callback /* (error, elmFiles) */) {
     }
 
     const fileStreams = files.map(f => fs.createReadStream(f));
-    makeCQLtoELMRequest(artifacts, fileStreams, callback);
+    makeCQLtoELMRequest(artifacts, fileStreams, getXML, callback);
   });
 }
 
-function makeCQLtoELMRequest(files, fileStreams, callback) {
+function makeCQLtoELMRequest(files, fileStreams, getXML, callback) {
   // Request endpoint query parameters are being updated according to CPG guidance
-  // http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html
+  // http://hl7.org/fhir/uv/cpg/STU1/libraries.html#translation-to-elm
   const requestParams = [
     'annotations=true',
     'locators=true',
@@ -1689,9 +1689,16 @@ function makeCQLtoELMRequest(files, fileStreams, callback) {
     'disable-list-traversal=false',
     'signatures=All'
   ];
-  const requestEndpoint = `${config.get('cqlToElm.url')}?${requestParams.join('&')}`;
+  const options = {
+    url: `${config.get('cqlToElm.url')}?${requestParams.join('&')}`
+  };
+  if (getXML) {
+    options.headers = {
+      'X-TargetFormat': 'application/elm+json,application/elm+xml'
+    };
+  }
   // NOTE: the request isn't posted until the next event loop, so we can modify it after calling request.post
-  const cqlReq = request.post(requestEndpoint, (err2, resp, body) => {
+  const cqlReq = request.post(options, (err2, resp, body) => {
     if (err2) {
       callback(err2);
       return;

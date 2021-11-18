@@ -44,7 +44,8 @@
     "husky": "6.0.0",
     "mocha": "^8.4.0",
     "nock": "^9.1.4",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "prettier": "2.1.2"
   },
   "resolutions": {
     "axios": "^0.21.1"

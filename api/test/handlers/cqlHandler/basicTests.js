@@ -1,13 +1,16 @@
+const fs = require('fs');
+const path = require('path');
+const nock = require('nock');
 const { expect } = require('chai');
-const { buildCQL } = require('../../../handlers/cqlHandler');
+const { buildCQL, makeCQLtoELMRequest } = require('../../../handlers/cqlHandler');
 const _ = require('lodash');
 const Artifact = require('../../../models/artifact');
 
-const testEmptyPublishableLibrary = require('../../data/Library-Test-Empty-Artifact');
-const testPublishableLibraryWithDates = require('../../data/Library-Test-Artifact-With-Dates');
-const testPublishableLibraryWithDatesAndContext = require('../../data/Library-Test-Artifact-With-Dates-And-Context');
-const testPublishableLibrary = require('../../data/Library-Test-CPG-Export');
-const testExpandedContext = require('../../data/Library-Test-Expanded-Context');
+const testEmptyPublishableLibrary = require('./fixtures/Library-Test-Empty-Artifact');
+const testPublishableLibraryWithDates = require('./fixtures/Library-Test-Artifact-With-Dates');
+const testPublishableLibraryWithDatesAndContext = require('./fixtures/Library-Test-Artifact-With-Dates-And-Context');
+const testPublishableLibrary = require('./fixtures/Library-Test-CPG-Export');
+const testExpandedContext = require('./fixtures/Library-Test-Expanded-Context');
 
 const baseArtifact = {
   name: 'a test',
@@ -2559,5 +2562,133 @@ describe('CPG Publishable Library tests', () => {
     const testCtxArtifact = new Artifact(contextCPGArtifact);
     const ecPL = testCtxArtifact.toPublishableLibrary();
     expect(_.isEqual(difference(ecPL, testExpandedContext), {})).to.equal(true);
+  });
+});
+
+const nockBack = nock.back;
+nockBack.fixtures = path.join(__dirname, 'fixtures');
+nockBack.setMode('record');
+
+describe('CQL to ELM tests', () => {
+  let inputFiles, inputFileStreams, outputContent, outputHeaders;
+
+  // before the tests, disable network connections to ensure tests never hit real network
+  before(() => {
+    // if another test suite de-activated nock, we need to re-activate it
+    if (!nock.isActive()) nock.activate();
+    nock.disableNetConnect();
+  });
+
+  // after the tests, re-enable network connections
+  after(() => {
+    nock.restore();
+    nock.enableNetConnect();
+  });
+
+  // before each test, setup the commonly used data
+  beforeEach(() => {
+    // In AT, artifact CQL is sent as file objects and FHIRHelpers is sent as a filestream
+    inputFiles = [
+      {
+        filename: 'Simple.cql',
+        text: fs.readFileSync(path.join(__dirname, 'fixtures', 'Simple.cql'), 'utf-8'),
+        type: 'application/cql'
+      }
+    ];
+    inputFileStreams = [fs.createReadStream(path.join(__dirname, 'fixtures', 'FHIRHelpers.cql'))];
+    // Output is a multi-part message w/ JSON and XML
+    outputContent = fs
+      .readFileSync(path.join(__dirname, 'fixtures', 'Simple-Response.txt'), 'utf-8')
+      .replace(/[\n]/g, '\r\n');
+    outputHeaders = {
+      'MIME-Version': '1.0',
+      'Content-Type': 'multipart/form-data;boundary=Boundary_5_1061164500_1637185497930'
+    };
+  });
+
+  // after each test, check and clean nock
+  afterEach(() => {
+    nock.isDone();
+    nock.cleanAll();
+  });
+
+  it('should send the right translation parameters to the CQL Translation Service', done => {
+    nock('http://localhost:8080')
+      .post('/cql/translator')
+      .query({
+        annotations: true,
+        locators: true,
+        'disable-list-demotion': true,
+        'disable-list-promotion': true,
+        'disable-method-invocation': true,
+        'date-range-optimization': true,
+        'result-types': true,
+        'detailed-errors': false,
+        'disable-list-traversal': false,
+        signatures: 'All'
+      })
+      .reply(200, outputContent, outputHeaders);
+
+    // Make the request!
+    makeCQLtoELMRequest(inputFiles, inputFileStreams, true, err => {
+      expect(err).to.be.null;
+      done();
+    });
+  });
+
+  it('should request JSON and XML from CQL Translation Service when getXML argument is true', done => {
+    nock('http://localhost:8080', {
+      reqheaders: { 'X-TargetFormat': 'application/elm+json,application/elm+xml' }
+    })
+      .post('/cql/translator')
+      .query(true) // we don't care about checking the specific params for this test
+      .reply(200, outputContent, outputHeaders);
+
+    // Make the request!
+    makeCQLtoELMRequest(inputFiles, inputFileStreams, true, err => {
+      expect(err).to.be.null;
+      done();
+    });
+  });
+
+  it('should not request XML from CQL Translation Service when getXML argument is false', done => {
+    nock('http://localhost:8080', {
+      badheaders: ['X-TargetFormat']
+    })
+      .post('/cql/translator')
+      .query(true) // we don't care about checking the specific params for this test
+      .reply(200, outputContent, outputHeaders);
+
+    // Make the request!
+    makeCQLtoELMRequest(inputFiles, inputFileStreams, false, err => {
+      expect(err).to.be.null;
+      done();
+    });
+  });
+
+  it('should process the multi-part response from the CQL Translation Service correctly', done => {
+    nock('http://localhost:8080')
+      .post('/cql/translator')
+      .query(true) // we don't care about checking the specific params for this test
+      .reply(200, outputContent, outputHeaders);
+
+    // Make the request!
+    makeCQLtoELMRequest(inputFiles, inputFileStreams, true, (err, elmFiles) => {
+      expect(err).to.be.null;
+      expect(elmFiles).to.have.length(4);
+      expect(elmFiles[0].name).to.equal('FHIRHelpers.cql');
+      expect(elmFiles[0].content).to.match(
+        /\{\s*"library"[\s\S]*"identifier"\s*:\s*\{\s*"id"\s*:\s*"FHIRHelpers"[\s\S]*\}/m
+      );
+      expect(elmFiles[1].name).to.equal('FHIRHelpers.cql');
+      expect(elmFiles[1].content).to.match(/<library[\s\S]*<identifier id="FHIRHelpers"[\s\S]*/m);
+      expect(elmFiles[2].name).to.equal('Simple.cql');
+      expect(elmFiles[2].content).to.match(
+        /\{\s*"library"[\s\S]*"identifier"\s*:\s*\{\s*"id"\s*:\s*"SimpleLibrary"[\s\S]*\}/m
+      );
+      expect(elmFiles[3].name).to.equal('Simple.cql');
+      expect(elmFiles[3].content).to.match(/<library[\s\S]*<identifier id="SimpleLibrary"[\s\S]*/m);
+      done();
+    });
   });
 });
