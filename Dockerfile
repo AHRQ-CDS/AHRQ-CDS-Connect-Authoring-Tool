@@ -10,7 +10,7 @@
 #   common to all (or most?) environments.
 ###############################################################################
 
-FROM node:14.18.0-alpine as base
+FROM node:14.18.1-alpine as base
 
 ENV NODE_ENV production
 
