@@ -44,7 +44,7 @@ const ElementSelect = ({ excludeListOperations = false, handleAddElement, isDisa
     if (!elementTemplates) return [];
     const filterOut = ['Medications', 'Operations', excludeListOperations && 'List Operations'].filter(Boolean);
     const versionLockMap = {
-      serviceRequest: ['4.0.0']
+      serviceRequest: ['4.0.0', '4.0.1', '4.0.x']
     };
 
     const result = elementTemplates

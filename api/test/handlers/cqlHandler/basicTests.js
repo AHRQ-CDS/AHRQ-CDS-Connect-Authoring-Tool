@@ -15,7 +15,7 @@ const testExpandedContext = require('./fixtures/Library-Test-Expanded-Context');
 const baseArtifact = {
   name: 'a test',
   version: null,
-  dataModel: { name: 'FHIR', version: '4.0.0' },
+  dataModel: { name: 'FHIR', version: '4.0.1' },
   expTreeInclude: {},
   expTreeExclude: {},
   subpopulations: [],
@@ -925,8 +925,43 @@ describe('Modifier tests', () => {
     expect(converted).to.contain('Count(C3F.ActiveOrConfirmedAllergyIntolerance([AllergyIntolerance])) > 0');
   });
 
-  it('Handles query modifiers (R4/STU3)', () => {
-    const artifact = buildCQL(rawQuery);
+  it('Handles query modifiers (R4 4.0.x)', () => {
+    const rawQueryR4 = _.cloneDeep(rawQuery);
+    rawQueryR4.dataModel.version = '4.0.x';
+    const artifact = buildCQL(rawQueryR4);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (AI.onset as FHIR.dateTime is not null ' +
+        'and (AI.verificationStatus is not null or AI.clinicalStatus is null))'
+    );
+  });
+
+  it('Handles query modifiers (R4 4.0.1)', () => {
+    const rawQueryR4 = _.cloneDeep(rawQuery);
+    rawQueryR4.dataModel.version = '4.0.1';
+    const artifact = buildCQL(rawQueryR4);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (AI.onset as FHIR.dateTime is not null ' +
+        'and (AI.verificationStatus is not null or AI.clinicalStatus is null))'
+    );
+  });
+
+  it('Handles query modifiers (R4 4.0.0)', () => {
+    const rawQueryR4 = _.cloneDeep(rawQuery);
+    rawQueryR4.dataModel.version = '4.0.0';
+    const artifact = buildCQL(rawQueryR4);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (AI.onset as FHIR.dateTime is not null ' +
+        'and (AI.verificationStatus is not null or AI.clinicalStatus is null))'
+    );
+  });
+
+  it('Handles query modifiers (STU3)', () => {
+    const rawQuerySTU3 = _.cloneDeep(rawQuery);
+    rawQuerySTU3.dataModel.version = '3.0.0';
+    const artifact = buildCQL(rawQuerySTU3);
     const converted = artifact.toString();
     expect(converted).to.contain(
       '[AllergyIntolerance] AI where (AI.onset as FHIR.dateTime is not null ' +

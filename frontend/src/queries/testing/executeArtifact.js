@@ -110,8 +110,10 @@ const executeArtifact = async ({ elmFiles, artifact, params, patients, vsacApiKe
     patientSource = cqlfhir.PatientSource.FHIRv102();
   } else if (dataModel.version === '3.0.0') {
     patientSource = cqlfhir.PatientSource.FHIRv300();
-  } else {
+  } else if (dataModel.version === '4.0.0') {
     patientSource = cqlfhir.PatientSource.FHIRv400();
+  } else {
+    patientSource = cqlfhir.PatientSource.FHIRv401();
   }
 
   // Load the patient source with the patient

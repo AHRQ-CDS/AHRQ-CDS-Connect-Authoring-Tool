@@ -627,7 +627,7 @@ describe('<ModifierModal />', () => {
           ]
         }
       };
-      renderComponent({ artifact: { ...mockArtifact, fhirVersion: '4.0.0' }, handleUpdateModifiers, modifierToEdit });
+      renderComponent({ artifact: { ...mockArtifact, fhirVersion: '4.0.1' }, handleUpdateModifiers, modifierToEdit });
 
       expect(screen.getByTestId(/edit modifier/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();

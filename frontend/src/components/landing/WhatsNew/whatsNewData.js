@@ -4,6 +4,22 @@ import React from 'react';
 const whatsNewData = [
   {
     id: 1,
+    name: 'FHIR 4.0.1',
+    ariaLabel: 'FHIR 4.0.1',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-fhir-401.png`,
+    description: (
+      <>
+        Authors can now download their artifacts using CQL that leverages the FHIR 4.0.1 data model. In addition,
+        authors can upload FHIR 4.0.1 CQL libraries to External CQL and test their FHIR 4.0.1 artifacts using the built
+        in testing capability. The Authoring Tool continues to also support these capabilities for the FHIR 1.0.2, FHIR
+        3.0.0, and FHIR 4.0.0 data models.
+      </>
+    ),
+    linkText: 'Building Artifacts Documentation',
+    link: `${process.env.PUBLIC_URL}/documentation#Building_Artifacts`
+  },
+  {
+    id: 2,
     name: 'Build Modifiers',
     ariaLabel: 'Build Modifiers',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-build-modifiers.png`,
@@ -19,7 +35,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Modifier_Builder`
   },
   {
-    id: 2,
+    id: 3,
     name: 'Recommendation Links',
     ariaLabel: 'Recommendation Links',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-rec-links.png`,
@@ -35,7 +51,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Adding_Links_to_Recommendations`
   },
   {
-    id: 3,
+    id: 4,
     name: 'Summary Tab & More',
     ariaLabel: 'Summary Tab & More',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-summary.png`,
@@ -49,21 +65,6 @@ const whatsNewData = [
     ),
     linkText: 'Summary Tab Documentation',
     link: `${process.env.PUBLIC_URL}/documentation#Summary`
-  },
-  {
-    id: 4,
-    name: 'Sort & Duplicate Artifacts',
-    ariaLabel: 'Sort & Duplicate Artifacts',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-artifacts.png`,
-    description: (
-      <>
-        The Artifacts page now allows users to sort their artifact list by name, version, last changed, or date created.
-        In addition, users can duplicate an existing artifact to create a brand new copy that they can develop
-        independent of the original artifact.
-      </>
-    ),
-    linkText: 'Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation#Managing_Artifacts`
   }
 ];
 

@@ -26,7 +26,10 @@ const ExecuteCQLModal = ({ patients, handleCloseModal, handleExecuteCQL }) => {
     [validArtifactsToExecute]
   );
   const handleSubmit = () => {
-    const version = Object.keys(fhirVersionMap).find(key => fhirVersionMap[key] === fhirVersion);
+    let version = Object.keys(fhirVersionMap).find(key => fhirVersionMap[key] === fhirVersion);
+    if (version === '4.0.x') {
+      version = artifactToExecute.fhirVersion === '4.0.0' ? '4.0.0' : '4.0.1';
+    }
     const dataModel = { name: 'FHIR', version };
 
     handleExecuteCQL({

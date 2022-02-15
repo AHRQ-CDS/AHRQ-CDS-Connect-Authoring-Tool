@@ -100,7 +100,9 @@ const ModifierModal = ({
                 disabled={hasModifiers || !typeSupportedByBuilder}
                 onClick={() =>
                   setDisplayMode(
-                    ['1.0.2', '3.0.0', '4.0.0'].includes(fhirVersion) ? 'buildModifier' : 'selectFhirVersion'
+                    ['1.0.2', '3.0.0', '4.0.0', '4.0.1', '4.0.x'].includes(fhirVersion)
+                      ? 'buildModifier'
+                      : 'selectFhirVersion'
                   )
                 }
                 variant="contained"

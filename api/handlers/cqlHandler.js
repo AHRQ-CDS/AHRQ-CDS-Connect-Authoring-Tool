@@ -75,7 +75,7 @@ const includeLibrariesDstu2 = [
   { name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers' },
   {
     name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv102',
-    version: '1.3.2',
+    version: '1.3.4',
     alias: 'C3F'
   },
   {
@@ -89,7 +89,7 @@ const includeLibrariesStu3 = [
   { name: 'FHIRHelpers', version: '3.0.0', alias: 'FHIRHelpers' },
   {
     name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv300',
-    version: '1.0.1',
+    version: '1.0.3',
     alias: 'C3F'
   },
   {
@@ -99,11 +99,25 @@ const includeLibrariesStu3 = [
   }
 ];
 
-const includeLibrariesR4 = [
+const includeLibrariesR400 = [
   { name: 'FHIRHelpers', version: '4.0.0', alias: 'FHIRHelpers' },
   {
     name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv400',
-    version: '1.0.1',
+    version: '1.0.4',
+    alias: 'C3F'
+  },
+  {
+    name: 'AT_Internal_CDS_Connect_Conversions',
+    version: '1',
+    alias: 'Convert'
+  }
+];
+
+const includeLibrariesR401 = [
+  { name: 'FHIRHelpers', version: '4.0.1', alias: 'FHIRHelpers' },
+  {
+    name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv401',
+    version: '1.1.0',
     alias: 'C3F'
   },
   {
@@ -116,7 +130,8 @@ const includeLibrariesR4 = [
 const includeLibrariesMap = {
   '1.0.2': includeLibrariesDstu2,
   '3.0.0': includeLibrariesStu3,
-  '4.0.0': includeLibrariesR4
+  '4.0.0': includeLibrariesR400,
+  '4.0.1': includeLibrariesR401
 };
 
 const queryResourceMap = {
@@ -386,9 +401,12 @@ class CqlArtifact {
     });
     this.version = artifact.version ? artifact.version : 1;
     this.dataModel = artifact.dataModel;
-    this.includeLibraries = artifact.dataModel.version
-      ? includeLibrariesMap[artifact.dataModel.version]
-      : includeLibrariesR4;
+    if (this.dataModel.version === '4.0.x') {
+      // default 4.0.x to to 4.0.1
+      this.dataModel = _.cloneDeep(this.dataModel);
+      this.dataModel.version = '4.0.1';
+    }
+    this.includeLibraries = this.dataModel.version ? includeLibrariesMap[this.dataModel.version] : includeLibrariesR401;
     this.includeLibraries = this.includeLibraries.concat(artifact.externalLibs || []);
     this.context = artifact.context && artifact.context.length ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
@@ -399,7 +417,7 @@ class CqlArtifact {
     this.recommendations = artifact.recommendations;
     this.errorStatement = artifact.errorStatement;
 
-    fhirTarget = artifact.dataModel;
+    fhirTarget = this.dataModel;
 
     this.initialize();
   }
@@ -765,10 +783,10 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(field.codes, medicationRequestValueSets.concepts);
           addValueSets(field, medicationRequestValueSets, 'valuesets');
-          if (fhirTarget.version === '3.0.0' || fhirTarget.version === '4.0.0') {
-            this.setFieldContexts(medicationRequestValueSets, 'MedicationRequest', context);
-          } else {
+          if (fhirTarget.version === '1.0.2') {
             this.setFieldContexts(medicationRequestValueSets, 'MedicationOrder', context);
+          } else {
+            this.setFieldContexts(medicationRequestValueSets, 'MedicationRequest', context);
           }
           break;
         }
@@ -1519,18 +1537,12 @@ function objConvert(req, res, callback) {
       const artifactJson = artifact.toJson();
 
       // Merge the artifact with the commons and conversions libraries
-      let helperPath;
-      let commonsPath;
-      if (fhirTarget.version === '4.0.0') {
-        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'R4');
-        commonsPath = path.join(helperPath, 'AT_Internal_CDS_Connect_Commons_for_FHIRv400.cql');
-      } else if (fhirTarget.version === '3.0.0') {
-        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'STU3');
-        commonsPath = path.join(helperPath, 'AT_Internal_CDS_Connect_Commons_for_FHIRv300.cql');
-      } else {
-        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'DSTU2');
-        commonsPath = path.join(helperPath, 'AT_Internal_CDS_Connect_Commons_for_FHIRv102.cql');
-      }
+      const fhirVersion = fhirTarget.version || '4.0.1';
+      const helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', fhirVersion);
+      const commonsPath = path.join(
+        helperPath,
+        `AT_Internal_CDS_Connect_Commons_for_FHIRv${fhirVersion.replace(/\./g, '')}.cql`
+      );
       const conversionsPath = path.join(helperPath, 'AT_Internal_CDS_Connect_Conversions.cql');
       const artifactRaw = new RawCQL(artifactJson.text);
       const commonsRaw = new RawCQL(fs.readFileSync(commonsPath, 'utf-8'));
@@ -1631,14 +1643,14 @@ function writeZip(artifact, artifactJson, externalLibs, writeStream, callback /*
         });
       });
 
-      let helperPath;
-      if (fhirTarget.version === '4.0.0') {
-        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'R4');
-      } else if (fhirTarget.version === '3.0.0') {
-        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'STU3');
-      } else {
-        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'DSTU2');
-      }
+      const helperPath = path.join(
+        __dirname,
+        '..',
+        'data',
+        'library_helpers',
+        'CQLFiles',
+        fhirTarget.version || '4.0.1'
+      );
       archive.glob('FHIRHelpers.cql', { cwd: helperPath });
       archive.finalize();
     });
@@ -1653,14 +1665,7 @@ function convertToElm(artifacts, getXML, callback /* (error, elmFiles) */) {
   }
 
   // Load all the supplementary CQL files, open file streams to them, and convert to ELM
-  let helperPath;
-  if (fhirTarget.version === '4.0.0') {
-    helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'R4');
-  } else if (fhirTarget.version === '3.0.0') {
-    helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'STU3');
-  } else {
-    helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'DSTU2');
-  }
+  const helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', fhirTarget.version || '4.0.1');
   // We might not need glob anymore, but we keep it just in case we need to bundle more
   // helper libraries into the CQL to ELM request again eventually
   glob(`${helperPath}/FHIRHelpers.cql`, (err, files) => {

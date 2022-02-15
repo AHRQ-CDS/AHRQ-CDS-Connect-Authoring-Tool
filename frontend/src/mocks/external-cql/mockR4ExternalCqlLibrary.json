@@ -4,9 +4,9 @@
   "user": "demo",
   "name": "AgeR4",
   "version": "1",
-  "fhirVersion": "4.0.0",
+  "fhirVersion": "4.0.1",
   "details": {
-    "cqlFileText": "library \"AgeR4\" version '1'\n\nusing FHIR version '4.0.0'\n\ncontext Patient\n\ndefine \"AgeR4\":\n  AgeInHours() >= 14\n\ndefine \"GenR4\":\n  Patient.gender.value = 'female'\n\ndefine \"MeetsInclusionCriteriaR4\":\n  \"AgeR4\"\n  and \"GenR4\"\n\ndefine \"InPopulationR4\":\n   \"MeetsInclusionCriteriaR4\"\n\ndefine \"RecommendationR4\":\n  null\n\ndefine \"RationaleR4\":\n  null\ndefine \"ErrorsR4\":\n  null\n",
+    "cqlFileText": "library \"AgeR4\" version '1'\n\nusing FHIR version '4.0.1'\n\ncontext Patient\n\ndefine \"AgeR4\":\n  AgeInHours() >= 14\n\ndefine \"GenR4\":\n  Patient.gender.value = 'female'\n\ndefine \"MeetsInclusionCriteriaR4\":\n  \"AgeR4\"\n  and \"GenR4\"\n\ndefine \"InPopulationR4\":\n   \"MeetsInclusionCriteriaR4\"\n\ndefine \"RecommendationR4\":\n  null\n\ndefine \"RationaleR4\":\n  null\ndefine \"ErrorsR4\":\n  null\n",
     "fileName": "mockR4.cql",
     "parameters": [],
     "definitions": [

@@ -114,7 +114,7 @@ describe('<Tester />', () => {
     describe('R4 patients', () => {
       it('validates and executes the CQL on selected patients', async () => {
         scope = scope
-          .post('/authoring/api/cql/validate', { ...mockArtifact, dataModel: { name: 'FHIR', version: '4.0.0' } })
+          .post('/authoring/api/cql/validate', { ...mockArtifact, dataModel: { name: 'FHIR', version: '4.0.1' } })
           .reply(200, mockElmFilesR4);
 
         renderComponent();

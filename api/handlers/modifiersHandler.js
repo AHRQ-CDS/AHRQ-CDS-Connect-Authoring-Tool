@@ -32,6 +32,7 @@ function allGet(req, res) {
               'CDS_Connect_Commons_for_FHIRv102',
               'CDS_Connect_Commons_for_FHIRv300',
               'CDS_Connect_Commons_for_FHIRv400',
+              'CDS_Connect_Commons_for_FHIRv401',
               'CDS_Connect_Conversions',
               'FHIRHelpers'
             ].includes(lib.name)

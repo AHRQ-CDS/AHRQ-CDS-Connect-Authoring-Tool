@@ -4,12 +4,13 @@ const CQLLibrary = require('../models/cqlLibrary');
 const Artifact = require('../models/artifact');
 const makeCQLtoELMRequest = require('../handlers/cqlHandler').makeCQLtoELMRequest;
 
-const supportedFHIRVersions = ['1.0.2', '3.0.0', '4.0.0'];
+const supportedFHIRVersions = ['1.0.2', '3.0.0', '4.0.0', '4.0.1'];
 
 const authoringToolExports = [
   { name: 'FHIRHelpers', version: '1.0.2' },
   { name: 'FHIRHelpers', version: '3.0.0' },
-  { name: 'FHIRHelpers', version: '4.0.0' }
+  { name: 'FHIRHelpers', version: '4.0.0' },
+  { name: 'FHIRHelpers', version: '4.0.1' }
 ];
 
 const singularTypeMap = {
@@ -473,7 +474,7 @@ function singlePost(req, res) {
   if (req.user) {
     const { cqlFileName, cqlFileContent, fileType, artifact } = req.body.library;
     const artifactId = artifact._id;
-    const artifactFHIRVersion = artifact.fhirVersion;
+    let artifactFHIRVersion = artifact.fhirVersion;
 
     let duplicateLib = { flag: false, libraryName: '' };
     const decodedBuffer = Buffer.from(cqlFileContent, 'base64');
@@ -489,7 +490,7 @@ function singlePost(req, res) {
               return Promise.resolve({ filename: fileName, type: 'text/plain', text: buffer.toString() });
             })
           );
-          makeCQLtoELMRequest(files, [], (err, elmFiles) => {
+          makeCQLtoELMRequest(files, [], false, (err, elmFiles) => {
             if (err) {
               res.status(500).send(err);
               return;
@@ -552,6 +553,14 @@ function singlePost(req, res) {
 
                 const newLibFHIRVersion = getCurrentFHIRVersion(elmResultsToSave);
                 const fhirVersion = getCurrentFHIRVersion(libraries);
+                // If the artifact FHIR version is R4 wildcard, set it to whatever R4 is being used.
+                if (artifactFHIRVersion === '4.0.x') {
+                  if (newLibFHIRVersion && newLibFHIRVersion.startsWith('4.0.')) {
+                    artifactFHIRVersion = newLibFHIRVersion;
+                  } else if (fhirVersion && fhirVersion.startsWith('4.0.')) {
+                    artifactFHIRVersion = fhirVersion;
+                  }
+                }
 
                 // If no FHIR version locked, any version can be uploaded.
                 // If no FHIR version on any libraries being added, they can be added
@@ -596,8 +605,8 @@ function singlePost(req, res) {
                     .status(400)
                     .send(
                       'Unable to upload external CQL because it uses an unsupported FHIR® version. The CDS Authoring ' +
-                        'Tool currently supports CQL using the following FHIR® versions: 1.0.2, 3.0.0, or 4.0.0. To ' +
-                        'fix this, upload a new library that uses one of the supported versions.'
+                        'Tool currently supports CQL using the following FHIR® versions: 1.0.2, 3.0.0, 4.0.0, or ' +
+                        '4.0.1. To fix this, upload a new library that uses one of the supported versions.'
                     );
                 } else if (hasRepeats) {
                   const message =
@@ -715,7 +724,7 @@ function singlePost(req, res) {
 
       const files = [cqlJson];
 
-      makeCQLtoELMRequest(files, [], (err, elmFiles) => {
+      makeCQLtoELMRequest(files, [], false, (err, elmFiles) => {
         if (err) {
           res.status(500).send(err);
           return;
@@ -760,6 +769,14 @@ function singlePost(req, res) {
             const dupVersion = libraries.find(lib => lib.version === elmResult.version);
             const newLibFHIRVersion = elmResult.fhirVersion;
             const fhirVersion = getCurrentFHIRVersion(libraries);
+            // If the artifact FHIR version is R4 wildcard, set it to whatever R4 is being used.
+            if (artifactFHIRVersion === '4.0.x') {
+              if (newLibFHIRVersion && newLibFHIRVersion.startsWith('4.0.')) {
+                artifactFHIRVersion = newLibFHIRVersion;
+              } else if (fhirVersion && fhirVersion.startsWith('4.0.')) {
+                artifactFHIRVersion = fhirVersion;
+              }
+            }
 
             // If no FHIR version locked, any version can be uploaded.
             // If no FHIR version used by the library, it can be uploaded
@@ -792,8 +809,8 @@ function singlePost(req, res) {
                 .status(400)
                 .send(
                   'Unable to upload external CQL because it uses an unsupported FHIR® version. The CDS Authoring ' +
-                    'Tool currently supports CQL using the following FHIR® versions: 1.0.2, 3.0.0, or 4.0.0. To ' +
-                    'fix this, upload a new library that uses one of the supported versions.'
+                    'Tool currently supports CQL using the following FHIR® versions: 1.0.2, 3.0.0, 4.0.0, or ' +
+                    '4.0.1. To fix this, upload a new library that uses one of the supported versions.'
                 );
             } else if (!artifactFHIRVersionsMatch) {
               const message =
@@ -924,11 +941,16 @@ function singleDelete(req, res) {
               if (error) res.status(500).send(error);
               else if (response) {
                 if (artifactHasServiceRequest(response)) {
-                  currentFHIRVersion = '4.0.0';
+                  currentFHIRVersion = '4.0.x';
                 } else if (artifactHasCustomModifiers(response)) {
                   currentFHIRVersion = response.fhirVersion;
                 } else {
                   currentFHIRVersion = getCurrentFHIRVersion(libraries);
+                }
+                // If the version is 4.0.0 or 4.0.1, but we don't have any external CQL files,
+                // then we can safely treat it as 4.0.x since nothing else is 4.0.0/4.0.1-specific.
+                if (/4\.0\.[01]/.test(currentFHIRVersion) && libraries.length === 0) {
+                  currentFHIRVersion = '4.0.x';
                 }
 
                 Artifact.update(

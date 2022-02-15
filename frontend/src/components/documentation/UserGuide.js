@@ -238,7 +238,7 @@ const UserGuide = () => {
               names or versions, but{' '}
               <Link
                 external
-                href="http://hl7.org/fhir/uv/cpg/2019Sep/documentation-libraries.html"
+                href="http://hl7.org/fhir/uv/cpg/libraries.html"
                 text={
                   <>
                     FHIR<sup>®</sup> Clinical Guidelines
@@ -264,7 +264,7 @@ const UserGuide = () => {
               The Authoring Tool supports metadata conforming to the{' '}
               <Link
                 external
-                href="http://build.fhir.org/ig/HL7/cqf-recommendations/StructureDefinition-cpg-publishablelibrary.html"
+                href="http://hl7.org/fhir/uv/cpg/StructureDefinition-cpg-publishablelibrary.html"
                 text={'FHIR Clinical Guidelines Publishable Library'}
               />{' '}
               specification. By clicking the "Show CPG Fields" button, form data may be entered.
@@ -356,8 +356,11 @@ const UserGuide = () => {
               <li>
                 <strong>Download CQL Button</strong>: Allows the author to download the artifact as both FHIR-based CQL
                 and as a Clinical Practice Guidelines (a.k.a. CPG on FHIR) Publishable Library. When you click this
-                button, you can choose which version of FHIR to use in the exported CQL (DSTU2, STU3, or R4). NOTE: FHIR
-                version may be restricted depending on the FHIR version of any External CQL that has been imported.
+                button, you can choose which version of FHIR to use in the exported CQL (DSTU2, STU3, or R4). For FHIR
+                R4, you can choose between 4.0.0 and 4.0.1 depending on which CQL data model your system supports. If
+                you are unsure, FHIR R4 (4.0.1) is preferred. NOTE: The FHIR version may be restricted depending on
+                several factors, including external CQL that you've uploaded, custom modifiers that you've built, and/or
+                your use of version-specific element types (e.g., Service Request).
               </li>
               <li>
                 <strong>Save Button</strong>: Allows the author to explicitly save their progress. NOTE: Progress will
@@ -2146,7 +2149,7 @@ const UserGuide = () => {
             <div>
               The testing details dialog contains a dropdown select box allowing authors to choose a FHIR compatible
               artifact. Choose the artifact you want to test from the list. If you do not see your artifact, it is
-              likely locked to a different version of FHIR than the patients you have selectec. If the artifact you
+              likely locked to a different version of FHIR than the patients you have selected. If the artifact you
               selected has parameters defined, an additional field will display for each parameter with the default
               value preselected. You can use these fields to override the default values. After populating the parameter
               values (if applicable), click on the "Execute CQL" button to close the dialog and execute the CQL.

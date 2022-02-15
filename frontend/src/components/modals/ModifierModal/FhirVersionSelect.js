@@ -6,7 +6,7 @@ import { useTextStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 const fhirVersions = [
-  { version: '4.0.0', label: 'R4' },
+  { version: '4.0.x', label: 'R4' },
   { version: '3.0.0', label: 'STU3' },
   { version: '1.0.2', label: 'DSTU2' }
 ];

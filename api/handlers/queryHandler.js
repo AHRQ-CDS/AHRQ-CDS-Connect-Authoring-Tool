@@ -46,7 +46,7 @@ function resourceQuery(req, res) {
 function resourceSelector(fhirVersion) {
   if (fhirVersion === '1.0.2') return queryResources.dstu2_resources;
   else if (fhirVersion === '3.0.0') return queryResources.stu3_resources;
-  else if (fhirVersion === '4.0.0') return queryResources.r4_resources;
+  else if (/4\.0\.[01x]/.test(fhirVersion)) return queryResources.r4_resources;
   else return '';
 }
 

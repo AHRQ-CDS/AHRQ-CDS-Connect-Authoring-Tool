@@ -301,7 +301,11 @@ export class Builder extends Component {
     if ((hasExternalCql && !hasServiceRequest) || hasCustomModifier) return;
 
     let updatedArtifact = _.cloneDeep(artifact);
-    updatedArtifact.fhirVersion = hasServiceRequest ? '4.0.0' : '';
+    if (hasServiceRequest) {
+      updatedArtifact.fhirVersion ||= '4.0.x';
+    } else {
+      updatedArtifact.fhirVersion = '';
+    }
     updateAndSaveArtifact(updatedArtifact);
   };
 
@@ -435,18 +439,27 @@ export class Builder extends Component {
     const artifactName = artifact ? artifact.name : null;
     let disableDSTU2 = false;
     let disableSTU3 = false;
-    let disableR4 = false;
+    let disableR400 = false;
+    let disableR401 = false;
 
     const artifactFHIRVersion = artifact.fhirVersion;
     if (artifactFHIRVersion === '1.0.2') {
       disableSTU3 = true;
-      disableR4 = true;
-    }
-    if (artifactFHIRVersion === '3.0.0') {
+      disableR400 = true;
+      disableR401 = true;
+    } else if (artifactFHIRVersion === '3.0.0') {
       disableDSTU2 = true;
-      disableR4 = true;
-    }
-    if (artifactFHIRVersion === '4.0.0') {
+      disableR400 = true;
+      disableR401 = true;
+    } else if (artifactFHIRVersion === '4.0.0') {
+      disableDSTU2 = true;
+      disableSTU3 = true;
+      disableR401 = true;
+    } else if (artifactFHIRVersion === '4.0.1') {
+      disableDSTU2 = true;
+      disableSTU3 = true;
+      disableR400 = true;
+    } else if (artifactFHIRVersion === '4.0.x') {
       disableDSTU2 = true;
       disableSTU3 = true;
     }
@@ -489,8 +502,12 @@ export class Builder extends Component {
                 FHIR<sup>®</sup> STU3
               </MenuItem>
 
-              <MenuItem disabled={disableR4} onClick={() => this.downloadOptionSelected(disableR4, '4.0.0')}>
-                FHIR<sup>®</sup> R4
+              <MenuItem disabled={disableR400} onClick={() => this.downloadOptionSelected(disableR400, '4.0.0')}>
+                FHIR<sup>®</sup> R4 (4.0.0)
+              </MenuItem>
+
+              <MenuItem disabled={disableR401} onClick={() => this.downloadOptionSelected(disableR401, '4.0.1')}>
+                FHIR<sup>®</sup> R4 (4.0.1)
               </MenuItem>
             </Menu>
 

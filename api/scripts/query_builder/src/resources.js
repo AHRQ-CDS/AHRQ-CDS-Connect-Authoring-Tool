@@ -626,13 +626,6 @@ const supportedResourceProperties = [
   }
 ];
 
-const fhirVersionTypeMap = {
-  dstu2: '1.0.2',
-  stu3: '3.0.0',
-  r4: '4.0.1'
-};
-
 module.exports = {
-  fhirVersionTypeMap: fhirVersionTypeMap,
   supportedResourceProperties: supportedResourceProperties
 };
