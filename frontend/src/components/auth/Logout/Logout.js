@@ -6,18 +6,24 @@ import { Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } fr
 import { ArrowDropDown as ArrowDropDownIcon } from '@mui/icons-material';
 
 import { Modal } from 'components/elements';
-import { logoutUser } from 'actions/auth';
+import { logoutUser, updateSettings } from 'actions/auth';
 import useStyles from '../styles';
+import { TermsAndConditions } from '../';
 
 const Logout = () => {
   const [showModal, toggleModal] = useToggle(false);
   const [showMenu, toggleMenu] = useToggle(false);
   const authUser = useSelector(state => state.auth.username);
   const artifactSaved = useSelector(state => state.artifacts.artifactSaved);
+  const termsAcceptedDate = useSelector(state => state.auth.termsAcceptedDate);
   const dispatch = useDispatch();
   const anchorRef = useRef(null);
   const history = useHistory();
   const styles = useStyles();
+
+  const acceptTerms = useCallback(() => {
+    dispatch(updateSettings({ termsAcceptedDate: new Date().toString() }));
+  }, [dispatch]);
 
   const logout = useCallback(() => {
     toggleModal(false);
@@ -84,6 +90,8 @@ const Logout = () => {
       >
         <h5>Are you sure you want to log out without saving your changes?</h5>
       </Modal>
+
+      <TermsAndConditions isOpen={termsAcceptedDate == null} logout={logout} saveTermsDate={acceptTerms} />
     </div>
   );
 };

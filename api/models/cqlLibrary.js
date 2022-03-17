@@ -8,7 +8,7 @@ const cqlLibrarySchema = new Schema(
     version: String,
     fhirVersion: String,
     linkedArtifactId: String,
-    user: String,
+    user: { type: String, immutable: true },
     details: Object
   },
   {

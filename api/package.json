@@ -6,7 +6,6 @@
   "dependencies": {
     "archiver": "^5.2.0",
     "basic-auth": "^2.0.0",
-    "body-parser": "^1.18.2",
     "busboy": "^0.2.14",
     "cds-upload": "file:./localDependencies/cds-upload-v1.0.0.tgz",
     "change-case": "^3.1.0",
@@ -53,10 +52,11 @@
     "bson": "^1.1.5"
   },
   "scripts": {
-    "format": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
     "lint:fix": "eslint --fix .; exit 0",
     "lint": "eslint .",
     "prepare": "cd .. && husky install api/.husky",
+    "prettier": "prettier --check \"**/*.+(js|jsx|json|css|md)\"",
+    "prettier:fix": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
     "start-dev": "nodemon",
     "start": "node ./server.js",
     "test-ci": "./node_modules/.bin/mocha --reporter spec --recursive --no-colors",

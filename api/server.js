@@ -3,7 +3,6 @@ const path = require('path');
 const process = require('process');
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const mm = require('mongodb-migrations');
 const config = require('./config');
 const configPassport = require('./auth/configPassport');
@@ -24,8 +23,8 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.get('mongo.url'));
 
 // Configure API to use BodyParser and handle json data
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({ limit: '50mb' }));
 
 // Configure passport authentication
 configPassport(app);

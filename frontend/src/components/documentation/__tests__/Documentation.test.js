@@ -21,4 +21,11 @@ describe('<Documentation />', () => {
 
     expect(getAllByText('Data Types and Expressions')).not.toBeNull();
   });
+
+  it('renders the terms and conditions guide', () => {
+    const { getAllByText } = render(<Documentation />);
+    userEvent.click(screen.getByRole('tab', { name: 'Terms & Conditions' }));
+
+    expect(getAllByText('CDS Authoring Tool Terms and Conditions')).not.toBeNull();
+  });
 });

@@ -7,7 +7,7 @@ const PatientSchema = new Schema(
     name: String,
     patient: Object,
     fhirVersion: String,
-    user: String
+    user: { type: String, immutable: true }
   },
   {
     timestamps: true // adds created_at, updated_at

@@ -99,11 +99,12 @@
     "test": "react-scripts test",
     "test-ci": "CI=1 react-scripts test --silent --coverage=false --maxWorkers=2",
     "eject": "react-scripts eject",
-    "format": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
+    "prettier": "prettier --check \"**/*.+(js|jsx|json|css|md)\"",
+    "prettier:fix": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
+    "lint": "run-p --aggregate-output -c lint:css lint:js",
+    "lint:fix": "eslint --fix .",
     "lint:css": "stylelint 'src/styles/**/*.scss'",
     "lint:js": "eslint .",
-    "lint": "run-p --aggregate-output -c lint:*",
-    "lint-fix": "eslint --fix .",
     "prepare": "cd .. && husky install frontend/.husky"
   },
   "browserslist": {

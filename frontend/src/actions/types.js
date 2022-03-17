@@ -10,6 +10,15 @@ export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 export const SET_AUTH_STATUS = 'SET_AUTH_STATUS';
 
+// ------------------------- USER SETTINGS --------------------------------- //
+
+export const USER_SETTINGS_REQUEST = 'USER_SETTINGS_REQUEST';
+export const USER_SETTINGS_SUCCESS = 'USER_SETTINGS_SUCCESS';
+export const USER_SETTINGS_FAILURE = 'USER_SETTINGS_FAILURE';
+export const UPDATE_USER_SETTINGS_REQUEST = 'UPDATE_USER_SETTINGS_REQUEST';
+export const UPDATE_USER_SETTINGS_SUCCESS = 'UPDATE_USER_SETTINGS_SUCCESS';
+export const UPDATE_USER_SETTINGS_FAILURE = 'UPDATE_USER_SETTINGS_FAILURE';
+
 // ------------------------- ERRORS ---------------------------------------- //
 
 export const SET_ERROR_MESSAGE = 'SET_ERROR_MESSAGE';

@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import DataTypeGuide from './DataTypeGuide';
 import UserGuide from './UserGuide';
+import TermsAndConditions from './TermsAndConditions';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from './styles';
 
@@ -48,6 +49,7 @@ const Documentation = () => {
             >
               <Tab className={styles.tab} label="User Guide" {...a11yProps(0)} />
               <Tab className={styles.tab} label="Data Types" {...a11yProps(1)} />
+              <Tab className={styles.tab} label="Terms & Conditions" {...a11yProps(2)} />
             </Tabs>
           </AppBar>
         </div>
@@ -58,6 +60,10 @@ const Documentation = () => {
 
         <TabPanel value={value} index={1}>
           <DataTypeGuide />
+        </TabPanel>
+
+        <TabPanel value={value} index={2}>
+          <TermsAndConditions />
         </TabPanel>
       </div>
     </div>

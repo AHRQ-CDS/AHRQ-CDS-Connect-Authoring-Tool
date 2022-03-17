@@ -4,6 +4,8 @@ const defaultState = {
   isAuthenticating: false,
   isAuthenticated: false,
   isLoggingOut: false,
+  isLoadingSettings: false,
+  termsAcceptedDate: null,
   username: null,
   authStatus: null,
   authStatusText: ''
@@ -78,6 +80,27 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         authStatus: action.status
+      };
+    case types.USER_SETTINGS_REQUEST:
+    case types.UPDATE_USER_SETTINGS_REQUEST:
+      return {
+        ...state,
+        isLoadingSettings: true,
+        termsAcceptedDate: null
+      };
+    case types.USER_SETTINGS_FAILURE:
+    case types.UPDATE_USER_SETTINGS_FAILURE:
+      return {
+        ...state,
+        isLoadingSettings: false,
+        termsAcceptedDate: null
+      };
+    case types.USER_SETTINGS_SUCCESS:
+    case types.UPDATE_USER_SETTINGS_SUCCESS:
+      return {
+        ...state,
+        isLoadingSettings: false,
+        termsAcceptedDate: action.settings.termsAcceptedDate
       };
     default:
       return state;

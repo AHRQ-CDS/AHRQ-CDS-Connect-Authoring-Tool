@@ -34,7 +34,10 @@ export function getCurrentUser() {
     dispatch(requestUser());
 
     return sendUserRequest()
-      .then(data => dispatch(userReceived(data.uid)))
+      .then(async data => {
+        await dispatch(getSettings());
+        return dispatch(userReceived(data.uid));
+      })
       .catch(() => dispatch(userReceived(null)));
   };
 }
@@ -76,7 +79,10 @@ export function loginUser(username, password) {
     dispatch(requestLogin());
 
     return sendLoginRequest(username, password)
-      .then(data => dispatch(loginSuccess(data.uid)))
+      .then(async data => {
+        await dispatch(getSettings());
+        return dispatch(loginSuccess(data.uid));
+      })
       .catch(error => dispatch(loginFailure(error)));
   };
 }
@@ -119,5 +125,71 @@ export function setAuthStatus(status) {
   return {
     type: types.SET_AUTH_STATUS,
     status
+  };
+}
+
+// ------------------------- GET SETTINGS ---------------------------------- //
+
+function requestUserSettings() {
+  return {
+    type: types.USER_SETTINGS_REQUEST
+  };
+}
+
+function userSettingsSuccess(settings) {
+  return {
+    type: types.USER_SETTINGS_SUCCESS,
+    settings
+  };
+}
+
+function userSettingsFailure(error) {
+  return {
+    type: types.USER_SETTINGS_FAILURE,
+    status: error.response.status,
+    statusText: error.response.statusText
+  };
+}
+
+export function getSettings() {
+  return dispatch => {
+    dispatch(requestUserSettings());
+    return axios
+      .get(`${API_BASE}/settings`)
+      .then(results => dispatch(userSettingsSuccess(results.data)))
+      .catch(error => dispatch(userSettingsFailure(error)));
+  };
+}
+
+// ------------------------- UPDATE SETTINGS ------------------------------- //
+
+function requestUpdateUserSettings() {
+  return {
+    type: types.UPDATE_USER_SETTINGS_REQUEST
+  };
+}
+
+function updateUserSettingsSuccess(settings) {
+  return {
+    type: types.UPDATE_USER_SETTINGS_SUCCESS,
+    settings
+  };
+}
+
+function updateUserSettingsFailure(error) {
+  return {
+    type: types.UPDATE_USER_SETTINGS_FAILURE,
+    status: error.response.status,
+    statusText: error.response.statusText
+  };
+}
+
+export function updateSettings(settings) {
+  return dispatch => {
+    dispatch(requestUpdateUserSettings());
+    return axios
+      .put(`${API_BASE}/settings`, settings)
+      .then(result => dispatch(updateUserSettingsSuccess(result.data)))
+      .catch(error => dispatch(updateUserSettingsFailure(error)));
   };
 }

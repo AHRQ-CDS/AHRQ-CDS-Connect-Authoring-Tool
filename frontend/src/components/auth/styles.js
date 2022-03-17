@@ -32,6 +32,17 @@ export default makeStyles(
     },
     input: {
       margin: '10px 0'
+    },
+    terms: {
+      fontSize: '0.8em'
+    },
+    termsHeader: {
+      fontWeight: 'bold',
+      textAlign: 'center',
+      textTransform: 'uppercase'
+    },
+    termsSection: {
+      fontWeight: 'bold'
     }
   }),
   { name: 'Auth', index: 1 }

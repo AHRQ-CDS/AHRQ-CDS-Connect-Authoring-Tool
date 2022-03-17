@@ -16,8 +16,14 @@ describe('auth actions', () => {
       const username = 'myUserName';
 
       nock('http://localhost').get('/authoring/api/auth/user').query(true).reply(200, { uid: username });
+      nock('http://localhost').get('/authoring/api/settings').reply(200, {});
 
-      const expectedActions = [{ type: types.USER_REQUEST }, { type: types.USER_RECEIVED, username }];
+      const expectedActions = [
+        { type: types.USER_REQUEST },
+        { type: types.USER_SETTINGS_REQUEST },
+        { type: types.USER_SETTINGS_SUCCESS, settings: {} },
+        { type: types.USER_RECEIVED, username }
+      ];
 
       return store.dispatch(actions.getCurrentUser()).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
@@ -45,8 +51,14 @@ describe('auth actions', () => {
       const password = 'myPw';
 
       nock('http://localhost').post('/authoring/api/auth/login').reply(200, { uid: username });
+      nock('http://localhost').get('/authoring/api/settings').reply(200, {});
 
-      const expectedActions = [{ type: types.LOGIN_REQUEST }, { type: types.LOGIN_SUCCESS, username }];
+      const expectedActions = [
+        { type: types.LOGIN_REQUEST },
+        { type: types.USER_SETTINGS_REQUEST },
+        { type: types.USER_SETTINGS_SUCCESS, settings: {} },
+        { type: types.LOGIN_SUCCESS, username }
+      ];
 
       return store.dispatch(actions.loginUser(username, password)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
@@ -118,6 +130,88 @@ describe('auth actions', () => {
 
       store.dispatch(actions.setAuthStatus('status message'));
       expect(store.getActions()).toEqual([{ type: types.SET_AUTH_STATUS, status: 'status message' }]);
+    });
+  });
+
+  // ------------------------- GET SETTINGS -------------------------------- //
+  describe('get user settings', () => {
+    it('dispatches a USER_SETTINGS_SUCCESS action upon successful attempt to get settings', () => {
+      const store = mockStore();
+
+      const mockSettings = { termsAcceptedDate: new Date().toString() };
+
+      nock('http://localhost').get('/authoring/api/settings').reply(200, mockSettings);
+
+      const expectedActions = [
+        { type: types.USER_SETTINGS_REQUEST },
+        { type: types.USER_SETTINGS_SUCCESS, settings: mockSettings }
+      ];
+
+      return store.dispatch(actions.getSettings()).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+
+    it('dispatches a USER_SETTINGS_FAILURE action upon unsuccessful attempt to get settings', () => {
+      const store = mockStore();
+
+      nock('http://localhost')
+        .get('/authoring/api/settings')
+        .reply(500, function () {
+          this.req.response.statusMessage = 'Internal error';
+          return { status: 500 };
+        });
+
+      const expectedActions = [
+        { type: types.USER_SETTINGS_REQUEST },
+        { type: types.USER_SETTINGS_FAILURE, status: 500, statusText: 'Internal error' }
+      ];
+
+      return store.dispatch(actions.getSettings()).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+  });
+
+  // ------------------------- UPDATE SETTINGS ----------------------------- //
+  describe('update user settings', () => {
+    it('dispatches an UPDATE_USER_SETTINGS_SUCCESS action upon successfully updating settings', () => {
+      const store = mockStore();
+
+      const settings = {};
+
+      nock('http://localhost').put('/authoring/api/settings').reply(200, settings);
+
+      const expectedActions = [
+        { type: types.UPDATE_USER_SETTINGS_REQUEST },
+        { type: types.UPDATE_USER_SETTINGS_SUCCESS, settings }
+      ];
+
+      return store.dispatch(actions.updateSettings(settings)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+
+    it('dispatches an UPDATE_USER_SETTINGS_FAILURE action upon unsuccessfully updating settings', () => {
+      const store = mockStore();
+
+      const settings = { termsAcceptedDate: new Date().toString() };
+
+      nock('http://localhost')
+        .put('/authoring/api/settings')
+        .reply(500, function () {
+          this.req.response.statusMessage = 'Internal error';
+          return { status: 500 };
+        });
+
+      const expectedActions = [
+        { type: types.UPDATE_USER_SETTINGS_REQUEST },
+        { type: types.UPDATE_USER_SETTINGS_FAILURE, status: 500, statusText: 'Internal error' }
+      ];
+
+      return store.dispatch(actions.updateSettings(settings)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
   });
 });

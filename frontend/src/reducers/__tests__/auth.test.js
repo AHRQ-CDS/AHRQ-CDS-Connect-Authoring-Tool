@@ -7,6 +7,8 @@ describe('auth reducer', () => {
       isAuthenticating: false,
       isAuthenticated: false,
       isLoggingOut: false,
+      isLoadingSettings: false,
+      termsAcceptedDate: null,
       username: null,
       authStatus: null,
       authStatusText: ''
@@ -94,6 +96,44 @@ describe('auth reducer', () => {
     expect(reducer([], action)).toEqual(newState);
 
     const previousState = { authStatus: 'Old test status' };
+    expect(reducer(previousState, action)).toEqual(newState);
+  });
+
+  // ------------------------- GET SETTINGS ---------------------------------- //
+  it('should handle getting user settings', () => {
+    const date = new Date().toString();
+    let action = { type: types.USER_SETTINGS_REQUEST };
+    let newState = { isLoadingSettings: true, termsAcceptedDate: null };
+    expect(reducer([], action)).toEqual(newState);
+
+    const previousState = { isLoadingSettings: false, termsAcceptedDate: date };
+    expect(reducer(previousState, action)).toEqual(newState);
+
+    action = { type: types.USER_SETTINGS_SUCCESS, settings: { termsAcceptedDate: date } };
+    newState = { isLoadingSettings: false, termsAcceptedDate: date };
+    expect(reducer(previousState, action)).toEqual(newState);
+
+    action = { type: types.USER_SETTINGS_FAILURE, status: 'Test status', statusText: 'Test status text' };
+    newState = { isLoadingSettings: false, termsAcceptedDate: null };
+    expect(reducer(previousState, action)).toEqual(newState);
+  });
+
+  // ------------------------- UPDATE SETTINGS ------------------------------- //
+  it('should handle updating user settings', () => {
+    const date = new Date().toString();
+    let action = { type: types.UPDATE_USER_SETTINGS_REQUEST };
+    let newState = { isLoadingSettings: true, termsAcceptedDate: null };
+    expect(reducer([], action)).toEqual(newState);
+
+    const previousState = { isLoadingSettings: false, termsAcceptedDate: date };
+    expect(reducer(previousState, action)).toEqual(newState);
+
+    action = { type: types.UPDATE_USER_SETTINGS_SUCCESS, settings: { termsAcceptedDate: date } };
+    newState = { isLoadingSettings: false, termsAcceptedDate: date };
+    expect(reducer(previousState, action)).toEqual(newState);
+
+    action = { type: types.UPDATE_USER_SETTINGS_FAILURE, status: 'Test status', statusText: 'Test status text' };
+    newState = { isLoadingSettings: false, termsAcceptedDate: null };
     expect(reducer(previousState, action)).toEqual(newState);
   });
 });

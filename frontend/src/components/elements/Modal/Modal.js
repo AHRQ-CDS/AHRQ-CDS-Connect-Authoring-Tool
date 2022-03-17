@@ -19,6 +19,7 @@ import useStyles from './styles';
 const Modal = ({
   children,
   closeButtonText = 'Cancel',
+  disableBackdropClick = false,
   Footer,
   handleCloseModal,
   handleSaveModal,
@@ -50,13 +51,20 @@ const Modal = ({
     }
   };
 
+  const onClose = (event, reason) => {
+    if (reason && reason === 'backdropClick' && disableBackdropClick) {
+      return;
+    }
+    handleCloseModal();
+  };
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={modalTheme}>
         <Dialog
           fullWidth
           maxWidth={maxWidth}
-          onClose={handleCloseModal}
+          onClose={onClose}
           onKeyDown={hasEnterKeySubmit ? e => enterKeyCheck(handleSaveModal, null, e) : null}
           open={isOpen}
         >
@@ -110,6 +118,7 @@ const Modal = ({
 Modal.propTypes = {
   children: PropTypes.element.isRequired,
   closeButtonText: PropTypes.string,
+  disableBackdropClick: PropTypes.bool,
   Footer: PropTypes.oneOfType([PropTypes.element, PropTypes.bool]),
   handleCloseModal: PropTypes.func.isRequired,
   handleSaveModal: PropTypes.func.isRequired,
