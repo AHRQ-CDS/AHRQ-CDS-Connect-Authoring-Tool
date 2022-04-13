@@ -56,6 +56,16 @@ For local development, a `config/local.json` file can also be used to override c
 
 Lastly, most aspects of config can also be overridden via specific environment variables. See the `config.js` configuration schema for the relevant environment variable names.
 
+### Enabling HTTPS
+
+By default, the API server and frontend server listen over unsecure HTTP. To listen over HTTPS, all three of the following environment variables must be set:
+
+* `HTTPS`: Set to `true` to enable HTTPS.
+* `SSL_KEY_FILE`: The absolute path to the SSL key file (e.g., `/data/ssl/server.key`)
+* `SSL_CRT_FILE`: The absolute path to the SSL cert file (e.g., `/data/ssl/server.cert`)
+
+These variable names match the variables documented in Create React App's [Using HTTPS in Development](https://create-react-app.dev/docs/using-https-in-development/) documentation.
+
 ### Updating Modifier Templates
 
 This project uses EJS templates to generate CQL files. These files are all located in the subdirectories of `api/data/cql` and can be updated according to changes in CQL.

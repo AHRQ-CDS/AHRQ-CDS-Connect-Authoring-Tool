@@ -10,9 +10,28 @@
 require('dotenv-expand')(require('dotenv').config());
 
 const express = require('express');
+const https = require('https');
 const proxy = require('express-http-proxy');
 const path = require('path');
+const fs = require('fs');
 const url = require('url');
+
+const PORT = 9000;
+
+// This uses the same evironment variables as documented for Create React App:
+// https://create-react-app.dev/docs/using-https-in-development/
+const useHTTPS = /^true$/i.test(process.env.HTTPS);
+const sslKeyFile = process.env.SSL_KEY_FILE;
+const sslCrtFile = process.env.SSL_CRT_FILE;
+if (useHTTPS) {
+  const sslFilesExist = sslKeyFile && fs.existsSync(sslKeyFile) && sslCrtFile && fs.existsSync(sslCrtFile);
+  if (!sslFilesExist) {
+    console.error(
+      'HTTPS mode detected, but SSL_KEY_FILE and/or SSL_CRT_FILE environment variables do not resolve to valid file paths.'
+    );
+    process.exit(1);
+  }
+}
 
 const app = express();
 
@@ -23,13 +42,20 @@ const proxyActive = !/^(false|f|no|n|0)$/i.test(process.env.API_PROXY_ACTIVE);
 if (proxyActive) {
   const apiHost = process.env.API_PROXY_HOST || 'localhost';
   const apiPort = process.env.API_PROXY_PORT || 3001;
-  app.use(
-    process.env.REACT_APP_API_URL,
-    proxy(`${apiHost}:${apiPort}`, {
-      // By default, the API base URL (e.g., /authoring/api) isn't preserved, so we need to add it back
-      proxyReqPathResolver: req => `${process.env.REACT_APP_API_URL}${url.parse(req.url).path}`
-    })
-  );
+  const proxyOptions = {
+    // By default, the API base URL (e.g., /authoring/api) isn't preserved, so we need to add it back
+    proxyReqPathResolver: req => `${process.env.REACT_APP_API_URL}${url.parse(req.url).path}`
+  };
+  if (useHTTPS) {
+    // Enable HTTPS proxy to API
+    proxyOptions.https = true;
+    // API usually uses a self-signed cert, so disable cert-checking just for this proxy
+    proxyOptions.proxyReqOptDecorator = proxyReqOpts => {
+      proxyReqOpts.rejectUnauthorized = false;
+      return proxyReqOpts;
+    };
+  }
+  app.use(process.env.REACT_APP_API_URL, proxy(`${apiHost}:${apiPort}`, proxyOptions));
 }
 
 app.get('/authoring/*', (req, res) => {
@@ -40,5 +66,12 @@ app.get('/', (req, res) => {
   res.redirect('/authoring');
 });
 
-console.log('Listening on port 9000...');
-app.listen(9000);
+if (useHTTPS) {
+  https.createServer({ key: fs.readFileSync(sslKeyFile), cert: fs.readFileSync(sslCrtFile) }, app).listen(PORT, () => {
+    console.log(`Frontend listening on port ${PORT} using https`);
+  });
+} else {
+  app.listen(PORT, () => {
+    console.log(`Frontend listening on port ${PORT} using http`);
+  });
+}

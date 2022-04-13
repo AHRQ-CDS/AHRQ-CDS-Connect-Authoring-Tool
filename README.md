@@ -131,6 +131,19 @@ By default, the server on port 9000 will proxy requests on _/authoring/api_ to t
   -e "API_PROXY_ACTIVE=false" \
 ```
 
+**Enabling HTTPS**
+
+By default, the API server and frontend server listen over unsecure HTTP. To listen over HTTPS, add these three flags to the `docker run` command above:
+
+```
+  -v /data/ssl:/data/ssl \
+  -e "HTTPS=true" \
+  -e "SSL_KEY_FILE=/data/ssl/server.key" \
+  -e "SSL_CRT_FILE=/data/ssl/server.cert" \
+```
+
+You should substitute the volume mapping and SSL filenames as needed for your specific environment.
+
 **Using the Container**
 
 When the container is running, access the app at [http://localhost:9000](http://localhost:9000).

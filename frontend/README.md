@@ -48,6 +48,16 @@ This project has very few configuration needs. Currently, four data points are c
 - `REACT_APP_GTM_KEY`: the Google Tag Manager key for analytics (blank by default, indicating no analytics)
   The default values can be found in the `.env` file and overridden via environment variables. Note that during a production build, the current values in the environment and/or `.env` will be hard-coded into the resulting HTML and JS.
 
+### Enabling HTTPS
+
+By default, the frontend server and API server listen over unsecure HTTP. To listen over HTTPS, all three of the following environment variables must be set:
+
+* `HTTPS`: Set to `true` to enable HTTPS.
+* `SSL_KEY_FILE`: The absolute path to the SSL key file (e.g., `/data/ssl/server.key`)
+* `SSL_CRT_FILE`: The absolute path to the SSL cert file (e.g., `/data/ssl/server.cert`)
+
+These variable names match the variables documented in Create React App's [Using HTTPS in Development](https://create-react-app.dev/docs/using-https-in-development/) documentation.
+
 ### Run
 
 `yarn start` will run the frontend in development mode, with hot redeployment when changes are detected on the filesystem.
