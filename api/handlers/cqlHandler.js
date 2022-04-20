@@ -1464,7 +1464,14 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
       if (!code.display) code.display = '';
       code.code = code.code.replace(/'/g, "\\'").replace(/"/g, '\\"');
       code.display = code.display.replace(/'/g, "\\'");
-      code.codeSystem.id = code.codeSystem.id.replace(/'/g, "\\'");
+      // Qualifier modifier editor flattens out the typical codeSystem, so handle both formats of codes
+      const system = code.codeSystem ? code.codeSystem.name : code.system;
+      const uri = code.codeSystem ? code.codeSystem.id : code.uri;
+      if (!code.codeSystem) {
+        code.codeSystem = {};
+      }
+      code.codeSystem.id = uri.replace(/'/g, "\\'");
+      code.codeSystem.name = system;
       // If the codeName variable is ever modified, make sure to update the templates
       // in api/data/cql/rules that use similar logic (such as codeConceptMatchesConcept)
       const codeName = code.display && code.display.length < 60 ? code.display.replace(/"/g, '\\"') : code.code;
