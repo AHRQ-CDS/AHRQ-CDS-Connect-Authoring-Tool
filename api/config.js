@@ -101,6 +101,27 @@ const config = convict({
           format: 'String',
           default: '(uid={{username}})',
           env: 'AUTH_LDAP_SEARCH_FILTER'
+        },
+        tlsOptions: {
+          minVersion: {
+            doc: 'The minumum TLS version to allow (TLSv1.3, TLSv1.2, TLSv1.1, or TLSv1)',
+            format: String,
+            default: 'TLSv1.2',
+            env: 'AUTH_LDAP_TLS_MIN_VERSION'
+          },
+          ca: {
+            doc: 'List of certificates to trust when validating LDAPS connection.',
+            format: 'Array',
+            nullable: true,
+            default: null,
+            env: 'AUTH_LDAP_TLS_CA'
+          },
+          rejectUnauthorized: {
+            doc: 'Indicates if TLS should reject unauthorized certificates for LDAPS connection.',
+            format: 'Boolean',
+            default: true,
+            env: 'AUTH_LDAP_TLS_REJECT_UNAUTHORIZED'
+          }
         }
       }
     },

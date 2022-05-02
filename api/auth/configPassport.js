@@ -1,3 +1,4 @@
+const fs = require('fs');
 const process = require('process');
 const session = require('express-session');
 const passport = require('passport');
@@ -15,6 +16,22 @@ function getLdapConfiguration(req, callback) {
       .replace(/\{\{username\}\}/g, req.body.username)
       .replace(/\{\{password\}\}/g, req.body.password)
   );
+  if (
+    ldapConfig &&
+    ldapConfig.server &&
+    ldapConfig.server.tlsOptions &&
+    Array.isArray(ldapConfig.server.tlsOptions.ca)
+  ) {
+    ldapConfig.server.tlsOptions.ca = ldapConfig.server.tlsOptions.ca
+      .map(f => {
+        try {
+          return fs.readFileSync(f);
+        } catch (e) {
+          console.error(`Failed to load certificate for LDAP: ${f}`);
+        }
+      })
+      .filter(c => c != null);
+  }
   callback(null, ldapConfig);
 }
 
