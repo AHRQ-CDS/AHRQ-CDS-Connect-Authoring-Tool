@@ -22,7 +22,17 @@ const Dropdown = ({
         option.isSubheader ? (
           <ListSubheader key={option[valueKey]}>{renderItem ? renderItem(option) : option[labelKey]}</ListSubheader>
         ) : (
-          <MenuItem key={option[valueKey]} value={option[valueKey]} disabled={option.isDisabled}>
+          <MenuItem
+            key={option[valueKey]}
+            value={option[valueKey]}
+            disabled={option.isDisabled}
+            onKeyDown={event => {
+              if (event.key === 'Tab') {
+                event.target = { value: option[valueKey] };
+                props.onChange(event);
+              }
+            }}
+          >
             {renderItem ? renderItem(option) : option[labelKey]}
           </MenuItem>
         )

@@ -16,6 +16,8 @@ const options = [
 const ValueComparisonModifier = ({ handleUpdateModifier, values }) => (
   <Stack direction="row" flexWrap="wrap" py={1} width="100%">
     <Autocomplete
+      autoSelect
+      autoHighlight
       getOptionLabel={option => option?.label || ''}
       id="value-comparison-modifier-minop"
       onChange={(event, option) => handleUpdateModifier({ minOperator: option?.value || null })}
@@ -38,6 +40,8 @@ const ValueComparisonModifier = ({ handleUpdateModifier, values }) => (
     />
 
     <Autocomplete
+      autoSelect
+      autoHighlight
       getOptionLabel={option => option?.value || ''}
       id="value-comparison-modifier-maxop"
       onChange={(event, option) => handleUpdateModifier({ maxOperator: option?.value || null })}

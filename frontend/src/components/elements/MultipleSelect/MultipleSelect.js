@@ -17,6 +17,8 @@ const MultipleSelect = ({ allowCustomInput = false, label, onChange, options, va
 
   return (
     <Autocomplete
+      autoSelect
+      autoHighlight
       filterOptions={filterOptions}
       freeSolo={allowCustomInput}
       fullWidth

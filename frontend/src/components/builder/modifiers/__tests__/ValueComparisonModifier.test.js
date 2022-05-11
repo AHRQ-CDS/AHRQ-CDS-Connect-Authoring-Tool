@@ -35,8 +35,10 @@ describe('<ValueComparisonModifier />', () => {
     fireEvent.change(screen.getByRole('spinbutton', { name: 'maxValue' }), { target: { value: '189' } });
     expect(handleUpdateModifier).toBeCalledWith({ maxValue: 189 });
 
-    userEvent.click(screen.getByRole('textbox', { name: /maxOp/ }));
-    userEvent.click(screen.getByRole('option', { name: '!=' }));
+    const maxOp = screen.getByRole('textbox', { name: /maxOp/ });
+    userEvent.click(maxOp);
+    fireEvent.change(maxOp, { target: { value: '!=' } });
+    userEvent.tab();
 
     expect(handleUpdateModifier).toBeCalledWith({ maxOperator: '!=' });
   }, 30000);

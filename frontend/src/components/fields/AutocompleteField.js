@@ -17,6 +17,8 @@ const FormikSelect = ({ field: { name, value, onChange }, form: { setFieldValue 
 
   return (
     <Autocomplete
+      autoSelect
+      autoHighlight
       className={fieldStyles.fieldInputLg}
       getOptionLabel={option => option?.label || ''}
       id={name}
