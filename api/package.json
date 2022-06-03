@@ -12,7 +12,7 @@
     "connect-mongo": "^3.2.0",
     "convict": "^6.0.1",
     "cql-merge": "file:./localDependencies/cql-merge-1.0.0.tgz",
-    "ejs": "^3.1.6",
+    "ejs": "^3.1.7",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "fs-extra": "^5.0.0",
