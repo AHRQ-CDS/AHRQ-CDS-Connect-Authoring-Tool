@@ -79,7 +79,6 @@ const Parameter = ({
       handleUpdateComment={event => handleUpdateParameter({ ...parameter, comment: event[uniqueId] })}
       handleUpdateTitleField={event => handleUpdateParameter({ ...parameter, name: event[uniqueId] })}
       hasErrors={(hasDuplicateName && !hasChangedUse) || hasErrors}
-      hideActions
       label="parameter"
       setShowAllContent={setShowAllContent}
       showAllContent={showAllContent}

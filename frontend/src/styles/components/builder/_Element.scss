@@ -31,15 +31,6 @@
   }
 }
 
-.vsac-authenticate,
-#vsac-controls {
-  display: flex;
-
-  button {
-    margin-right: 10px;
-  }
-}
-
 .element-field {
   display: flex;
 
@@ -82,17 +73,5 @@
     display: flex;
     align-items: flex-start;
     white-space: nowrap;
-  }
-}
-
-.modifier-select button {
-  margin: 0 10px 10px 0;
-}
-
-button.modifier-select-button {
-  text-transform: none;
-
-  svg {
-    margin-right: 10px;
   }
 }

@@ -1,5 +1,6 @@
 import Validators from './validators';
 import _ from 'lodash';
+import { getOriginalBaseElement } from 'utils/baseElements';
 
 export function validateModifier(modifier) {
   let validationWarning = null;
@@ -44,6 +45,21 @@ export function allModifiersValid(modifiers) {
   return areAllModifiersValid;
 }
 
+export function filterRelevantModifiers(modifiers, instance) {
+  const relevantModifiers = (modifiers || []).slice();
+  if (!instance.checkInclusionInVS) {
+    // Rather than suppressing `CheckInclusionInVS` in every element, assume it's suppressed unless explicity
+    // stated otherwise
+    _.remove(relevantModifiers, modifier => modifier.id === 'CheckInclusionInVS');
+  }
+  if (_.has(instance, 'suppressedModifiers')) {
+    instance.suppressedModifiers.forEach(suppressedModifier =>
+      _.remove(relevantModifiers, relevantModifier => relevantModifier.id === suppressedModifier)
+    );
+  }
+  return relevantModifiers;
+}
+
 export function getFieldWithType(fields, type) {
   return fields.find(f => f.type && f.type.endsWith(type));
 }
@@ -68,4 +84,35 @@ export function getInstanceByReference(allInstances, referenceField) {
 
 export function getInstanceById(allInstances, instanceId) {
   return allInstances.find(instance => instance.uniqueId === instanceId);
+}
+
+export function getLabelForInstance(instance, baseElements) {
+  let label = instance.name;
+  const referenceField = getFieldWithType(instance.fields, 'reference');
+  if (referenceField && referenceField.id === 'baseElementReference') {
+    // Element type to display in header will be the reference type for Base Elements.
+    const originalBaseElement = getOriginalBaseElement(instance, baseElements);
+    label = originalBaseElement.type === 'parameter' ? 'Parameter' : originalBaseElement.name;
+  }
+  return label;
+}
+
+export function getReferenceArguments(referenceFieldArgs) {
+  let referenceSetIds = new Set();
+  referenceFieldArgs.forEach(arg => {
+    if (
+      arg.value &&
+      arg.value.argSource &&
+      arg.value.argSource !== 'editor' &&
+      arg.value.argSource !== '' &&
+      arg.value.argSource !== 'externalCql' &&
+      arg.value.selected
+    ) {
+      referenceSetIds.add(arg.value.selected);
+    }
+  });
+
+  return [...referenceSetIds].map(referenceSetId =>
+    referenceFieldArgs.find(arg => arg.value?.selected === referenceSetId)
+  );
 }

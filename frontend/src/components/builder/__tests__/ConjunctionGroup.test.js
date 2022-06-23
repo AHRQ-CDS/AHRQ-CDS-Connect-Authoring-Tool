@@ -2,6 +2,7 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import nock from 'nock';
+import _ from 'lodash';
 import { render, fireEvent, userEvent, screen, within } from 'utils/test-utils';
 import { createTemplateInstance } from 'utils/test_helpers';
 import { instanceTree, elementGroups } from 'utils/test_fixtures';
@@ -157,14 +158,20 @@ describe('<ConjunctionGroup />', () => {
   });
 
   it('has an expression phrase', () => {
+    const topLevelChildInstances = _.cloneDeep(instanceTree.childInstances);
+    topLevelChildInstances[0].fields.find(f => f.id === 'element_name').value = 'Top Level Age';
+    topLevelChildInstances[1].fields.find(f => f.id === 'element_name').value = 'Top Level LDL_Test';
     const childGroupInstance = {
       ...instanceTree,
       path: '',
-      childInstances: [...instanceTree.childInstances, orInstance, instanceTree]
+      childInstances: [...topLevelChildInstances, orInstance, instanceTree]
     };
 
     const { container } = renderComponent({ instance: childGroupInstance });
-    expect(container.querySelectorAll('.expression__group')).toHaveLength(1);
+    expect(container.querySelectorAll('[class^="ElementCard-expressionPhrase"]')).toHaveLength(3);
+    expect(container.querySelectorAll('[class^="ElementCard-expressionPhrase"]')[1]).toHaveTextContent(
+      'AgeandLDL_Test'
+    );
   });
 
   describe('for deeper nested conjunction groups', () => {
@@ -204,7 +211,7 @@ describe('<ConjunctionGroup />', () => {
       const deleteInstance = jest.fn();
       const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
 
-      fireEvent.click(container.querySelector('.card-element__header button[aria-label="indent"]'));
+      fireEvent.click(within(container.querySelector('[class^="MuiCardHeader-action"]')).getByLabelText('indent'));
 
       expect(deleteInstance).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',
@@ -217,7 +224,7 @@ describe('<ConjunctionGroup />', () => {
       const deleteInstance = jest.fn();
       const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
 
-      fireEvent.click(container.querySelector('.card-element__header button[aria-label="outdent"]'));
+      fireEvent.click(within(container.querySelector('[class^="MuiCardHeader-action"]')).getByLabelText('outdent'));
 
       expect(deleteInstance).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',

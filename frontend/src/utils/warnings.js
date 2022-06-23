@@ -170,7 +170,14 @@ export function parameterHasDuplicateName(parameterName, id, usedBy, instanceNam
   return duplicateNameIndex !== -1;
 }
 
-export function validateElement(instance, templateInstanceFields) {
+export function validateElement(instance) {
+  const templateInstanceFields = instance.fields.reduce(
+    (previous, current) => ({
+      ...previous,
+      [current.id]: current.value
+    }),
+    {}
+  );
   if (instance.validator) {
     const validator = Validators[instance.validator.type];
     const validatorFields = instance.validator.fields;
@@ -253,3 +260,71 @@ export function hasGroupNestedWarning(
 export function hasInvalidListWarning(returnType) {
   return returnType.toLowerCase() === 'invalid';
 }
+
+// Get all errors on an element using the above util functions
+export const getElementErrors = (elementInstance, allInstancesInAllTrees, baseElements, instanceNames, parameters) => {
+  const doesHaveDuplicateName = hasDuplicateName(
+    elementInstance,
+    instanceNames,
+    baseElements,
+    parameters,
+    allInstancesInAllTrees
+  );
+  const doesHaveBaseElementUseWarning = doesBaseElementUseNeedWarning(elementInstance, baseElements);
+  const doesHaveBaseElementInstanceWarning = doesBaseElementInstanceNeedWarning(
+    elementInstance,
+    allInstancesInAllTrees
+  );
+  const doesHaveParameterUseWarning = doesParameterUseNeedWarning(elementInstance, parameters);
+
+  const elementAlerts = [
+    {
+      alertSeverity: 'error',
+      alertMessage: 'Warning: Name already in use. Choose another name.',
+      showAlert:
+        doesHaveDuplicateName &&
+        !doesHaveBaseElementUseWarning &&
+        !doesHaveBaseElementInstanceWarning &&
+        !doesHaveParameterUseWarning
+    },
+    {
+      alertSeverity: 'error',
+      alertMessage: 'Warning: This use of the Base Element has changed. Choose another name.',
+      showAlert: doesHaveBaseElementUseWarning
+    },
+    {
+      alertSeverity: 'error',
+      alertMessage: 'Warning: One or more uses of this Base Element have changed. Choose another name.',
+      showAlert: doesHaveBaseElementInstanceWarning
+    },
+    {
+      alertSeverity: 'error',
+      alertMessage: 'Warning: This use of the Parameter has changed. Choose another name.',
+      showAlert: doesHaveParameterUseWarning
+    }
+  ];
+
+  return elementAlerts;
+};
+
+// Check if an element has any any warnings using the above util functions
+export const hasWarnings = (
+  templateInstance,
+  instanceNames,
+  baseElements,
+  parameters,
+  allInstancesInAllTrees,
+  validateReturnType
+) => {
+  // Use function for group warnings with a list of just this element to check for all types of warnings.
+  const hasSomeWarning = hasGroupNestedWarning(
+    [templateInstance],
+    instanceNames,
+    baseElements,
+    parameters,
+    allInstancesInAllTrees,
+    validateReturnType
+  );
+
+  return hasSomeWarning;
+};

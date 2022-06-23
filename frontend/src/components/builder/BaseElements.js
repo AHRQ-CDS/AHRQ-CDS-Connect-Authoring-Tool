@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { ElementSelect } from './element-select';
-import TemplateInstance from './TemplateInstance';
 import ListGroup from './ListGroup';
+import { ArtifactElement } from 'components/builder/artifact-element';
+import { getElementErrors, hasWarnings } from 'utils/warnings';
+import { getLabelForInstance } from 'utils/instances';
 
 import createTemplateInstance from 'utils/templates';
 import { getFieldWithId } from 'utils/instances';
@@ -55,41 +57,70 @@ export default class BaseElements extends Component {
   );
 
   render() {
-    const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
+    const {
+      baseElements,
+      deleteInstance,
+      disableAddElement,
+      editInstance,
+      getAllInstancesInAllTrees,
+      instanceNames,
+      isLoadingModifiers,
+      modifiersByInputType,
+      parameters,
+      treeName,
+      updateInstanceModifiers,
+      validateReturnType,
+      vsacApiKey
+    } = this.props;
+    const allInstancesInAllTrees = getAllInstancesInAllTrees();
 
     return (
       <div>
-        {this.props.instance.baseElements.map((s, i) => {
-          if (s.conjunction) {
+        {this.props.instance.baseElements.map((baseElement, i) => {
+          if (baseElement.conjunction) {
             return (
-              <div className="subpopulations" key={i} id={s.uniqueId}>
-                {this.renderListOperationConjunction(s, i)}
+              <div className="subpopulations" key={i} id={baseElement.uniqueId}>
+                {this.renderListOperationConjunction(baseElement, i)}
               </div>
             );
           }
 
           return (
-            <div className="card-group card-group__top" key={i} id={s.uniqueId}>
+            <div className="card-group card-group__top" key={i} id={baseElement.uniqueId}>
               <div className="card-group-section subpopulation base-element">
-                <TemplateInstance
+                <ArtifactElement
+                  alerts={getElementErrors(
+                    baseElement,
+                    allInstancesInAllTrees,
+                    baseElements,
+                    instanceNames,
+                    parameters
+                  )}
                   allInstancesInAllTrees={allInstancesInAllTrees}
-                  baseElements={this.props.baseElements}
-                  conversionFunctions={this.props.conversionFunctions}
-                  deleteInstance={this.props.deleteInstance}
-                  editInstance={this.props.editInstance}
-                  getPath={this.getChildsPath}
-                  instanceNames={this.props.instanceNames}
-                  isLoadingModifiers={this.props.isLoadingModifiers}
-                  modifierMap={this.props.modifierMap}
-                  modifiersByInputType={this.props.modifiersByInputType}
-                  otherInstances={[]}
-                  parameters={this.props.parameters}
-                  renderIndentButtons={() => {}}
-                  templateInstance={s}
-                  treeName={this.props.treeName}
-                  updateInstanceModifiers={this.props.updateInstanceModifiers}
-                  validateReturnType={this.props.validateReturnType}
-                  vsacApiKey={this.props.vsacApiKey}
+                  allowIndent={false}
+                  baseElementInUsedList={!!disableAddElement}
+                  elementInstance={baseElement}
+                  handleDeleteElement={() => deleteInstance(treeName, this.getChildsPath(baseElement.uniqueId))}
+                  handleUpdateElement={newElementField =>
+                    editInstance(treeName, newElementField, this.getChildsPath(baseElement.uniqueId), false)
+                  }
+                  hasErrors={hasWarnings(
+                    baseElement,
+                    instanceNames,
+                    baseElements,
+                    parameters,
+                    allInstancesInAllTrees,
+                    validateReturnType
+                  )}
+                  isLoadingModifiers={isLoadingModifiers}
+                  instanceNames={instanceNames}
+                  label={getLabelForInstance(baseElement, baseElements)}
+                  modifiersByInputType={modifiersByInputType}
+                  updateModifiers={modifiers =>
+                    updateInstanceModifiers(treeName, modifiers, this.getChildsPath(baseElement.uniqueId))
+                  }
+                  validateReturnType={validateReturnType}
+                  vsacApiKey={vsacApiKey}
                 />
               </div>
             </div>

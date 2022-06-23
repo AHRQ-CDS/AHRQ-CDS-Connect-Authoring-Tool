@@ -287,7 +287,7 @@ function addVSandCodeText(expressionArray, valueSets, codes) {
   const allValues = valueSetValues.concat(codeValues);
 
   if (allValues.length > 0) {
-    expressionArray.push({ expressionText: 'with a code from', isExpression: false });
+    expressionArray.push({ label: 'with a code from', isTag: false });
   }
 
   allValues.forEach((name, i) => {
@@ -302,22 +302,22 @@ function addVSandCodeText(expressionArray, valueSets, codes) {
       // Any value within the first three values gets added to the phrase text individually
       if (i === allValues.length - 1 && i !== 0) {
         // Add 'or' before the last value listed, as long as it is not the only one
-        expressionArray.push({ expressionText: 'or', isExpression: false });
+        expressionArray.push({ label: 'or', isTag: false });
       }
       // If there are only two values to add OR you are at the end of the list, don't add a comma after the name
       if ((i === 0 && allValues.length === 2) || i === allValues.length - 1) {
-        expressionArray.push({ expressionText: name, isExpression: true });
+        expressionArray.push({ label: name, isTag: true });
       } else {
-        expressionArray.push({ expressionText: name, isExpression: true });
-        expressionArray.push({ expressionText: ',', isExpression: false });
+        expressionArray.push({ label: name, isTag: true });
+        expressionArray.push({ label: ',', isTag: false });
       }
     }
   });
 
   if (tooltipText) {
-    expressionArray.push({ expressionText: 'or', isExpression: false });
+    expressionArray.push({ label: 'or', isTag: false });
     tooltipText = tooltipText.slice(0, -1); // Remove trailing comma
-    expressionArray.push({ expressionText: '...', isExpression: true, tooltipText: `...${tooltipText}` });
+    expressionArray.push({ label: '...', isTag: true, tooltipText: `...${tooltipText}` });
   }
 
   return expressionArray;
@@ -325,56 +325,56 @@ function addVSandCodeText(expressionArray, valueSets, codes) {
 
 function addElementNames(expressionArray, elementNames, type, isBaseElementAndOr) {
   if ((type === 'And' || type === 'Or') && isBaseElementAndOr) {
-    expressionArray.push({ expressionText: 'that satisfies', isExpression: false });
+    expressionArray.push({ label: 'that satisfies', isTag: false });
   }
 
   elementNames.forEach((nameObject, i) => {
     if (i === elementNames.length - 1 && i !== 0) {
       if (type === 'And' || type === 'Or') {
-        expressionArray.push({ expressionText: _.lowerCase(type), isExpression: false, isType: true });
+        expressionArray.push({ label: _.lowerCase(type), isTag: false, isType: true });
       } else {
-        expressionArray.push({ expressionText: 'and', isExpression: false });
+        expressionArray.push({ label: 'and', isTag: false });
       }
     }
     if ((i === 0 && elementNames.length === 2) || i === elementNames.length - 1) {
       expressionArray.push({
-        expressionText: nameObject.name,
-        isExpression: true,
+        label: nameObject.name,
+        isTag: true,
         isName: true,
         tooltipText: nameObject.tooltipText
       });
     } else {
       expressionArray.push({
-        expressionText: nameObject.name,
-        isExpression: true,
+        label: nameObject.name,
+        isTag: true,
         isName: true,
         tooltipText: nameObject.tooltipText
       });
-      expressionArray.push({ expressionText: ',', isExpression: false });
+      expressionArray.push({ label: ',', isTag: false });
     }
   });
 
   return expressionArray;
 }
 
-function addExpressionText(expressionArray, expression, type = null) {
+function addlabel(expressionArray, expression, type = null) {
   // Add any text needed ahead of the modifier
   if (
     expression.leadingText &&
     !(type === 'parameter' || type === 'externalCqlStatement' || type === 'externalCqlFunction')
   ) {
-    expressionArray.push({ expressionText: expression.leadingText, isExpression: false });
+    expressionArray.push({ label: expression.leadingText, isTag: false });
   }
   // Add the modifier text
-  expressionArray.push({ expressionText: expression.modifierText, isExpression: true });
+  expressionArray.push({ label: expression.modifierText, isTag: true });
   return expressionArray;
 }
 
 function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageFields) {
   let orderedExpressionArray = [];
-  orderedExpressionArray.push({ expressionText: "The patient's", isExpression: false });
-  orderedExpressionArray.push({ expressionText: 'age', isExpression: false, isType: true });
-  orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
+  orderedExpressionArray.push({ label: "The patient's", isTag: false });
+  orderedExpressionArray.push({ label: 'age', isTag: false, isType: true });
+  orderedExpressionArray.push({ label: 'is', isTag: false });
 
   const minAgeField = getFieldWithId(ageFields, 'min_age');
   const maxAgeField = getFieldWithId(ageFields, 'max_age');
@@ -384,34 +384,34 @@ function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageFields
 
   if (minAgeField.value && maxAgeField.value) {
     // The minimum age and the maximum age are both added
-    orderedExpressionArray.push({ expressionText: 'between', isExpression: false });
+    orderedExpressionArray.push({ label: 'between', isTag: false });
     orderedExpressionArray.push({
-      expressionText: `${minAgeField.value} ${ageUnitString}`,
-      isExpression: true
+      label: `${minAgeField.value} ${ageUnitString}`,
+      isTag: true
     });
-    orderedExpressionArray.push({ expressionText: 'and', isExpression: false });
+    orderedExpressionArray.push({ label: 'and', isTag: false });
     orderedExpressionArray.push({
-      expressionText: `${maxAgeField.value} ${ageUnitString}`,
-      isExpression: true
+      label: `${maxAgeField.value} ${ageUnitString}`,
+      isTag: true
     });
   } else if (minAgeField.value) {
     // Only a minimum age is added
-    orderedExpressionArray.push({ expressionText: 'at least', isExpression: false });
+    orderedExpressionArray.push({ label: 'at least', isTag: false });
     orderedExpressionArray.push({
-      expressionText: `${minAgeField.value} ${ageUnitString}`,
-      isExpression: true
+      label: `${minAgeField.value} ${ageUnitString}`,
+      isTag: true
     });
   } else if (maxAgeField.value) {
     // Only a maximum age is added
-    orderedExpressionArray.push({ expressionText: 'at most', isExpression: false });
+    orderedExpressionArray.push({ label: 'at most', isTag: false });
     orderedExpressionArray.push({
-      expressionText: `${maxAgeField.value} ${ageUnitString}`,
-      isExpression: true
+      label: `${maxAgeField.value} ${ageUnitString}`,
+      isTag: true
     });
   }
 
   expressionArray.forEach(expression => {
-    orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
+    orderedExpressionArray = addlabel(orderedExpressionArray, expression);
   });
 
   return orderedExpressionArray;
@@ -419,13 +419,13 @@ function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageFields
 
 function getOrderedExpressionSentenceArrayForGender(genderFields) {
   const orderedExpressionArray = [];
-  orderedExpressionArray.push({ expressionText: "The patient's", isExpression: false });
-  orderedExpressionArray.push({ expressionText: 'gender', isExpression: false, isType: true });
-  orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
+  orderedExpressionArray.push({ label: "The patient's", isTag: false });
+  orderedExpressionArray.push({ label: 'gender', isTag: false, isType: true });
+  orderedExpressionArray.push({ label: 'is', isTag: false });
 
   const genderField = getFieldWithId(genderFields, 'gender');
   if (genderField.value) {
-    orderedExpressionArray.push({ expressionText: genderField.value.name, isExpression: true });
+    orderedExpressionArray.push({ label: genderField.value.name, isTag: true });
   }
 
   return orderedExpressionArray;
@@ -496,51 +496,51 @@ function orderExpressionSentenceArray(
   // Handle not and exists
   if (existsExpression) {
     if (notExpression) {
-      orderedExpressionArray.push({ expressionText: 'There does', isExpression: false });
-      orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
-      orderedExpressionArray.push({ expressionText: 'exist', isExpression: true });
+      orderedExpressionArray.push({ label: 'There does', isTag: false });
+      orderedExpressionArray.push({ label: 'not', isTag: true });
+      orderedExpressionArray.push({ label: 'exist', isTag: true });
       hasStarted = true;
       if (checkExistenceExpression) {
-        orderedExpressionArray.push({ expressionText: 'a case where', isExpression: false });
+        orderedExpressionArray.push({ label: 'a case where', isTag: false });
       }
     } else {
-      orderedExpressionArray.push({ expressionText: 'There', isExpression: false });
-      orderedExpressionArray.push({ expressionText: 'exists', isExpression: true });
+      orderedExpressionArray.push({ label: 'There', isTag: false });
+      orderedExpressionArray.push({ label: 'exists', isTag: true });
       hasStarted = true;
     }
   } else if (!returnsPlural && returnsBoolean && !checkExistenceExpression) {
     if (notExpression && (type === 'parameter' || type === 'externalCqlStatement' || type === 'externalCqlFunction')) {
-      orderedExpressionArray.push({ expressionText: 'Not', isExpression: true });
+      orderedExpressionArray.push({ label: 'Not', isTag: true });
       hasStarted = true;
     } else if (
       notExpression &&
       !(type === 'parameter' || type === 'externalCqlStatement' || type === 'externalCqlFunction')
     ) {
-      orderedExpressionArray.push({ expressionText: 'There does', isExpression: false });
-      orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
-      orderedExpressionArray.push({ expressionText: 'exist', isExpression: false });
+      orderedExpressionArray.push({ label: 'There does', isTag: false });
+      orderedExpressionArray.push({ label: 'not', isTag: true });
+      orderedExpressionArray.push({ label: 'exist', isTag: false });
       hasStarted = true;
     } else if (!(type === 'parameter' || type === 'externalCqlStatement' || type === 'externalCqlFunction')) {
-      orderedExpressionArray.push({ expressionText: 'There exists', isExpression: false });
+      orderedExpressionArray.push({ label: 'There exists', isTag: false });
       hasStarted = true;
     }
   } else if (notExpression && !countExpression) {
     if (checkExistenceExpression) {
-      orderedExpressionArray.push({ expressionText: 'It is', isExpression: false });
-      orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
-      orderedExpressionArray.push({ expressionText: 'the case that', isExpression: false });
+      orderedExpressionArray.push({ label: 'It is', isTag: false });
+      orderedExpressionArray.push({ label: 'not', isTag: true });
+      orderedExpressionArray.push({ label: 'the case that', isTag: false });
       hasStarted = true;
     }
   } else if (countExpression) {
     const article = notExpression ? 'the' : 'The';
     if (notExpression) {
-      orderedExpressionArray.push({ expressionText: 'It is', isExpression: false });
-      orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
-      orderedExpressionArray.push({ expressionText: 'the case that', isExpression: false });
+      orderedExpressionArray.push({ label: 'It is', isTag: false });
+      orderedExpressionArray.push({ label: 'not', isTag: true });
+      orderedExpressionArray.push({ label: 'the case that', isTag: false });
     }
-    orderedExpressionArray.push({ expressionText: article, isExpression: false });
-    orderedExpressionArray.push({ expressionText: 'count', isExpression: true });
-    orderedExpressionArray.push({ expressionText: 'of', isExpression: false });
+    orderedExpressionArray.push({ label: article, isTag: false });
+    orderedExpressionArray.push({ label: 'count', isTag: true });
+    orderedExpressionArray.push({ label: 'of', isTag: false });
     hasStarted = true;
   }
 
@@ -550,11 +550,11 @@ function orderExpressionSentenceArray(
     const descriptorText = descriptorExpression.modifierText;
     const descriptorArticle = useArticleThe.includes(descriptorText) ? 'the' : getArticle(descriptorText);
     if (hasStarted) {
-      orderedExpressionArray.push({ expressionText: descriptorArticle, isExpression: false });
-      orderedExpressionArray.push({ expressionText: descriptorText, isExpression: true });
+      orderedExpressionArray.push({ label: descriptorArticle, isTag: false });
+      orderedExpressionArray.push({ label: descriptorText, isTag: true });
     } else {
-      orderedExpressionArray.push({ expressionText: _.capitalize(descriptorArticle), isExpression: false });
-      orderedExpressionArray.push({ expressionText: descriptorText, isExpression: true });
+      orderedExpressionArray.push({ label: _.capitalize(descriptorArticle), isTag: false });
+      orderedExpressionArray.push({ label: descriptorText, isTag: true });
       hasStarted = true;
     }
   }
@@ -566,11 +566,11 @@ function orderExpressionSentenceArray(
       const listArticle = getArticle(listText);
       if (hasStarted) {
         if (!descriptorExpression && index === 0 && !countExpression) {
-          orderedExpressionArray.push({ expressionText: listArticle, isExpression: false });
+          orderedExpressionArray.push({ label: listArticle, isTag: false });
         }
-        orderedExpressionArray.push({ expressionText: listText, isExpression: true });
+        orderedExpressionArray.push({ label: listText, isTag: true });
       } else {
-        orderedExpressionArray.push({ expressionText: _.capitalize(listText), isExpression: true });
+        orderedExpressionArray.push({ label: _.capitalize(listText), isTag: true });
         hasStarted = true;
       }
     });
@@ -597,12 +597,12 @@ function orderExpressionSentenceArray(
   if (hasStarted) {
     if (returnsPlural) {
       if (type !== 'Intersect' && type !== 'Union') elementText = `${elementText}s`;
-      orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
+      orderedExpressionArray.push({ label: elementText, isTag: false, isType: true });
     } else if (descriptorExpression || listExpressions.length > 0) {
-      orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
+      orderedExpressionArray.push({ label: elementText, isTag: false, isType: true });
     } else {
-      orderedExpressionArray.push({ expressionText: elementArticle, isExpression: false });
-      orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
+      orderedExpressionArray.push({ label: elementArticle, isTag: false });
+      orderedExpressionArray.push({ label: elementText, isTag: false, isType: true });
     }
   } else if (returnsPlural) {
     if (type !== 'Intersect' && type !== 'Union') {
@@ -611,21 +611,21 @@ function orderExpressionSentenceArray(
       elementText = `${_.capitalize(elementText)}`;
     }
     orderedExpressionArray.push({
-      expressionText: elementText,
-      isExpression: false,
+      label: elementText,
+      isTag: false,
       isType: true
     });
     hasStarted = true;
   } else {
-    orderedExpressionArray.push({ expressionText: _.capitalize(elementArticle), isExpression: false });
-    orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
+    orderedExpressionArray.push({ label: _.capitalize(elementArticle), isTag: false });
+    orderedExpressionArray.push({ label: elementText, isTag: false, isType: true });
     hasStarted = true;
   }
   if (type === 'Intersect' || type === 'Union') {
-    orderedExpressionArray.push({ expressionText: 'of', isExpression: false });
+    orderedExpressionArray.push({ label: 'of', isTag: false });
   }
   if (type === 'parameter' || type === 'externalCqlStatement' || type === 'externalCqlFunction') {
-    orderedExpressionArray.push({ expressionText: referenceElementName, isExpression: true });
+    orderedExpressionArray.push({ label: referenceElementName, isTag: true });
   }
 
   // Handle value sets and codes and other element names
@@ -634,18 +634,18 @@ function orderExpressionSentenceArray(
 
   // Handle post-lists (with unit)
   if (postListExpressions) {
-    orderedExpressionArray = addExpressionText(orderedExpressionArray, postListExpressions, type);
+    orderedExpressionArray = addlabel(orderedExpressionArray, postListExpressions, type);
   }
 
   // Handle any remaining expressions at the end, except concept/quantity value
   otherExpressions.forEach(expression => {
-    orderedExpressionArray = addExpressionText(orderedExpressionArray, expression, type);
+    orderedExpressionArray = addlabel(orderedExpressionArray, expression, type);
   });
 
   // Handle expressions for custom modifiers
   if (userDefinedExpression && userDefinedExpression.modifierExpression !== '') {
-    orderedExpressionArray.push({ expressionText: 'with custom modifier' });
-    orderedExpressionArray.push({ expressionText: userDefinedExpression.modifierExpression, isExpression: true });
+    orderedExpressionArray.push({ label: 'with custom modifier' });
+    orderedExpressionArray.push({ label: userDefinedExpression.modifierExpression, isTag: true });
   }
   return orderedExpressionArray;
 }

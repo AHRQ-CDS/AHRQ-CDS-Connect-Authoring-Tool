@@ -1,28 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { Tooltip } from 'components/elements';
 
 import useStyles from './styles';
 
-const ElementExpressionPhrase = ({ expressions }) => {
+const ElementExpressionPhrase = ({ closed, expressions, inModal = false }) => {
   const styles = useStyles();
 
   return (
-    <div className={styles.expressionPhrase}>
+    <div
+      className={clsx(
+        styles.expressionPhrase,
+        closed && styles.expressionPhraseClosed,
+        !inModal && styles.expressionBorder
+      )}
+    >
       {expressions.map((expression, index) => (
-        <span
-          key={index}
-          className={clsx(expression.isTag && styles.expressionTag, expression.isType && styles.expressionType)}
-        >
-          {expression.label}
-        </span>
+        <Tooltip key={index} enabled={!!expression.tooltipText} title={expression.tooltipText}>
+          <span
+            className={clsx(
+              expression.isTag ? styles.expressionTag : styles.expressionText,
+              expression.isType && styles.expressionType
+            )}
+          >
+            {expression.label}
+          </span>
+        </Tooltip>
       ))}
     </div>
   );
 };
 
 ElementExpressionPhrase.propTypes = {
-  expressions: PropTypes.array.isRequired
+  closed: PropTypes.bool,
+  expressions: PropTypes.array.isRequired,
+  inModal: PropTypes.bool
 };
 
 export default ElementExpressionPhrase;

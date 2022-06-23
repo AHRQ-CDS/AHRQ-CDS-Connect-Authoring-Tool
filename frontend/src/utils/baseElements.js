@@ -26,3 +26,11 @@ export function getAllModifiersOnBaseElementUse(instance, baseElements, modifier
   }
   return currentModifiers;
 }
+
+export function hasBaseElementLinks(instance, baseElements) {
+  const thisBaseElement = baseElements.find(baseElement => baseElement.uniqueId === instance.uniqueId);
+  if (!thisBaseElement) return false;
+  const thisBaseElementUsedBy = thisBaseElement.usedBy;
+  if (!thisBaseElementUsedBy || thisBaseElementUsedBy.length === 0) return false;
+  return true;
+}

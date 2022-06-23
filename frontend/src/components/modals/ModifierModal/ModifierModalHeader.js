@@ -25,6 +25,7 @@ const ModifierModalHeader = ({ elementInstance, modifiersToAdd }) => {
             <ExpressionPhrase
               instance={{ ...elementInstance, modifiers: modifiersToAdd }}
               baseElements={baseElements}
+              inModal={true}
             />
           </div>
         </div>

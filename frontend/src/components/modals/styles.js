@@ -30,7 +30,8 @@ export default makeStyles(
     },
     headerTag: {
       alignItems: 'center',
-      display: 'flex'
+      display: 'flex',
+      fontSize: '0.95em'
     },
     list: {
       backgroundColor: theme.palette.common.blueDarker,

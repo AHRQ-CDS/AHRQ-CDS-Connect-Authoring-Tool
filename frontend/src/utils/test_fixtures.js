@@ -33,8 +33,9 @@ const instanceTree = {
           id: 'element_name',
           type: 'string',
           name: 'Element Name',
-          value: 'name1'
+          value: 'Age'
         },
+        { id: 'comment', type: 'string', name: 'Comment' },
         {
           id: 'min_age',
           type: 'number',
@@ -78,6 +79,7 @@ const instanceTree = {
           type: 'string',
           value: 'LDL_Test'
         },
+        { id: 'comment', type: 'string', name: 'Comment' },
         {
           id: 'observation',
           name: 'Observation',
@@ -343,6 +345,7 @@ const elementGroups = [
         suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
         fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'comment', type: 'string', name: 'Comment' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
           { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' }
         ]
@@ -354,6 +357,7 @@ const elementGroups = [
         cannotHaveModifiers: true,
         fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'comment', type: 'string', name: 'Comment' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' }
         ]
       }
@@ -565,6 +569,7 @@ const genericInstance = {
   suppressedModifiers: ['WithUnit', 'ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
   fields: [
     { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
+    { id: 'comment', type: 'textarea', name: 'Comment' },
     {
       id: 'observation',
       type: 'observation_vsac',
@@ -594,6 +599,7 @@ const genericInstanceWithModifiers = {
   suppressedModifiers: ['WithUnit', 'ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
   fields: [
     { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
+    { id: 'comment', type: 'textarea', name: 'Comment' },
     {
       id: 'observation',
       type: 'observation_vsac',
@@ -648,6 +654,7 @@ const genericBaseElementInstance = {
   suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
   fields: [
     { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
+    { id: 'comment', type: 'textarea', name: 'Comment' },
     {
       id: 'observation',
       type: 'observation_vsac',
@@ -677,6 +684,7 @@ const genericBaseElementInstanceWithModifiers = {
   suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
   fields: [
     { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
+    { id: 'comment', type: 'textarea', name: 'Comment' },
     {
       id: 'observation',
       type: 'observation_vsac',
@@ -742,6 +750,7 @@ const genericBaseElementUseInstance = {
   template: 'GenericStatement',
   fields: [
     { id: 'element_name', name: 'Element Name', type: 'string', value: 'Base Element Observation' },
+    { id: 'comment', type: 'textarea', name: 'Comment' },
     {
       id: 'baseElementReference',
       type: 'reference',

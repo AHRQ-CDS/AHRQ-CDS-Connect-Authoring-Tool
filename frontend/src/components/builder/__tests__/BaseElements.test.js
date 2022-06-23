@@ -61,7 +61,7 @@ describe('<BaseElements />', () => {
       instance: { baseElements }
     });
 
-    const templateInstanceHeaders = container.querySelectorAll('.card-element__header');
+    const templateInstanceHeaders = container.querySelectorAll('.MuiCardHeader-root');
     expect(templateInstanceHeaders).toHaveLength(2);
     expect(templateInstanceHeaders[0]).toHaveTextContent('Observation');
     expect(templateInstanceHeaders[1]).toHaveTextContent('Observation');
@@ -82,7 +82,9 @@ describe('<BaseElements />', () => {
 
     // ConjunctionGroup renders a TemplateInstance and an ElementSelect
     const [conjunctionGroup] = conjunctions;
-    const expressPhrase = conjunctionGroup.querySelectorAll('.expression-item');
+    const expressPhrase = conjunctionGroup.querySelectorAll(
+      '[class^="ElementCard-expressionTag"], [class^="ElementCard-expressionText"]'
+    );
 
     expect(expressPhrase[0]).toHaveTextContent('Union');
     expect(expressPhrase[1]).toHaveTextContent('of');

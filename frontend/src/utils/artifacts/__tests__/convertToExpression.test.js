@@ -17,14 +17,14 @@ test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => 
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'There', isExpression: false },
-    { expressionText: 'exists', isExpression: true },
-    { expressionText: 'an', isExpression: false },
-    { expressionText: 'active', isExpression: true },
-    { expressionText: 'confirmed', isExpression: true },
-    { expressionText: 'condition', isExpression: false, isType: true },
-    { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'Diabetes', isExpression: true }
+    { label: 'There', isTag: false },
+    { label: 'exists', isTag: true },
+    { label: 'an', isTag: false },
+    { label: 'active', isTag: true },
+    { label: 'confirmed', isTag: true },
+    { label: 'condition', isTag: false, isType: true },
+    { label: 'with a code from', isTag: false },
+    { label: 'Diabetes', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -54,16 +54,16 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'There exists', isExpression: false },
-    { expressionText: 'the', isExpression: false },
-    { expressionText: 'most recent', isExpression: true },
-    { expressionText: 'verified', isExpression: true },
-    { expressionText: 'observation', isExpression: false, isType: true },
-    { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL', isExpression: true },
-    { expressionText: 'which occurred', isExpression: false },
-    { expressionText: 'within the last 14 years', isExpression: true },
-    { expressionText: 'whose value is a code from Smoker', isExpression: true }
+    { label: 'There exists', isTag: false },
+    { label: 'the', isTag: false },
+    { label: 'most recent', isTag: true },
+    { label: 'verified', isTag: true },
+    { label: 'observation', isTag: false, isType: true },
+    { label: 'with a code from', isTag: false },
+    { label: 'LDL', isTag: true },
+    { label: 'which occurred', isTag: false },
+    { label: 'within the last 14 years', isTag: true },
+    { label: 'whose value is a code from Smoker', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -97,19 +97,19 @@ test('More complicated modifiers, including Value Comparison, builds correct phr
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'There exists', isExpression: false },
-    { expressionText: 'the', isExpression: false },
-    { expressionText: 'most recent', isExpression: true },
-    { expressionText: 'verified', isExpression: true },
-    { expressionText: 'observation', isExpression: false, isType: true },
-    { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL', isExpression: true },
-    { expressionText: 'with unit', isExpression: false },
-    { expressionText: 'mg/dL', isExpression: true },
-    { expressionText: 'with', isExpression: false },
-    { expressionText: 'units converted from mmol/L to mg/dL for blood cholesterol', isExpression: true },
-    { expressionText: 'whose value', isExpression: false },
-    { expressionText: 'is greater than or equal to 120 mg/dL and is less than 300 mg/dL', isExpression: true }
+    { label: 'There exists', isTag: false },
+    { label: 'the', isTag: false },
+    { label: 'most recent', isTag: true },
+    { label: 'verified', isTag: true },
+    { label: 'observation', isTag: false, isType: true },
+    { label: 'with a code from', isTag: false },
+    { label: 'LDL', isTag: true },
+    { label: 'with unit', isTag: false },
+    { label: 'mg/dL', isTag: true },
+    { label: 'with', isTag: false },
+    { label: 'units converted from mmol/L to mg/dL for blood cholesterol', isTag: true },
+    { label: 'whose value', isTag: false },
+    { label: 'is greater than or equal to 120 mg/dL and is less than 300 mg/dL', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -131,16 +131,16 @@ test('More complicated expression, with Highest, Not, and Is Null, builds correc
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'It is', isExpression: false },
-    { expressionText: 'not', isExpression: true },
-    { expressionText: 'the case that', isExpression: false },
-    { expressionText: 'the', isExpression: false },
-    { expressionText: 'highest', isExpression: true },
-    { expressionText: 'verified', isExpression: true },
-    { expressionText: 'observation', isExpression: false, isType: true },
-    { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'test code', isExpression: true },
-    { expressionText: 'is null', isExpression: true }
+    { label: 'It is', isTag: false },
+    { label: 'not', isTag: true },
+    { label: 'the case that', isTag: false },
+    { label: 'the', isTag: false },
+    { label: 'highest', isTag: true },
+    { label: 'verified', isTag: true },
+    { label: 'observation', isTag: false, isType: true },
+    { label: 'with a code from', isTag: false },
+    { label: 'test code', isTag: true },
+    { label: 'is null', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -159,9 +159,9 @@ test('Only validated modifiers are added to the phrase', () => {
 
   // Only modifiers that are validated are added
   const expectedOutput = [
-    { expressionText: 'Observations', isExpression: false, isType: true },
-    { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL', isExpression: true }
+    { label: 'Observations', isTag: false, isType: true },
+    { label: 'with a code from', isTag: false },
+    { label: 'LDL', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -184,19 +184,19 @@ test('All value sets and codes are added to phrase, but only first three are dis
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'There', isExpression: false },
-    { expressionText: 'exists', isExpression: true },
-    { expressionText: 'an', isExpression: false },
-    { expressionText: 'observation', isExpression: false, isType: true },
-    { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL', isExpression: true },
-    { expressionText: ',', isExpression: false },
-    { expressionText: 'HDL', isExpression: true },
-    { expressionText: ',', isExpression: false },
-    { expressionText: 'Test code', isExpression: true },
-    { expressionText: ',', isExpression: false },
-    { expressionText: 'or', isExpression: false },
-    { expressionText: '...', isExpression: true, tooltipText: '...or 432-1 (CS2)' }
+    { label: 'There', isTag: false },
+    { label: 'exists', isTag: true },
+    { label: 'an', isTag: false },
+    { label: 'observation', isTag: false, isType: true },
+    { label: 'with a code from', isTag: false },
+    { label: 'LDL', isTag: true },
+    { label: ',', isTag: false },
+    { label: 'HDL', isTag: true },
+    { label: ',', isTag: false },
+    { label: 'Test code', isTag: true },
+    { label: ',', isTag: false },
+    { label: 'or', isTag: false },
+    { label: '...', isTag: true, tooltipText: '...or 432-1 (CS2)' }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -212,9 +212,9 @@ test('Elements that have a return type of a list indicates plurality in the phra
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'list_of_observations');
 
   const expectedOutput = [
-    { expressionText: 'Observations', isExpression: false, isType: true },
-    { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL', isExpression: true }
+    { label: 'Observations', isTag: false, isType: true },
+    { label: 'with a code from', isTag: false },
+    { label: 'LDL', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -243,13 +243,13 @@ describe('Demographics elements support special case phrases', () => {
     const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', ages);
 
     const expectedOutput = [
-      { expressionText: "The patient's", isExpression: false },
-      { expressionText: 'age', isExpression: false, isType: true },
-      { expressionText: 'is', isExpression: false },
-      { expressionText: 'between', isExpression: false },
-      { expressionText: '18 years', isExpression: true },
-      { expressionText: 'and', isExpression: false },
-      { expressionText: '70 years', isExpression: true }
+      { label: "The patient's", isTag: false },
+      { label: 'age', isTag: false, isType: true },
+      { label: 'is', isTag: false },
+      { label: 'between', isTag: false },
+      { label: '18 years', isTag: true },
+      { label: 'and', isTag: false },
+      { label: '70 years', isTag: true }
     ];
 
     expect(expressionPhrase).toEqual(expectedOutput);
@@ -270,10 +270,10 @@ describe('Demographics elements support special case phrases', () => {
     const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', gender);
 
     const expectedOutput = [
-      { expressionText: "The patient's", isExpression: false },
-      { expressionText: 'gender', isExpression: false, isType: true },
-      { expressionText: 'is', isExpression: false },
-      { expressionText: 'Male', isExpression: true }
+      { label: "The patient's", isTag: false },
+      { label: 'gender', isTag: false, isType: true },
+      { label: 'is', isTag: false },
+      { label: 'Male', isTag: true }
     ];
 
     expect(expressionPhrase).toEqual(expectedOutput);
@@ -304,14 +304,14 @@ test("Base Element Lists create a phrase with individual element's phrases in a 
   );
 
   const expectedOutput = [
-    { expressionText: 'There', isExpression: false },
-    { expressionText: 'exists', isExpression: true },
-    { expressionText: 'a', isExpression: false },
-    { expressionText: 'union', isExpression: false, isType: true },
-    { expressionText: 'of', isExpression: false },
-    { expressionText: 'Test Name', isExpression: true, tooltipText: 'Phrase for Test Name', isName: true },
-    { expressionText: 'and', isExpression: false },
-    { expressionText: 'Other', isExpression: true, tooltipText: 'Another phrase', isName: true }
+    { label: 'There', isTag: false },
+    { label: 'exists', isTag: true },
+    { label: 'a', isTag: false },
+    { label: 'union', isTag: false, isType: true },
+    { label: 'of', isTag: false },
+    { label: 'Test Name', isTag: true, tooltipText: 'Phrase for Test Name', isName: true },
+    { label: 'and', isTag: false },
+    { label: 'Other', isTag: true, tooltipText: 'Another phrase', isName: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -338,12 +338,12 @@ test("Conjunction Groups create a phrase with the group's children 1 level deep 
   );
 
   const expectedOutput = [
-    { expressionText: 'Child 1', isExpression: true, isName: true },
-    { expressionText: ',', isExpression: false },
-    { expressionText: 'Child 2', isExpression: true, isName: true },
-    { expressionText: ',', isExpression: false },
-    { expressionText: 'or', isExpression: false, isType: true },
-    { expressionText: 'Group Child', isExpression: true, isName: true }
+    { label: 'Child 1', isTag: true, isName: true },
+    { label: ',', isTag: false },
+    { label: 'Child 2', isTag: true, isName: true },
+    { label: ',', isTag: false },
+    { label: 'or', isTag: false, isType: true },
+    { label: 'Group Child', isTag: true, isName: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -373,10 +373,10 @@ test('Parameters with BooleanNot create a phrase with the parameter name', () =>
   );
 
   const expectedOutput = [
-    { expressionText: 'Not', isExpression: true },
-    { expressionText: 'the', isExpression: false },
-    { expressionText: 'parameter', isExpression: false, isType: true },
-    { expressionText: 'Original Param', isExpression: true }
+    { label: 'Not', isTag: true },
+    { label: 'the', isTag: false },
+    { label: 'parameter', isTag: false, isType: true },
+    { label: 'Original Param', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -414,10 +414,10 @@ test('Quantity parameters with Value Comparison create a phrase with the paramet
   );
 
   const expectedOutput = [
-    { expressionText: 'The', isExpression: false },
-    { expressionText: 'parameter', isExpression: false, isType: true },
-    { expressionText: 'Original Param', isExpression: true },
-    { expressionText: 'is greater than or equal to 120 mg/dL and is less than 300 mg/dL', isExpression: true }
+    { label: 'The', isTag: false },
+    { label: 'parameter', isTag: false, isType: true },
+    { label: 'Original Param', isTag: true },
+    { label: 'is greater than or equal to 120 mg/dL and is less than 300 mg/dL', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -443,13 +443,13 @@ test('Count expression builds phrase that uses the count as the subject of the p
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, returnType);
 
   const expectedOutput = [
-    { expressionText: 'The', isExpression: false },
-    { expressionText: 'count', isExpression: true },
-    { expressionText: 'of', isExpression: false },
-    { expressionText: 'observations', isExpression: false, isType: true },
-    { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL', isExpression: true },
-    { expressionText: 'is greater than 10', isExpression: true }
+    { label: 'The', isTag: false },
+    { label: 'count', isTag: true },
+    { label: 'of', isTag: false },
+    { label: 'observations', isTag: false, isType: true },
+    { label: 'with a code from', isTag: false },
+    { label: 'LDL', isTag: true },
+    { label: 'is greater than 10', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -468,15 +468,15 @@ test('Immunization Phrases', () => {
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'The', isExpression: false },
-    { expressionText: 'most recent', isExpression: true },
-    { expressionText: 'completed', isExpression: true },
-    { expressionText: 'immunization', isExpression: false, isType: true },
-    { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'FluVaccines', isExpression: true },
-    { expressionText: 'which occurred', isExpression: false },
-    { expressionText: 'within the last 6 years', isExpression: true },
-    { expressionText: 'is not null', isExpression: true }
+    { label: 'The', isTag: false },
+    { label: 'most recent', isTag: true },
+    { label: 'completed', isTag: true },
+    { label: 'immunization', isTag: false, isType: true },
+    { label: 'with a code from', isTag: false },
+    { label: 'FluVaccines', isTag: true },
+    { label: 'which occurred', isTag: false },
+    { label: 'within the last 6 years', isTag: true },
+    { label: 'is not null', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -490,13 +490,13 @@ test('Device Phrases', () => {
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'There', isExpression: false },
-    { expressionText: 'exists', isExpression: true },
-    { expressionText: 'an', isExpression: false },
-    { expressionText: 'active', isExpression: true },
-    { expressionText: 'device', isExpression: false, isType: true },
-    { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'PaceMakers', isExpression: true }
+    { label: 'There', isTag: false },
+    { label: 'exists', isTag: true },
+    { label: 'an', isTag: false },
+    { label: 'active', isTag: true },
+    { label: 'device', isTag: false, isType: true },
+    { label: 'with a code from', isTag: false },
+    { label: 'PaceMakers', isTag: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);

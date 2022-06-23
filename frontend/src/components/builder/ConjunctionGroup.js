@@ -17,15 +17,15 @@ import clsx from 'clsx';
 
 import { Dropdown } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
-import TemplateInstance from './TemplateInstance';
+import { ArtifactElement } from 'components/builder/artifact-element';
 import { ElementSelect } from './element-select';
 import { StringField, TextAreaField } from 'components/builder/fields';
 import ExpressionPhrase from './ExpressionPhrase';
 
 import createTemplateInstance from 'utils/templates';
-import { hasGroupNestedWarning } from 'utils/warnings';
+import { getElementErrors, hasGroupNestedWarning, hasWarnings } from 'utils/warnings';
 import requiredIf from 'utils/prop_types';
-import { getFieldWithId } from 'utils/instances';
+import { getFieldWithId, getLabelForInstance } from 'utils/instances';
 
 export default class ConjunctionGroup extends Component {
   constructor(props) {
@@ -88,6 +88,16 @@ export default class ConjunctionGroup extends Component {
     }
 
     return 'card-group__odd';
+  };
+
+  getIndentParity = path => {
+    const level = path.split('.').filter(pathSection => pathSection === 'childInstances').length;
+    if (level === 0) {
+      return 'odd';
+    } else if (level % 2 === (this.props.baseIndentLevel ?? 0)) {
+      return 'even';
+    }
+    return 'odd';
   };
 
   // ----------------------- CLICK HANDLERS -------------------------------- //
@@ -418,32 +428,58 @@ export default class ConjunctionGroup extends Component {
   }
 
   renderTemplate(instance) {
-    const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
+    const {
+      baseElements,
+      deleteInstance,
+      disableAddElement,
+      disableIndent,
+      editInstance,
+      getAllInstancesInAllTrees,
+      isLoadingModifiers,
+      instanceNames,
+      modifiersByInputType,
+      parameters,
+      subPopulationIndex,
+      treeName,
+      updateInstanceModifiers,
+      validateReturnType,
+      vsacApiKey
+    } = this.props;
+    const allInstancesInAllTrees = getAllInstancesInAllTrees();
 
     return (
       <div key={instance.uniqueId} className="card-group-section" id={instance.uniqueId}>
-        <TemplateInstance
+        <ArtifactElement
+          alerts={getElementErrors(instance, allInstancesInAllTrees, baseElements, instanceNames, parameters)}
           allInstancesInAllTrees={allInstancesInAllTrees}
-          baseElements={this.props.baseElements}
-          conversionFunctions={this.props.conversionFunctions}
-          deleteInstance={this.props.deleteInstance}
-          disableAddElement={this.props.disableAddElement}
-          disableIndent={this.props.disableIndent}
-          editInstance={this.props.editInstance}
-          getPath={this.getChildsPath}
-          instanceNames={this.props.instanceNames}
-          isLoadingModifiers={this.props.isLoadingModifiers}
-          modifierMap={this.props.modifierMap}
-          modifiersByInputType={this.props.modifiersByInputType}
-          otherInstances={this.props.getAllInstances(this.props.treeName)}
-          parameters={this.props.parameters}
-          renderIndentButtons={this.renderIndentButtons}
-          subpopulationIndex={this.props.subPopulationIndex}
-          templateInstance={instance}
-          treeName={this.props.treeName}
-          updateInstanceModifiers={this.props.updateInstanceModifiers}
-          validateReturnType={this.props.validateReturnType}
-          vsacApiKey={this.props.vsacApiKey}
+          allowIndent={!disableIndent}
+          allowOutdent={this.getPath() !== ''} // cannot outdent if at the root
+          baseElementInUsedList={!!disableAddElement}
+          elementInstance={instance}
+          handleDeleteElement={() => deleteInstance(treeName, this.getChildsPath(instance.uniqueId))}
+          handleIndent={() => this.indentClickHandler(instance)}
+          handleOutdent={() => this.outdentClickHandler(instance)}
+          handleUpdateElement={newElementField =>
+            editInstance(treeName, newElementField, this.getChildsPath(instance.uniqueId), false)
+          }
+          hasErrors={hasWarnings(
+            instance,
+            instanceNames,
+            baseElements,
+            parameters,
+            allInstancesInAllTrees,
+            validateReturnType
+          )}
+          indentParity={this.getIndentParity(this.getChildsPath(instance.uniqueId))}
+          instanceNames={instanceNames}
+          isLoadingModifiers={isLoadingModifiers}
+          label={getLabelForInstance(instance, baseElements)}
+          modifiersByInputType={modifiersByInputType}
+          updateModifiers={modifiers =>
+            updateInstanceModifiers(treeName, modifiers, this.getChildsPath(instance.uniqueId), subPopulationIndex)
+          }
+          validateReturnType={validateReturnType}
+          vsacApiKey={vsacApiKey}
         />
 
         {this.renderConjunctionSelect(instance)}
@@ -489,6 +525,7 @@ ConjunctionGroup.propTypes = {
   addInstance: PropTypes.func.isRequired,
   artifact: PropTypes.object,
   baseElements: PropTypes.array.isRequired,
+  baseIndentLevel: PropTypes.number,
   conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   disableAddElement: PropTypes.bool,

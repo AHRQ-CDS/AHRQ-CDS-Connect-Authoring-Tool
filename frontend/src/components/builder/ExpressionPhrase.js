@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import _ from 'lodash';
-import classNames from 'classnames';
-import { UncontrolledTooltip } from 'reactstrap';
 
 import convertToExpression from 'utils/artifacts/convertToExpression';
 import { getOriginalBaseElement, getAllModifiersOnBaseElementUse } from 'utils/baseElements';
 import { getReturnType, getFieldWithId, getFieldWithType } from 'utils/instances';
+import { ElementExpressionPhrase } from 'components/elements/ElementCard';
 
 export default class ExpressionPhrase extends Component {
   getExpressionPhrase = instance => {
@@ -79,8 +77,8 @@ export default class ExpressionPhrase extends Component {
         }
         const phraseArrayAsSentence = secondPhraseExpressions.reduce(
           (acc, currentValue) =>
-            `${acc}${currentValue.expressionText === ',' ? '' : ' '}
-          ${currentValue.isName ? '"' : ''}${currentValue.expressionText}${currentValue.isName ? '"' : ''}`,
+            `${acc}${currentValue.label === ',' ? '' : ' '}
+          ${currentValue.isName ? '"' : ''}${currentValue.label}${currentValue.isName ? '"' : ''}`,
           ''
         );
         const nameField = getFieldWithId(child.fields, 'element_name');
@@ -116,52 +114,19 @@ export default class ExpressionPhrase extends Component {
   };
 
   render() {
-    const { instance } = this.props;
+    const { instance, closed, inModal } = this.props;
     const expressions = this.getExpressionPhrase(instance);
-    const hasElements = expressions.some(expression => expression.isExpression);
+    const hasElements = expressions.some(expression => expression.isTag);
 
     if (!expressions || !hasElements) {
       return null;
     }
 
-    return (
-      <div className={this.props.class}>
-        <div className="expression-logic">
-          {expressions.map((expression, i) => {
-            const expressionTextClass = classNames('expression-item expression-text', {
-              'expression-type': expression.isType
-            });
-
-            if (expression.isExpression) {
-              return (
-                <span key={i}>
-                  <span id={`expression-${instance.uniqueId}-${i}`} className="expression-item expression-tag">
-                    {expression.expressionText}
-                  </span>
-
-                  {expression.tooltipText && (
-                    <UncontrolledTooltip target={`expression-${instance.uniqueId}-${i}`} placement="top">
-                      {expression.tooltipText}
-                    </UncontrolledTooltip>
-                  )}
-                </span>
-              );
-            }
-
-            return (
-              <span className={expressionTextClass} key={i}>
-                {expression.expressionText}
-              </span>
-            );
-          })}
-        </div>
-      </div>
-    );
+    return <ElementExpressionPhrase closed={closed} expressions={expressions} inModal={inModal} />;
   }
 }
 
 ExpressionPhrase.propTypes = {
   baseElements: PropTypes.array.isRequired,
-  class: PropTypes.string,
   instance: PropTypes.object.isRequired
 };

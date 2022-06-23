@@ -20,7 +20,7 @@ const ExternalCQLTemplate = ({ externalCqlArguments, handleUpdateExternalCqlArgu
   };
 
   return (
-    <Stack>
+    <Stack data-testid="external-cql-template">
       {!allArgumentsComplete() && (
         <Alert severity="warning">
           All fields for standalone External CQL functions are required. Enter valid values for each field.

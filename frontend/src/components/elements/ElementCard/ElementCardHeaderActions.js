@@ -6,6 +6,8 @@ import {
   Clear as ClearIcon,
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
+  FormatIndentDecrease as FormatIndentDecreaseIcon,
+  FormatIndentIncrease as FormatIndentIncreaseIcon,
   Sms as SmsIcon
 } from '@mui/icons-material';
 
@@ -14,8 +16,13 @@ import { Tooltip } from 'components/elements';
 import { changeToCase } from 'utils/strings';
 
 const ElementCardHeaderActions = ({
+  allowIndent = false,
+  allowOutdent = false,
   disableDeleteMessage,
+  disableIndentMessage,
   handleDelete,
+  handleIndent,
+  handleOutdent,
   handleToggleContent,
   handleToggleComment,
   hasComment,
@@ -33,6 +40,30 @@ const ElementCardHeaderActions = ({
 
   return (
     <>
+      {showContent && allowOutdent && (
+        <Tooltip title={disableIndentMessage || 'Outdent'}>
+          <IconButton
+            aria-label="outdent"
+            color="primary"
+            disabled={Boolean(disableIndentMessage)}
+            onClick={handleOutdent}
+          >
+            <FormatIndentDecreaseIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      )}
+      {showContent && allowIndent && (
+        <Tooltip title={disableIndentMessage || 'Indent'}>
+          <IconButton
+            aria-label="indent"
+            color="primary"
+            disabled={Boolean(disableIndentMessage)}
+            onClick={handleIndent}
+          >
+            <FormatIndentIncreaseIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      )}
       {showContent && (
         <Tooltip title={showComment ? 'Hide Comment' : 'Show Comment'}>
           <IconButton
@@ -54,7 +85,7 @@ const ElementCardHeaderActions = ({
 
       <Tooltip title={disableDeleteMessage || 'Delete'}>
         <IconButton
-          aria-label="delete"
+          aria-label={`delete ${label}`}
           color="primary"
           disabled={Boolean(disableDeleteMessage)}
           onClick={() => setShowConfirmDeleteModal(true)}
@@ -79,8 +110,13 @@ const ElementCardHeaderActions = ({
 };
 
 ElementCardHeaderActions.propTypes = {
+  allowIndent: PropTypes.bool,
+  allowOutdent: PropTypes.bool,
   disableDeleteMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  disableIndentMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   handleDelete: PropTypes.func.isRequired,
+  handleIndent: PropTypes.func,
+  handleOutdent: PropTypes.func,
   handleToggleContent: PropTypes.func.isRequired,
   handleToggleComment: PropTypes.func.isRequired,
   hasComment: PropTypes.bool.isRequired,

@@ -347,6 +347,7 @@ export default class ListGroup extends Component {
           }
           validateReturnType={isAndOrElement}
           vsacApiKey={this.props.vsacApiKey}
+          baseIndentLevel={1}
         />
       </div>
     );

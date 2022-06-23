@@ -141,7 +141,7 @@ describe('<Parameters />', () => {
     const newParameters = _.cloneDeep(parameters);
     renderComponent({ handleUpdateParameters });
 
-    userEvent.click(screen.queryAllByRole('button', { name: 'delete' })[0]);
+    userEvent.click(screen.queryAllByRole('button', { name: 'delete parameter' })[0]);
     userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
     expect(handleUpdateParameters).toBeCalledWith(newParameters.slice(1));

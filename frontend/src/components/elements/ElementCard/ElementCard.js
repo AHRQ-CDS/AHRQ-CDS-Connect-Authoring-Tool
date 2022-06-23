@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { Card, CardActions, CardContent, CardHeader } from '@mui/material';
 
 import ElementCardHeader from './ElementCardHeader';
 import ElementCardHeaderActions from './ElementCardHeaderActions';
+import useStyles from './styles';
 
 const ElementCard = ({
+  actions,
   alerts,
+  allowIndent,
+  allowOutdent,
   children,
   collapsedContent,
   commentField,
   disableDeleteMessage,
+  disableIndentMessage,
   disableTitleField,
   handleDelete,
+  handleIndent,
+  handleOutdent,
   handleUpdateComment,
   handleUpdateTitleField,
   hasErrors,
-  hideActions = false,
+  isBaseElement,
   label,
+  indentParity,
   setShowAllContent,
   showAllContent,
   titleField
 }) => {
+  const styles = useStyles();
   const [showContent, setShowContent] = useState(true);
   const [showComment, setShowComment] = useState(false);
 
@@ -34,13 +44,21 @@ const ElementCard = ({
     setShowAllContent(null);
   };
 
+  const background = styles[indentParity] ?? '';
+  const classNames = clsx(isBaseElement && styles.baseElement, background);
+
   return (
-    <Card>
+    <Card className={classNames}>
       <CardHeader
         action={
           <ElementCardHeaderActions
+            allowIndent={allowIndent}
+            allowOutdent={allowOutdent}
             disableDeleteMessage={disableDeleteMessage}
+            disableIndentMessage={disableIndentMessage}
             handleDelete={handleDelete}
+            handleIndent={handleIndent}
+            handleOutdent={handleOutdent}
             handleToggleContent={handleToggleContent}
             handleToggleComment={() => setShowComment(!showComment)}
             hasComment={Boolean(commentField.value)}
@@ -69,13 +87,16 @@ const ElementCard = ({
 
       {showContent && <CardContent>{children}</CardContent>}
 
-      {!hideActions && <CardActions></CardActions>}
+      {actions && showContent && <CardActions>{actions}</CardActions>}
     </Card>
   );
 };
 
 ElementCard.propTypes = {
+  actions: PropTypes.element,
   alerts: PropTypes.array,
+  allowIndent: PropTypes.bool,
+  allowOutdent: PropTypes.bool,
   children: PropTypes.element.isRequired,
   collapsedContent: PropTypes.element,
   commentField: PropTypes.shape({
@@ -84,10 +105,16 @@ ElementCard.propTypes = {
     value: PropTypes.string
   }).isRequired,
   disableDeleteMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  disableIndentMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   disableTitleField: PropTypes.bool,
   handleDelete: PropTypes.func.isRequired,
+  handleIndent: PropTypes.func,
+  handleOutdent: PropTypes.func,
+  handleUpdateComment: PropTypes.func.isRequired,
   handleUpdateTitleField: PropTypes.func.isRequired,
   hasErrors: PropTypes.bool,
+  indentParity: PropTypes.string,
+  isBaseElement: PropTypes.bool,
   isDisabled: PropTypes.bool,
   label: PropTypes.string.isRequired,
   setShowAllContent: PropTypes.func.isRequired,
