@@ -20,11 +20,13 @@ const SelectModifierAction = ({
 
   useEffect(() => {
     if (elementInstance.modifiers == null) elementInstance.modifiers = [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const relevantModifiers = filterRelevantModifiers(modifiersByInputType[returnType], elementInstance);
     setRelevantModifiers(relevantModifiers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [returnType, modifiersByInputType]);
 
   if (isLoadingModifiers) return <Box>Loading modifiers...</Box>;
