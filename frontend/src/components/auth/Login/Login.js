@@ -106,7 +106,7 @@ const Login = () => {
           </div>
 
           <div className={styles.forgotPassword}>
-            <a href="https://ahrqadmin.org/UMA/password" onClick={onVisitExternalForm}>
+            <a href="https://cds-pass.ahrq.gov/?action=sendtoken" onClick={onVisitExternalForm}>
               Forgot password?
             </a>
           </div>
