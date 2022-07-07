@@ -12,6 +12,7 @@ require('dotenv-expand')(require('dotenv').config());
 const express = require('express');
 const https = require('https');
 const proxy = require('express-http-proxy');
+const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
@@ -34,6 +35,12 @@ if (useHTTPS) {
 }
 
 const app = express();
+
+const logRequests = /^true$/i.test(process.env.LOG_REQUESTS) || /^true$/i.test(process.env.LOG_FRONTEND_REQUESTS);
+if (logRequests) {
+  // Log HTTP requests and responses
+  app.use(morgan('combined'));
+}
 
 app.use('/authoring', express.static(path.join(__dirname, 'build')));
 

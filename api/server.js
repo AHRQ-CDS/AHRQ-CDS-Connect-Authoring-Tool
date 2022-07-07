@@ -4,6 +4,7 @@ const fs = require('fs');
 const process = require('process');
 const express = require('express');
 const https = require('https');
+const morgan = require('morgan');
 const mongoose = require('mongoose');
 const mm = require('mongodb-migrations');
 const config = require('./config');
@@ -32,6 +33,12 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.get('tlsRejectUnauthorized');
 
 // Create App
 const app = express();
+
+const logRequests = /^true$/i.test(process.env.LOG_REQUESTS) || /^true$/i.test(process.env.LOG_API_REQUESTS);
+if (logRequests) {
+  // Log HTTP requests and responses
+  app.use(morgan('combined'));
+}
 
 // Set port or check environment
 const port = process.env.API_PORT || 3001;
