@@ -22,6 +22,14 @@ export default makeStyles(
       fontWeight: 'bold',
       marginTop: '10px',
       minWidth: '250px'
+    },
+    // Even/odd color is opposite from groups because this is rendered within a group with the same parity
+    // So an "even" (grey) group gets an "even" element select, but that needs to be white ("odd" color)
+    odd: {
+      backgroundColor: '#fff'
+    },
+    even: {
+      backgroundColor: '#f8f8f8'
     }
   }),
   { name: 'Element-Select', index: 1 }

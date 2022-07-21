@@ -37,8 +37,6 @@ export default class Subpopulation extends Component {
     this.props.addInstance(name, template, path, this.props.subpopulation.uniqueId);
   };
 
-  getAllInstances = treeName => this.props.getAllInstances(treeName, null, this.props.subpopulation.uniqueId);
-
   editInstance = (treeName, fields, path, editingConjunction) => {
     this.props.editInstance(treeName, fields, path, editingConjunction, this.props.subpopulation.uniqueId);
   };
@@ -191,11 +189,9 @@ export default class Subpopulation extends Component {
     const {
       artifact,
       baseElements,
-      conversionFunctions,
       getAllInstancesInAllTrees,
       instanceNames,
       isLoadingModifiers,
-      modifierMap,
       modifiersByInputType,
       parameters,
       subpopulation,
@@ -221,15 +217,13 @@ export default class Subpopulation extends Component {
           addInstance={this.addInstance}
           artifact={artifact}
           baseElements={baseElements}
-          conversionFunctions={conversionFunctions}
+          baseIndentLevel={1}
           deleteInstance={this.deleteInstance}
           editInstance={this.editInstance}
-          getAllInstances={this.getAllInstances}
           getAllInstancesInAllTrees={getAllInstancesInAllTrees}
           instance={subpopulation}
           instanceNames={instanceNames}
           isLoadingModifiers={isLoadingModifiers}
-          modifierMap={modifierMap}
           modifiersByInputType={modifiersByInputType}
           parameters={parameters}
           root={true}
@@ -260,14 +254,11 @@ Subpopulation.propTypes = {
   artifact: PropTypes.object.isRequired,
   baseElements: PropTypes.array.isRequired,
   checkSubpopulationUsage: PropTypes.func.isRequired,
-  conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
-  getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
   parameters: PropTypes.array.isRequired,

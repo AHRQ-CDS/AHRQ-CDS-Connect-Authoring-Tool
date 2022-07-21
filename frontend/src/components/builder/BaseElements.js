@@ -35,16 +35,13 @@ export default class BaseElements extends Component {
         addInstance={this.props.addInstance}
         artifact={this.props.instance}
         baseElements={this.props.baseElements}
-        conversionFunctions={this.props.conversionFunctions}
         deleteInstance={this.props.deleteInstance}
         editInstance={this.props.editInstance}
-        getAllInstances={this.props.getAllInstances}
         getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
         index={i}
         instance={s}
         instanceNames={this.props.instanceNames}
         isLoadingModifiers={this.props.isLoadingModifiers}
-        modifierMap={this.props.modifierMap}
         modifiersByInputType={this.props.modifiersByInputType}
         parameters={this.props.parameters}
         templates={this.props.templates}
@@ -137,15 +134,12 @@ BaseElements.propTypes = {
   addBaseElement: PropTypes.func.isRequired,
   addInstance: PropTypes.func.isRequired,
   baseElements: PropTypes.array.isRequired,
-  conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
-  getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instance: PropTypes.object.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   parameters: PropTypes.array.isRequired,
   templates: PropTypes.array.isRequired,

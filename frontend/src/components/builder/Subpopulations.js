@@ -65,14 +65,11 @@ export default class Subpopulations extends Component {
             artifact={this.props.artifact}
             baseElements={this.props.baseElements}
             checkSubpopulationUsage={this.props.checkSubpopulationUsage}
-            conversionFunctions={this.props.conversionFunctions}
             deleteInstance={this.props.deleteInstance}
             editInstance={this.props.editInstance}
-            getAllInstances={this.props.getAllInstances}
             getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
             instanceNames={this.props.instanceNames}
             isLoadingModifiers={this.props.isLoadingModifiers}
-            modifierMap={this.props.modifierMap}
             modifiersByInputType={this.props.modifiersByInputType}
             name={this.props.name}
             parameters={this.props.parameters}
@@ -101,14 +98,11 @@ Subpopulations.propTypes = {
   artifact: PropTypes.object.isRequired,
   baseElements: PropTypes.array.isRequired,
   checkSubpopulationUsage: PropTypes.func.isRequired,
-  conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
-  getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
   parameters: PropTypes.array.isRequired,

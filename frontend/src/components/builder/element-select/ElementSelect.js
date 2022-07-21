@@ -29,7 +29,13 @@ export const VSAC_OPTIONS = [
   'serviceRequest'
 ];
 
-const ElementSelect = ({ excludeListOperations = false, handleAddElement, isDisabled, parentElementId }) => {
+const ElementSelect = ({
+  excludeListOperations = false,
+  handleAddElement,
+  indentParity,
+  isDisabled,
+  parentElementId
+}) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSuboption, setSelectedSuboption] = useState(null);
   const [selectedCqlOption, setSelectedCqlOption] = useState(null);
@@ -39,6 +45,8 @@ const ElementSelect = ({ excludeListOperations = false, handleAddElement, isDisa
   const { data: externalCqlList } = useQuery(['externalCql', query], () => fetchExternalCqlList(query));
   const { data: elementTemplates } = useQuery('templates', () => fetchTemplates(), { staleTime: Infinity });
   const styles = useStyles();
+
+  const background = styles[indentParity] ?? '';
 
   const elementOptions = useMemo(() => {
     if (!elementTemplates) return [];
@@ -131,7 +139,7 @@ const ElementSelect = ({ excludeListOperations = false, handleAddElement, isDisa
   };
 
   return (
-    <Card>
+    <Card className={background}>
       <CardContent>
         <div className={styles.elementSelect}>
           <div className={styles.elementSelectGroup}>
@@ -183,6 +191,7 @@ const ElementSelect = ({ excludeListOperations = false, handleAddElement, isDisa
 ElementSelect.propTypes = {
   excludeListOperations: PropTypes.bool,
   handleAddElement: PropTypes.func.isRequired,
+  indentParity: PropTypes.string,
   isDisabled: PropTypes.bool,
   parentElementId: PropTypes.string
 };

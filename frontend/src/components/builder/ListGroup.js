@@ -76,8 +76,6 @@ export default class ListGroup extends Component {
     };
   }
 
-  getAllInstances = treeName => this.props.getAllInstances(treeName, null, this.props.instance.uniqueId);
-
   collapse = () => {
     this.setState({ isExpanded: false });
   };
@@ -320,7 +318,7 @@ export default class ListGroup extends Component {
           addInstance={(name, template, path) => this.addInstance(name, template, path, instance, isAndOrElement)}
           artifact={this.props.artifact}
           baseElements={this.props.baseElements}
-          conversionFunctions={this.props.conversionFunctions}
+          baseIndentLevel={1}
           deleteInstance={(treeName, path, toAdd) =>
             this.deleteInstance(treeName, path, toAdd, instance, isAndOrElement)
           }
@@ -330,12 +328,10 @@ export default class ListGroup extends Component {
             this.editInstance(treeName, fields, path, editingConjunction, instance)
           }
           elementUniqueId={instance.uniqueId}
-          getAllInstances={this.getAllInstances}
           getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
           instance={this.props.instance}
           instanceNames={this.props.instanceNames}
           isLoadingModifiers={this.props.isLoadingModifiers}
-          modifierMap={this.props.modifierMap}
           modifiersByInputType={this.props.modifiersByInputType}
           options={isAndOrElement ? '' : 'listOperations'}
           parameters={this.props.parameters}
@@ -347,7 +343,6 @@ export default class ListGroup extends Component {
           }
           validateReturnType={isAndOrElement}
           vsacApiKey={this.props.vsacApiKey}
-          baseIndentLevel={1}
         />
       </div>
     );
@@ -521,16 +516,13 @@ ListGroup.propTypes = {
   addInstance: PropTypes.func.isRequired,
   artifact: PropTypes.object,
   baseElements: PropTypes.array.isRequired,
-  conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
-  getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   instance: PropTypes.object.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   parameters: PropTypes.array.isRequired,
   templates: PropTypes.array,

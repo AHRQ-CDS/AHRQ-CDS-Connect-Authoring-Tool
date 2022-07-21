@@ -18,26 +18,23 @@ describe('<ConjunctionGroup />', () => {
   const orInstance = createTemplateInstance(orTemplate);
   const instance = { ...instanceTree, path: '', childInstances: [...instanceTree.childInstances, orInstance] };
 
-  const renderComponent = (props = {}) =>
+  const renderComponent = ({ groupInstance = instance, ...props } = {}) =>
     render(
       <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact } })}>
         <ConjunctionGroup
           addInstance={jest.fn()}
           artifact={{ MeetsInclusionCriteria: { id: 'Or' } }}
           baseElements={[]}
-          conversionFunctions={[]}
           deleteInstance={jest.fn()}
           disableAddElement={false}
           disableIndent={false}
           editInstance={jest.fn()}
           elementUniqueId=""
-          getAllInstances={() => instance.childInstances}
           getAllInstancesInAllTrees={jest.fn().mockReturnValue([])}
           getPath={jest.fn()}
-          instance={instance}
+          instance={groupInstance}
           instanceNames={[]}
           isLoadingModifiers={false}
-          modifierMap={{}}
           modifiersByInputType={{}}
           options=""
           parameters={[]}
@@ -66,24 +63,22 @@ describe('<ConjunctionGroup />', () => {
 
   afterEach(() => nock.cleanAll());
 
-  it('has correct base class', () => {
-    const { container } = renderComponent();
-    expect(container.firstChild).toHaveClass('card-group');
-  });
-
   it('applies correct nesting classes', () => {
     const { container } = renderComponent();
 
+    expect(screen.getByTestId('root')).toBeInTheDocument();
+
     const cardGroups = container.querySelectorAll('.card-group');
-    expect(cardGroups[0]).toHaveClass('card-group__top');
-    expect(cardGroups[2]).toHaveClass('card-group__odd');
+    expect(cardGroups).toHaveLength(1); // One group within Inclusions
+
+    expect(cardGroups[0].firstChild.className).toMatch(/ElementCard-odd/); // Group has the correct class applied
   });
 
   it('can delete group', () => {
     const deleteInstance = jest.fn();
     renderComponent({ deleteInstance });
 
-    userEvent.click(screen.getByRole('button', { name: 'remove Or' }));
+    userEvent.click(screen.getByLabelText('delete Group'));
     userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
     expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.2');
@@ -107,7 +102,7 @@ describe('<ConjunctionGroup />', () => {
 
     const { container } = renderComponent({ editInstance });
 
-    const childConjunction = container.querySelector('.card-group__odd');
+    const childConjunction = container.querySelector('.card-group, [class^="ElementCard-odd"]');
     const nameField = childConjunction.querySelector('input[type="text"]');
 
     fireEvent.change(nameField, { target: { value: newName } });
@@ -121,16 +116,22 @@ describe('<ConjunctionGroup />', () => {
   });
 
   it("can't indent or outdent root group", () => {
-    const { container } = renderComponent();
+    const { queryByLabelText, getAllByLabelText } = renderComponent({
+      // same as instance defined above but no group
+      groupInstance: { ...instanceTree, path: '', childInstances: [...instanceTree.childInstances] }
+    });
 
-    expect(container.querySelector('.card-group__top > .card-group__top .indent-outdent-container')).toBeNull();
+    // Inclusions without any groups should have no outdent buttons available
+    expect(queryByLabelText('Outdent')).toBeNull();
+    // Top level inclusions group shouldn't have indent button and two elements in childInstances should each have an indent button.
+    expect(getAllByLabelText('Indent')).toHaveLength(2);
   });
 
   it('can indent a child group', () => {
     const deleteInstance = jest.fn();
     const { container } = renderComponent({ deleteInstance });
 
-    const childConjunction = container.querySelector('.card-group__odd');
+    const childConjunction = container.querySelector('.card-group');
     fireEvent.click(childConjunction.querySelector('button[aria-label="indent"]'));
 
     const expectedInstance = {
@@ -151,7 +152,7 @@ describe('<ConjunctionGroup />', () => {
     const deleteInstance = jest.fn();
     const { container } = renderComponent({ deleteInstance });
 
-    const childConjunction = container.querySelector('.card-group__odd');
+    const childConjunction = container.querySelector('.card-group');
     fireEvent.click(childConjunction.querySelector('button[aria-label="outdent"]'));
 
     expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.2', []);
@@ -185,13 +186,11 @@ describe('<ConjunctionGroup />', () => {
       childInstances: [deeperOr]
     };
 
-    // TODO: All the following should really verify what they were called with as well
-
     it('can indent a child group', () => {
       const deleteInstance = jest.fn();
       const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
 
-      const childConjunction = container.querySelector('.card-group__odd');
+      const childConjunction = container.querySelector('.card-group');
       fireEvent.click(childConjunction.querySelector('button[aria-label="indent"]'));
 
       expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.0', expect.anything());
@@ -201,7 +200,7 @@ describe('<ConjunctionGroup />', () => {
       const deleteInstance = jest.fn();
       const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
 
-      const childConjunction = container.querySelector('.card-group__odd');
+      const childConjunction = container.querySelector('.card-group');
       fireEvent.click(childConjunction.querySelector('button[aria-label="outdent"]'));
 
       expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.0', expect.anything());
@@ -211,7 +210,11 @@ describe('<ConjunctionGroup />', () => {
       const deleteInstance = jest.fn();
       const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
 
-      fireEvent.click(within(container.querySelector('[class^="MuiCardHeader-action"]')).getByLabelText('indent'));
+      fireEvent.click(
+        within(
+          container.querySelector('.card-group .card-group-section [class^="MuiCardHeader-action"]')
+        ).getByLabelText('indent')
+      );
 
       expect(deleteInstance).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',
@@ -224,7 +227,11 @@ describe('<ConjunctionGroup />', () => {
       const deleteInstance = jest.fn();
       const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
 
-      fireEvent.click(within(container.querySelector('[class^="MuiCardHeader-action"]')).getByLabelText('outdent'));
+      fireEvent.click(
+        within(
+          container.querySelector('.card-group .card-group-section [class^="MuiCardHeader-action"]')
+        ).getByLabelText('outdent')
+      );
 
       expect(deleteInstance).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',
@@ -237,14 +244,14 @@ describe('<ConjunctionGroup />', () => {
   describe('conjunctions that are in base elements in use', () => {
     it('cannot delete main or nested conjunctions', () => {
       const { container } = renderComponent({ disableAddElement: true });
-      const disabledConjunction = within(container.querySelector('.card-group__odd'));
+      const disabledConjunction = within(container.querySelector('.card-group'));
 
-      expect(disabledConjunction.getByRole('button', { name: 'remove Or' })).toBeDisabled();
+      expect(disabledConjunction.getByRole('button', { name: 'delete Group' })).toBeDisabled();
     });
 
     it('cannot indent or outdent nested conjunctions', () => {
       const { container } = renderComponent({ disableAddElement: true });
-      const disabledConjunction = within(container.querySelector('.card-group__odd'));
+      const disabledConjunction = within(container.querySelector('.card-group'));
 
       const indentButton = disabledConjunction.getByRole('button', { name: 'indent' });
       const outdentButton = disabledConjunction.getByRole('button', { name: 'outdent' });

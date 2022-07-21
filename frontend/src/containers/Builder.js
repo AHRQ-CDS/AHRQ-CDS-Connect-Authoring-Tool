@@ -394,14 +394,7 @@ export class Builder extends Component {
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = treeName => {
-    const {
-      artifact,
-      conversionFunctions,
-      isLoadingModifiers,
-      modifierMap,
-      modifiersByInputType,
-      templates
-    } = this.props;
+    const { artifact, isLoadingModifiers, modifiersByInputType, templates } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => !_.isNull(p.name) && p.name.length);
 
     if (artifact && artifact[treeName].childInstances) {
@@ -410,15 +403,12 @@ export class Builder extends Component {
           addInstance={this.addInstance}
           artifact={artifact}
           baseElements={artifact.baseElements}
-          conversionFunctions={conversionFunctions}
           deleteInstance={this.deleteInstance}
           editInstance={this.editInstance}
-          getAllInstances={this.getAllInstances}
           getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
           instance={artifact[treeName]}
           instanceNames={this.props.names}
           isLoadingModifiers={isLoadingModifiers}
-          modifierMap={modifierMap}
           modifiersByInputType={modifiersByInputType}
           parameters={namedParameters}
           root={true}
@@ -653,10 +643,8 @@ export class Builder extends Component {
     const {
       activeTab,
       artifact,
-      conversionFunctions,
       downloadedArtifact,
       isLoadingModifiers,
-      modifierMap,
       modifiersByInputType,
       names,
       templates,
@@ -727,14 +715,11 @@ export class Builder extends Component {
                     artifact={artifact}
                     baseElements={artifact.baseElements}
                     checkSubpopulationUsage={this.checkSubpopulationUsage}
-                    conversionFunctions={conversionFunctions}
                     deleteInstance={this.deleteInstance}
                     editInstance={this.editInstance}
-                    getAllInstances={this.getAllInstances}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     instanceNames={names}
                     isLoadingModifiers={isLoadingModifiers}
-                    modifierMap={modifierMap}
                     modifiersByInputType={modifiersByInputType}
                     name={'subpopulations'}
                     parameters={namedParameters}
@@ -758,16 +743,13 @@ export class Builder extends Component {
                     addBaseElement={this.addBaseElement}
                     addInstance={this.addInstance}
                     baseElements={artifact.baseElements}
-                    conversionFunctions={conversionFunctions}
                     deleteInstance={this.deleteInstance}
                     editInstance={this.editInstance}
                     fhirVersion={artifact.fhirVersion}
-                    getAllInstances={this.getAllInstances}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     instance={artifact}
                     instanceNames={names}
                     isLoadingModifiers={isLoadingModifiers}
-                    modifierMap={modifierMap}
                     modifiersByInputType={modifiersByInputType}
                     parameters={namedParameters}
                     templates={templates}
