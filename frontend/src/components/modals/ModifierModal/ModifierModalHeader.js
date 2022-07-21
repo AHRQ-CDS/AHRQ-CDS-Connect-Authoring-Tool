@@ -7,6 +7,7 @@ import clsx from 'clsx';
 
 import ExpressionPhrase from 'components/builder/ExpressionPhrase';
 import { changeToCase } from 'utils/strings';
+import { getReturnType } from 'utils/instances';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from '../styles';
 
@@ -23,7 +24,7 @@ const ModifierModalHeader = ({ elementInstance, modifiersToAdd }) => {
         <div className={styles.headerTag}>
           <div className={clsx(styles.headerIndicator, styles.headerIndicatorHighlight)}>
             <ExpressionPhrase
-              instance={{ ...elementInstance, modifiers: modifiersToAdd }}
+              instance={{ ...elementInstance, modifiers: [...elementInstance.modifiers, ...modifiersToAdd] }}
               baseElements={baseElements}
               inModal={true}
             />
@@ -39,6 +40,15 @@ const ModifierModalHeader = ({ elementInstance, modifiersToAdd }) => {
                 <ArrowForwardIcon className={spacingStyles.horizontalPadding} fontSize="small" />
                 {modifiersReturnType === 'boolean' && <CheckIcon fontSize="small" />}
                 {changeToCase(modifiersReturnType, 'capitalCase')}
+              </>
+            )}
+            {!modifiersReturnType && elementInstance.modifiers.length > 0 && (
+              <>
+                <ArrowForwardIcon className={spacingStyles.horizontalPadding} fontSize="small" />
+                {getReturnType(elementInstance.returnType, elementInstance.modifiers) === 'boolean' && (
+                  <CheckIcon fontSize="small" />
+                )}
+                {changeToCase(getReturnType(elementInstance.returnType, elementInstance.modifiers), 'capitalCase')}
               </>
             )}
           </div>
