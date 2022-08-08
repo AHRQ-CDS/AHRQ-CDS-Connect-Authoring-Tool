@@ -26,6 +26,23 @@ const codeLookups = {
   'http://hl7.org/fhir/sid/cvx': 'CVX'
 };
 
+/**
+ * In Summer 2022, the VSAC FHIR API started appending "|{version}" to the end
+ * of resource ids in search results. This is not actually a valid FHIR id, and
+ * it causes problems because other parts of the VSAC API don't accept it as an
+ * id. Since we prefer non-version-specific value sets anyway, this function
+ * strips the version suffix from the id.
+ * @param {string} id - the value set id
+ * @returns {string} the id with invalid suffix removed (if applicable)
+ */
+function cleanId(id) {
+  if (id && id.indexOf('|') !== -1) {
+    return id.slice(0, id.indexOf('|'));
+  } else {
+    return id;
+  }
+}
+
 function getValueSet(oid, username, password) {
   const options = {
     method: 'GET',
@@ -39,7 +56,7 @@ function getValueSet(oid, username, password) {
   return rpn(options).then(res => {
     const response = JSON.parse(res);
     return {
-      oid: response.id,
+      oid: cleanId(response.id),
       version: response.meta.versionId,
       displayName: response.name,
       codes: response.expansion.contains.map(c => {
@@ -72,7 +89,7 @@ function searchForValueSets(search, username, password) {
       return {
         name: v.resource.name,
         steward: v.resource.publisher,
-        oid: v.resource.id,
+        oid: cleanId(v.resource.id),
         codeSystem: [],
         codeCount: (v.resource.expansion || {}).total || 0
       };
