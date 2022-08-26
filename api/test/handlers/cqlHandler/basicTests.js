@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const nock = require('nock');
 const { expect } = require('chai');
-const { buildCQL, makeCQLtoELMRequest } = require('../../../handlers/cqlHandler');
+const { buildCQL, makeCQLtoELMRequest, formatCQL } = require('../../../handlers/cqlHandler');
 const _ = require('lodash');
 const Artifact = require('../../../models/artifact');
 
@@ -2723,6 +2723,66 @@ describe('CQL to ELM tests', () => {
       );
       expect(elmFiles[3].name).to.equal('Simple.cql');
       expect(elmFiles[3].content).to.match(/<library[\s\S]*<identifier id="SimpleLibrary"[\s\S]*/m);
+      done();
+    });
+  });
+});
+
+describe('CQL Formatter tests', () => {
+  // before the tests, disable network connections to ensure tests never hit real network
+  before(() => {
+    // if another test suite de-activated nock, we need to re-activate it
+    if (!nock.isActive()) nock.activate();
+    nock.disableNetConnect();
+  });
+
+  // after the tests, re-enable network connections
+  after(() => {
+    nock.restore();
+    nock.enableNetConnect();
+  });
+
+  // after each test, check and clean nock
+  afterEach(() => {
+    nock.isDone();
+    nock.cleanAll();
+  });
+
+  it('should send a valid request to the CQL Formatter Service', done => {
+    const inputContent = fs.readFileSync(path.join(__dirname, 'fixtures', 'UnformattedCQL.cql'), 'utf-8');
+    const inputHeaders = { 'Content-Type': 'application/cql', Accept: 'application/cql' };
+    const outputContent = fs.readFileSync(path.join(__dirname, 'fixtures', 'FormattedCQL.cql'), 'utf-8');
+    const outputHeaders = { 'Content-Type': 'application/cql' };
+    nock('http://localhost:8080', {
+      reqheaders: inputHeaders
+    })
+      .post('/cql/formatter', inputContent)
+      .reply(200, outputContent, outputHeaders);
+
+    // Make the request!
+    formatCQL(inputContent, (err, output) => {
+      expect(err).to.be.null;
+      expect(output).to.equal(outputContent);
+      done();
+    });
+  });
+
+  it('should signal an error in the callback when the CQL Formatter Service responds with an error', done => {
+    const inputContent = 'DEFINITELY NOT CQL';
+    const inputHeaders = { 'Content-Type': 'application/cql', Accept: 'application/cql' };
+    const outputContent = "CQL formatting failed due to errors:[1:0]: mismatched input 'DEFINITELY'";
+    const outputHeaders = { 'Content-Type': 'text/plain' };
+    nock('http://localhost:8080', {
+      reqheaders: inputHeaders
+    })
+      .post('/cql/formatter', inputContent)
+      .reply(400, outputContent, outputHeaders);
+
+    // Make the request!
+    formatCQL(inputContent, (err, output) => {
+      expect(err).to.be.instanceOf(Error);
+      expect(err.message).to.equal(outputContent);
+      expect(output).to.be.undefined;
       done();
     });
   });

@@ -50,6 +50,20 @@ const config = convict({
       env: 'CQL_TO_ELM_ACTIVE'
     }
   },
+  cqlFormatter: {
+    url: {
+      doc: 'The URL endpoint for the CQL formatter service.',
+      format: laxUrl('http', 'https'),
+      default: 'http://localhost:8080/cql/formatter',
+      env: 'CQL_FORMATTER_URL'
+    },
+    active: {
+      doc: 'Indicates if CQL formatter is active (requires translation service 1.5.10 or above)',
+      format: 'Boolean',
+      default: true,
+      env: 'CQL_FORMATTER_ACTIVE'
+    }
+  },
   auth: {
     session: {
       secret: {

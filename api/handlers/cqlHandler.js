@@ -168,6 +168,7 @@ module.exports = {
   objToCql,
   objToELM,
   makeCQLtoELMRequest,
+  formatCQL,
   idToObj,
   writeZip,
   buildCQL
@@ -1560,11 +1561,28 @@ function objConvert(req, res, callback) {
       // artifactJson are affected by the merge operation here.
       artifactJson.text = exportCQL(libraryGroup);
 
-      callback(artifact, artifactJson, externalLibs, res, err => {
-        if (err) {
-          res.status(500).send({ error: err.message });
-        }
-      });
+      // Attempt to reformat the primary CQL library if CQL Formatter is active
+      if (config.get('cqlFormatter.active')) {
+        formatCQL(artifactJson.text, (err, formattedCQL) => {
+          // Sanity check: only replace the CQL if no errors and it starts with "library";
+          // Otherwise just ignore the error since formatting isn't critical.
+          if (err == null && formattedCQL != null && /^library/.test(formattedCQL)) {
+            artifactJson.text = formattedCQL;
+          }
+          callback(artifact, artifactJson, externalLibs, res, err => {
+            if (err) {
+              res.status(500).send({ error: err.message });
+            }
+          });
+        });
+      } else {
+        // Skip reformatting the CQL
+        callback(artifact, artifactJson, externalLibs, res, err => {
+          if (err) {
+            res.status(500).send({ error: err.message });
+          }
+        });
+      }
     }
   });
 }
@@ -1594,18 +1612,18 @@ function validateELM(artifact, artifactJson, externalLibs, writeStream, callback
 }
 
 //given a CQLArtifact, find the associated Artifact in the DB, convert it to a CPG Publishable Library
-function convertToCPGPL(cqlArtifact) {
+function convertToCPGPL(cqlArtifact, cqlText) {
   return Artifact.findOne({ _id: { $ne: null, $eq: cqlArtifact._id } })
     .exec()
     .then(artifact => {
       let cpg = artifact.toPublishableLibrary();
-      let cqlBuffer = Buffer.from(cqlArtifact.toJson().text);
+      let cqlBuffer = Buffer.from(cqlText);
       cpg['content'] = [
         {
           contentType: 'application/cql',
           data: cqlBuffer.toString('base64')
         }
-      ]; //{content type: application/cql, data: base64 of the CQL)
+      ];
       return JSON.stringify(cpg, null, 2);
     })
     .catch(err => {
@@ -1615,8 +1633,8 @@ function convertToCPGPL(cqlArtifact) {
 
 function writeZip(artifact, artifactJson, externalLibs, writeStream, callback /* (error) */) {
   const artifacts = [artifactJson, ...externalLibs];
-  //convert the artifact to a CPG Publishable Library
-  convertToCPGPL(artifact).then(function (cpgString) {
+  // convert the artifact to a CPG Publishable Library, passing in the text directly (since it was likely modified)
+  convertToCPGPL(artifact, artifactJson.text).then(function (cpgString) {
     // We must first convert to ELM before packaging up
     convertToElm(artifacts, true, (err, elmFiles) => {
       if (err) {
@@ -1756,6 +1774,24 @@ function splitELM(body, contentType, callback /* (error, elmFiles) */) {
       callback(err);
     });
   bb.end(body);
+}
+
+function formatCQL(cqlText, callback) {
+  const options = {
+    url: config.get('cqlFormatter.url'),
+    headers: { 'Content-Type': 'application/cql', Accept: 'application/cql' },
+    body: cqlText
+  };
+  request.post(options, (err, resp, body) => {
+    if (err) {
+      callback(err);
+      return;
+    } else if (resp.statusCode !== 200) {
+      callback(new Error(body));
+      return;
+    }
+    callback(null, body);
+  });
 }
 
 function buildCQL(artifactBody) {

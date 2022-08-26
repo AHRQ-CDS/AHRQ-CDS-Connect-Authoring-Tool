@@ -12,6 +12,10 @@
     "url": "http://localhost:8080/cql/translator",
     "active": true
   },
+  "cqlFormatter": {
+    "url": "http://localhost:8080/cql/formatter",
+    "active": true
+  },
   "auth": {
     "session": {
       "secret": "secret"
