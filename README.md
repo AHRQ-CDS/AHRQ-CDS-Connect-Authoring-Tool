@@ -106,6 +106,7 @@ docker run --name cat \
   --link cat-cql2elm:cql2elm \
   --link cat-mongo:mongo \
   -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" \
+  -e "CQL_FORMATTER_URL=http://cql2elm:8080/cql/formatter" \
   -e "MONGO_URL=mongodb://mongo/cds_authoring" \
   -e "AUTH_SESSION_SECRET=secret" \
   -e "AUTH_LDAP_URL=ldap://localhost:389" \
