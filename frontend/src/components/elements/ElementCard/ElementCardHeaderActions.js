@@ -16,6 +16,7 @@ import { Tooltip } from 'components/elements';
 import { changeToCase } from 'utils/strings';
 
 const ElementCardHeaderActions = ({
+  allowComment = true,
   allowIndent = false,
   allowOutdent = false,
   disableDeleteMessage,
@@ -64,7 +65,7 @@ const ElementCardHeaderActions = ({
           </IconButton>
         </Tooltip>
       )}
-      {showContent && (
+      {showContent && allowComment && (
         <Tooltip title={showComment ? 'Hide Comment' : 'Show Comment'}>
           <IconButton
             aria-label={showComment ? 'hide comment' : 'show comment'}
@@ -110,6 +111,7 @@ const ElementCardHeaderActions = ({
 };
 
 ElementCardHeaderActions.propTypes = {
+  allowComment: PropTypes.bool,
   allowIndent: PropTypes.bool,
   allowOutdent: PropTypes.bool,
   disableDeleteMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,

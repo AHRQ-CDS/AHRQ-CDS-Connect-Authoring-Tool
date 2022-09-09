@@ -335,22 +335,11 @@ export class Builder extends Component {
 
   // ----------------------------------------------------------------------- //
 
-  updateRecsSubpop = (newName, uniqueId) => {
-    const recs = _.cloneDeep(this.props.artifact.recommendations);
-    for (let i = 0; i < recs.length; i++) {
-      const subpops = recs[i].subpopulations;
-      for (let j = 0; j < subpops.length; j++) {
-        if (subpops[j].uniqueId === uniqueId) {
-          subpops[j].subpopulationName = newName;
-        }
-      }
-    }
-    this.setState({ recommendations: recs });
-  };
-
-  updateSubpopulations = async (subpopulations, target = 'subpopulations') => {
+  updateSubpopulations = async (subpopulations, target = 'subpopulations', shouldUpdateFHIRVersion = false) => {
     await this.props.updateArtifact(this.props.artifact, { [target]: subpopulations });
-    this.updateFHIRVersion();
+    if (shouldUpdateFHIRVersion) {
+      this.updateFHIRVersion();
+    }
   };
 
   updateRecommendations = recommendations => {
@@ -363,18 +352,6 @@ export class Builder extends Component {
 
   updateErrorStatement = errorStatement => {
     this.props.updateArtifact(this.props.artifact, { errorStatement });
-  };
-
-  checkSubpopulationUsage = uniqueId => {
-    for (let i = 0; i < this.props.artifact.recommendations.length; i++) {
-      const subpops = this.props.artifact.recommendations[i].subpopulations;
-      for (let j = 0; j < subpops.length; j++) {
-        if (subpops[j].uniqueId === uniqueId) {
-          return true;
-        }
-      }
-    }
-    return false;
   };
 
   handleClickDownloadMenu = event => {
@@ -714,18 +691,16 @@ export class Builder extends Component {
                     addInstance={this.addInstance}
                     artifact={artifact}
                     baseElements={artifact.baseElements}
-                    checkSubpopulationUsage={this.checkSubpopulationUsage}
                     deleteInstance={this.deleteInstance}
                     editInstance={this.editInstance}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     instanceNames={names}
                     isLoadingModifiers={isLoadingModifiers}
                     modifiersByInputType={modifiersByInputType}
-                    name={'subpopulations'}
                     parameters={namedParameters}
+                    subpopulations={artifact.subpopulations}
                     templates={templates}
                     updateInstanceModifiers={this.updateInstanceModifiers}
-                    updateRecsSubpop={this.updateRecsSubpop}
                     updateSubpopulations={this.updateSubpopulations}
                     vsacApiKey={vsacApiKey}
                   />

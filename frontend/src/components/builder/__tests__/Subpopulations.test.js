@@ -14,7 +14,10 @@ const subpopulation = {
   name: '',
   conjunction: true,
   returnType: 'boolean',
-  fields: [{ id: 'element_name', type: 'string', name: 'Group Name' }],
+  fields: [
+    { id: 'element_name', type: 'string', name: 'Group Name' },
+    { id: 'comment', type: 'string', name: 'Comment' }
+  ],
   uniqueId: 'foo123',
   childInstances: [],
   path: '',
@@ -35,25 +38,19 @@ describe('<Subpopulations />', () => {
       <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact } })}>
         <Subpopulations
           addInstance={jest.fn()}
-          artifact={{ subpopulations: [specialSubpop] }}
+          artifact={{ subpopulations: [specialSubpop], recommendations: [] }}
           baseElements={[]}
-          checkSubpopulationUsage={jest.fn()}
-          conversionFunctions={[]}
           deleteInstance={jest.fn()}
           editInstance={jest.fn()}
-          getAllInstances={jest.fn()}
           getAllInstancesInAllTrees={jest.fn()}
           instanceNames={[]}
           isLoadingModifiers={false}
-          modifierMap={{}}
           modifiersByInputType={{}}
-          name="subpopulations"
           parameters={[]}
+          subpopulations={[specialSubpop]}
           templates={elementGroups}
           updateInstanceModifiers={jest.fn()}
-          updateRecsSubpop={jest.fn()}
           updateSubpopulations={jest.fn()}
-          validateReturnType={false}
           vsacApiKey="key"
           {...props}
         />
@@ -82,9 +79,9 @@ describe('<Subpopulations />', () => {
   });
 
   it('filters out "default" subpopulations', () => {
-    const { container } = renderComponent();
+    const { queryAllByText } = renderComponent();
 
-    expect(container.querySelectorAll('.subpopulation')).toHaveLength(0);
+    expect(queryAllByText('Subpopulation:')).toHaveLength(0);
   });
 
   it('can add subpopulations', () => {
@@ -107,65 +104,69 @@ describe('<Subpopulations />', () => {
   });
 
   it('can update a subpopulation name', () => {
-    const newSubpopName = 'newSubpopName';
-    const updateRecsSubpop = jest.fn();
+    const newSubpopulationName = 'New Subpopulation Name v2.0';
     const updateSubpopulations = jest.fn();
+    const subpopulations = [specialSubpop, subpopulation];
 
-    renderComponent({
-      artifact: {
-        subpopulations: [specialSubpop, subpopulation]
-      },
-      updateRecsSubpop,
+    const { container } = renderComponent({
+      artifact: { subpopulations, recommendations: [] },
+      subpopulations,
       updateSubpopulations
     });
 
-    fireEvent.change(document.querySelector('input[type=text]'), { target: { value: newSubpopName } });
+    fireEvent.change(container.querySelector('input[type=text]'), { target: { value: newSubpopulationName } });
 
     expect(updateSubpopulations).toHaveBeenCalledWith(
       [
         specialSubpop,
         expect.objectContaining({
-          subpopulationName: newSubpopName
+          subpopulationName: newSubpopulationName
         })
       ],
       'subpopulations'
     );
-
-    expect(updateRecsSubpop).toHaveBeenCalledWith(newSubpopName, subpopulation.uniqueId);
   });
 
   it('can delete subpopulation not in use', () => {
-    const checkSubpopulationUsage = jest.fn().mockReturnValueOnce(false);
     const updateSubpopulations = jest.fn();
+    const subpopulations = [specialSubpop, subpopulation];
 
-    renderComponent({
+    const { getByRole } = renderComponent({
       artifact: {
-        subpopulations: [specialSubpop, subpopulation]
+        subpopulations,
+        recommendations: [{ text: 'Talk to dr.', subpopulations: [] }] // doesn't use any subpopulation
       },
-      checkSubpopulationUsage,
+      subpopulations,
       updateSubpopulations
     });
 
-    userEvent.click(screen.getByRole('button', { name: 'delete subpopulation' }));
-    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    userEvent.click(getByRole('button', { name: 'delete Subpopulation' })); // delete button on subpopulation
+    userEvent.click(getByRole('button', { name: 'Delete' })); // modal delete
 
-    expect(updateSubpopulations).toHaveBeenCalledWith([specialSubpop], 'subpopulations');
+    expect(updateSubpopulations).toHaveBeenCalledWith([specialSubpop], 'subpopulations', true);
   });
 
-  it("can't delete subpopulation in use", () => {
-    const checkSubpopulationUsage = jest.fn().mockReturnValueOnce(true);
+  it("can't delete subpopulation or edit its name when used by a recommendation", () => {
     const updateSubpopulations = jest.fn();
+    const subpopulations = [specialSubpop, subpopulation];
 
-    renderComponent({
+    const { getByRole } = renderComponent({
       artifact: {
-        subpopulations: [specialSubpop, subpopulation]
+        subpopulations,
+        recommendations: [
+          { text: 'Talk to dr.', subpopulations: [{ subpopulationName: 'Subpopulation 1', uniqueId: 'foo123' }] } // uses a subpopulation
+        ]
       },
-      checkSubpopulationUsage,
+      subpopulations,
       updateSubpopulations
     });
 
-    userEvent.click(screen.getByRole('button', { name: 'delete subpopulation' }));
-
+    userEvent.click(getByRole('button', { name: 'delete Subpopulation' }));
     expect(updateSubpopulations).not.toHaveBeenCalled();
+
+    // Delete button on subpopulation is disabled
+    expect(getByRole('button', { name: 'delete Subpopulation' })).toBeDisabled();
+    // Title text field on subpopulation is disabled
+    expect(getByRole('textbox')).toBeDisabled();
   });
 });

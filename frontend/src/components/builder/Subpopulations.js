@@ -1,115 +1,135 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
-import pluralize from 'pluralize';
 import _ from 'lodash';
 
 import Subpopulation from './Subpopulation';
 import createTemplateInstance from 'utils/templates';
+import { getSubpopulationErrors, hasGroupNestedWarning, isSubpopulationUsed } from 'utils/warnings';
 
-export default class Subpopulations extends Component {
-  constructor(props) {
-    super(props);
+const TREE_NAME = 'subpopulations';
 
-    const operations = this.props.templates.find(g => g.name === 'Operations');
-    const andTemplate = operations.entries.find(e => e.name === 'And');
-    this.baseTemplate = andTemplate;
+const Subpopulations = ({
+  addInstance,
+  artifact,
+  baseElements,
+  deleteInstance,
+  editInstance,
+  getAllInstancesInAllTrees,
+  instanceNames,
+  isLoadingModifiers,
+  modifiersByInputType,
+  parameters,
+  subpopulations,
+  templates,
+  updateInstanceModifiers,
+  updateSubpopulations,
+  vsacApiKey
+}) => {
+  const operations = templates.find(g => g.name === 'Operations');
+  const andTemplate = operations.entries.find(e => e.name === 'And');
 
-    this.state = {
-      subpopulations: this.props.artifact[this.props.name].filter(sp => !sp.special), // Don't want to allow user interaction with the two default subpopulations added by the system
-      baseElements: this.props.artifact[this.props.name].filter(sp => !sp.special),
-      numOfSpecialSubpopulations: this.props.artifact[this.props.name].filter(sp => sp.special).length
-    };
-  }
+  const numOfSpecialSubpopulations = subpopulations.filter(s => s.special).length;
+  const allInstancesInAllTrees = getAllInstancesInAllTrees();
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    // eslint-disable-line camelcase
-    this.setState({
-      subpopulations: nextProps.artifact[this.props.name].filter(sp => !sp.special),
-      baseElements: nextProps.artifact[this.props.name],
-      numOfSpecialSubpopulations: nextProps.artifact[this.props.name].filter(sp => sp.special).length
-    });
-  }
-
-  addSubpopulation = () => {
-    const newSubpopulation = createTemplateInstance(this.baseTemplate);
+  const addSubpopulation = () => {
+    const newSubpopulation = createTemplateInstance(andTemplate);
     newSubpopulation.name = '';
     newSubpopulation.path = '';
-    // eslint-disable-next-line
-    newSubpopulation.subpopulationName = `${_.capitalize(pluralize.singular(this.props.name))} ${
-      this.state[this.props.name].length + 1
-    }`;
+    newSubpopulation.subpopulationName = `Subpopulation ${subpopulations.length - numOfSpecialSubpopulations + 1}`;
     newSubpopulation.expanded = true;
-    const newSubpopulations = this.props.artifact[this.props.name].concat([newSubpopulation]);
-    this.props.updateSubpopulations(newSubpopulations, this.props.name);
+    const newSubpopulations = subpopulations.concat([newSubpopulation]);
+
+    updateSubpopulations(newSubpopulations, TREE_NAME);
   };
 
-  setSubpopulationName = (name, uniqueId) => {
-    const newSubpopulations = _.cloneDeep(this.props.artifact[this.props.name]);
-    const subpopulationIndex = this.props.artifact[this.props.name].findIndex(sp => sp.uniqueId === uniqueId);
+  const setSubpopulationName = (name, uniqueId) => {
+    const newSubpopulations = _.cloneDeep(subpopulations);
+    const subpopulationIndex = subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
     newSubpopulations[subpopulationIndex].subpopulationName = name;
 
-    this.props.updateSubpopulations(newSubpopulations, this.props.name);
-    this.props.updateRecsSubpop(name, uniqueId);
+    updateSubpopulations(newSubpopulations, TREE_NAME);
   };
 
-  render() {
-    const newButtonLabel = `New ${pluralize.singular(this.props.name)}`;
+  const deleteSubpopulation = uniqueId => {
+    const newSubpopulations = _.cloneDeep(subpopulations);
+    const subpopulationIndex = newSubpopulations.findIndex(sp => sp.uniqueId === uniqueId);
+    newSubpopulations.splice(subpopulationIndex, 1);
 
-    return (
-      <div className="subpopulations">
-        {this.state.subpopulations.map((subpop, i) => (
-          <Subpopulation
-            key={subpop.uniqueId}
-            addInstance={this.props.addInstance}
-            artifact={this.props.artifact}
-            baseElements={this.props.baseElements}
-            checkSubpopulationUsage={this.props.checkSubpopulationUsage}
-            deleteInstance={this.props.deleteInstance}
-            editInstance={this.props.editInstance}
-            getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-            instanceNames={this.props.instanceNames}
-            isLoadingModifiers={this.props.isLoadingModifiers}
-            modifiersByInputType={this.props.modifiersByInputType}
-            name={this.props.name}
-            parameters={this.props.parameters}
-            setSubpopulationName={this.setSubpopulationName}
-            subpopulation={subpop}
-            subpopulationIndex={i + this.state.numOfSpecialSubpopulations} // System needs to know true index out of all subpopulations
-            templates={this.props.templates}
-            treeName={this.props.name}
-            updateInstanceModifiers={this.props.updateInstanceModifiers}
-            updateSubpopulations={this.props.updateSubpopulations}
-            validateReturnType={this.props.validateReturnType}
-            vsacApiKey={this.props.vsacApiKey}
-          />
-        ))}
+    // Update Subpopulations and update FHIRVersion because
+    // elements that required a specific FHIR version may have been removed.
+    // Because deleteInstance isn't called directly, we need to check here.
+    updateSubpopulations(newSubpopulations, TREE_NAME, true);
+  };
 
-        <Button color="primary" onClick={this.addSubpopulation} variant="contained">
-          {newButtonLabel}
-        </Button>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="subpopulations">
+      {subpopulations
+        .filter(s => !s.special)
+        .map((subpopulation, i) => {
+          const subpopulationAlerts = getSubpopulationErrors(subpopulation, artifact.recommendations, instanceNames);
+          const hasNestedWarning = hasGroupNestedWarning(
+            subpopulation.childInstances,
+            instanceNames,
+            baseElements,
+            parameters,
+            allInstancesInAllTrees,
+            true // validate
+          );
+          const hasErrors =
+            subpopulationAlerts.filter(a => a.showAlert && a.alertSeverity === 'error').length > 0 || hasNestedWarning;
+          return (
+            <Subpopulation
+              key={subpopulation.uniqueId}
+              addInstance={(name, template, path) => addInstance(name, template, path, subpopulation.uniqueId)} // Add elements inside subpopulations
+              alerts={subpopulationAlerts}
+              artifact={artifact}
+              baseElements={baseElements}
+              deleteInstance={(treeName, path, toAdd) => deleteInstance(treeName, path, toAdd, subpopulation.uniqueId)} // Delete elements inside subpopulations
+              disableDeleteSubpopulationElement={isSubpopulationUsed(artifact.recommendations, subpopulation.uniqueId)}
+              editInstance={(treeName, fields, path, editingConjunction) =>
+                editInstance(treeName, fields, path, editingConjunction, subpopulation.uniqueId)
+              } // Edit elements inside subpopulations
+              getAllInstancesInAllTrees={getAllInstancesInAllTrees}
+              handleDeleteSubpopulationElement={deleteSubpopulation}
+              handleUpdateSubpopulationElement={setSubpopulationName}
+              hasErrors={hasErrors}
+              instanceNames={instanceNames}
+              isLoadingModifiers={isLoadingModifiers}
+              modifiersByInputType={modifiersByInputType}
+              parameters={parameters}
+              subpopulation={subpopulation}
+              subpopulationIndex={i + numOfSpecialSubpopulations} // System needs to know true index out of all subpopulations
+              templates={templates}
+              updateInstanceModifiers={updateInstanceModifiers}
+              vsacApiKey={vsacApiKey}
+            />
+          );
+        })}
+
+      <Button color="primary" onClick={addSubpopulation} variant="contained">
+        New subpopulation
+      </Button>
+    </div>
+  );
+};
 
 Subpopulations.propTypes = {
   addInstance: PropTypes.func.isRequired,
   artifact: PropTypes.object.isRequired,
   baseElements: PropTypes.array.isRequired,
-  checkSubpopulationUsage: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
   modifiersByInputType: PropTypes.object.isRequired,
-  name: PropTypes.string.isRequired,
   parameters: PropTypes.array.isRequired,
+  subpopulations: PropTypes.array.isRequired,
   templates: PropTypes.array.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
-  updateRecsSubpop: PropTypes.func.isRequired,
   updateSubpopulations: PropTypes.func.isRequired,
-  validateReturnType: PropTypes.bool,
   vsacApiKey: PropTypes.string
 };
+
+export default Subpopulations;

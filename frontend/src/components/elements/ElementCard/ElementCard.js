@@ -10,6 +10,7 @@ import useStyles from './styles';
 const ElementCard = ({
   actions,
   alerts,
+  allowComment,
   allowIndent,
   allowOutdent,
   children,
@@ -24,9 +25,9 @@ const ElementCard = ({
   handleUpdateComment,
   handleUpdateTitleField,
   hasErrors,
+  indentParity,
   isBaseElement,
   label,
-  indentParity,
   setShowAllContent,
   showAllContent,
   titleField
@@ -52,6 +53,7 @@ const ElementCard = ({
       <CardHeader
         action={
           <ElementCardHeaderActions
+            allowComment={allowComment}
             allowIndent={allowIndent}
             allowOutdent={allowOutdent}
             disableDeleteMessage={disableDeleteMessage}
@@ -95,6 +97,7 @@ const ElementCard = ({
 ElementCard.propTypes = {
   actions: PropTypes.element,
   alerts: PropTypes.array,
+  allowComment: PropTypes.bool,
   allowIndent: PropTypes.bool,
   allowOutdent: PropTypes.bool,
   children: PropTypes.element.isRequired,
@@ -115,7 +118,6 @@ ElementCard.propTypes = {
   hasErrors: PropTypes.bool,
   indentParity: PropTypes.string,
   isBaseElement: PropTypes.bool,
-  isDisabled: PropTypes.bool,
   label: PropTypes.string.isRequired,
   setShowAllContent: PropTypes.func.isRequired,
   showAllContent: PropTypes.bool,

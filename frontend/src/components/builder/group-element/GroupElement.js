@@ -13,6 +13,7 @@ const GroupElement = ({
   allowOutdent,
   children,
   disable,
+  disableTitleField = false,
   elementUniqueId,
   groupInstance,
   handleAddElement,
@@ -22,13 +23,21 @@ const GroupElement = ({
   handleUpdateElement,
   hasErrors,
   indentParity,
+  isSubpopulation,
+  label = 'Group',
   root
 }) => {
   const artifact = useSelector(state => state.artifacts.artifact);
   const { baseElements } = artifact;
   const [showAllContent, setShowAllContent] = useState(true);
   const commentField = getFieldWithId(groupInstance.fields, 'comment');
-  const titleField = getFieldWithId(groupInstance.fields, 'element_name');
+  let titleField = getFieldWithId(groupInstance.fields, 'element_name');
+  if (isSubpopulation) {
+    titleField = { id: 'subpopulation_title', value: groupInstance.subpopulationName };
+  }
+  const disableDeleteMessage = isSubpopulation
+    ? 'To delete this subpopulation, remove all references to it.'
+    : 'To edit or delete this element, remove all references to the Base Element List.';
 
   if (root) {
     return (
@@ -48,17 +57,16 @@ const GroupElement = ({
   return (
     <ElementCard
       alerts={alerts}
+      allowComment={!isSubpopulation} // Subpopulations themselves cannot be commented on
       allowIndent={allowIndent}
       allowOutdent={allowOutdent}
       collapsedContent={<ExpressionPhrase closed instance={groupInstance} baseElements={baseElements} />}
       commentField={commentField}
-      disableDeleteMessage={
-        disable && 'To edit or delete this element, remove all references to the Base Element List.'
-      }
+      disableDeleteMessage={disable && disableDeleteMessage}
       disableIndentMessage={
         disable && 'To edit or delete this element, remove all references to the Base Element List.'
       }
-      disableTitleField={false}
+      disableTitleField={disableTitleField}
       handleDelete={handleDeleteElement}
       handleIndent={handleIndent}
       handleOutdent={handleOutdent}
@@ -67,7 +75,7 @@ const GroupElement = ({
       hasErrors={hasErrors}
       indentParity={indentParity}
       isBaseElement={false} // Groups will never be base element uses
-      label={'Group'}
+      label={label}
       setShowAllContent={setShowAllContent}
       showAllContent={showAllContent}
       titleField={titleField}
@@ -75,13 +83,16 @@ const GroupElement = ({
       <Stack>
         <ExpressionPhrase instance={groupInstance} baseElements={baseElements} />
         {children}
-        <ElementSelect
-          excludeListOperations
-          handleAddElement={handleAddElement}
-          indentParity={indentParity}
-          isDisabled={disable}
-          parentElementId={elementUniqueId}
-        />
+        {/* Subpopulations will just use the containing group's select - they don't need their own */}
+        {!isSubpopulation && (
+          <ElementSelect
+            excludeListOperations
+            handleAddElement={handleAddElement}
+            indentParity={indentParity}
+            isDisabled={disable}
+            parentElementId={elementUniqueId}
+          />
+        )}
       </Stack>
     </ElementCard>
   );
@@ -92,6 +103,7 @@ GroupElement.propTypes = {
   allowIndent: PropTypes.bool,
   allowOutdent: PropTypes.bool,
   disable: PropTypes.bool.isRequired,
+  disableTitleField: PropTypes.bool,
   elementUniqueId: PropTypes.string,
   groupInstance: PropTypes.object.isRequired,
   handleAddElement: PropTypes.func.isRequired,
@@ -101,6 +113,8 @@ GroupElement.propTypes = {
   handleUpdateElement: PropTypes.func.isRequired,
   hasErrors: PropTypes.bool.isRequired,
   indentParity: PropTypes.string,
+  isSubpopulation: PropTypes.bool,
+  label: PropTypes.string,
   root: PropTypes.bool.isRequired
 };
 

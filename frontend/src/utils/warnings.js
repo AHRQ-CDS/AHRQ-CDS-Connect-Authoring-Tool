@@ -191,6 +191,7 @@ export function validateElement(instance) {
   return null;
 }
 
+// If validateReturnType is null/undefined, it will validate the return type because null/undefined !== false
 export function hasReturnTypeError(startingReturnType, modifiers, validReturnType, validateReturnType) {
   const currentReturnType = getReturnType(startingReturnType, modifiers);
   return currentReturnType !== validReturnType && validateReturnType !== false;
@@ -260,6 +261,43 @@ export function hasGroupNestedWarning(
 export function hasInvalidListWarning(returnType) {
   return returnType.toLowerCase() === 'invalid';
 }
+
+export function isSubpopulationEmpty(subpopulation) {
+  return subpopulation.childInstances && subpopulation.childInstances.length < 1;
+}
+
+export function isSubpopulationUsed(recommendations, uniqueId) {
+  return recommendations.some(rec => rec.subpopulations.some(s => s.uniqueId === uniqueId));
+}
+
+// Get all errors on a top-level Subpopulation
+export const getSubpopulationErrors = (subpopulation, recommendations, instanceNames) => {
+  const doesHaveEmptySubpopulationWarning = isSubpopulationEmpty(subpopulation);
+  const doesHaveDuplicateName =
+    instanceNames.findIndex(
+      name => name.id !== subpopulation.uniqueId && name.name === subpopulation.subpopulationName
+    ) !== -1;
+  const doesHaveSubpopulationUsedAlert = isSubpopulationUsed(recommendations, subpopulation.uniqueId);
+  const subpopulationAlerts = [
+    {
+      alertSeverity: 'error',
+      alertMessage: 'Warning: This subpopulation needs at least one element.',
+      showAlert: doesHaveEmptySubpopulationWarning
+    },
+    {
+      alertSeverity: 'error',
+      alertMessage: 'Warning: Name already in use. Choose another name.',
+      showAlert: doesHaveDuplicateName
+    },
+    {
+      alertSeverity: 'info',
+      alertMessage: "Subpopulation name can't be changed while it is being used in a recommendation.",
+      showAlert: doesHaveSubpopulationUsedAlert
+    }
+  ];
+
+  return subpopulationAlerts;
+};
 
 // Get all errors on an element using the above util functions
 export const getElementErrors = (elementInstance, allInstancesInAllTrees, baseElements, instanceNames, parameters) => {

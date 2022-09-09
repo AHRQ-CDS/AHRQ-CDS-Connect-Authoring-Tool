@@ -113,7 +113,11 @@ export default class ListGroup extends Component {
       baseElement => baseElement.uniqueId === uniqueId
     );
     newBaseElementLists.splice(baseElementIndex, 1);
-    this.props.updateBaseElementLists(newBaseElementLists, 'baseElements');
+
+    // Update Base Elements and update FHIRVersion because
+    // elements that required a specific FHIR version may have been removed.
+    // Because deleteInstance isn't called directly, we need to check here.
+    this.props.updateBaseElementLists(newBaseElementLists, 'baseElements', true);
   };
 
   openConfirmDeleteModal = uniqueId => {
