@@ -17,7 +17,7 @@
     "express-session": "^1.15.6",
     "fs-extra": "^5.0.0",
     "glob": "^7.1.2",
-    "json5": "^2.2.0",
+    "json5": "^2.2.2",
     "lodash": "^4.17.21",
     "mongodb-migrations": "^0.8.5",
     "mongoose": "^5.13.13",
