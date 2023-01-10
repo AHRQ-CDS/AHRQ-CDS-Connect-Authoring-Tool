@@ -788,10 +788,10 @@ content-type@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/content-type/-/content-type-1.0.4.tgz#e138cc75e040c727b1966fe5e5f8c9aee256fe3b"
 
-convict@^6.0.1:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/convict/-/convict-6.2.0.tgz#d227aef6d77a4d518ca6a6a3b863bdfdb6dc5665"
-  integrity sha512-aCk1+VWt3TG6SJV59u+wwuza7lvtlJfj6zH/fmE1xzx5yZnNby1lPYkccq1mKaJJXHjk9cuVCFWVVIhbkpmwRw==
+convict@^6.2.4:
+  version "6.2.4"
+  resolved "https://registry.yarnpkg.com/convict/-/convict-6.2.4.tgz#be290672bf6397eec808d3b11fc5f71785b02a4b"
+  integrity sha512-qN60BAwdMVdofckX7AlohVJ2x9UvjTNoKVXCL2LxFk1l7757EJqf1nySdMkPQer0bt8kQ5lQiyZ9/2NvrFBuwQ==
   dependencies:
     lodash.clonedeep "^4.5.0"
     yargs-parser "^20.2.7"
