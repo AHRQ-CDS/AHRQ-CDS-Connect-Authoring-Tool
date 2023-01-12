@@ -33,7 +33,7 @@ describe('vsac/FHIRClient', () => {
     it('should get a value set by OID', () => {
       const [username, password] = ['test-user', 'test-pass'];
 
-      nock('https://cts.nlm.nih.gov').get('/fhir/r4/ValueSet/1234/$expand').reply(200, FHIRMocks.ValueSet);
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/1234/$expand').reply(200, FHIRMocks.ValueSet);
 
       // Invoke the request and verify the result
       const result = client.getValueSet('1234', username, password);
@@ -61,7 +61,7 @@ describe('vsac/FHIRClient', () => {
       const vsWithVersion = lodash.cloneDeep(FHIRMocks.ValueSet);
       vsWithVersion.id = '2468|13579';
 
-      nock('https://cts.nlm.nih.gov').get('/fhir/r4/ValueSet/2468/$expand').reply(200, vsWithVersion);
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/2468/$expand').reply(200, vsWithVersion);
 
       // Invoke the request and verify the result
       const result = client.getValueSet('2468', username, password);
@@ -89,7 +89,7 @@ describe('vsac/FHIRClient', () => {
       const [username, password] = ['test-user', 'test-pass'];
 
       nock('https://cts.nlm.nih.gov')
-        .get('/fhir/r4/CodeSystem/$lookup?code=1963-8&system=http://loinc.org')
+        .get('/fhir/CodeSystem/$lookup?code=1963-8&system=http://loinc.org')
         .reply(200, FHIRMocks.Code);
 
       // Invoke the request and verify the result
@@ -107,7 +107,7 @@ describe('vsac/FHIRClient', () => {
       const [username, password] = ['test-user', 'test-pass'];
 
       nock('https://cts.nlm.nih.gov')
-        .get('/fhir/r4/CodeSystem/$lookup?code=abcd&system=http://not-a-system.org')
+        .get('/fhir/CodeSystem/$lookup?code=abcd&system=http://not-a-system.org')
         .reply(404, FHIRMocks.Code);
       const result = client.getCode('abcd', 'http://not-a-system.org', username, password);
       return expect(result).to.be.rejectedWith(404);
@@ -116,7 +116,7 @@ describe('vsac/FHIRClient', () => {
 
   it('should send a 401 back to the client', () => {
     const [username, password] = ['bad-test-user', 'bad-test-pass'];
-    nock('https://cts.nlm.nih.gov').get('/fhir/r4/ValueSet/1234/$expand').reply(401, '');
+    nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/1234/$expand').reply(401, '');
     const result = client.getValueSet('1234', username, password);
     return expect(result).to.be.rejectedWith(401);
   });
@@ -168,7 +168,7 @@ describe('vsac/FHIRClient', () => {
   describe('#getOneValueSet', () => {
     it('should get a list of one valueset with good credentials', () => {
       const [username, password] = ['test-user', 'test-pass'];
-      nock('https://cts.nlm.nih.gov').get('/fhir/r4/ValueSet/2.16.840.1.113762.1.4.1034.65').reply(200, '');
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/2.16.840.1.113762.1.4.1034.65').reply(200, '');
       const result = client.getOneValueSet(username, password);
       // No data manipulation happens in this function. The request should succeed and return the result.
       return expect(result).to.eventually.be.fulfilled;
@@ -176,7 +176,7 @@ describe('vsac/FHIRClient', () => {
 
     it('should handle bad authentication and send 401 back', () => {
       const [username, password] = ['test-user', 'test-wrong-pass'];
-      nock('https://cts.nlm.nih.gov').get('/fhir/r4/ValueSet/2.16.840.1.113762.1.4.1034.65').reply(401, '');
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/2.16.840.1.113762.1.4.1034.65').reply(401, '');
       const result = client.getOneValueSet(username, password);
       // No data manipulation happens in this function. The request should success and return the result.
       return expect(result).to.be.rejectedWith(/401/);
