@@ -173,7 +173,7 @@ const config = convict({
   terminologyService: {
     doc: 'Terminology Service Endpoint URL',
     format: 'String',
-    default: 'https://cts.nlm.nih.gov/fhir/r4',
+    default: 'https://cts.nlm.nih.gov/fhir',
     env: 'TERMINOLOGY_ENDPOINT'
   }
 });
