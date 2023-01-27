@@ -9,11 +9,15 @@
     align-items: center;
     margin: 1em 4em;
 
-    @include respond-to('mobile') { flex-direction: column; }
+    @include respond-to("mobile") {
+      flex-direction: column;
+    }
   }
 
   &__column:first-child {
-    @include respond-to('mobile') { margin-bottom: 2em; }
+    @include respond-to("mobile") {
+      margin-bottom: 2em;
+    }
   }
 
   &__header {
@@ -39,14 +43,22 @@
   }
 
   .footer-wide {
-    @include respond-to('mobile') { display: none; }
+    @include respond-to("mobile") {
+      display: none;
+    }
   }
 
   .footer-mobile {
-    @include respond-to('tablet') { display: none; }
+    @include respond-to("tablet") {
+      display: none;
+    }
 
-    @include respond-to('desktop') { display: none; }
+    @include respond-to("desktop") {
+      display: none;
+    }
 
-    @include respond-to('desktop-wide') { display: none; }
+    @include respond-to("desktop-wide") {
+      display: none;
+    }
   }
 }

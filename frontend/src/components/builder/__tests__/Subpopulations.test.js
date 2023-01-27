@@ -161,7 +161,7 @@ describe('<Subpopulations />', () => {
       updateSubpopulations
     });
 
-    userEvent.click(getByRole('button', { name: 'delete Subpopulation' }));
+    userEvent.click(getByRole('button', { name: 'delete Subpopulation' }), undefined, { skipPointerEventsCheck: true });
     expect(updateSubpopulations).not.toHaveBeenCalled();
 
     // Delete button on subpopulation is disabled

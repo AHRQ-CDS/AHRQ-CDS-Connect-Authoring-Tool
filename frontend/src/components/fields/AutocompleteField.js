@@ -8,10 +8,10 @@ import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 const FormikSelect = ({ field: { name, value, onChange }, form: { setFieldValue }, options }) => {
-  const handleChange = useCallback((event, option) => setFieldValue(name, option?.value || null), [
-    name,
-    setFieldValue
-  ]);
+  const handleChange = useCallback(
+    (event, option) => setFieldValue(name, option?.value || null),
+    [name, setFieldValue]
+  );
   const selectedOption = options.find(option => option.value === value) || null;
   const fieldStyles = useFieldStyles();
 

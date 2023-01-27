@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@mui/material';
-import { TimePicker as MuiTimePicker } from '@mui/lab';
+import { TimePicker as MuiTimePicker } from '@mui/x-date-pickers';
 import { Schedule as TimeIcon } from '@mui/icons-material';
 
 const TimePicker = ({ onChange, value }) => (

@@ -9,7 +9,7 @@ const archiver = require('archiver');
 const path = require('path');
 const glob = require('glob');
 const request = require('request');
-const Busboy = require('busboy');
+const busboy = require('busboy');
 const { exportCQL, importCQL, RawCQL } = require('cql-merge');
 
 const queryResources = {
@@ -1759,7 +1759,7 @@ function splitELM(body, contentType, callback /* (error, elmFiles) */) {
 
   let bb;
   try {
-    bb = new Busboy({ headers: { 'content-type': contentType } });
+    bb = busboy({ headers: { 'content-type': contentType } });
   } catch (err) {
     callback(err);
     return;

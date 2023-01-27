@@ -32,8 +32,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -58,8 +57,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -84,8 +82,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -110,8 +107,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -136,8 +132,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -162,8 +157,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><div><p>Diabetes GROUPING</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes</h2><div><p>Diabetes GROUPING</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -189,8 +183,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Codes</h2><div><p>Value set to identify diabetes</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Codes</h2><div><p>Value set to identify diabetes</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -216,8 +209,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Diagnoses</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Diagnoses</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -242,8 +234,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Diagnosis</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Diagnosis</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -268,8 +259,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Dx</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Dx</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -294,8 +284,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Dx for Q measure 001 Registry</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Dx for Q measure 001 Registry</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -320,8 +309,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Grouped</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Grouped</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -346,8 +334,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes ICD10</h2><div><p>Developed by OFMQ for immunization measures</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes ICD10</h2><div><p>Developed by OFMQ for immunization measures</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -373,8 +360,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes ICD10 ACO</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes ICD10 ACO</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -399,8 +385,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes ICD10CM ICD9CM</h2><div><p>The purpose of this value set is to create a harmonized group value set of ICD9CM and ICD10CM codes to inform measures in multiple quality program such as MIPS and MSSP ACO.</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes ICD10CM ICD9CM</h2><div><p>The purpose of this value set is to create a harmonized group value set of ICD9CM and ICD10CM codes to inform measures in multiple quality program such as MIPS and MSSP ACO.</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -427,8 +412,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes ICD9</h2><div><p>Developed by OFMQ for Immunization measures</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes ICD9</h2><div><p>Developed by OFMQ for Immunization measures</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -454,8 +438,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes ICD9CM ACO</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes ICD9CM ACO</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -480,8 +463,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Long Term Complications</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Long Term Complications</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -506,8 +488,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Management Training</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Management Training</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -532,8 +513,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Medical Supplies (insulin syringes only)</h2><div><p>Blood-glucose meters and sensors\n126958, 412956, 412959,\n637321, 668291, 668370,\n686655, 692383, 748611,\n880998, 881056\n751128\ncannot be found</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Medical Supplies (insulin syringes only)</h2><div><p>Blood-glucose meters and sensors\n126958, 412956, 412959,\n637321, 668291, 668370,\n686655, 692383, 748611,\n880998, 881056\n751128\ncannot be found</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -560,8 +540,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitius</h2><div><p>Patient advisory</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitius</h2><div><p>Patient advisory</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -587,8 +566,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -613,8 +591,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -639,8 +616,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus</h2><div><p>dfgdfgfgfgfg</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus</h2><div><p>dfgdfgfgfgfg</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -666,8 +642,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus</h2><div><p>OP-13 is the measure ID associated with the codes.</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus</h2><div><p>OP-13 is the measure ID associated with the codes.</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -693,8 +668,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus (ICD 10)</h2><div><p>Need to identify diabetes mellitus patients in the hospital.</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus (ICD 10)</h2><div><p>Need to identify diabetes mellitus patients in the hospital.</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -720,8 +694,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus (ICD 9)</h2><div><p>Need to identify patient that are diagnosed with diabetes mellitus.</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus (ICD 9)</h2><div><p>Need to identify patient that are diagnosed with diabetes mellitus.</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -747,8 +720,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus (SNOMED)</h2><div><p>Identification of patients with diabetes mellitus</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus (SNOMED)</h2><div><p>Identification of patients with diabetes mellitus</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -774,8 +746,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus, poorly controlled</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus, poorly controlled</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -800,8 +771,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus, poorly controlled</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Mellitus, poorly controlled</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -826,8 +796,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes SNOMED</h2><div><p>Developed by OFMQ for immunization measures</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes SNOMED</h2><div><p>Developed by OFMQ for immunization measures</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -853,8 +822,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Self Management Training Services</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Self Management Training Services</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -879,8 +847,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Short Term Complications</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Short Term Complications</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -905,8 +872,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Visit</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes Visit</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -931,8 +897,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes group</h2><div><p>Developed by OFMQ for immunization measures</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes group</h2><div><p>Developed by OFMQ for immunization measures</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -958,8 +923,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes management encounter</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes management encounter</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -984,8 +948,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes mellitus</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes mellitus</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1010,8 +973,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes mellitus</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes mellitus</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1036,8 +998,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes with Long Term Complications</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes with Long Term Complications</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1062,8 +1023,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes_ICD10</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes_ICD10</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1088,8 +1048,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes_ICD9</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes_ICD9</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1114,8 +1073,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes_SNOMED</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Diabetes_SNOMED</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1140,8 +1098,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Gestational Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Gestational Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1166,8 +1123,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Gestational Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Gestational Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1192,8 +1148,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Gestational Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Gestational Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1218,8 +1173,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>NQF-064 Diabetes SNOMED-CT</h2><div><p>SNOMED-CT</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>NQF-064 Diabetes SNOMED-CT</h2><div><p>SNOMED-CT</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1245,8 +1199,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>NQF064- Diabetes GRP ICD-10</h2><div><p>&quot;diabetes&quot; ICD-10-CM code list</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>NQF064- Diabetes GRP ICD-10</h2><div><p>&quot;diabetes&quot; ICD-10-CM code list</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1272,8 +1225,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Other Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Other Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1298,8 +1250,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Other Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Other Diabetes</h2><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1324,8 +1275,7 @@ let Search = {
         },
         text: {
           status: 'generated',
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Patient with Diabetes and Most Recent LDL Cholesterol Lab Result &lt; 70 mg/dL and Not Taking Statin Therapy</h2><div><p>This value set created to define equivalent codes for administrative billing / quality data codes representing the fasting or direct LDL-C laboratory test where the most recent result for a patient with diabetes is &lt; 70 mg/dL and the patient is not taking a statin.</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"><h2>Patient with Diabetes and Most Recent LDL Cholesterol Lab Result &lt; 70 mg/dL and Not Taking Statin Therapy</h2><div><p>This value set created to define equivalent codes for administrative billing / quality data codes representing the fasting or direct LDL-C laboratory test where the most recent result for a patient with diabetes is &lt; 70 mg/dL and the patient is not taking a statin.</p>\n</div><p>This value set includes codes from the following code systems:</p><ul/></div>'
         },
         identifier: [
           {
@@ -1334,8 +1284,7 @@ let Search = {
           }
         ],
         version: 'Draft',
-        name:
-          'Patient with Diabetes and Most Recent LDL Cholesterol Lab Result < 70 mg/dL and Not Taking Statin Therapy',
+        name: 'Patient with Diabetes and Most Recent LDL Cholesterol Lab Result < 70 mg/dL and Not Taking Statin Therapy',
         status: 'draft',
         publisher: 'McKesson Steward',
         description:

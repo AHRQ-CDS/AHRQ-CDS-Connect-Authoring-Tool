@@ -1,7 +1,7 @@
 .footer {
   position: relative;
   padding-top: 0;
-  font-family: 'CartoGothicStdBook', sans-serif;
+  font-family: CartoGothicStdBook, sans-serif;
   font-weight: bold;
   font-size: 13.44px;
 
@@ -30,6 +30,7 @@
       background: linear-gradient(to bottom, $footer-background 0%, $footer-background-light 100%);
       border-left: 1px solid $footer-background;
       border-right: 1px solid $footer-background;
+
       // min-height: 390px;
 
       li {
@@ -49,7 +50,9 @@
         -webkit-font-smoothing: auto;
       }
 
-      &-hhs { border-bottom: 1px solid $footer-background; }
+      &-hhs {
+        border-bottom: 1px solid $footer-background;
+      }
 
       &-ahrq {
         border-top: 1px solid $footer-background-light;
@@ -60,7 +63,10 @@
       a {
         text-decoration: none;
         color: $white;
-        &:hover { text-decoration: underline; }
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
 
@@ -79,23 +85,31 @@
       a {
         text-decoration: none;
         color: $white;
-        &:hover { text-decoration: underline; }
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
 
       .link-header {
-        font-family: 'Code-Pro-LC', sans-serif;
+        font-family: Code-Pro-LC, sans-serif;
         margin: 20px 0 10px;
         text-transform: uppercase;
         font-size: 16px;
         line-height: 18px;
-        img { padding-right: 5px; }
+
+        img {
+          padding-right: 5px;
+        }
       }
     }
   }
 
   // ----------------------- FOOTER-BOTTOM --------------------------------- //
   &__bottom {
-    &-wrapper { @include componentWidth; }
+    &-wrapper {
+      @include componentWidth;
+    }
 
     background: $ahrq-color-background-light;
     padding: 20px 0 6px;
@@ -139,7 +153,7 @@
         .social-title {
           text-transform: uppercase;
           color: $gray-dark;
-          font: 18px 'Code-Pro', sans-serif;
+          font: 18px Code-Pro, sans-serif;
           float: left;
           padding-right: 4px;
           text-align: right;
@@ -149,10 +163,22 @@
           line-height: 32px;
           height: 32px;
           width: 32px;
-          &.facebook { background-color: rgb(59, 89, 152); }
-          &.twitter { background-color: rgb(29, 161, 242); }
-          &.youtube { background-color: rgb(205, 32, 31); }
-          &.linkedin { background-color: rgb(0, 119, 181); }
+
+          &.facebook {
+            background-color: rgb(59 89 152);
+          }
+
+          &.twitter {
+            background-color: rgb(29 161 242);
+          }
+
+          &.youtube {
+            background-color: rgb(205 32 31);
+          }
+
+          &.linkedin {
+            background-color: rgb(0 119 181);
+          }
         }
 
         .at-icon {

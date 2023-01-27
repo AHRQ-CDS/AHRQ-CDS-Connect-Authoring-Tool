@@ -129,7 +129,7 @@ describe('<Parameters />', () => {
     const newParameters = _.cloneDeep(parameters);
     renderComponent({ handleUpdateParameters });
 
-    userEvent.click(screen.getByRole('button', { name: 'True' }));
+    userEvent.click(screen.getByRole('button', { name: 'Boolean value True' }));
     userEvent.click(screen.getByRole('option', { name: 'False' }));
 
     newParameters[0].value = 'false';

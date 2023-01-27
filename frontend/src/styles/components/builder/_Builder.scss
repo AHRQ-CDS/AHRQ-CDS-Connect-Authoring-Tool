@@ -45,7 +45,7 @@
       margin-bottom: 5px;
     }
 
-    [role='status'] {
+    [role="status"] {
       height: 30px;
       color: $white;
       font-style: italic;
@@ -58,7 +58,7 @@
   }
 
   .react-tabs {
-    [role='tablist'] {
+    [role="tablist"] {
       display: flex;
       justify-content: space-between;
       margin: 0 -9999rem;
@@ -70,7 +70,7 @@
       z-index: 2;
     }
 
-    [role='tab'] {
+    [role="tab"] {
       align-items: center;
       border-radius: $border-radius $border-radius 0 0;
       cursor: pointer;
@@ -83,21 +83,21 @@
       text-align: center;
       white-space: nowrap;
 
-      @include respond-to('1440px') {
+      @include respond-to("1440px") {
         font-size: 1em;
       }
 
-      @include respond-to('1200px') {
+      @include respond-to("1200px") {
         font-size: 0.85em;
       }
 
       font-size: 0.72em;
 
-      &[aria-selected='true'] {
+      &[aria-selected="true"] {
         background-color: $white;
       }
 
-      &[aria-selected='false'] {
+      &[aria-selected="false"] {
         background-color: $blue;
         color: $white;
 

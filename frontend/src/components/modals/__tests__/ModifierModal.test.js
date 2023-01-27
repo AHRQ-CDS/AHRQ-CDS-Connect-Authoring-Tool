@@ -118,8 +118,7 @@ describe('<ModifierModal />', () => {
             },
             {
               id: 'predefinedConceptComparisonSingular',
-              note:
-                'Used for single (NamedTypeSpecifier) System.Concept (FHIR.ValueCodeableConcept) and System.Code (FHIR.Coding)',
+              note: 'Used for single (NamedTypeSpecifier) System.Concept (FHIR.ValueCodeableConcept) and System.Code (FHIR.Coding)',
               name: 'Matches Standard Code in',
               description: 'Check to see if a predefined concept matches an element in a list of predefined concepts',
               operatorTemplate: 'predefinedConceptComparisonSingular',
@@ -292,7 +291,9 @@ describe('<ModifierModal />', () => {
         screen.getByLabelText('Cannot remove expression because return type does not match next input type.')
       ).toBeInTheDocument();
 
-      userEvent.click(screen.queryAllByRole('button', { name: /delete modifier/i })[0]);
+      userEvent.click(screen.queryAllByRole('button', { name: /delete modifier/i })[0], undefined, {
+        skipPointerEventsCheck: true
+      });
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(2);
     });
 
@@ -469,13 +470,13 @@ describe('<ModifierModal />', () => {
       const clinicalStatusOption = await screen.findByRole('option', { name: 'Clinical Status' });
       userEvent.click(clinicalStatusOption);
       await waitForElementToBeRemoved(clinicalStatusOption);
-      expect(screen.queryAllByRole('button', { name: /^is null$/i })).toHaveLength(0);
+      expect(screen.queryAllByRole('button', { name: /^operator is null$/i })).toHaveLength(0);
 
       userEvent.click(await screen.findByTestId('operator-select'));
       const isNullOption = screen.getByRole('option', { name: /^is null$/i });
       userEvent.click(isNullOption);
       await waitForElementToBeRemoved(isNullOption);
-      expect(screen.getByRole('button', { name: /^is null$/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /^operator is null$/i })).toBeInTheDocument();
     });
 
     it('includes only predefined code operators when predefined codes are required and custom codes not allowed', async () => {

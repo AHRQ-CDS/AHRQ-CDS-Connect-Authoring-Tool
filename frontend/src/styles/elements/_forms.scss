@@ -6,28 +6,42 @@
   &__long {
     width: 32em;
 
-    @include respond-to(tablet) { width: 24em; }
+    @include respond-to(tablet) {
+      width: 24em;
+    }
 
-    @include respond-to(mobile) { width: 12em; }
+    @include respond-to(mobile) {
+      width: 12em;
+    }
   }
 
   &__short {
     width: 6em;
 
-    @include respond-to(tablet) { width: 4em; }
+    @include respond-to(tablet) {
+      width: 4em;
+    }
 
-    @include respond-to(mobile) { width: 3em; }
+    @include respond-to(mobile) {
+      width: 3em;
+    }
   }
 }
 
 // ------------------------- FORM GROUP ------------------------------------ //
 
 .form__group {
-  &-inline { display: inline-block; }
+  &-inline {
+    display: inline-block;
+  }
 
-  label { margin: 0; }
+  label {
+    margin: 0;
+  }
 
-  .form__caption { font-size: 0.9em; }
+  .form__caption {
+    font-size: 0.9em;
+  }
 
   > span {
     font-size: 0.8em;
@@ -100,7 +114,7 @@
 
 .html-control_indicator::after {
   box-sizing: unset;
-  content: '';
+  content: "";
   position: absolute;
   display: none;
 }

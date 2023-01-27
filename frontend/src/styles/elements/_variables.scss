@@ -1,4 +1,6 @@
-//-------------------------- Colors -----------------------------------------//
+@use "sass:color";
+
+// -------------------------- Colors -----------------------------------------//
 // accessible foreground/background combinations include:
 //   - $black on $gray-light, $gray-lighter, $white
 //   - $white on $black, $gray-dark, $gray, $blue-dark, $blue
@@ -21,8 +23,8 @@ $light-blue-link: #84b9ff;
 $red-light: #e1756a;
 $red: #961328;
 $green: #41c682;
-$gray-with-opacity: rgba(20, 37, 54, 0.9);
-$white-with-opacity: rgba(255, 255, 255, 0.5);
+$gray-with-opacity: rgb(20 37 54 / 90%);
+$white-with-opacity: rgb(255 255 255 / 50%);
 
 // ahrq colors
 $ahrq-color-background-light-gradient: -webkit-linear-gradient(top, #d1d1d1 0%, #fff 100%);
@@ -47,7 +49,7 @@ $home-yellow: #b48e43;
 $home-gray: #646974;
 
 // border colors
-$border-color: darken($gray-lighter, 10%);
+$border-color: color.adjust($gray-lighter, $lightness: -10%);
 
 // background colors
 $body-bg: $white;
@@ -59,17 +61,14 @@ $default-button-text-color: $blue;
 $default-button-bg-color: $gray-lightest;
 $default-button-border-color: $gray-lightest;
 $default-button-border-hover-color: $blue;
-
 $primary-button-text-color: $white;
 $primary-button-bg-color: $blue;
 $primary-button-border-color: $blue;
 $primary-button-border-hover-color: $blue;
-
 $secondary-button-text-color: $blue;
 $secondary-button-bg-color: $white;
 $secondary-button-border-color: $white;
 $secondary-button-border-hover-color: $blue;
-
 $disabled-button-text-color: $gray-light;
 $disabled-button-bg-color: $gray-lighter;
 $disabled-button-border-color: $gray-lighter;
@@ -78,7 +77,7 @@ $disabled-button-border-hover-color: $gray-lighter;
 // form colors
 $form-input-placeholder-color: $gray-contrast;
 $form-validation-success-color: shade($blue, 60%);
-$form-validation-error-color: darken($red, 20%);
+$form-validation-error-color: color.adjust($red, $lightness: -20%);
 
 // nav colors
 $navbar-bg-color: #1e2f40;
@@ -97,47 +96,44 @@ $footer-background-gradient-1: linear-gradient(
 );
 $footer-links: #6c1f7e;
 
-//-------------------------- Borders ----------------------------------------//
+// -------------------------- Borders ----------------------------------------//
 $border-radius: 0.2em;
 $border-width: 0.1em;
 $border-global: $border-width solid $border-color;
 
-//-------------------------- Spacing ----------------------------------------//
+// -------------------------- Spacing ----------------------------------------//
 $global-padding: 30px 0;
 
-//-------------------------- Box Shadows ------------------------------------//
+// -------------------------- Box Shadows ------------------------------------//
 $box-shadow: 1px 1px 1px 0 fade-out($black, 0.9);
 $box-shadow-inset: inset 0 1px 2px 0 fade-out($black, 0.9);
 
-//-------------------------- Fonts ------------------------------------------//
+// -------------------------- Fonts ------------------------------------------//
 $font-weight-regular: 400;
 $font-weight-bold: 500;
 
 // ------------------------- PATHS ----------------------------------------- //
-$icon-font-path: '/assets/bootstrap/';
+$icon-font-path: "/assets/bootstrap/";
 
 // ------------------------- BOOTSTRAP VARIABLES --------------------------- //
 $navbar-height: 80px;
 $panel-border-radius: 0;
 $border-radius-large: 0;
 $headings-font-weight: 200;
-
 $screen-xs: 480px;
 $screen-sm: 768px;
 $screen-md: 992px;
 $screen-lg: 1200px;
-
 $container-sm: $screen-sm;
 $container-md: $screen-md;
 $container-lg: $screen-lg;
-
 $grid-float-breakpoint: $screen-md;
 $grid-gutter-width: 30px;
 $container-tablet: $screen-sm + $grid-gutter-width;
 $container-desktop: $screen-md + $grid-gutter-width;
 $container-large-desktop: $screen-lg + $grid-gutter-width;
 
-//------------------------ Media Queries ------------------------------------//
+// ------------------------ Media Queries ------------------------------------//
 
 $break-mobile: $screen-sm - 1; // mobile and tablet-portrait
 $break-tablet: $screen-md - 1; // tablet-landscape
@@ -165,7 +161,7 @@ $break-desktop: $screen-lg - 1; // desktop-regular (> desktop-wide)
       @content;
     }
   } @else if $media == non-handheld {
-    @media only screen and (min-width: $break-tablet +1) {
+    @media only screen and (min-width: $break-tablet + 1) {
       @content;
     }
   } @else {

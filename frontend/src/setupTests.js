@@ -5,5 +5,5 @@ import axios from 'axios';
 // Running inside a container in the CI environment can be a particular problem.
 jest.setTimeout(60000);
 
-axios.defaults.adapter = require('axios/lib/adapters/http');
-axios.defaults.host = 'http://localhost';
+axios.defaults.adapter = 'http';
+axios.defaults.baseURL = 'http://localhost';

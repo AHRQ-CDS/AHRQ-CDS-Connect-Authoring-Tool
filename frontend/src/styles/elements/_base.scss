@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // default styling for all elements
 
 html {
@@ -20,7 +22,7 @@ body {
 body {
   background: $body-bg;
   overflow-x: hidden;
-  color: darken($gray, 10%);
+  color: color.adjust($gray, $lightness: -10%);
 }
 
 main {
@@ -34,7 +36,9 @@ main {
   }
 }
 
-label { margin-bottom: 0; }
+label {
+  margin-bottom: 0;
+}
 
 .label {
   font-weight: bold;
@@ -72,7 +76,7 @@ table {
   }
 }
 
-a.light-link, {
+a.light-link {
   color: $light-blue-link;
 
   &:hover,
@@ -89,7 +93,7 @@ a {
   &:hover,
   &:focus,
   &:active {
-    color: darken($blue-link, 15%);
+    color: color.adjust($blue-link, $lightness: -15%);
   }
 }
 
@@ -116,7 +120,7 @@ h6 {
   display: inline-block;
   color: $red;
   font-size: 0.8em;
-  background-color: lighten($red, 58%);
+  background-color: color.adjust($red, $lightness: 58%);
   padding: 10px;
   margin: 10px 0;
 
@@ -133,7 +137,7 @@ h6 {
 .notification {
   color: $blue;
   font-size: 0.8em;
-  background-color: lighten($blue-light, 35%);
+  background-color: color.adjust($blue-light, $lightness: 35%);
   padding: 10px;
   margin: 10px;
 
@@ -152,12 +156,16 @@ h6 {
 }
 
 .Select .Select-placeholder {
-  color: lighten($gray, 15%) !important;
+  color: color.adjust($gray, $lightness: 15%) !important;
 }
 
-.bold { font-weight: bold; }
+.bold {
+  font-weight: bold;
+}
 
-.align-right { text-align: right; }
+.align-right {
+  text-align: right;
+}
 
 .form-control::placeholder {
   color: $gray-contrast;

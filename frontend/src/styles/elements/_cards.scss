@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .card-group {
   flex-flow: column;
   border-radius: 0.2em;
@@ -161,12 +163,12 @@
     }
 
     &.base-element {
-      background-color: lighten($blue-light, 40%);
-      border-color: lighten($blue-light, 20%);
+      background-color: color.adjust($blue-light, $lightness: 40%);
+      border-color: color.adjust($blue-light, $lightness: 20%);
 
       .card-element__body,
       .card-element__footer {
-        border-color: lighten($blue-light, 20%);
+        border-color: color.adjust($blue-light, $lightness: 20%);
       }
     }
 
@@ -212,7 +214,7 @@
     margin: 20px 0;
     border: 0.1em solid $border-color;
     border-radius: 0.2em;
-    box-shadow: 1px 1px 1px 0 rgba(21, 21, 21, 0.1);
+    box-shadow: 1px 1px 1px 0 rgb(21 21 21 / 10%);
     min-width: 200px;
   }
 }

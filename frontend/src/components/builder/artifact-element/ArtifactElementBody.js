@@ -148,16 +148,16 @@ const ArtifactElementBody = ({
       )}
 
       {hasBaseElementLinks(elementInstance, baseElements) &&
-        [
-          ...new Set(baseElements.find(baseElement => baseElement.uniqueId === elementInstance.uniqueId).usedBy)
-        ].map((link, index) => (
-          <ReferenceTemplate
-            key={`standalone-${link}-${index}`}
-            elementNames={instanceNames}
-            referenceInstanceTab={getInstanceById(allInstancesInAllTrees, link).tab}
-            referenceField={{ id: 'baseElementUse', value: { id: link } }}
-          />
-        ))}
+        [...new Set(baseElements.find(baseElement => baseElement.uniqueId === elementInstance.uniqueId).usedBy)].map(
+          (link, index) => (
+            <ReferenceTemplate
+              key={`standalone-${link}-${index}`}
+              elementNames={instanceNames}
+              referenceInstanceTab={getInstanceById(allInstancesInAllTrees, link).tab}
+              referenceField={{ id: 'baseElementUse', value: { id: link } }}
+            />
+          )
+        )}
 
       {elementInstance.modifiers?.length > 0 && (
         <ModifiersTemplate

@@ -42,7 +42,7 @@ const ValueSetSearchResultsTable = ({ keyword, setSearchCount, setSelectedValueS
 
   return (
     <>
-      {error && <Alert severity="error">{error}</Alert>}
+      {error && <Alert severity="error">{error.message}</Alert>}
       {isLoading && <CircularProgress />}
 
       {isSuccess && (

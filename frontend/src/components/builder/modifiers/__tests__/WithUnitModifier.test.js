@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, within } from 'utils/test-utils';
+import { fireEvent, render, screen } from 'utils/test-utils';
 import WithUnitModifier from '../WithUnitModifier';
 
 describe('<WithUnitModifier />', () => {
@@ -11,13 +11,12 @@ describe('<WithUnitModifier />', () => {
     renderComponent({ handleUpdateModifier });
 
     const autocomplete = screen.getByRole('combobox');
-    const input = within(autocomplete).getByRole('textbox');
 
     autocomplete.focus();
-    fireEvent.change(input, { target: { value: 'mg/dL' } });
+    fireEvent.change(autocomplete, { target: { value: 'mg/dL' } });
     fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
     fireEvent.keyDown(autocomplete, { key: 'Enter' });
 
-    expect(input.value).toEqual('mg/dL');
+    expect(autocomplete.value).toEqual('mg/dL');
   });
 });

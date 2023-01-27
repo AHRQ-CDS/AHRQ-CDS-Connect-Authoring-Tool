@@ -12,7 +12,7 @@ import {
 } from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { UncontrolledTooltip } from 'reactstrap';
+import { Tooltip } from 'components/elements';
 import clsx from 'clsx';
 import _ from 'lodash';
 
@@ -464,22 +464,18 @@ export default class ListGroup extends Component {
               </IconButton>
 
               <span id={`deletebutton-${instance.uniqueId}`}>
-                <IconButton
-                  aria-label="remove base element list"
-                  color="primary"
-                  disabled={baseElementListUsed}
-                  onClick={() => this.openConfirmDeleteModal(instance.uniqueId)}
-                  size="large"
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
+                <Tooltip placement="left" title={'To delete this Base Element List, remove all references to it.'}>
+                  <IconButton
+                    aria-label="remove base element list"
+                    color="primary"
+                    disabled={baseElementListUsed}
+                    onClick={() => this.openConfirmDeleteModal(instance.uniqueId)}
+                    size="large"
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
               </span>
-
-              {baseElementListUsed && (
-                <UncontrolledTooltip target={`deletebutton-${instance.uniqueId}`} placement="left">
-                  To delete this Base Element List, remove all references to it.
-                </UncontrolledTooltip>
-              )}
             </div>
           </div>
 

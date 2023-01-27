@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import withGracefulUnmount from 'react-graceful-unmount';
 import { connect, useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
 import { bindActionCreators } from 'redux';
@@ -884,4 +883,4 @@ const BuilderWithQuery = props => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withGracefulUnmount(BuilderWithQuery));
+export default connect(mapStateToProps, mapDispatchToProps)(BuilderWithQuery);

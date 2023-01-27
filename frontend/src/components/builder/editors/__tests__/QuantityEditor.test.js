@@ -56,7 +56,7 @@ describe('<QuantityEditor />', () => {
         value: { quantity: '1.0', unit: '', str: `1.0 '1'` }
       });
 
-      const unitAutocomplete = screen.getByRole('textbox', { name: 'Unit' });
+      const unitAutocomplete = screen.getByRole('combobox', { name: 'Unit' });
       userEvent.click(unitAutocomplete);
       fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
       userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
@@ -132,7 +132,7 @@ describe('<QuantityEditor />', () => {
         value: { firstQuantity: '1.0', secondQuantity: null, unit: '', str: `Interval[1.0 '1',null]` }
       });
 
-      const unitAutocomplete = screen.getByRole('textbox', { name: 'Unit' });
+      const unitAutocomplete = screen.getByRole('combobox', { name: 'Unit' });
       userEvent.click(unitAutocomplete);
       fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
       userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
@@ -187,7 +187,7 @@ describe('<QuantityEditor />', () => {
         value: { firstQuantity: null, secondQuantity: '1.0', unit: '', str: `Interval[null,1.0 '1']` }
       });
 
-      const unitAutocomplete = screen.getByRole('textbox', { name: 'Unit' });
+      const unitAutocomplete = screen.getByRole('combobox', { name: 'Unit' });
       userEvent.click(unitAutocomplete);
       fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
       userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
@@ -214,7 +214,7 @@ describe('<QuantityEditor />', () => {
         value: { firstQuantity: '0.0', secondQuantity: '1.0', unit: '', str: `Interval[0.0 '1',1.0 '1']` }
       });
 
-      const unitAutocomplete = screen.getByRole('textbox', { name: 'Unit' });
+      const unitAutocomplete = screen.getByRole('combobox', { name: 'Unit' });
       userEvent.click(unitAutocomplete);
       fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
       userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));

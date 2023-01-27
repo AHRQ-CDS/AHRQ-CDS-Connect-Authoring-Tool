@@ -23,33 +23,33 @@ For specific development details of each component, including configuration, see
 
 ### Prerequisites
 
-First, ensure you have [Node.js LTS](https://nodejs.org/), [Yarn](https://yarnpkg.com/), and [MongoDB](https://www.mongodb.com/download-center/community) installed. The CDS Authoring Tool is tested using MongoDB 4.4.x, but later versions are expected to work.
+First, ensure you have [Node.js LTS](https://nodejs.org/) and [MongoDB](https://www.mongodb.com/download-center/community) installed. The CDS Authoring Tool is tested using MongoDB 4.4.x, but later versions are expected to work.
 
 ### Install Node Foreman
 
 To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode. To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman).
 
 ```bash
-yarn global add foreman
+npm install -g foreman
 ```
 
 ### Install Dependencies
 
-Each of the subprojects (_api_ and _frontend_) must have the dependencies installed via _yarn_. This can be done as follows:
+Each of the subprojects (_api_ and _frontend_) must have the dependencies installed via _npm_. This can be done as follows:
 
 ```bash
 cd api
-yarn
+npm install
 ```
 
-After the yarn api dependency install successfully runs, install the frontend dependencies:
+After the api dependency install successfully runs, install the frontend dependencies:
 
 ```bash
 cd ../frontend
-yarn
+npm install
 ```
 
-After the yarn frontend dependency install runs, go back to the root folder:
+After the frontend dependency install runs, go back to the root folder:
 
 ```bash
 cd ..
@@ -192,13 +192,13 @@ CDS Authoring Tool tests are broken up into frontend and backend tests.
 To run the frontend tests in a temporary docker container (for example, to ensure it works before deploying), run the following command:
 
 ```bash
-docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/frontend cdsauthoringtool yarn test
+docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/frontend cdsauthoringtool npm test
 ```
 
 To run the backend tests in a temporary docker container:
 
 ```bash
-docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/api cdsauthoringtool yarn test
+docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/api cdsauthoringtool npm test
 ```
 
 ## LICENSE

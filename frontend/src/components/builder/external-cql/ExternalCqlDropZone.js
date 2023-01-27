@@ -34,7 +34,10 @@ const ExternalCqlDropZone = () => {
   });
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: '.cql,application/zip,text/plain',
+    accept: {
+      'application/zip': ['.zip'],
+      'text/plain': ['.cql']
+    },
     disabled: artifact._id == null,
     maxFiles: 1,
     onDrop: library => {

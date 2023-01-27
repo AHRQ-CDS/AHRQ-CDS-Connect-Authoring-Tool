@@ -16,21 +16,20 @@ For information about contributing to this project, please see [CONTRIBUTING](..
 
 This project represents the M, E, and N in the MERN application architecture, using MongoDB, Express, and Node.
 
-To develop and run this project, your must install mongodb, node, and yarn. On Mac OS X, this can be done through brew:
+To develop and run this project, your must install mongodb and node. On Mac OS X, this can be done through brew:
 
 ```bash
 brew install mongodb # install mongodb on host system
 brew services start mongodb # start mongo
-brew install node # install node
-brew install yarn # install yarn
+brew install node # install node, which also installs npm
 ```
 
 For other operating systems, use the instructions provided in each tool's online documentation.
 
-Once the prerequisite tools are installed, use yarn to install the dependency libraries:
+Once the prerequisite tools are installed, use npm to install the dependency libraries:
 
 ```bash
-yarn # e.g. yarn install. installs this app's dependencies based on this project's yarn.lock / package.json
+npm install # installs this app's dependencies based on this project's package.json and package-lock.json
 ```
 
 By default, the project will attempt to convert CQL to ELM on download. To disable this in development, see the configuration section below. If enabled, you will need the CQL-to-ELM translation service, a Java application that can be run locally via Maven or Docker.
@@ -41,9 +40,9 @@ By default, the project will attempt to convert CQL to ELM on download. To disab
 ### Add / Remove / Adjust dependencies
 
 ```bash
-yarn add <thing> # add a package. add --dev if this is a development dependency.
-yarn add <thing>@<version> # will adjust version
-yarn remove <thing> # remove a package.
+npm install <package> # add a package. add --save-dev if this is a development dependency.
+npm install <package>@<version> # will adjust version
+npm uninstall <package> # remove a package.
 ```
 
 ### Configuration
@@ -60,9 +59,9 @@ Lastly, most aspects of config can also be overridden via specific environment v
 
 By default, the API server and frontend server listen over unsecure HTTP. To listen over HTTPS, all three of the following environment variables must be set:
 
-* `HTTPS`: Set to `true` to enable HTTPS.
-* `SSL_KEY_FILE`: The absolute path to the SSL key file (e.g., `/data/ssl/server.key`)
-* `SSL_CRT_FILE`: The absolute path to the SSL cert file (e.g., `/data/ssl/server.cert`)
+- `HTTPS`: Set to `true` to enable HTTPS.
+- `SSL_KEY_FILE`: The absolute path to the SSL key file (e.g., `/data/ssl/server.key`)
+- `SSL_CRT_FILE`: The absolute path to the SSL cert file (e.g., `/data/ssl/server.cert`)
 
 These variable names match the variables documented in Create React App's [Using HTTPS in Development](https://create-react-app.dev/docs/using-https-in-development/) documentation.
 
@@ -102,16 +101,16 @@ For development purposes, the [Local Authentication Strategy](https://github.com
 
 ### Run
 
-`yarn start` will run the api server:
+`npm start` will run the api server:
 
 ```bash
-yarn start # run the api server
+npm start # run the api server
 ```
 
-`yarn start-dev` will run the api server in development mode, reloading the server when changes are detected.
+`npm run start-dev` will run the api server in development mode, reloading the server when changes are detected.
 
 ```bash
-yarn run start-dev # run the api server with hot-reloading for development
+npm run start-dev # run the api server with hot-reloading for development
 ```
 
 ### Linting
@@ -119,8 +118,8 @@ yarn run start-dev # run the api server with hot-reloading for development
 JavaScript linting is done using ESLint.
 
 ```bash
-yarn run lint # runs eslint using the configuration in .eslintrc.
-yarn run lint:fix # runs eslint --fix using the configuration in .eslintrc. The --fix flag will autocorrect minor errors
+npm run lint # runs eslint using the configuration in .eslintrc.
+npm run lint:fix # runs eslint --fix using the configuration in .eslintrc. The --fix flag will autocorrect minor errors
 ```
 
 ### Testing
@@ -128,7 +127,7 @@ yarn run lint:fix # runs eslint --fix using the configuration in .eslintrc. The 
 API server testing uses [Chai](http://chaijs.com/) with [Mocha](http://mochajs.org/) as the test runner.
 
 ```bash
-yarn test # runs all api tests
+npm test # runs all api tests
 ```
 
 ### Docker

@@ -15,7 +15,7 @@ function laxUrl(...protocols) {
 convict.addParser({ extension: 'json', parse: json5.parse });
 const config = convict({
   env: {
-    doc: 'The applicaton environment.',
+    doc: 'The application environment.',
     format: ['production', 'development', 'test'],
     default: 'development',
     env: 'NODE_ENV'
@@ -118,7 +118,7 @@ const config = convict({
         },
         tlsOptions: {
           minVersion: {
-            doc: 'The minumum TLS version to allow (TLSv1.3, TLSv1.2, TLSv1.1, or TLSv1)',
+            doc: 'The minimum TLS version to allow (TLSv1.3, TLSv1.2, TLSv1.1, or TLSv1)',
             format: String,
             default: 'TLSv1.2',
             env: 'AUTH_LDAP_TLS_MIN_VERSION'
@@ -151,7 +151,7 @@ const config = convict({
     }
   },
   tlsRejectUnauthorized: {
-    doc: 'Indicates if TLS should reject unauthorized certifates.  Never disable in production!',
+    doc: 'Indicates if TLS should reject unauthorized certificates.  Never disable in production!',
     format: ['0', '1'],
     default: '1',
     env: 'NODE_TLS_REJECT_UNAUTHORIZED'

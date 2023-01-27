@@ -4,7 +4,7 @@ const config = require('../config');
 function login(req, res, next) {
   // If the user is already logged in, log out first
   if (req.user) {
-    req.logout();
+    req.logout(function () {});
   }
 
   // Add strategies for authentication based on configuration
@@ -26,9 +26,10 @@ function login(req, res, next) {
 }
 
 function logout(req, res) {
-  req.logout();
-  req.session = null;
-  res.sendStatus(200);
+  req.logout(function () {
+    req.session = null;
+    res.sendStatus(200);
+  });
 }
 
 function currentUser(req, res) {

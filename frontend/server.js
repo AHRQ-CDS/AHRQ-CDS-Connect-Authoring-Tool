@@ -7,7 +7,7 @@
  *
  * This is mainly used by PM2 and our Docker image.
  */
-require('dotenv-expand')(require('dotenv').config());
+require('dotenv-expand').expand(require('dotenv').config());
 
 const express = require('express');
 const https = require('https');
@@ -19,7 +19,7 @@ const url = require('url');
 
 const PORT = 9000;
 
-// This uses the same evironment variables as documented for Create React App:
+// This uses the same environment variables as documented for Create React App:
 // https://create-react-app.dev/docs/using-https-in-development/
 const useHTTPS = /^true$/i.test(process.env.HTTPS);
 const sslKeyFile = process.env.SSL_KEY_FILE;

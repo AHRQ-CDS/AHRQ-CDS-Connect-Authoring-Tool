@@ -4,8 +4,8 @@ import { render as testingLibRender } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -29,33 +29,13 @@ const ProviderWrapper = ({ children }) => (
 export const render = (ui, options) => testingLibRender(ui, { wrapper: ProviderWrapper, ...options });
 
 export const changeDate = (value, index = 0) => {
-  userEvent.click(screen.queryAllByRole('textbox', { name: /choose date/i })[index]);
-  userEvent.click(
-    screen.getByRole('button', {
-      name: /calendar view is open, go to text input view/i
-    })
-  );
-  fireEvent.change(screen.getByPlaceholderText(/mm\/dd\/yyyy/i), { target: { value } });
-  userEvent.click(
-    screen.getByRole('button', {
-      name: /ok/i
-    })
-  );
+  userEvent.click(screen.queryAllByRole('button', { name: /change date/i })[index]);
+  fireEvent.change(screen.getAllByPlaceholderText(/mm\/dd\/yyyy/i)[index], { target: { value } });
 };
 
 export const changeTime = (value, index = 0) => {
-  userEvent.click(screen.queryAllByRole('textbox', { name: /choose time/i })[index]);
-  userEvent.click(
-    screen.getByRole('button', {
-      name: /clock view is open, go to text input view/i
-    })
-  );
-  fireEvent.change(screen.getByPlaceholderText(/hh:mm:ss/i), { target: { value } });
-  userEvent.click(
-    screen.getByRole('button', {
-      name: /ok/i
-    })
-  );
+  userEvent.click(screen.queryAllByRole('button', { name: /change time/i })[index]);
+  fireEvent.change(screen.getAllByPlaceholderText(/hh:mm:ss/i)[index], { target: { value } });
 };
 
 export { getRoles, logRoles } from '@testing-library/dom';

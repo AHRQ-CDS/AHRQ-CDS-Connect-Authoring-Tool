@@ -25,7 +25,7 @@ describe('<ValueComparisonModifier />', () => {
     fireEvent.change(screen.getByRole('spinbutton', { name: 'minValue' }), { target: { value: '21' } });
     expect(handleUpdateModifier).toBeCalledWith({ minValue: 21 });
 
-    userEvent.click(screen.getByRole('textbox', { name: /minOp/ }));
+    userEvent.click(screen.getByRole('combobox', { name: /minOp/ }));
     userEvent.click(screen.getByRole('option', { name: '<' }));
 
     await waitFor(() => {
@@ -35,7 +35,7 @@ describe('<ValueComparisonModifier />', () => {
     fireEvent.change(screen.getByRole('spinbutton', { name: 'maxValue' }), { target: { value: '189' } });
     expect(handleUpdateModifier).toBeCalledWith({ maxValue: 189 });
 
-    const maxOp = screen.getByRole('textbox', { name: /maxOp/ });
+    const maxOp = screen.getByRole('combobox', { name: /maxOp/ });
     userEvent.click(maxOp);
     fireEvent.change(maxOp, { target: { value: '!=' } });
     userEvent.tab();

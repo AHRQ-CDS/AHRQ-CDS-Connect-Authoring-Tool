@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .element {
   padding: 0.5em;
   background-color: $white;
@@ -48,7 +50,7 @@
   }
 
   &-details {
-    border-bottom: 1px solid lighten($gray-light, 15%);
+    border-bottom: 1px solid color.adjust($gray-light, $lightness: 15%);
     display: flex;
     justify-content: space-between;
     width: 100%;

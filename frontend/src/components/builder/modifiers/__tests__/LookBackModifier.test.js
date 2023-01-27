@@ -14,7 +14,7 @@ describe('<LookBackModifier />', () => {
 
     expect(handleUpdateModifier).toBeCalledWith({ value: 13 });
 
-    userEvent.click(screen.getByRole('button', { name: 'Day(s)' }));
+    userEvent.click(screen.getByRole('button', { name: 'Unit Day(s)' }));
     userEvent.click(screen.getByText('Year(s)'));
 
     expect(handleUpdateModifier).toBeCalledWith({ unit: 'years' });

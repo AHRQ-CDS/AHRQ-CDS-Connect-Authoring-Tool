@@ -10,7 +10,7 @@
 #   common to all (or most?) environments.
 ###############################################################################
 
-FROM node:14.19.0-alpine as base
+FROM node:16-alpine as base
 
 ENV NODE_ENV production
 
@@ -22,14 +22,14 @@ ENV NODE_ENV production
 
 FROM base as install_backend
 
-# First copy just the package.json, yarn.lock, and local dependencies so that
+# First copy just the package.json, package-lock.json, and local dependencies so that
 # if they have not changed, we can use cached node_modules instead of
 # redownloading them all.
 COPY ./api/package.json /usr/src/app/api/package.json
-COPY ./api/yarn.lock /usr/src/app/api/yarn.lock
+COPY ./api/package-lock.json /usr/src/app/api/package-lock.json
 COPY ./api/localDependencies /usr/src/app/api/localDependencies
 WORKDIR /usr/src/app/api
-RUN yarn --production --non-interactive install
+RUN npm install
 
 # Then copy the rest of the source code
 COPY ./api /usr/src/app/api
@@ -46,11 +46,11 @@ ENV NODE_ENV test
 ENV CI true
 
 WORKDIR /usr/src/app/api
-RUN yarn --production=false --non-interactive install
+RUN npm install
 
 # Some api code shares code w/ frontend, so bring that in for the tests
 COPY ./frontend/src/data /usr/src/app/frontend/src/data
-RUN yarn run test-ci 2>&1 | tee api-test-report.txt
+RUN npm run test-ci 2>&1 | tee api-test-report.txt
 
 ###############################################################################
 # STAGE 3: install_frontend
@@ -61,14 +61,16 @@ RUN yarn run test-ci 2>&1 | tee api-test-report.txt
 
 FROM base as install_frontend
 
-RUN apk --no-cache add python2 make g++
-
-# First copy just the package.json and yarn.lock so that if they have not
+# First copy just the package.json and package-lock.json so that if they have not
 # changed, we can use cached node_modules instead of redownloading them all.
 COPY ./frontend/package.json /usr/src/app/frontend/package.json
-COPY ./frontend/yarn.lock /usr/src/app/frontend/yarn.lock
+COPY ./frontend/package-lock.json /usr/src/app/frontend/package-lock.json
 WORKDIR /usr/src/app/frontend
-RUN yarn --production --non-interactive install
+
+# Delete the prepare script - it only installs husky, which we do not need here
+RUN npm pkg delete scripts.prepare
+
+RUN npm install
 
 # Then copy the rest of the source code
 COPY ./frontend /usr/src/app/frontend
@@ -83,10 +85,11 @@ FROM install_frontend as test_frontend
 
 ENV NODE_ENV test
 ENV CI true
+ENV NODE_OPTIONS --max_old_space_size=4096
 
 WORKDIR /usr/src/app/frontend
-RUN yarn --production=false --non-interactive install
-RUN yarn run test-ci 2>&1 | tee frontend-test-report.txt
+RUN npm install
+RUN npm run test-ci 2>&1 | tee frontend-test-report.txt
 
 ###############################################################################
 # STAGE 5: build_frontend
@@ -99,7 +102,7 @@ FROM test_frontend as build_frontend
 ENV NODE_ENV production
 
 WORKDIR /usr/src/app/frontend
-RUN yarn build
+RUN npm run build
 
 ###############################################################################
 # STAGE 6: final
@@ -115,7 +118,7 @@ FROM base as final
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
-RUN yarn global add pm2@4.4.1 -g
+RUN npm install -g pm2@4.4.1
 
 COPY --chown=node:node --from=install_backend /usr/src/app/api /usr/src/app/api
 COPY --chown=node:node --from=install_frontend /usr/src/app/frontend/node_modules /usr/src/app/frontend/node_modules

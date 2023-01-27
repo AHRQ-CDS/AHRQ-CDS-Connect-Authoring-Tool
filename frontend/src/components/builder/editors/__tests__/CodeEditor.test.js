@@ -56,7 +56,7 @@ describe('<CodeEditor />', () => {
       userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
       userEvent.click(screen.getByRole('button', { name: 'Select' }));
 
-      userEvent.click(screen.getByRole('button'));
+      userEvent.click(screen.getByRole('button', { hidden: true }));
       fireEvent.change(screen.getByRole('textbox', { name: 'Code' }), { target: { value: '456' } });
       userEvent.click(screen.getByRole('button', { name: 'Code system ​' }));
       userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));

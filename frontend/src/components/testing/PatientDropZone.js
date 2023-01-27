@@ -65,7 +65,9 @@ const PatientDropZone = () => {
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: 'application/json',
+    accept: {
+      'application/json': ['.json']
+    },
     onDrop: handleOnDrop,
     maxFiles: 1
   });

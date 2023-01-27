@@ -2,19 +2,27 @@
   padding: 0;
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
   -webkit-font-smoothing: auto;
-  a { text-decoration: none; }
 
-  //------------------------ Links ------------------------------------------//
+  a {
+    text-decoration: none;
+  }
+
+  // ------------------------ Links ------------------------------------------//
   &__links {
     margin-top: 3px;
     padding-right: 0;
     white-space: nowrap;
     text-align: right;
-    img { vertical-align: middle; }
 
-    @include respond-to('tablet') { text-align: left; }
+    img {
+      vertical-align: middle;
+    }
 
-    @include respond-to('mobile') {
+    @include respond-to("tablet") {
+      text-align: left;
+    }
+
+    @include respond-to("mobile") {
       padding: 0;
       text-align: center;
     }
@@ -22,18 +30,22 @@
     span {
       padding: 0 11px;
 
-      @include respond-to('mobile') { padding: 5px; }
+      @include respond-to("mobile") {
+        padding: 5px;
+      }
     }
 
     a {
       color: $ahrq-color-purple;
       padding: 5px 0;
 
-      @include respond-to('500px') { font-size: 0.8em; }
+      @include respond-to("500px") {
+        font-size: 0.8em;
+      }
     }
   }
 
-  //------------------------ Header Stripe ----------------------------------//
+  // ------------------------ Header Stripe ----------------------------------//
   &__stripe-container {
     display: block;
     width: 100%;
@@ -47,7 +59,7 @@
     float: left;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       left: 51%;
       width: 100%;
@@ -58,22 +70,34 @@
 
     &--purple {
       background-color: $ahrq-color-purple;
-      &::before { background-color: $ahrq-color-light-blue; }
+
+      &::before {
+        background-color: $ahrq-color-light-blue;
+      }
     }
 
     &--light-blue {
       background-color: $ahrq-color-light-blue;
-      &::before { background-color: $ahrq-color-orange; }
+
+      &::before {
+        background-color: $ahrq-color-orange;
+      }
     }
 
     &--orange {
       background-color: $ahrq-color-orange;
-      &::before { background-color: $ahrq-color-green; }
+
+      &::before {
+        background-color: $ahrq-color-green;
+      }
     }
 
     &--green {
       background-color: $ahrq-color-green;
-      &::before { background-color: $ahrq-color-dark-blue; }
+
+      &::before {
+        background-color: $ahrq-color-dark-blue;
+      }
     }
 
     &--dark-blue {
@@ -82,7 +106,7 @@
     }
   }
 
-  //------------------------ CDS Banner -------------------------------------//
+  // ------------------------ CDS Banner -------------------------------------//
   &__cdsbanner {
     background: $ahrq-color-dark-gradient;
 
@@ -97,7 +121,9 @@
       padding: 20px 10px;
       white-space: nowrap;
 
-      @include respond-to('670px') { text-align: center; }
+      @include respond-to("670px") {
+        text-align: center;
+      }
 
       a {
         color: $white;
@@ -107,14 +133,18 @@
           text-transform: uppercase;
           letter-spacing: 1px;
 
-          @include respond-to('670px') { font-size: 1em; }
+          @include respond-to("670px") {
+            font-size: 1em;
+          }
         }
 
         .text-bottom {
           font-size: 38px;
           font-weight: bold;
 
-          @include respond-to('670px') { font-size: 1.4em; }
+          @include respond-to("670px") {
+            font-size: 1.4em;
+          }
         }
       }
     }

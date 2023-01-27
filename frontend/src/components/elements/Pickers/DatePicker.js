@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@mui/material';
-import { DatePicker as MuiDatePicker } from '@mui/lab';
+import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers';
 
 const DatePicker = ({ disabled = false, label = 'Date', onChange, value }) => (
   <MuiDatePicker

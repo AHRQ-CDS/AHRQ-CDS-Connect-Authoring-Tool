@@ -13,7 +13,6 @@
       "error",
       { "devDependencies": ["src/utils/test-utils.js", "src/**/*.test.js", "src/setupTests.js"] }
     ], // don't check helpers for extraneous deps
-    "import/no-named-default": "off", // turning it off since it's currently broken w/ yarn (see: https://github.com/yarnpkg/yarn/issues/3332)
     "jsx-a11y/href-no-hash": 0,
     "jsx-a11y/label-has-for": ["error", { "required": { "some": ["nesting", "id"] } }],
     "no-console": 0, // allow console.log statements

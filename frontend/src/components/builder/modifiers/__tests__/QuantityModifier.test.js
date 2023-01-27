@@ -26,7 +26,7 @@ describe('<QuantityModifier />', () => {
     const handleUpdateModifier = jest.fn();
     renderComponent({ handleUpdateModifier });
 
-    const unitAutocomplete = screen.getByRole('textbox', { name: 'Unit' });
+    const unitAutocomplete = screen.getByRole('combobox', { name: 'Unit' });
     userEvent.click(unitAutocomplete);
     fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
     userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
