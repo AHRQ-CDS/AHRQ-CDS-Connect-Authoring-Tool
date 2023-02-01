@@ -44,6 +44,13 @@ const Artifact = () => {
 
       {isSuccess && (
         <div className={clsx(spacingStyles.minHeight, spacingStyles.verticalPadding)}>
+          <div className={spacingStyles.verticalPadding}>
+            <Alert severity={'error'}>
+              Note: Performance of the Value Set Authority Center integration is currently degraded. As a result,
+              authors may be unable to search for value sets during element creation and modification. The CDS Connect
+              and Value Set Authority Center teams are working to resolve this issue.
+            </Alert>
+          </div>
           <div className={styles.helpLink}>
             <Button color="primary" onClick={() => setShowModal(true)} startIcon={<AddIcon />} variant="contained">
               Create New Artifact
