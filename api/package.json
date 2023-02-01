@@ -20,7 +20,7 @@
     "json5": "^2.2.0",
     "lodash": "^4.17.21",
     "mongodb-migrations": "^0.8.5",
-    "mongoose": "^5.13.13",
+    "mongoose": "^5.13.15",
     "morgan": "^1.10.0",
     "passport": "^0.4.0",
     "passport-ldapauth": "^2.0.0",
