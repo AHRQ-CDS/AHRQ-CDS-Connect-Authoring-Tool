@@ -35,12 +35,34 @@ const codeLookups = {
  * @param {string} id - the value set id
  * @returns {string} the id with invalid suffix removed (if applicable)
  */
-function cleanId(id) {
+function stripBarFromId(id) {
   if (id && id.indexOf('|') !== -1) {
     return id.slice(0, id.indexOf('|'));
   } else {
     return id;
   }
+}
+
+/**
+ * In Winter 2023, the VSAC FHIR API started appending "-{version}" to the end
+ * of resource ids in search results. This is not actually valid behavior for a
+ * FHIR RESTful service to respond to a search for a resource with an id with a
+ * resource that has a different id. This was discussed on chat.fhir.org here:
+ * https://chat.fhir.org/#narrow/stream/179202-terminology/topic/VSAC.20Appending.20Version.20to.20ID
+ * Since we prefer non-version-specific value sets anyway, this function
+ * strips the version suffix from the id.
+ * @param {string} id - the value set id
+ * @returns {string} the id with invalid suffix removed (if possible)
+ */
+function stripDashFromId(id, version) {
+  if (id && version && id.endsWith(`-${version}`)) {
+    return id.slice(0, id.lastIndexOf(`-${version}`));
+  }
+  return id;
+}
+
+function cleanId(id, version) {
+  return stripDashFromId(stripBarFromId(id), version);
 }
 
 function getValueSet(oid, username, password) {
@@ -56,7 +78,7 @@ function getValueSet(oid, username, password) {
   return rpn(options).then(res => {
     const response = JSON.parse(res);
     return {
-      oid: cleanId(response.id),
+      oid: cleanId(response.id, response.version),
       version: response.meta.versionId,
       displayName: response.name,
       codes: response.expansion.contains.map(c => {

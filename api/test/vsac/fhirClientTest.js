@@ -55,7 +55,7 @@ describe('vsac/FHIRClient', () => {
       });
     });
 
-    it('should get a value set by OID and strip version', () => {
+    it('should get a value set by OID and strip |{version}', () => {
       const [username, password] = ['test-user', 'test-pass'];
 
       const vsWithVersion = lodash.cloneDeep(FHIRMocks.ValueSet);
@@ -67,6 +67,64 @@ describe('vsac/FHIRClient', () => {
       const result = client.getValueSet('2468', username, password);
       return expect(result).to.eventually.eql({
         oid: '2468',
+        version: '1',
+        displayName: 'foo',
+        codes: [
+          {
+            code: '250.00',
+            codeSystemName: 'ICD9CM',
+            codeSystemURI: 'http://hl7.org/fhir/sid/icd-9-cm',
+            codeSystemVersion: '2013',
+            displayName:
+              'Diabetes mellitus without mention of complication, type II or unspecified type, ' +
+              'not stated as uncontrolled'
+          }
+        ]
+      });
+    });
+
+    it('should get a value set by OID and strip -{version}', () => {
+      const [username, password] = ['test-user', 'test-pass'];
+
+      const vsWithVersion = lodash.cloneDeep(FHIRMocks.ValueSet);
+      vsWithVersion.id = '9876-54321';
+      vsWithVersion.version = '54321';
+
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/9876/$expand').reply(200, vsWithVersion);
+
+      // Invoke the request and verify the result
+      const result = client.getValueSet('9876', username, password);
+      return expect(result).to.eventually.eql({
+        oid: '9876',
+        version: '1',
+        displayName: 'foo',
+        codes: [
+          {
+            code: '250.00',
+            codeSystemName: 'ICD9CM',
+            codeSystemURI: 'http://hl7.org/fhir/sid/icd-9-cm',
+            codeSystemVersion: '2013',
+            displayName:
+              'Diabetes mellitus without mention of complication, type II or unspecified type, ' +
+              'not stated as uncontrolled'
+          }
+        ]
+      });
+    });
+
+    it('should get a value set by OID and NOT strip anything after a - if it is just part of the id', () => {
+      const [username, password] = ['test-user', 'test-pass'];
+
+      const vsWithVersion = lodash.cloneDeep(FHIRMocks.ValueSet);
+      vsWithVersion.id = '9876-6789-321'; // Valid id with - characters
+      vsWithVersion.version = '54321'; // version differs from the last -321 portion
+
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/9876-6789-321/$expand').reply(200, vsWithVersion);
+
+      // Invoke the request and verify the result
+      const result = client.getValueSet('9876-6789-321', username, password);
+      return expect(result).to.eventually.eql({
+        oid: '9876-6789-321',
         version: '1',
         displayName: 'foo',
         codes: [
