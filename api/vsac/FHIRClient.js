@@ -111,7 +111,7 @@ function searchForValueSets(search, username, password) {
       return {
         name: v.resource.name,
         steward: v.resource.publisher,
-        oid: cleanId(v.resource.id),
+        oid: cleanId(v.resource.id, v.resource.version),
         codeSystem: [],
         codeCount: (v.resource.expansion || {}).total || 0
       };
