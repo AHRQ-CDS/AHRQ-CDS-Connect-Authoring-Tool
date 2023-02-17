@@ -83,14 +83,20 @@ Note that if any new operator needs to be added to the `api/data/query_builder/o
 
 ### Migrations
 
-As the project evolves over time, the database schema may change in ways that require existing data to be transformed. This project uses the [mongodb-migrations](https://www.npmjs.com/package/mongodb-migrations) to support database migrations. Migration scripts are stored in the `migrations` folder.
+As the project evolves over time, the database schema may change in ways that require existing data to be transformed. Until early 2023, this project used [mongodb-migrations](https://www.npmjs.com/package/mongodb-migrations) to support database migrations. Those legacy migration scripts can be found in the `old-migrations` folder. Now this project uses [migrate-mongo](https://www.npmjs.com/package/migrate-mongo) for database migrations. The migrate-mongo scripts can be found in the `migrations` folder.
 
 Migrations are automatically applied on application startup. This may be disabled via configuration (`migrations.active` in your local config file or the `MIGRATIONS_ACTIVE` environment variable). Migrations should only be disabled during development.
 
-To run migrations from the commandline, simply execute the following command from the root of the `api` project:
+To create a new migration from the commandline, run the following command from the root of the `api` project:
 
 ```bash
-./node_modules/.bin/mm
+npx migrate-mongo create my_migration_description
+```
+
+To run migrations from the commandline, run the following command from the root of the `api` project:
+
+```bash
+npx migrate-mongo up
 ```
 
 ### Authentication

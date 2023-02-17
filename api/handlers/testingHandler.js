@@ -52,7 +52,7 @@ function singlePost(req, res) {
 function singleDelete(req, res) {
   if (req.user) {
     const id = req.params.patient;
-    Patient.remove({ user: req.user.uid, _id: id }, (error, response) => {
+    Patient.deleteMany({ user: req.user.uid, _id: id }, (error, response) => {
       if (error) res.status(500).send(error);
       else if (response.n === 0) res.sendStatus(404);
       else res.sendStatus(200);

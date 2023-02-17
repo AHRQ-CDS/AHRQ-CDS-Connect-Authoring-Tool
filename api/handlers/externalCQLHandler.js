@@ -631,7 +631,7 @@ function singlePost(req, res) {
                     Promise.all(
                       librariesToUpdate
                         .map(async library => {
-                          return CQLLibrary.update({ user: req.user.uid, name: library.name }, library);
+                          return CQLLibrary.updateOne({ user: req.user.uid, name: library.name }, library);
                         })
                         .map(p => p.catch(e => null))
                     );
@@ -652,7 +652,7 @@ function singlePost(req, res) {
                           message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
                         }
                         if (newLibFHIRVersion) {
-                          Artifact.update(
+                          Artifact.updateOne(
                             { user: req.user.uid, _id: artifactId },
                             { fhirVersion: newLibFHIRVersion },
                             (error, response) => {
@@ -667,7 +667,7 @@ function singlePost(req, res) {
                       } else {
                         if (exportLibrariesNotUploaded.length > 0) {
                           if (newLibFHIRVersion) {
-                            Artifact.update(
+                            Artifact.updateOne(
                               { user: req.user.uid, _id: artifactId },
                               { fhirVersion: newLibFHIRVersion },
                               (error, response) => {
@@ -684,7 +684,7 @@ function singlePost(req, res) {
                           if (librariesToUpdate.length > 0)
                             updateMessage = 'One or more of the libraries in this artifact have been updated.';
                           if (newLibFHIRVersion) {
-                            Artifact.update(
+                            Artifact.updateOne(
                               { user: req.user.uid, _id: artifactId },
                               { fhirVersion: newLibFHIRVersion },
                               (error, response) => {
@@ -827,7 +827,7 @@ function singlePost(req, res) {
                   );
               } else {
                 if (shouldLibraryBeUpdated(elmResult, artifact)) {
-                  CQLLibrary.update({ user: req.user.uid, name: elmResult.name }, elmResult, error => {
+                  CQLLibrary.updateOne({ user: req.user.uid, name: elmResult.name }, elmResult, error => {
                     const message = `Library ${elmResult.name} successfully updated to version ${elmResult.version}.`;
                     if (error) res.status(500).send(error);
                     else res.status(200).send(message);
@@ -848,7 +848,7 @@ function singlePost(req, res) {
                   // If the new library has a FHIR version, it can only be added if it either first sets a FHIR version
                   // or it matches so update the artifact to that FHIR version
                   if (newLibFHIRVersion) {
-                    Artifact.update(
+                    Artifact.updateOne(
                       { user: req.user.uid, _id: artifactId },
                       { fhirVersion: newLibFHIRVersion },
                       (error, response) => {
@@ -953,7 +953,7 @@ function singleDelete(req, res) {
                   currentFHIRVersion = '4.0.x';
                 }
 
-                Artifact.update(
+                Artifact.updateOne(
                   { user: req.user.uid, _id: linkedArtifactId },
                   { fhirVersion: currentFHIRVersion },
                   (error, response) => {

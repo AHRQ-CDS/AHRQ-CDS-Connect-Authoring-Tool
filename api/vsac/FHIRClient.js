@@ -71,7 +71,7 @@ function getValueSet(oid, username, password) {
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet/${oid}/$expand`,
     headers: {
       Accept: 'application/json',
-      Authorization: `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+      Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
     }
   };
 
@@ -100,7 +100,7 @@ function searchForValueSets(search, username, password) {
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet?name:contains=${search}`,
     headers: {
       Accept: 'application/json',
-      Authorization: `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+      Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
     }
   };
 
@@ -131,7 +131,7 @@ function getCode(code, system, username, password) {
     url: `${VSAC_FHIR_ENDPOINT}/CodeSystem/$lookup?code=${code}&system=${system}`,
     headers: {
       Accept: 'application/json',
-      Authorization: `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+      Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
     }
   };
   return rpn(options).then(res => {
@@ -155,7 +155,7 @@ function getOneValueSet(username, password) {
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet/${oneCodeVSOID}`,
     headers: {
       Accept: 'application/json',
-      Authorization: `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+      Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
     }
   };
   return rpn(options).then(res => {

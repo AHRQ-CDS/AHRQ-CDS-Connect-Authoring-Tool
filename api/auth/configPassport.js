@@ -4,8 +4,7 @@ const session = require('express-session');
 const passport = require('passport');
 const LdapStrategy = require('passport-ldapauth');
 const LocalStrategy = require('passport-local').Strategy;
-const MongoStore = require('connect-mongo')(session);
-const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
 const config = require('../config');
 const findLocalUserById = require('./localAuthUsers').findByUsername;
 
@@ -56,7 +55,9 @@ module.exports = app => {
     secret: config.get('auth.session.secret'),
     cookie: {},
     unset: 'destroy',
-    store: new MongoStore({ mongooseConnection: mongoose.connection })
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: config.get('mongo.url') })
   };
   if (process.env.NODE_ENV === 'production') {
     app.set('trust proxy', 1); // trust first proxy

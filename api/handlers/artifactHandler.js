@@ -56,7 +56,7 @@ function singlePut(req, res) {
   if (req.user) {
     const id = req.body._id;
     const artifact = req.body;
-    Artifact.update({ user: req.user.uid, _id: id }, { $set: artifact }, (error, response) => {
+    Artifact.updateOne({ user: req.user.uid, _id: id }, { $set: artifact }, (error, response) => {
       if (error) res.status(500).send(error);
       else if (response.n === 0) res.sendStatus(404);
       else res.sendStatus(200);
@@ -70,11 +70,11 @@ function singlePut(req, res) {
 function singleDelete(req, res) {
   if (req.user) {
     const id = req.params.artifact;
-    Artifact.remove({ user: req.user.uid, _id: id }, (error, response) => {
+    Artifact.deleteMany({ user: req.user.uid, _id: id }, (error, response) => {
       if (error) res.status(500).send(error);
       else if (response.n === 0) res.sendStatus(404);
       else {
-        CQLLibrary.remove({ user: req.user.uid, linkedArtifactId: id }, (error, response) => {
+        CQLLibrary.deleteMany({ user: req.user.uid, linkedArtifactId: id }, (error, response) => {
           if (error) res.status(500).send(error);
           else res.sendStatus(200);
         });

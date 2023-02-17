@@ -1,16 +1,14 @@
 // Import Dependencies
-const path = require('path');
 const fs = require('fs');
 const process = require('process');
 const express = require('express');
 const https = require('https');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const mm = require('mongodb-migrations');
+const mm = require('migrate-mongo');
 const config = require('./config');
 const configPassport = require('./auth/configPassport');
 const routes = require('./routes');
-const mmConfig = require('./mm-config');
 
 // This uses the same evironment variables as documented for Create React App:
 // https://create-react-app.dev/docs/using-https-in-development/
@@ -44,7 +42,7 @@ if (logRequests) {
 const port = process.env.API_PORT || 3001;
 
 // MongoDB Configuration
-mongoose.Promise = global.Promise;
+mongoose.set('strictQuery', true); // Suppress warning. See: https://mongoosejs.com/docs/guide.html#strictQuery
 mongoose.connect(config.get('mongo.url'));
 
 // Configure API to use BodyParser and handle json data
@@ -91,16 +89,37 @@ if (!module.parent) {
   // check if within a test or not.
   if (config.get('migrations.active')) {
     // Run any necessary migrations before starting the server
-    console.log('Running Migrations');
-    const migrator = new mm.Migrator(mmConfig);
-    migrator.runFromDir(path.resolve(__dirname, 'migrations'), (err, results) => {
-      if (err) {
+    console.log('Checking migrations...');
+    mm.database
+      .connect()
+      .then(({ db, client }) => {
+        return mm.status(db).then(status => {
+          const pending = status.filter(s => s.appliedAt === 'PENDING');
+          console.log(`Previously applied migrations: ${status.length - pending.length}`);
+          if (pending.length) {
+            console.log('Pending migrations:');
+            pending.forEach(({ fileName }) => console.log(`  - ${fileName}`));
+            console.log('Applying pending migrations...');
+          } else {
+            console.log('Pending migrations: 0');
+          }
+          return { db, client };
+        });
+      })
+      .then(({ db, client }) => {
+        return mm.up(db, client);
+      })
+      .then(migrated => {
+        migrated.forEach(fileName => console.log('Migrated:', fileName));
+        if (migrated.length) {
+          console.log(`Newly applied migrations: ${migrated.length}`);
+        }
+        startServer();
+      })
+      .catch(err => {
         console.error('Migration Error:', err);
         process.exit(1);
-      }
-      console.log('Migrations Complete');
-      startServer();
-    });
+      });
   } else {
     console.log('Skipping Migrations Due to Config');
     startServer();
