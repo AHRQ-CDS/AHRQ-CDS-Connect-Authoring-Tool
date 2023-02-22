@@ -246,17 +246,16 @@ export class Builder extends Component {
     this.updateFHIRVersion();
   };
 
-  // subpop_index is an optional parameter, for determining which tree within subpop we are referring to
-  updateInstanceModifiers = async (treeName, modifiers, path, subpopIndex, updatedReturnType = null) => {
-    const tree = _.cloneDeep(this.props.artifact[treeName]);
-    const valuePath = _.isNumber(subpopIndex) ? tree[subpopIndex] : tree;
-    const target = findValueAtPath(valuePath, path);
+  updateInstanceModifiers = async (treeName, modifiers, path, uid = null, updatedReturnType = null) => {
+    const treeData = this.findTree(treeName, uid);
+    const tree = treeData.tree;
+    const target = findValueAtPath(tree, path);
     target.modifiers = modifiers;
 
     if (updatedReturnType) {
-      valuePath.returnType = updatedReturnType;
+      tree.returnType = updatedReturnType;
     }
-    await this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
+    await this.setTree(treeName, treeData, tree);
     this.updateFHIRVersion();
   };
 
@@ -716,6 +715,7 @@ export class Builder extends Component {
                   <BaseElements
                     addBaseElement={this.addBaseElement}
                     addInstance={this.addInstance}
+                    artifact={artifact}
                     baseElements={artifact.baseElements}
                     deleteInstance={this.deleteInstance}
                     editInstance={this.editInstance}

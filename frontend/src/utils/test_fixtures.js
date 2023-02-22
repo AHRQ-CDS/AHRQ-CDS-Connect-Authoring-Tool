@@ -742,6 +742,21 @@ const genericBaseElementListInstance = {
   childInstances: [genericInstance]
 };
 
+const genericBaseElementListAndInstance = {
+  id: 'And',
+  name: 'And',
+  conjunction: true,
+  returnType: 'boolean',
+  path: '',
+  uniqueId: 'And-1',
+  usedBy: ['testId1'],
+  fields: [
+    { id: 'element_name', type: 'string', name: 'Group Name', value: 'AndListName' },
+    { id: 'comment', type: 'textarea', name: 'Comment', value: 'AndListName Comment' }
+  ],
+  childInstances: []
+};
+
 const genericBaseElementUseInstance = {
   id: 'GenericObservation_vsac',
   name: 'BaseElement',
@@ -828,6 +843,7 @@ export {
   genericBaseElementInstance,
   genericBaseElementInstanceWithModifiers,
   genericBaseElementListInstance,
+  genericBaseElementListAndInstance,
   genericBaseElementUseInstance,
   reduxState
 };

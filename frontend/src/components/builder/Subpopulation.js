@@ -20,7 +20,7 @@ const Subpopulation = ({
   modifiersByInputType,
   parameters,
   subpopulation,
-  subpopulationIndex,
+  subpopulationUniqueId,
   templates,
   updateInstanceModifiers,
   vsacApiKey
@@ -28,16 +28,18 @@ const Subpopulation = ({
   return (
     <GroupElement
       alerts={alerts}
+      allowComment={false}
       disable={disableDeleteSubpopulationElement}
       disableTitleField={disableDeleteSubpopulationElement}
       groupInstance={subpopulation}
-      handleAddElement={() => {}}
+      groupTitleField={{ id: 'subpopulation_title', value: subpopulation.subpopulationName }}
+      handleAddElement={() => {}} // Adding elements isn't handled by this wrapper GroupElement
       handleDeleteElement={() => handleDeleteSubpopulationElement(subpopulation.uniqueId)}
       handleUpdateElement={field => handleUpdateSubpopulationElement(field.subpopulation_title, subpopulation.uniqueId)}
       hasErrors={hasErrors}
       label={'Subpopulation'}
       indentParity={'odd'}
-      isSubpopulation
+      isWrapper
       root={false}
     >
       <ConjunctionGroup
@@ -54,7 +56,7 @@ const Subpopulation = ({
         modifiersByInputType={modifiersByInputType}
         parameters={parameters}
         root={true}
-        subPopulationIndex={subpopulationIndex}
+        subpopulationUniqueId={subpopulationUniqueId}
         templates={templates}
         treeName={'subpopulations'}
         updateInstanceModifiers={updateInstanceModifiers}
@@ -81,7 +83,7 @@ Subpopulation.propTypes = {
   modifiersByInputType: PropTypes.object.isRequired,
   parameters: PropTypes.array,
   subpopulation: PropTypes.object.isRequired,
-  subpopulationIndex: PropTypes.number.isRequired,
+  subpopulationUniqueId: PropTypes.string.isRequired,
   templates: PropTypes.array,
   updateInstanceModifiers: PropTypes.func.isRequired,
   vsacApiKey: PropTypes.string

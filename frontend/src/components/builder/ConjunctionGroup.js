@@ -26,7 +26,7 @@ const ConjunctionGroup = ({
   options,
   parameters,
   root,
-  subPopulationIndex,
+  subpopulationUniqueId,
   templates,
   treeName,
   updateInstanceModifiers,
@@ -163,7 +163,7 @@ const ConjunctionGroup = ({
         label={getLabelForInstance(instance, baseElements)}
         modifiersByInputType={modifiersByInputType}
         updateModifiers={modifiers =>
-          updateInstanceModifiers(treeName, modifiers, getChildsPath(instance.uniqueId), subPopulationIndex)
+          updateInstanceModifiers(treeName, modifiers, getChildsPath(instance.uniqueId), subpopulationUniqueId)
         }
         validateReturnType={validateReturnType}
         vsacApiKey={vsacApiKey}
@@ -200,7 +200,7 @@ const ConjunctionGroup = ({
               modifiersByInputType={modifiersByInputType}
               parameters={parameters}
               root={false}
-              subPopulationIndex={subPopulationIndex}
+              subpopulationUniqueId={subpopulationUniqueId}
               templates={templates}
               treeName={treeName}
               updateInstanceModifiers={updateInstanceModifiers}
@@ -261,7 +261,7 @@ ConjunctionGroup.propTypes = {
   options: PropTypes.string,
   parameters: PropTypes.array,
   root: PropTypes.bool.isRequired,
-  subPopulationIndex: PropTypes.number,
+  subpopulationUniqueId: PropTypes.string,
   templates: PropTypes.array,
   treeName: PropTypes.string.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,

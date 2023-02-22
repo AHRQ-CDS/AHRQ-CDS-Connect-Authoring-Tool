@@ -9,7 +9,7 @@ const ReturnTypeTemplate = ({ returnType, returnTypeIsValid }) => (
   <Stack direction="row" my={1}>
     <ElementCardLabel label="Return Type" />
 
-    <Stack alignItems="center" direction="row" mb={1}>
+    <Stack data-testid="return-type-template" alignItems="center" direction="row" mb={1}>
       {returnTypeIsValid && <CheckIcon fontSize="small" sx={{ marginRight: '5px' }} />}
       {returnType}
     </Stack>

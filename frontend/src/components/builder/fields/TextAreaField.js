@@ -7,6 +7,7 @@ const TextAreaField = ({ field, handleUpdateField }) => (
     fullWidth
     hiddenLabel
     multiline
+    inputProps={{ 'aria-label': field.name }}
     onChange={event => handleUpdateField({ [field.id]: event.target.value })}
     value={field.value || ''}
   />

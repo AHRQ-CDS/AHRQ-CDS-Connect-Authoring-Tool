@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Stack } from '@mui/material';
-import { getFieldWithId } from 'utils/instances';
+import _ from 'lodash';
+import { getFieldWithId, isReturnTypeValid } from 'utils/instances';
 import { ElementCard } from 'components/elements';
 import { ElementSelect } from 'components/builder/element-select';
 import ExpressionPhrase from 'components/builder/ExpressionPhrase';
+import { ReturnTypeTemplate } from 'components/builder/templates';
 
 const GroupElement = ({
   alerts,
+  allowComment = true,
   allowIndent,
   allowOutdent,
   children,
@@ -16,6 +19,7 @@ const GroupElement = ({
   disableTitleField = false,
   elementUniqueId,
   groupInstance,
+  groupTitleField,
   handleAddElement,
   handleDeleteElement,
   handleIndent,
@@ -23,21 +27,24 @@ const GroupElement = ({
   handleUpdateElement,
   hasErrors,
   indentParity,
-  isSubpopulation,
+  isWrapper,
   label = 'Group',
-  root
+  root,
+  showReturnType
 }) => {
   const artifact = useSelector(state => state.artifacts.artifact);
   const { baseElements } = artifact;
   const [showAllContent, setShowAllContent] = useState(true);
   const commentField = getFieldWithId(groupInstance.fields, 'comment');
-  let titleField = getFieldWithId(groupInstance.fields, 'element_name');
-  if (isSubpopulation) {
-    titleField = { id: 'subpopulation_title', value: groupInstance.subpopulationName };
-  }
-  const disableDeleteMessage = isSubpopulation
-    ? 'To delete this subpopulation, remove all references to it.'
+  const titleField = groupTitleField ?? getFieldWithId(groupInstance.fields, 'element_name');
+  const disableDeleteMessage = isWrapper
+    ? `To delete this ${label}, remove all references to it.`
     : 'To edit or delete this element, remove all references to the Base Element List.';
+  const hasValidReturnType = isReturnTypeValid(
+    groupInstance.returnType,
+    groupInstance.id,
+    groupInstance.childInstances
+  );
 
   if (root) {
     return (
@@ -57,7 +64,7 @@ const GroupElement = ({
   return (
     <ElementCard
       alerts={alerts}
-      allowComment={!isSubpopulation} // Subpopulations themselves cannot be commented on
+      allowComment={allowComment}
       allowIndent={allowIndent}
       allowOutdent={allowOutdent}
       collapsedContent={<ExpressionPhrase closed instance={groupInstance} baseElements={baseElements} />}
@@ -82,9 +89,15 @@ const GroupElement = ({
     >
       <Stack>
         <ExpressionPhrase instance={groupInstance} baseElements={baseElements} />
+        {showReturnType && (
+          <ReturnTypeTemplate
+            returnType={_.startCase(groupInstance.returnType)}
+            returnTypeIsValid={hasValidReturnType}
+          />
+        )}
         {children}
-        {/* Subpopulations will just use the containing group's select - they don't need their own */}
-        {!isSubpopulation && (
+        {/* Subpopulations and ListGroups will just use the containing group's select - they don't need their own */}
+        {!isWrapper && (
           <ElementSelect
             excludeListOperations
             handleAddElement={handleAddElement}
@@ -106,6 +119,10 @@ GroupElement.propTypes = {
   disableTitleField: PropTypes.bool,
   elementUniqueId: PropTypes.string,
   groupInstance: PropTypes.object.isRequired,
+  groupTitleField: PropTypes.shape({
+    id: PropTypes.string,
+    value: PropTypes.string
+  }),
   handleAddElement: PropTypes.func.isRequired,
   handleDeleteElement: PropTypes.func.isRequired,
   handleIndent: PropTypes.func,
@@ -113,8 +130,9 @@ GroupElement.propTypes = {
   handleUpdateElement: PropTypes.func.isRequired,
   hasErrors: PropTypes.bool.isRequired,
   indentParity: PropTypes.string,
-  isSubpopulation: PropTypes.bool,
+  isWrapper: PropTypes.bool,
   label: PropTypes.string,
+  showReturnType: PropTypes.bool,
   root: PropTypes.bool.isRequired
 };
 

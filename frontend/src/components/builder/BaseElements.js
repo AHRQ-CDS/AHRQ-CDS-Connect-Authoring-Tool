@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import { ElementSelect } from './element-select';
 import ListGroup from './ListGroup';
@@ -29,29 +30,59 @@ export default class BaseElements extends Component {
     return `${childIndex}`;
   };
 
-  renderListOperationConjunction = (s, i) => (
-    <div>
+  updateBaseElements = (newBaseElement, index) => {
+    const baseElementsCopy = _.cloneDeep(this.props.baseElements);
+    baseElementsCopy[index] = newBaseElement;
+    this.props.updateBaseElementLists(baseElementsCopy, 'baseElements');
+  };
+
+  deleteBaseElements = index => {
+    const baseElementsCopy = _.cloneDeep(this.props.baseElements);
+    baseElementsCopy.splice(index, 1);
+
+    // Update Base Elements and update FHIRVersion because
+    // elements that required a specific FHIR version may have been removed.
+    // Because deleteInstance isn't called directly, we need to check here.
+    this.props.updateBaseElementLists(baseElementsCopy, 'baseElements', true);
+  };
+
+  renderConjunctionGroup = (baseElement, i) => {
+    const {
+      addInstance,
+      artifact,
+      baseElements,
+      deleteInstance,
+      editInstance,
+      getAllInstancesInAllTrees,
+      instanceNames,
+      isLoadingModifiers,
+      modifiersByInputType,
+      parameters,
+      templates,
+      updateInstanceModifiers,
+      vsacApiKey
+    } = this.props;
+    return (
       <ListGroup
-        addInstance={this.props.addInstance}
-        artifact={this.props.instance}
-        baseElements={this.props.baseElements}
-        deleteInstance={this.props.deleteInstance}
-        editInstance={this.props.editInstance}
-        getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-        index={i}
-        instance={s}
-        instanceNames={this.props.instanceNames}
-        isLoadingModifiers={this.props.isLoadingModifiers}
-        modifiersByInputType={this.props.modifiersByInputType}
-        parameters={this.props.parameters}
-        templates={this.props.templates}
-        treeName={this.props.treeName}
-        updateBaseElementLists={this.props.updateBaseElementLists}
-        updateInstanceModifiers={this.props.updateInstanceModifiers}
-        vsacApiKey={this.props.vsacApiKey}
+        addInstance={addInstance}
+        artifact={artifact}
+        baseElements={baseElements}
+        deleteInstance={deleteInstance}
+        deleteLists={() => this.deleteBaseElements(i)}
+        editInstance={editInstance}
+        getAllInstancesInAllTrees={getAllInstancesInAllTrees}
+        instanceNames={instanceNames}
+        isLoadingModifiers={isLoadingModifiers}
+        listInstance={baseElement}
+        modifiersByInputType={modifiersByInputType}
+        parameters={parameters}
+        templates={templates}
+        updateLists={baseElement => this.updateBaseElements(baseElement, i)}
+        updateInstanceModifiers={updateInstanceModifiers}
+        vsacApiKey={vsacApiKey}
       />
-    </div>
-  );
+    );
+  };
 
   render() {
     const {
@@ -60,6 +91,7 @@ export default class BaseElements extends Component {
       disableAddElement,
       editInstance,
       getAllInstancesInAllTrees,
+      instance,
       instanceNames,
       isLoadingModifiers,
       modifiersByInputType,
@@ -73,11 +105,11 @@ export default class BaseElements extends Component {
 
     return (
       <div>
-        {this.props.instance.baseElements.map((baseElement, i) => {
+        {instance.baseElements.map((baseElement, i) => {
           if (baseElement.conjunction) {
             return (
-              <div className="subpopulations" key={i} id={baseElement.uniqueId}>
-                {this.renderListOperationConjunction(baseElement, i)}
+              <div className="subpopulations" key={i}>
+                {this.renderConjunctionGroup(baseElement, i)}
               </div>
             );
           }

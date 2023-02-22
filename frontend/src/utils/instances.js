@@ -1,6 +1,7 @@
 import Validators from './validators';
 import _ from 'lodash';
 import { getOriginalBaseElement } from 'utils/baseElements';
+import { isElementAndOr } from './lists';
 
 export function validateModifier(modifier) {
   let validationWarning = null;
@@ -33,6 +34,25 @@ export function getReturnType(startingReturnType, modifiers = []) {
   }
 
   return returnType;
+}
+
+function getAllChildInstances(childInstances) {
+  return _.flatten(
+    (childInstances || []).map(instance => {
+      if (instance.childInstances) {
+        return _.flatten([instance, getAllChildInstances(instance.childInstances)]);
+      }
+      return instance;
+    })
+  );
+}
+
+// Determines if the return type is valid for the given group type
+export function isReturnTypeValid(returnType, id, childInstances) {
+  if (isElementAndOr(id)) {
+    return returnType.toLowerCase() === 'boolean' || getAllChildInstances(childInstances).length === 1;
+  }
+  return true;
 }
 
 export function allModifiersValid(modifiers) {

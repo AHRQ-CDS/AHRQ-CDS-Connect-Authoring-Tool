@@ -8,10 +8,11 @@ export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTr
       const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
       if (use) {
         const useCommentField = getFieldWithId(use.fields, 'comment');
-        const useCommentValue = useCommentField ? useCommentField.value : '';
+        const useCommentValue = useCommentField && useCommentField.value ? useCommentField.value : '';
         const useNameField = getFieldWithId(use.fields, 'element_name');
         const instanceCommentField = getFieldWithId(instance.fields, 'comment');
-        const instanceCommentValue = instanceCommentField ? instanceCommentField.value : '';
+        const instanceCommentValue =
+          instanceCommentField && instanceCommentField.value ? instanceCommentField.value : '';
         const instanceNameField = getFieldWithId(instance.fields, 'element_name');
 
         if (
@@ -262,6 +263,14 @@ export function hasInvalidListWarning(returnType) {
   return returnType.toLowerCase() === 'invalid';
 }
 
+export function isEmptyIntersect(listInstance) {
+  return (
+    listInstance.returnType === 'list_of_any' &&
+    listInstance.name === 'Intersect' &&
+    listInstance.childInstances.length > 0
+  );
+}
+
 export function isSubpopulationEmpty(subpopulation) {
   return subpopulation.childInstances && subpopulation.childInstances.length < 1;
 }
@@ -269,6 +278,44 @@ export function isSubpopulationEmpty(subpopulation) {
 export function isSubpopulationUsed(recommendations, uniqueId) {
   return recommendations.some(rec => rec.subpopulations.some(s => s.uniqueId === uniqueId));
 }
+
+// Get all errors on a top level ListGroup
+export const getListGroupErrors = (listInstance, instanceNames, baseElements, parameters, allInstancesInAllTrees) => {
+  const doesHaveDuplicateName = hasDuplicateName(
+    listInstance,
+    instanceNames,
+    baseElements,
+    parameters,
+    allInstancesInAllTrees
+  );
+  const doesHaveBaseElementWarning = doesBaseElementInstanceNeedWarning(listInstance, allInstancesInAllTrees);
+  const listIsEmptyIntersect = isEmptyIntersect(listInstance);
+  const isInvalidList =
+    (listInstance.id === 'And' || listInstance.id === 'Or') && hasInvalidListWarning(listInstance.returnType);
+  const listAlerts = [
+    {
+      alertSeverity: 'error',
+      alertMessage: 'Warning: Name already in use. Choose another name.',
+      showAlert: doesHaveDuplicateName && !doesHaveBaseElementWarning
+    },
+    {
+      alertSeverity: 'error',
+      alertMessage: 'Warning: One or more uses of this Base Element have changed. Choose another name.',
+      showAlert: doesHaveBaseElementWarning
+    },
+    {
+      alertSeverity: 'warning',
+      alertMessage: 'Warning: Intersecting different types will always result in an empty list.',
+      showAlert: listIsEmptyIntersect
+    },
+    {
+      alertSeverity: 'warning',
+      alertMessage: "Warning: Elements in groups combined with and/or must all have return type 'boolean'.",
+      showAlert: isInvalidList
+    }
+  ];
+  return listAlerts;
+};
 
 // Get all errors on a top-level Subpopulation
 export const getSubpopulationErrors = (subpopulation, recommendations, instanceNames) => {
