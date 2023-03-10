@@ -14,7 +14,6 @@ import { getListGroupErrors, hasGroupNestedWarning } from 'utils/warnings';
 
 const ListGroup = ({
   addInstance,
-  artifact,
   baseElements,
   deleteInstance,
   deleteLists,
@@ -89,7 +88,6 @@ const ListGroup = ({
     >
       <ConjunctionGroup
         addInstance={addInstanceInGroup}
-        artifact={artifact}
         baseElements={baseElements}
         baseIndentLevel={1}
         deleteInstance={deleteInstanceInGroup}
@@ -117,7 +115,6 @@ const ListGroup = ({
 
 ListGroup.propTypes = {
   addInstance: PropTypes.func.isRequired,
-  artifact: PropTypes.object,
   baseElements: PropTypes.array.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   deleteLists: PropTypes.func.isRequired,

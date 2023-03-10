@@ -9,7 +9,6 @@ import { getLabelForInstance } from 'utils/instances';
 
 const ConjunctionGroup = ({
   addInstance,
-  artifact,
   baseElements,
   baseIndentLevel,
   deleteInstance,
@@ -75,23 +74,23 @@ const ConjunctionGroup = ({
     return 'odd';
   };
 
-  const indentClickHandler = instance => {
+  const indentClickHandler = element => {
     if (disableAddElement) {
       return;
     }
 
     // Decide what type of conjunction group to create when indenting
     let conjunctionType;
-    if (artifact[treeName].id === 'Or') {
+    if (instance.name === 'Or') {
       conjunctionType = conjunctionGroupOptions.find(template => template.id === 'And');
     } else {
       // Default is adding an OR
       conjunctionType = conjunctionGroupOptions.find(template => template.id === 'Or');
     }
 
-    if (instance.conjunction) {
+    if (element.conjunction) {
       // Indenting a conjunction group (and it's children)
-      const newInstance = createTemplateInstance(conjunctionType, [instance]);
+      const newInstance = createTemplateInstance(conjunctionType, [element]);
       const parentPath = getPath().split('.').slice(0, -2).join('.'); // Path of parent of conjunction group
       const index = Number(getPath().split('.').pop()); // Index of to indent group at
       const toAdd = [{ instance: newInstance, path: parentPath, index }];
@@ -99,27 +98,26 @@ const ConjunctionGroup = ({
       deleteInstance(treeName, getPath(), toAdd);
     } else {
       // Indent a single templateInstance
-      const newInstance = createTemplateInstance(conjunctionType, [instance]);
-      const index = Number(getChildsPath(instance.uniqueId).split('.').pop()); // Index to add new conjunction at
+      const newInstance = createTemplateInstance(conjunctionType, [element]);
+      const index = Number(getChildsPath(element.uniqueId).split('.').pop()); // Index to add new conjunction at
       const toAdd = [{ instance: newInstance, path: getPath(), index }];
 
-      deleteInstance(treeName, getChildsPath(instance.uniqueId), toAdd);
+      deleteInstance(treeName, getChildsPath(element.uniqueId), toAdd);
     }
   };
 
-  const outdentClickHandler = instance => {
+  const outdentClickHandler = element => {
     if (disableAddElement) {
       return;
     }
-    if (instance.conjunction) {
+    if (element.conjunction) {
       // Outdenting a conjunction group. Removes the conjunction, readds each child to the conjunction's parent
-      const toAdd = [];
-      instance.childInstances.forEach((child, i) => {
+      const toAdd = element.childInstances.map((child, i) => {
         // Path of the parent where items get added
         const parentPath = getPath().split('.').slice(0, -2).join('.');
         let index = getPath().split('.').pop(); // Index of the conjunction group
         index = Number(index) + i; // Index to add the conjunction's children at
-        return toAdd.push({ instance: child, path: parentPath, index });
+        return { instance: child, path: parentPath, index };
       });
 
       deleteInstance(treeName, getPath(), toAdd);
@@ -129,8 +127,8 @@ const ConjunctionGroup = ({
       const parentPath = getPath().split('.').slice(0, -2).join('.');
       let index = getPath().split('.').pop(); // Index of the parent
       index = Number(index) + 1; // Readd the child that is being outdented right below the parent it came from
-      const toAdd = [{ instance, path: parentPath, index }];
-      deleteInstance(treeName, getChildsPath(instance.uniqueId), toAdd);
+      const toAdd = [{ instance: element, path: parentPath, index }];
+      deleteInstance(treeName, getChildsPath(element.uniqueId), toAdd);
     }
   };
 
@@ -185,7 +183,6 @@ const ConjunctionGroup = ({
           <div key={child.uniqueId} className="card-group">
             <ConjunctionGroup
               addInstance={addInstance}
-              artifact={artifact}
               baseElements={baseElements}
               baseIndentLevel={baseIndentLevel}
               deleteInstance={deleteInstance}
@@ -244,7 +241,6 @@ const ConjunctionGroup = ({
 
 ConjunctionGroup.propTypes = {
   addInstance: PropTypes.func.isRequired,
-  artifact: PropTypes.object,
   baseElements: PropTypes.array.isRequired,
   baseIndentLevel: PropTypes.number,
   deleteInstance: PropTypes.func.isRequired,

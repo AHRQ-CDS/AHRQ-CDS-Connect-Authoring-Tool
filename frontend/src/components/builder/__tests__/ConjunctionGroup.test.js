@@ -23,7 +23,6 @@ describe('<ConjunctionGroup />', () => {
       <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact } })}>
         <ConjunctionGroup
           addInstance={jest.fn()}
-          artifact={{ MeetsInclusionCriteria: { id: 'Or' } }}
           baseElements={[]}
           deleteInstance={jest.fn()}
           disableAddElement={false}
@@ -39,7 +38,7 @@ describe('<ConjunctionGroup />', () => {
           options=""
           parameters={[]}
           root={true}
-          subpopulationUniqueId={0}
+          subpopulationUniqueId={null}
           templates={elementGroups}
           treeName="MeetsInclusionCriteria"
           updateInstanceModifiers={jest.fn()}

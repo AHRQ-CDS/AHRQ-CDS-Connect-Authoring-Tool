@@ -6,7 +6,6 @@ import ConjunctionGroup from './ConjunctionGroup';
 const Subpopulation = ({
   addInstance,
   alerts,
-  artifact,
   baseElements,
   deleteInstance,
   disableDeleteSubpopulationElement,
@@ -44,7 +43,6 @@ const Subpopulation = ({
     >
       <ConjunctionGroup
         addInstance={addInstance}
-        artifact={artifact}
         baseElements={baseElements}
         baseIndentLevel={1}
         deleteInstance={deleteInstance}
@@ -69,7 +67,6 @@ const Subpopulation = ({
 Subpopulation.propTypes = {
   addInstance: PropTypes.func.isRequired,
   alerts: PropTypes.array,
-  artifact: PropTypes.object,
   baseElements: PropTypes.array.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   disableDeleteSubpopulationElement: PropTypes.bool.isRequired,

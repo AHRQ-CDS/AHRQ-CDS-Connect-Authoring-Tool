@@ -376,7 +376,6 @@ export class Builder extends Component {
       return (
         <ConjunctionGroup
           addInstance={this.addInstance}
-          artifact={artifact}
           baseElements={artifact.baseElements}
           deleteInstance={this.deleteInstance}
           editInstance={this.editInstance}
@@ -715,19 +714,15 @@ export class Builder extends Component {
                   <BaseElements
                     addBaseElement={this.addBaseElement}
                     addInstance={this.addInstance}
-                    artifact={artifact}
                     baseElements={artifact.baseElements}
                     deleteInstance={this.deleteInstance}
                     editInstance={this.editInstance}
-                    fhirVersion={artifact.fhirVersion}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
-                    instance={artifact}
                     instanceNames={names}
                     isLoadingModifiers={isLoadingModifiers}
                     modifiersByInputType={modifiersByInputType}
                     parameters={namedParameters}
                     templates={templates}
-                    treeName="baseElements"
                     updateBaseElementLists={this.updateSubpopulations}
                     updateInstanceModifiers={this.updateInstanceModifiers}
                     validateReturnType={false}

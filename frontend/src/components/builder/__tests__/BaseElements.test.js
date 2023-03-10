@@ -5,7 +5,13 @@ import nock from 'nock';
 
 import BaseElements from '../BaseElements';
 import { render, screen, userEvent } from 'utils/test-utils';
-import { elementGroups, genericBaseElementInstance, genericBaseElementListInstance } from 'utils/test_fixtures';
+import {
+  elementGroups,
+  genericBaseElementInstance,
+  genericBaseElementListInstance,
+  genericInstance
+} from 'utils/test_fixtures';
+import { createTemplateInstance } from 'utils/test_helpers';
 import { mockArtifact } from 'mocks/artifacts';
 import { mockExternalCqlLibrary } from 'mocks/external-cql';
 import { mockTemplates } from 'mocks/templates';
@@ -18,19 +24,14 @@ describe('<BaseElements />', () => {
           addBaseElement={jest.fn()}
           addInstance={jest.fn()}
           baseElements={[]}
-          conversionFunctions={[]}
           deleteInstance={jest.fn()}
           editInstance={jest.fn()}
-          getAllInstances={jest.fn()}
           getAllInstancesInAllTrees={jest.fn(() => [])}
-          instance={null}
           instanceNames={[]}
           isLoadingModifiers={false}
-          modifierMap={{}}
           modifiersByInputType={{}}
           parameters={[]}
-          templates={[]}
-          treeName="baseElements"
+          templates={elementGroups}
           updateBaseElementLists={jest.fn()}
           updateInstanceModifiers={jest.fn()}
           validateReturnType={false}
@@ -51,10 +52,15 @@ describe('<BaseElements />', () => {
 
   afterEach(() => nock.cleanAll());
 
-  it('renders separate template instances', () => {
-    const genericBaseElementInstanceWithoutUsedBy = { ...genericBaseElementInstance, usedBy: [] };
+  it('should render separate non-list elements', () => {
+    const genericBaseElementInstanceWithoutUsedBy1 = createTemplateInstance(genericBaseElementInstance);
+    genericBaseElementInstanceWithoutUsedBy1.usedBy = [];
+    genericBaseElementInstanceWithoutUsedBy1.uniqueId = 'base-el-1';
+    const genericBaseElementInstanceWithoutUsedBy2 = createTemplateInstance(genericBaseElementInstance);
+    genericBaseElementInstanceWithoutUsedBy2.usedBy = [];
+    genericBaseElementInstanceWithoutUsedBy2.uniqueId = 'base-el-2';
 
-    const baseElements = [genericBaseElementInstanceWithoutUsedBy, genericBaseElementInstanceWithoutUsedBy];
+    const baseElements = [genericBaseElementInstanceWithoutUsedBy1, genericBaseElementInstanceWithoutUsedBy2];
 
     const { container } = renderComponent({
       baseElements,
@@ -67,17 +73,15 @@ describe('<BaseElements />', () => {
     expect(templateInstanceHeaders[1]).toHaveTextContent('Observation');
   });
 
-  it('can render a list group with conjunction and a template instance inside', async () => {
-    const baseElements = [genericBaseElementListInstance];
-    const { container } = renderComponent({
-      baseElements,
-      getAllInstances: () => genericBaseElementListInstance.childInstances,
-      instance: { baseElements, uniqueId: 'uuid' },
-      templates: elementGroups
-    });
+  it('should render a list group with an element inside', async () => {
+    const baseElement = createTemplateInstance(genericBaseElementListInstance);
+    baseElement.childInstances = [genericInstance];
+    const baseElements = [baseElement];
+
+    const { getAllByTestId } = renderComponent({ baseElements });
 
     // ListGroup renders a ConjunctionGroup
-    const conjunctions = container.querySelectorAll('.subpopulations');
+    const conjunctions = getAllByTestId('group-element');
     expect(conjunctions).toHaveLength(1);
 
     // ConjunctionGroup renders a TemplateInstance and an ElementSelect
@@ -98,5 +102,67 @@ describe('<BaseElements />', () => {
     expect(menuOptions).toHaveLength(2);
     expect(menuOptions[0]).toHaveTextContent(listOperations[0].name);
     expect(menuOptions[1]).toHaveTextContent(listOperations[1].name);
+  });
+
+  it('should render ElementSelect to add new base elements', () => {
+    const { getByLabelText } = renderComponent({});
+    expect(getByLabelText('Element type')).toBeInTheDocument();
+  });
+
+  it('should call addBaseElement when adding a new base element', async () => {
+    const addBaseElement = jest.fn();
+    const { getByLabelText, findByRole, findByLabelText } = renderComponent({ addBaseElement, baseElements: [] });
+
+    const elementSelect = getByLabelText('Element type');
+    userEvent.click(elementSelect);
+    userEvent.click(await findByRole('option', { name: /demographics/i }));
+    userEvent.click(await findByLabelText('Demographics Element'));
+    userEvent.click(await findByRole('option', { name: /age range/i }));
+    expect(addBaseElement).toBeCalledTimes(1);
+    const ageRangeElement = {
+      fields: [
+        { id: 'element_name', name: 'Element Name', type: 'string' },
+        { id: 'comment', name: 'Comment', type: 'textarea' },
+        { id: 'min_age', name: 'Minimum Age', type: 'number', typeOfNumber: 'integer' },
+        { id: 'max_age', name: 'Maximum Age', type: 'number', typeOfNumber: 'integer' },
+        { id: 'unit_of_time', name: 'Unit of Time', select: 'demographics/units_of_time', type: 'valueset' }
+      ],
+      uniqueId: 'AgeRange-TEST-1',
+      id: 'AgeRange',
+      name: 'Age Range',
+      path: '',
+      returnType: 'boolean',
+      suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
+      validator: { fields: ['unit_of_time', 'min_age', 'max_age'], type: 'requiredIfThenOne' }
+    };
+    expect(addBaseElement).toBeCalledWith(ageRangeElement);
+  });
+
+  it('should call updateBaseElementLists when changing base element lists', () => {
+    const updateBaseElementLists = jest.fn();
+    const baseElement = createTemplateInstance(genericBaseElementListInstance);
+    baseElement.childInstances = [genericInstance];
+    const baseElements = [baseElement];
+
+    const { getByTestId } = renderComponent({ updateBaseElementLists, baseElements });
+
+    const groupElement = getByTestId('group-element').parentNode.parentNode;
+    const nameInput = groupElement.querySelector('input[type="text"]');
+    userEvent.type(nameInput, 'new list name');
+    expect(updateBaseElementLists).toBeCalled();
+  });
+
+  it('should call updateBaseElementLists when deleting a base element list', () => {
+    const updateBaseElementLists = jest.fn();
+    const baseElement = createTemplateInstance(genericBaseElementListInstance);
+    baseElement.childInstances = [genericInstance];
+    baseElement.usedBy = [];
+    const baseElements = [baseElement];
+
+    const { getByRole } = renderComponent({ updateBaseElementLists, baseElements });
+
+    userEvent.click(getByRole('button', { name: /delete list group/i }));
+    userEvent.click(getByRole('button', { name: 'Delete' }));
+    expect(updateBaseElementLists).toBeCalledTimes(1);
   });
 });

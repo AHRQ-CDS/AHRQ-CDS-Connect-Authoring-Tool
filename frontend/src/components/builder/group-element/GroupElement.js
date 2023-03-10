@@ -87,7 +87,7 @@ const GroupElement = ({
       showAllContent={showAllContent}
       titleField={titleField}
     >
-      <Stack>
+      <Stack data-testid="group-element">
         <ExpressionPhrase instance={groupInstance} baseElements={baseElements} />
         {showReturnType && (
           <ReturnTypeTemplate

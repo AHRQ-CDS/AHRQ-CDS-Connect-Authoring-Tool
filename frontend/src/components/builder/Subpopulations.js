@@ -83,7 +83,6 @@ const Subpopulations = ({
               key={subpopulation.uniqueId}
               addInstance={(name, template, path) => addInstance(name, template, path, subpopulation.uniqueId)} // Add elements inside subpopulations
               alerts={subpopulationAlerts}
-              artifact={artifact}
               baseElements={baseElements}
               deleteInstance={(treeName, path, toAdd) => deleteInstance(treeName, path, toAdd, subpopulation.uniqueId)} // Delete elements inside subpopulations
               disableDeleteSubpopulationElement={isSubpopulationUsed(artifact.recommendations, subpopulation.uniqueId)}
