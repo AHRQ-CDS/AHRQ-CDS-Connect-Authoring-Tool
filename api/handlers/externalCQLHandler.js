@@ -918,7 +918,7 @@ const artifactHasServiceRequest = artifact => {
   artifact.baseElements.forEach(instance => {
     const conjunctions = ['Union', 'And', 'Or', 'Intersect'];
     if (instance.name === 'Service Request') serviceRequestFound = true;
-    else if (conjunctions.includes(instance.name)) serviceRequestFound |= this.parseElementTree(instance);
+    else if (conjunctions.includes(instance.name)) serviceRequestFound |= parseElementTree(instance);
   });
 
   return serviceRequestFound;
