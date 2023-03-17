@@ -528,6 +528,7 @@ module.exports = [
     inputTypes: ['list_of_medication_requests'],
     returnType: 'list_of_medication_requests',
     values: { value: undefined, unit: undefined },
+    validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.MedicationRequestLookBack'
   },
@@ -538,6 +539,7 @@ module.exports = [
     inputTypes: ['list_of_medication_statements'],
     returnType: 'list_of_medication_statements',
     values: { value: undefined, unit: undefined },
+    validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.MedicationStatementLookBack'
   },
