@@ -682,7 +682,11 @@ class CqlArtifact {
           }
         }
       }
-      conjunction.components.push({ name: childName });
+      const component = { name: childName };
+      if ((element.id === 'Union' || element.id === 'Intersect') && child.needToPromote) {
+        component.needToPromote = true;
+      }
+      conjunction.components.push(component);
     });
     this.conjunction_main.push(conjunction);
     return element;

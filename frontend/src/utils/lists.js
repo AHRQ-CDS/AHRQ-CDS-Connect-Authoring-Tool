@@ -3,7 +3,34 @@ import { plural } from 'pluralize';
 import { getReturnType } from 'utils/instances';
 import { findValueAtPath } from './find';
 
+// These lists are based off the lists defined in api//data/modifiers.js
+// in order to ensure any type will have modifiers available for it.
+const listTypes = [
+  'list_of_allergy_intolerances',
+  'list_of_any',
+  'list_of_booleans',
+  'list_of_conditions',
+  'list_of_datetimes',
+  'list_of_decimals',
+  'list_of_devices',
+  'list_of_encounters',
+  'list_of_immunizations',
+  'list_of_integers',
+  'list_of_medication_requests',
+  'list_of_medication_statements',
+  'list_of_observations',
+  'list_of_others',
+  'list_of_procedures',
+  'list_of_service_requests',
+  'list_of_strings',
+  'list_of_system_codes',
+  'list_of_system_concepts',
+  'list_of_system_quantities',
+  'list_of_times'
+];
+
 export const isElementAndOr = id => id === 'And' || id === 'Or';
+export const isElementUnionIntersect = id => id === 'Union' || id === 'Intersect';
 
 export const promoteReturnTypeToList = returnType => {
   const isSingularElement = !returnType.startsWith('list_of_');
@@ -15,7 +42,7 @@ export const promoteReturnTypeToList = returnType => {
 
 export const checkReturnTypeCompatibilitySetList = (currentReturnType, incomingReturnType) => {
   const incomingReturnTypeOrPromoted = promoteReturnTypeToList(incomingReturnType);
-  const isListElement = incomingReturnTypeOrPromoted.startsWith('list_of_');
+  const isListElement = listTypes.find(type => type === incomingReturnTypeOrPromoted);
   if (currentReturnType === incomingReturnTypeOrPromoted && isListElement) {
     return incomingReturnTypeOrPromoted;
   }

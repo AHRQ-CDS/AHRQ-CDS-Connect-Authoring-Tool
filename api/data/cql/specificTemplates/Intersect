@@ -4,7 +4,12 @@ comment.forEach(c => {
 %>// <%-c%>
 <%})}; -%>
 define "<%-element_name%>":
-  <%-components.map(c => `"${c.name}"`).join(`
+  <%-components.map(c => {
+    if (c.needToPromote) {
+      return `(if "${c.name}" is null then null else List { "${c.name}" })`;
+    }
+    return `"${c.name}"`;
+  }).join(`
   intersect `)%><%
   if (components.length === 0) {
     %>null<%

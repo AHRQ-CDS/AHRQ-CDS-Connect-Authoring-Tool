@@ -34,7 +34,7 @@ describe('list utils', () => {
   });
 
   describe('#checkReturnTypeCompatibilitySetList', () => {
-    it('should calculate return types of Union and Intersect lists', () => {
+    it('should calculate return types of Union and Intersect lists with known types', () => {
       const observations = checkReturnTypeCompatibilitySetList('list_of_observations', 'observation');
       expect(observations).toEqual('list_of_observations');
 
@@ -49,6 +49,16 @@ describe('list utils', () => {
 
       const boolean = checkReturnTypeCompatibilitySetList('list_of_booleans', 'boolean');
       expect(boolean).toEqual('list_of_booleans');
+    });
+
+    it('should calculate return type of any if an unrecognized list type is provided', () => {
+      const obsAndDiagnosticReport = checkReturnTypeCompatibilitySetList('list_of_observations', 'diagnostic_report'); // not a supported type
+      expect(obsAndDiagnosticReport).toEqual('list_of_any');
+
+      // Technically, this wouldn't happen because list_of_diagnostic_reports wouldn't be an already applied type,
+      // but this case serves to just test the logic
+      const diagnosticReport = checkReturnTypeCompatibilitySetList('list_of_diagnostic_reports', 'diagnostic_report');
+      expect(diagnosticReport).toEqual('list_of_any');
     });
   });
 

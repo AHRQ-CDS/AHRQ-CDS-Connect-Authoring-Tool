@@ -46,6 +46,8 @@ import { fetchModifiers } from 'queries/modifiers';
 import isBlankArtifact from 'utils/artifacts/isBlankArtifact';
 import { findValueAtPath } from 'utils/find';
 import { hasGroupNestedWarning } from 'utils/warnings';
+import { getReturnType } from 'utils/instances';
+import { isElementUnionIntersect } from 'utils/lists';
 import { errorStatementHasWarnings } from 'components/builder/error-statement/utils';
 import { parametersHaveWarnings } from 'components/builder/parameters/utils';
 import { getAllElements, getElementNames } from 'components/builder/utils';
@@ -80,7 +82,19 @@ export class Builder extends Component {
     this.props.loadTemplates().then(result => {
       // if there is a current artifact, load it, otherwise initialize new artifact
       if (this.props.match.params.id) {
-        this.props.loadArtifact(this.props.match.params.id);
+        this.props.loadArtifact(this.props.match.params.id).then(() => {
+          // NOTE: This check is to ensure any Union/Intersect list groups that were created
+          // before the "needToPromote" flag was added to properly promote lists
+          // in CQL are marked for promotion.
+          // This section of code is only really useful for a limited amount of time,
+          // because eventually we can assume any artifact being used has the property
+          // set appropriately. Consider deleting this after one year (April 2024).
+          this.props.artifact.baseElements.forEach(baseElement => {
+            if (isElementUnionIntersect(baseElement.id)) {
+              this.checkForNeedToPromote(baseElement);
+            }
+          });
+        });
       } else {
         const operations = result.templates.find(template => template.name === 'Operations');
         const andTemplate = operations.entries.find(entry => entry.name === 'And');
@@ -178,6 +192,11 @@ export class Builder extends Component {
       tree.returnType = updatedReturnType;
     }
     localTree = tree;
+
+    if (treeName === 'baseElements' && isElementUnionIntersect(tree.id)) {
+      this.checkForNeedToPromote(tree);
+    }
+
     await this.setTree(treeName, treeData, tree);
     this.updateFHIRVersion();
   };
@@ -243,6 +262,10 @@ export class Builder extends Component {
       });
     }
 
+    if (treeName === 'baseElements' && isElementUnionIntersect(tree.id)) {
+      this.checkForNeedToPromote(tree);
+    }
+
     this.updateFHIRVersion();
   };
 
@@ -255,6 +278,11 @@ export class Builder extends Component {
     if (updatedReturnType) {
       tree.returnType = updatedReturnType;
     }
+
+    if (treeName === 'baseElements' && isElementUnionIntersect(tree.id)) {
+      this.checkForNeedToPromote(tree);
+    }
+
     await this.setTree(treeName, treeData, tree);
     this.updateFHIRVersion();
   };
@@ -287,6 +315,20 @@ export class Builder extends Component {
     if (!instances || instances.length === 0) return false;
     if (instances.some(instance => instance.name === instanceName)) return true;
     return false;
+  };
+
+  checkForNeedToPromote = baseElementSetList => {
+    baseElementSetList.childInstances.forEach(child => {
+      // Unions/Intersects only have children one level deep
+      let childReturnType = getReturnType(child.returnType, child.modifiers);
+      // All set lists will have a return type of list_of_SOMETHING. If any child on its own
+      // has a singular return type, it needs to be promoted to a list in the CQL.
+      if (!childReturnType.startsWith('list_of_') && baseElementSetList.childInstances.length > 1) {
+        child.needToPromote = true;
+      } else {
+        child.needToPromote = false;
+      }
+    });
   };
 
   updateFHIRVersion = () => {
