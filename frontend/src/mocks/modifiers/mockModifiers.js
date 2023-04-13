@@ -567,6 +567,17 @@ const mockModifiers = [
     cqlLibraryFunction: 'C3F.ServiceRequestLookBack'
   },
   {
+    id: 'LookBackEncounter',
+    type: 'LookBack',
+    name: 'Look Back',
+    inputTypes: ['list_of_service_requests'],
+    returnType: 'list_of_service_requests',
+    values: { value: undefined, unit: undefined },
+    validator: { type: 'require', fields: ['value', 'unit'], args: null },
+    cqlTemplate: 'LookBackModifier',
+    cqlLibraryFunction: 'C3F.EncounterLookBack'
+  },
+  {
     id: 'Count',
     name: 'Count',
     inputTypes: elementLists,

@@ -362,6 +362,19 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
+                Look Back
+                <ul>
+                  <li>
+                    CQL function: <code>C3F.EncounterLookBack</code>
+                  </li>
+                  <li>
+                    Summary: Returns a list of encounters with <code>period</code> that occurred between now and the
+                    time period specified by the user
+                  </li>
+                  <li>Returns: List of Encounters</li>
+                </ul>
+              </li>
+              <li>
                 See expressions that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>

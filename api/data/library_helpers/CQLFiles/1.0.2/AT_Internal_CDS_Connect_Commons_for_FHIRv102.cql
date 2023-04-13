@@ -13,7 +13,9 @@
 // - 1.3.4
 //   - Add functions for First {Observation, Condition, Procedure, Immunization}
 //   - Add functions for Average Observation
-library AT_Internal_CDS_Connect_Commons_for_FHIRv102 version '1.3.4'
+// - 1.3.5
+//   - Add function for EncounterLookBack
+library AT_Internal_CDS_Connect_Commons_for_FHIRv102 version '1.3.5'
 
 using FHIR version '1.0.2'
 
@@ -500,6 +502,19 @@ define function EncountersByConcept(Koncept System.Concept):
 define function InProgress(EncList List<Encounter>):
   EncList E
     where E.status.value = 'in-progress'
+
+/**
+ * Encounters performed in the specified "look back" period.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param EncList - a list of Encounters
+ * @param LookBack - the lookback period for when the encounter occurred
+ * @returns {List<Encounter>} a list of Encounters occurring during the look back period, or null if null
+ * was passed in
+ */
+define function EncounterLookBack(EncList List<Encounter>, LookBack System.Quantity):
+  EncList E
+    let LookBackInterval: Interval[Now() - LookBack, Now()]
+    where FHIRHelpers.ToInterval(E.period) overlaps LookBackInterval
 
 // -------------------------------------------------- ALLERGY INTOLERANCES ---------------------------------------------
 

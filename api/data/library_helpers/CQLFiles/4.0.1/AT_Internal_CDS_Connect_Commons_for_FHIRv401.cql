@@ -1,6 +1,6 @@
 // CDS Connect Commons for FHIRv401
 // Initial version (1.0.0) based on CDS_Connect_Commons_for_FHIRv400.cql v1.0.1
-// with the addition of "EncounterLookback" and "MedicationDispenseLookback" functions.
+// with the addition of "EncounterLookBack" and "MedicationDispenseLookBack" functions.
 // Change log:
 // - 1.1.0
 //   - Add functions to align with CDS_Connect_Commons_for_FHIRv400.cql v1.0.4:
@@ -8,7 +8,9 @@
 //     ActiveOrCompletedServiceRequest, ActiveServiceRequest, CompletedServiceRequest,
 //     CompletedImmunization, ImmunizationLookBack, MostRecentImmunization, FirstImmunization,
 //     and ActiveDevice
-library AT_Internal_CDS_Connect_Commons_for_FHIRv401 version '1.1.0'
+// - 1.1.1
+//   - Use PeriodToInterval instead of FHIRHelpers.ToInterval for EncounterLookBack
+library AT_Internal_CDS_Connect_Commons_for_FHIRv401 version '1.1.1'
 
 using FHIR version '4.0.1'
 
@@ -557,7 +559,7 @@ define function InProgress(EncList List<Encounter>):
 define function EncounterLookBack(EncList List<Encounter>, LookBack System.Quantity):
   EncList E
     let LookBackInterval: Interval[Now() - LookBack, Now()]
-    where FHIRHelpers.ToInterval(E.period) overlaps LookBackInterval
+    where PeriodToInterval(E.period) overlaps LookBackInterval
 
 // -------------------------------------------------- ALLERGY INTOLERANCES ------------------------------------------------------
 

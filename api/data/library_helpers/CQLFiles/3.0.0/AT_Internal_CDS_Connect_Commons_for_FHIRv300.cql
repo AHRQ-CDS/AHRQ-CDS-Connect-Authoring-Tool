@@ -1,4 +1,4 @@
-// CDS Connect Commons for FHIRv102
+// CDS Connect Commons for FHIRv300
 // Change log:
 // - 1.0.1
 //   - Remove NullSafe conversion functions since FHIRHelpers now does null-safe conversions
@@ -9,7 +9,9 @@
 // - 1.0.3
 //   - Add functions for First {Observation, Condition, Procedure, Immunization}
 //   - Add functions for Average Observation
-library AT_Internal_CDS_Connect_Commons_for_FHIRv300 version '1.0.3'
+// - 1.0.4
+//   - Add function for EncounterLookBack
+library AT_Internal_CDS_Connect_Commons_for_FHIRv300 version '1.0.4'
 
 using FHIR version '3.0.0'
 
@@ -403,6 +405,19 @@ define function EncountersByConcept(Koncept System.Concept):
 define function InProgress(EncList List<Encounter>):
   EncList E
     where E.status.value = 'in-progress'
+
+/**
+ * Encounters performed in the specified "look back" period.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param EncList - a list of Encounters
+ * @param LookBack - the lookback period for when the encounter occurred
+ * @returns {List<Encounter>} a list of Encounters occurring during the look back period, or null if null
+ * was passed in
+ */
+define function EncounterLookBack(EncList List<Encounter>, LookBack System.Quantity):
+  EncList E
+    let LookBackInterval: Interval[Now() - LookBack, Now()]
+    where FHIRHelpers.ToInterval(E.period) overlaps LookBackInterval
 
 // -------------------------------------------------- ALLERGY INTOLERANCES ------------------------------------------------------
 

@@ -75,7 +75,7 @@ const includeLibrariesDstu2 = [
   { name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers' },
   {
     name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv102',
-    version: '1.3.4',
+    version: '1.3.5',
     alias: 'C3F'
   },
   {
@@ -89,7 +89,7 @@ const includeLibrariesStu3 = [
   { name: 'FHIRHelpers', version: '3.0.0', alias: 'FHIRHelpers' },
   {
     name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv300',
-    version: '1.0.3',
+    version: '1.0.4',
     alias: 'C3F'
   },
   {
@@ -103,7 +103,7 @@ const includeLibrariesR400 = [
   { name: 'FHIRHelpers', version: '4.0.0', alias: 'FHIRHelpers' },
   {
     name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv400',
-    version: '1.0.4',
+    version: '1.0.5',
     alias: 'C3F'
   },
   {
@@ -117,7 +117,7 @@ const includeLibrariesR401 = [
   { name: 'FHIRHelpers', version: '4.0.1', alias: 'FHIRHelpers' },
   {
     name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv401',
-    version: '1.1.0',
+    version: '1.1.1',
     alias: 'C3F'
   },
   {

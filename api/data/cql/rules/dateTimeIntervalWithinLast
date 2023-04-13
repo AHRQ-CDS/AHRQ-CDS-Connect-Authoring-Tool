@@ -1,0 +1,1 @@
+<%-value_name%>.<%-resourceProperty%> <%-userSpecifiedIndex == 'Starts Within Last' ? 'starts' : 'ends'%> during Interval[Now() - <%-durationValue%> <%-timeUnit%>, Now()]

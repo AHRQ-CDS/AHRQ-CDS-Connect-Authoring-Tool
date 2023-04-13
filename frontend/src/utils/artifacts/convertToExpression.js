@@ -92,6 +92,7 @@ function getExpressionSentenceValue(modifier) {
     LookBackMedicationStatement: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackProcedure: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackServiceRequest: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
+    LookBackEncounter: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     ServiceRequestActiveOrCompleted: { modifierText: 'active or completed', leadingText: '', type: 'list' },
     ServiceRequestActive: { modifierText: 'active', leadingText: '', type: 'list' },
     ServiceRequestCompleted: { modifierText: 'completed', leadingText: '', type: 'list' },
@@ -230,7 +231,8 @@ function getExpressionSentenceValue(modifier) {
       case 'LookBackMedicationRequest':
       case 'LookBackMedicationStatement':
       case 'LookBackServiceRequest':
-      case 'LookBackProcedure': {
+      case 'LookBackProcedure':
+      case 'LookBackEncounter': {
         expressionSentenceValues[
           modifier.id
         ].modifierText = `within the last ${modifier.values.value} ${modifier.values.unit}`;

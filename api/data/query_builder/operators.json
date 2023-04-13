@@ -610,6 +610,46 @@
       ]
     },
     {
+      "id": "dateTimeIntervalWithinLast",
+      "name": "(Start | End) Occurred Within Last",
+      "displayName": "",
+      "description": "Check if the operand time type happened within the user specified duration ago",
+      "operatorTemplate": "dateTimeIntervalWithinLast",
+      "primaryOperand": {
+        "typeSpecifier": "IntervalTypeSpecifier",
+        "elementTypes": ["System.DateTime", "System.Date"]
+      },
+      "userSelectedOperands": [
+        {
+          "id": "userSpecifiedIndex",
+          "name": "Starts/Ends",
+          "type": "selector",
+          "selectionValues": ["Starts Within Last", "Ends Within Last"]
+        },
+        {
+          "id": "durationValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Integer"
+          }
+        },
+        {
+          "id": "timeUnit",
+          "name": "Time Unit",
+          "type": "selector",
+          "selectionValues": [
+            { "value": "years", "label": "year(s)" },
+            { "value": "months", "label": "month(s)" },
+            { "value": "weeks", "label": "week(s)" },
+            { "value": "days", "label": "day(s)" },
+            { "value": "hours", "label": "hour(s)" },
+            { "value": "minutes", "label": "minute(s)" }
+          ]
+        }
+      ]
+    },
+    {
       "id": "dateTimeIntervalOverlaps",
       "name": "Overlaps",
       "description": "Check if the operand Interval overlaps another",

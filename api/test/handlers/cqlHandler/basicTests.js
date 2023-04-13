@@ -2128,6 +2128,27 @@ describe('CQL Operator Templates', () => {
     expect(converted).to.contain('[AllergyIntolerance] AI where (AI.recordedDate in Interval[Now() - 7 years, Now()])');
   });
 
+  it('Handles dateTimeIntervalWithinLast template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'dateTimeIntervalWithinLast',
+          resourceProperty: 'onsetPeriod',
+          userSpecifiedIndex: 'Starts Within Last',
+          durationValue: '6',
+          timeUnit: 'months'
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (AI.onset as FHIR.Period starts during Interval[Now() - 6 months, Now()])'
+    );
+  });
+
   it('Handles dateTimeOccurredMoreThan template', () => {
     const templateTest = {
       conjunctionType: 'and',
