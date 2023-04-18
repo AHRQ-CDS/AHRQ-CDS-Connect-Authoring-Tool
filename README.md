@@ -23,7 +23,16 @@ For specific development details of each component, including configuration, see
 
 ### Prerequisites
 
-First, ensure you have [Node.js LTS](https://nodejs.org/) and [MongoDB](https://www.mongodb.com/download-center/community) installed. The CDS Authoring Tool is tested using MongoDB 4.4.x, but later versions are expected to work.
+First, ensure you have [Node.js LTS](https://nodejs.org/) and [MongoDB](https://www.mongodb.com/download-center/community) installed. The CDS Authoring Tool is tested using MongoDB 6.0.x, but later versions are expected to work.
+
+MongoDB can be run using a docker image if desired via
+
+```bash
+mkdir -p db
+docker run --name=mongodb --volume=$PWD/db:/data/db -p 27017:27017 --restart=unless-stopped --detach=true mongo:6.0
+```
+
+This creates a local db directory and then runs a MongoDB docker container that will store files in that directory.
 
 ### Install Node Foreman
 
@@ -83,6 +92,47 @@ nf start
 
 NOTE: Ensure MongoDB is running before starting the CDS Authoring Tool.
 
+When running, the Authoring Tool will be available at [http://localhost:5100/authoring](http://localhost:5100/authoring).
+
+### Testing CQL Execution Results
+
+Testing CQL execution in development requires the API to be configured to use the CQL-to-ELM
+Translator and also requires the Translator to be running locally.
+
+To configure the API, edit the configuration settings in `api/config/local.json` to point to a local
+instance of the Translator:
+
+```json
+"cqlToElm": {
+  "url": "http://localhost:8080/cql/translator",
+  "active": true
+}
+```
+
+This should replace any existing cqlToElm configuration block where `active` is set to `false`. See
+the Configuration section of the [API README](api/README.md#configuration) for details on configuring the API.
+
+Once the configuration is updated and the API has been restarted the translation service can be run
+locally in docker via:
+
+```bash
+docker run -p 8080:8080 cqframework/cql-translation-service:v2.0.0
+```
+
+### Running tests
+
+The API tests can be run with
+
+```bash
+npm --prefix api test
+```
+
+The frontend tests can be run with
+
+```bash
+npm --prefix frontend test
+```
+
 ## Docker
 
 This project can also be built into a Docker image and deployed as a Docker container. To do any of the commands below, [Docker](https://www.docker.com/) must be installed.
@@ -100,8 +150,8 @@ docker build -t cdsauthoringtool .
 For the authoring tool to run in a docker container, MongoDB and CQL-to-ELM docker containers must be linked. The following commands run the necessary containers, with the required links and exposed ports:
 
 ```bash
-docker run --name cat-cql2elm -d cqframework/cql-translation-service:v1.5.2
-docker run --name cat-mongo -d mongo:4.4
+docker run --name cat-cql2elm -d cqframework/cql-translation-service:v2.0.0
+docker run --name cat-mongo -d mongo:6.0
 docker run --name cat \
   --link cat-cql2elm:cql2elm \
   --link cat-mongo:mongo \
