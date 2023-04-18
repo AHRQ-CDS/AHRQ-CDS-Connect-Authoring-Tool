@@ -68,6 +68,8 @@ describe('<Subpopulations />', () => {
 
   afterEach(() => nock.cleanAll());
 
+  afterAll(() => nock.restore());
+
   let origAlert;
   beforeEach(() => {
     origAlert = window.alert;

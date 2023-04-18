@@ -4,6 +4,8 @@ import { render, screen } from 'utils/test-utils';
 import Artifact from '../Artifact';
 
 describe('<Artifact />', () => {
+  afterAll(() => nock.restore());
+
   it('shows form and no table when there is no data', async () => {
     nock('http://localhost').get('/authoring/api/artifacts').reply(200, []);
 

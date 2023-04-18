@@ -104,6 +104,8 @@ describe('<Builder />', () => {
   });
   afterEach(() => nock.cleanAll());
 
+  afterAll(() => nock.restore());
+
   it('can edit a template instance', async () => {
     const store = createMockStore(defaultState);
     renderComponent({ store });

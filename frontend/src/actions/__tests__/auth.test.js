@@ -9,6 +9,8 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 describe('auth actions', () => {
+  afterAll(() => nock.restore());
+
   // ----------------------- USER ------------------------------------------ //
   describe('get current user', () => {
     it('sends a GET request to find the current user', () => {

@@ -7,6 +7,8 @@ describe('<QuantityEditor />', () => {
   const renderComponent = (props = {}) =>
     render(<QuantityEditor errors={{}} handleUpdateEditor={jest.fn()} isInterval={false} value={null} {...props} />);
 
+  afterAll(() => nock.restore());
+
   describe('Quantity Editor', () => {
     it('calls handleUpdateEditor with valid decimal and no unit', () => {
       const handleUpdateEditor = jest.fn();

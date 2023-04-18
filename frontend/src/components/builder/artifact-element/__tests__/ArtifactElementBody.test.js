@@ -39,6 +39,8 @@ describe('<ArtifactElementBody />', () => {
     nock('http://localhost').persist().get(`/authoring/api/modifiers/artifact-id`).reply(200, []);
   });
 
+  afterAll(() => nock.restore());
+
   it('should render validation errors', () => {
     const elementInstanceWithValidationError = {
       fields: [

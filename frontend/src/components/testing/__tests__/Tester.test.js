@@ -28,6 +28,8 @@ describe('<Tester />', () => {
       .reply(200, [mockArtifact]);
   });
 
+  afterAll(() => nock.restore());
+
   describe('CQL execution', () => {
     const executeCQLOnSelectedPatients = async () => {
       userEvent.click(screen.getByRole('button', { name: /Execute CQL on Selected Patients/ }));

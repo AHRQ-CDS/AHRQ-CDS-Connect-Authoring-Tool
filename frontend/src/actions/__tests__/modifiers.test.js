@@ -18,6 +18,8 @@ mockModifiers.forEach(modifier => {
 });
 
 describe('modifiers actions', () => {
+  afterAll(() => nock.restore());
+
   describe('loadConversionFunctions', () => {
     it('dispatches a LOAD_CONVERSION_FUNCTIONS_SUCCESS action on successful load', () => {
       const store = mockStore({});

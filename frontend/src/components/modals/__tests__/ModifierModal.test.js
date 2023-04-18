@@ -214,6 +214,8 @@ describe('<ModifierModal />', () => {
 
   afterEach(() => nock.cleanAll());
 
+  afterAll(() => nock.restore());
+
   it('can close the modal with the "Cancel" button', () => {
     const handleCloseModal = jest.fn();
     renderComponent({ handleCloseModal });

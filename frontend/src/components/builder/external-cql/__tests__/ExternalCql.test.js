@@ -25,6 +25,8 @@ describe('<ExternalCQL />', () => {
       </Provider>
     );
 
+  afterAll(() => nock.restore());
+
   describe('when the artifact is new and has not been saved', () => {
     it('renders a table with no data', async () => {
       renderComponent({ artifact: { ...mockArtifact, _id: undefined } });

@@ -60,6 +60,8 @@ describe('<ListGroup />', () => {
 
   afterEach(() => nock.cleanAll());
 
+  afterAll(() => nock.restore());
+
   it('renders List Group element name', () => {
     const { container } = renderComponent({});
     expect(container).toHaveTextContent('List Group:');

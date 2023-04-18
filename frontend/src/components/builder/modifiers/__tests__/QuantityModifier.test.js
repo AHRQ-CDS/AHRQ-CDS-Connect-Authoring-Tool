@@ -9,6 +9,8 @@ describe('<QuantityModifier />', () => {
       <QuantityModifier handleUpdateModifier={jest.fn()} name="quantity-modifier-test" unit="" value={0} {...props} />
     );
 
+  afterAll(() => nock.restore());
+
   it('can change the quantity', () => {
     const handleUpdateModifier = jest.fn();
     renderComponent({ handleUpdateModifier });

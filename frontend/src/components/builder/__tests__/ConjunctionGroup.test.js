@@ -62,6 +62,8 @@ describe('<ConjunctionGroup />', () => {
 
   afterEach(() => nock.cleanAll());
 
+  afterAll(() => nock.restore());
+
   it('applies correct nesting classes', () => {
     const { container } = renderComponent();
 

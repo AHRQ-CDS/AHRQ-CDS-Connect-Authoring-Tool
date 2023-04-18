@@ -53,6 +53,8 @@ describe('<ValueSetSelectModal />', () => {
       .reply(404);
   });
 
+  afterAll(() => nock.restore());
+
   it('can close the modal with the "Cancel" button', async () => {
     const handleCloseModal = jest.fn();
     renderComponent({ handleCloseModal });

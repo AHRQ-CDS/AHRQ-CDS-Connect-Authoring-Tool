@@ -13,6 +13,8 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 describe('artifact actions', () => {
+  afterAll(() => nock.restore());
+
   // ----------------------- SET STATUS MESSAGE ---------------------------- //
   describe('status message', () => {
     it('should create an action to set a status message', () => {

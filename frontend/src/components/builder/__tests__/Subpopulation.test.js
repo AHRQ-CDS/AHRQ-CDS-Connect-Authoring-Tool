@@ -68,6 +68,8 @@ describe('<Subpopulation />', () => {
 
   afterEach(() => nock.cleanAll());
 
+  afterAll(() => nock.restore());
+
   it('starts expanded if expanded property is set to true on subpopulation object', () => {
     const { getByText } = renderComponent();
 

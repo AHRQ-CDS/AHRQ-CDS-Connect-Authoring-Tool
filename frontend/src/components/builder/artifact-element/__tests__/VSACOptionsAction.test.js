@@ -38,6 +38,8 @@ describe('<VSACOptionsAction />', () => {
       </Provider>
     );
 
+  afterAll(() => nock.restore());
+
   it('renders nothing if vsac is not allowed', () => {
     renderComponent({ allowsVSAC: false });
 

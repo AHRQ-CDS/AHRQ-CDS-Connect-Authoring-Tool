@@ -9,6 +9,8 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 describe('template actions', () => {
+  afterAll(() => nock.restore());
+
   describe('loadTemplates', () => {
     it('dispatches a LOAD_TEMPLATES_SUCCESS action on successful load', () => {
       const store = mockStore({});

@@ -21,6 +21,8 @@ describe('<ExternalModifier />', () => {
       </Provider>
     );
 
+  afterAll(() => nock.restore());
+
   it('renders the name', () => {
     const { container } = renderComponent({ name: 'external modifier test' });
 

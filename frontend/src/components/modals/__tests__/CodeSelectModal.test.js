@@ -11,6 +11,8 @@ describe('<CodeSelectModal />', () => {
     fireEvent.change(input, { target: { value } });
   };
 
+  afterAll(() => nock.restore());
+
   it('can close modal with "Cancel" button', async () => {
     const handleCloseModal = jest.fn();
 

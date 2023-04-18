@@ -41,6 +41,8 @@ describe('<SelectModifierAction />', () => {
       </Provider>
     );
 
+  afterAll(() => nock.restore());
+
   it('renders nothing when cannot have modifiers', () => {
     renderComponent({ elementInstance: { cannotHaveModifiers: true } });
     const button = screen.queryByRole('button', { name: 'Add Modifiers' });

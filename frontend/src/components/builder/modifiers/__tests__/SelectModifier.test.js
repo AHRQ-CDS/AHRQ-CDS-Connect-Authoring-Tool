@@ -7,6 +7,8 @@ describe('<SelectModifier />', () => {
   const renderComponent = (props = {}) =>
     render(<SelectModifier handleUpdateModifier={jest.fn()} name="select-modifier-test" value="" {...props} />);
 
+  afterAll(() => nock.restore());
+
   it('calls handleUpdateModifier on selection change', async () => {
     nock('http://localhost')
       .get('/authoring/api/config/conversions')

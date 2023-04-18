@@ -11,6 +11,8 @@ describe('<PatientsTable />', () => {
   const renderComponent = (props = {}) =>
     render(<PatientsTable patients={patientsMock} handleExecuteCQL={jest.fn()} {...props} />);
 
+  afterAll(() => nock.restore());
+
   it('renders all patient rows', () => {
     renderComponent();
 

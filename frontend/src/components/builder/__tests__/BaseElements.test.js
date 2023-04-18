@@ -52,6 +52,8 @@ describe('<BaseElements />', () => {
 
   afterEach(() => nock.cleanAll());
 
+  afterAll(() => nock.restore());
+
   it('should render separate non-list elements', () => {
     const genericBaseElementInstanceWithoutUsedBy1 = createTemplateInstance(genericBaseElementInstance);
     genericBaseElementInstanceWithoutUsedBy1.usedBy = [];

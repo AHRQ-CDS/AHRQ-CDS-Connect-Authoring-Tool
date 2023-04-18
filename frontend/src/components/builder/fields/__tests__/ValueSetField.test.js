@@ -66,6 +66,8 @@ describe('<ValueSetField />', () => {
       });
   });
 
+  afterAll(() => nock.restore());
+
   it('loads the value sets from the api', async () => {
     renderComponent();
 

@@ -92,6 +92,8 @@ describe('<ArtifactElement />', () => {
     nock('http://localhost').persist().get(`/authoring/api/modifiers/artifact-id`).reply(200, mockModifiers);
   });
 
+  afterAll(() => nock.restore());
+
   it('should display value set details from artifact element without editing', () => {
     const { valueSets } = getFieldWithType(elementInstance.fields, '_vsac');
     const { container } = renderComponentWithState({ elementInstance });

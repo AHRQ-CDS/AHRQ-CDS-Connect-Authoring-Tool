@@ -7,6 +7,8 @@ import { createDataTransferEventWithFiles, createFile } from 'utils/test_helpers
 import PatientDropZone from '../PatientDropZone';
 
 describe('<PatientDropZone />', () => {
+  afterAll(() => nock.restore());
+
   it('renders an error when an invalid file is uploaded', async () => {
     render(<PatientDropZone />);
 

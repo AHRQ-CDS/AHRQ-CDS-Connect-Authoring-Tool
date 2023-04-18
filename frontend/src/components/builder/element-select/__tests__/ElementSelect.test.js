@@ -47,6 +47,8 @@ describe('<ElementSelect />', () => {
   });
   afterEach(() => nock.cleanAll());
 
+  afterAll(() => nock.restore());
+
   it('renders the component with proper elements', () => {
     renderComponent();
 
