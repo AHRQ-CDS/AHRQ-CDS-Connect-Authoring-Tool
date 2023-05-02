@@ -1,0 +1,55 @@
+#  Run application tests
+
+image: node:16.18.1
+
+pipelines:
+  default:
+    - parallel:
+      - step:
+          name: Run API tests
+          caches:
+            - api-node
+          script:
+            - cd api
+            # Install dependencies
+            - npm install
+            # Run tests
+            - npm run test-ci
+      - step:
+          name: Run API formatting and code quality checks
+          caches:
+            - api-node
+          script:
+            - cd api
+            # Install dependencies
+            - npm install
+            # Run linter and prettier
+            - npm run lint
+            - npm run prettier
+      - step:
+          size: 2x # Double the memory
+          name: Run frontend tests
+          caches:
+            - frontend-node
+          script:
+            - cd frontend
+            # Install dependencies
+            - npm install
+            # Run tests using a script that minimizes memory usage
+            - npm run test-ci
+      - step:
+          name: Run frontend formatting and code quality checks
+          caches:
+            - frontend-node
+          script:
+            - cd frontend
+            # Install dependencies
+            - npm install
+            # Run linter and prettier
+            - npm run lint
+            - npm run prettier
+
+definitions:
+  caches:
+    api-node: ./api/node-modules
+    frontend-node: ./frontend/node-modules
