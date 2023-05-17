@@ -43,7 +43,10 @@ describe('<Tester />', () => {
 
     it('displays CQL validation errors', async () => {
       scope = scope
-        .post('/authoring/api/cql/validate', { ...mockArtifact, dataModel: { name: 'FHIR', version: '3.0.0' } })
+        .post('/authoring/api/cql/validate?includeCQL=true', {
+          ...mockArtifact,
+          dataModel: { name: 'FHIR', version: '3.0.0' }
+        })
         .reply(200, {
           ...mockElmFilesStu3,
           elmErrors: [
@@ -75,7 +78,10 @@ describe('<Tester />', () => {
 
     it('displays the known error when CQL validation fails with a 404 not found', async () => {
       scope = scope
-        .post('/authoring/api/cql/validate', { ...mockArtifact, dataModel: { name: 'FHIR', version: '3.0.0' } })
+        .post('/authoring/api/cql/validate?includeCQL=true', {
+          ...mockArtifact,
+          dataModel: { name: 'FHIR', version: '3.0.0' }
+        })
         .reply(404);
 
       renderComponent();
@@ -91,7 +97,10 @@ describe('<Tester />', () => {
     describe('STU3 patients', () => {
       it('validates and executes the CQL on selected patients', async () => {
         scope = scope
-          .post('/authoring/api/cql/validate', { ...mockArtifact, dataModel: { name: 'FHIR', version: '3.0.0' } })
+          .post('/authoring/api/cql/validate?includeCQL=true', {
+            ...mockArtifact,
+            dataModel: { name: 'FHIR', version: '3.0.0' }
+          })
           .reply(200, mockElmFilesStu3);
 
         renderComponent();
@@ -102,6 +111,11 @@ describe('<Tester />', () => {
         await executeCQLOnSelectedPatients();
 
         expect(await screen.findByText(/cql execution results/i)).toBeInTheDocument();
+
+        // We expect the CQL to be present in the modal ready for display, so search for some CQL text
+        // NOTE: The CQL does not match the ELM in the mockElmFilesStu3 mock file, which is ok for these tests
+        userEvent.click(screen.getByRole('button', { name: 'View Detailed Results' }));
+        expect(screen.getAllByText(/"Inpatient Encounter Exists"/)).toHaveLength(2);
 
         expect(screen.getByLabelText(/meets inclusion criteria:/i)).toHaveTextContent('0 of 1 patients');
         expect(screen.getByLabelText(/meets exclusion criteria:/i)).toHaveTextContent('0 of 1 patients');
@@ -116,7 +130,10 @@ describe('<Tester />', () => {
     describe('R4 patients', () => {
       it('validates and executes the CQL on selected patients', async () => {
         scope = scope
-          .post('/authoring/api/cql/validate', { ...mockArtifact, dataModel: { name: 'FHIR', version: '4.0.1' } })
+          .post('/authoring/api/cql/validate?includeCQL=true', {
+            ...mockArtifact,
+            dataModel: { name: 'FHIR', version: '4.0.1' }
+          })
           .reply(200, mockElmFilesR4);
 
         renderComponent();
@@ -127,6 +144,11 @@ describe('<Tester />', () => {
         await executeCQLOnSelectedPatients();
 
         expect(await screen.findByText(/cql execution results/i)).toBeInTheDocument();
+
+        // We expect the CQL to be present in the modal ready for display, so search for some CQL text
+        // NOTE: The CQL does not match the ELM in the mockElmFilesR4 mock file, which is ok for these tests
+        userEvent.click(screen.getByRole('button', { name: 'View Detailed Results' }));
+        expect(screen.getAllByText(/"Inpatient Encounter Exists"/)).toHaveLength(2);
 
         expect(screen.getByLabelText(/meets inclusion criteria:/i)).toHaveTextContent('0 of 1 patients');
         expect(screen.getByLabelText(/meets exclusion criteria:/i)).toHaveTextContent('0 of 1 patients');
@@ -141,7 +163,10 @@ describe('<Tester />', () => {
     describe('DSTU2 patients', () => {
       it('validates and executes the CQL on selected patients', async () => {
         scope = scope
-          .post('/authoring/api/cql/validate', { ...mockArtifact, dataModel: { name: 'FHIR', version: '1.0.2' } })
+          .post('/authoring/api/cql/validate?includeCQL=true', {
+            ...mockArtifact,
+            dataModel: { name: 'FHIR', version: '1.0.2' }
+          })
           .reply(200, mockElmFilesDstu2);
 
         renderComponent();
@@ -152,6 +177,11 @@ describe('<Tester />', () => {
         await executeCQLOnSelectedPatients();
 
         expect(await screen.findByText(/cql execution results/i)).toBeInTheDocument();
+
+        // We expect the CQL to be present in the modal ready for display, so search for some CQL text
+        // NOTE: The CQL does not match the ELM in the mockElmFilesDstu2 mock file, which is ok for these tests
+        userEvent.click(screen.getByRole('button', { name: 'View Detailed Results' }));
+        expect(screen.getAllByText(/"Inpatient Encounter Exists"/)).toHaveLength(2);
 
         expect(screen.getByLabelText(/meets inclusion criteria:/i)).toHaveTextContent('1 of 1 patients');
         expect(screen.getByLabelText(/meets exclusion criteria:/i)).toHaveTextContent('0 of 1 patients');

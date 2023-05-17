@@ -31,9 +31,9 @@ const Tester = () => {
     setExecutionError(null);
     setTestResults(null);
 
-    let elmFiles, validationElmErrors;
+    let elmFiles, validationElmErrors, cqlFiles;
     try {
-      ({ elmFiles, elmErrors: validationElmErrors } = await asyncValidateArtifact({ artifact, dataModel }));
+      ({ elmFiles, elmErrors: validationElmErrors, cqlFiles } = await asyncValidateArtifact({ artifact, dataModel }));
       if (validationElmErrors?.length > 0) setElmErrors(validationElmErrors);
     } catch (error) {
       setExecutionError(
@@ -52,8 +52,7 @@ const Tester = () => {
         vsacApiKey,
         codeService
       });
-
-      setTestResults({ results, patientsExecuted: selectedPatients, artifact });
+      setTestResults({ results, patientsExecuted: selectedPatients, artifact, elmFiles, cqlFiles });
     } catch (error) {
       setExecutionError(`Execution failed. Error: ${error.message}`);
     }
@@ -89,6 +88,8 @@ const Tester = () => {
           handleOnClose={() => setTestResults(null)}
           patientsExecuted={testResults.patientsExecuted}
           results={testResults.results}
+          cqlFiles={testResults.cqlFiles}
+          elmFiles={testResults.elmFiles}
         />
       )}
 

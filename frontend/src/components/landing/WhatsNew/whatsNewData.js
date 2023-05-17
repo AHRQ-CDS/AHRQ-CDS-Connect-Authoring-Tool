@@ -4,6 +4,24 @@ import React from 'react';
 const whatsNewData = [
   {
     id: 1,
+    name: 'Detailed CQL Results',
+    ariaLabel: 'Detailed CQL Results',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-detailed-cql.png`,
+    description: (
+      <>
+        In addition to seeing high level CQL execution results when testing artifacts, authors can now see the detailed
+        results of executing each CQL statement within an artifact. This new feature extends the existing testing
+        functionality to allow the CQL for an artifact to be viewed directly in the authoring tool. The CQL is displayed
+        with syntax highlighting to increase readability. In addition to the CQL itself, the result of each CQL
+        expression is displayed for the selected patient record. Results can include boolean values, numerical values,
+        strings, quantities, codes, and FHIR object type and ID references.
+      </>
+    ),
+    linkText: 'Detailed CQL Results Documentation',
+    link: `${process.env.PUBLIC_URL}/documentation#Detailed_Test_Execution_Results`
+  },
+  {
+    id: 2,
     name: 'FHIR 4.0.1',
     ariaLabel: 'FHIR 4.0.1',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-fhir-401.png`,
@@ -19,7 +37,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Building_Artifacts`
   },
   {
-    id: 2,
+    id: 3,
     name: 'Build Modifiers',
     ariaLabel: 'Build Modifiers',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-build-modifiers.png`,
@@ -35,7 +53,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Modifier_Builder`
   },
   {
-    id: 3,
+    id: 4,
     name: 'Recommendation Links',
     ariaLabel: 'Recommendation Links',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-rec-links.png`,
@@ -49,22 +67,6 @@ const whatsNewData = [
     ),
     linkText: 'Recommendation Links Documentation',
     link: `${process.env.PUBLIC_URL}/documentation#Adding_Links_to_Recommendations`
-  },
-  {
-    id: 4,
-    name: 'Summary Tab & More',
-    ariaLabel: 'Summary Tab & More',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-summary.png`,
-    description: (
-      <>
-        The new Summary tab provides an overview of the artifact, including its name, version, date last changed, date
-        created, and the high-level structure of the CDS logic (inclusions, exclusions, and recommendations). All tabs
-        now have indicator icons that show which tabs have user-provided content and which tabs contain errors. In
-        addition, tabs never scroll out of view, allowing authors to more easily maintain the context of where they are.
-      </>
-    ),
-    linkText: 'Summary Tab Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation#Summary`
   }
 ];
 

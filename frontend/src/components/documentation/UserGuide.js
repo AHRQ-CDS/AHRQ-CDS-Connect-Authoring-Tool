@@ -2213,7 +2213,31 @@ const UserGuide = () => {
                   displayed, otherwise the phrase "No Value" is displayed.
                 </li>
               </ul>
+              Each patient also has a "View Detailed Results" button allowing detailed test execution results to be
+              viewed for that patient. Clicking on this button brings up the CQL logic for the artifact displayed with
+              the results of executing each CQL statement on the patient.
             </div>
+          </div>
+          <div className={styles.h3Wrapper}>
+            <h3 id="Detailed_Test_Execution_Results">4.5 Detailed Test Execution Results</h3>
+            <div>
+              After clicking the "View Detailed Results" button for a patient, the CQL for the artifact is displayed
+              with the detailed execution results for each CQL statement.
+            </div>
+            <div>
+              <img
+                alt=""
+                src={screenshotUrl('Test_Results_CQL')}
+                className="img-fluid img-thumbnail rounded mx-auto d-block"
+              />
+            </div>
+            <div>
+              The detailed execution results popup shows the primary CQL from the artifact with the syntax highlighted.
+              The results of executing each CQL statement in the artifact against the selected patient are displayed
+              preceded with the characters "==>". Results can include boolean values, numerical values, strings,
+              quantities, codes, and FHIR object type and ID references.
+            </div>
+            <div>The detailed execution results can be closed using the "close" button at the bottom of the popup.</div>
           </div>
         </div>
       </div>

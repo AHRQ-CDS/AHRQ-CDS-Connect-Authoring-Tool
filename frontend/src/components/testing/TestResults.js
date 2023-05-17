@@ -9,7 +9,7 @@ import { getPatientId, getPatientFullName } from 'utils/patients';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from './styles';
 
-const TestResults = ({ artifact, handleOnClose, patientsExecuted, results }) => {
+const TestResults = ({ artifact, handleOnClose, patientsExecuted, results, cqlFiles, elmFiles }) => {
   const spacingStyles = useSpacingStyles();
   const styles = useStyles();
   const resultsArray = useMemo(() => Object.values(results.patientResults), [results]);
@@ -40,6 +40,8 @@ const TestResults = ({ artifact, handleOnClose, patientsExecuted, results }) => 
               key={patientId}
               patientName={getPatientFullName({ patient })}
               results={results.patientResults[patientId]}
+              cqlFiles={cqlFiles}
+              elmFiles={elmFiles}
             />
           );
         })}
@@ -52,7 +54,9 @@ TestResults.propTypes = {
   artifact: PropTypes.object.isRequired,
   handleOnClose: PropTypes.func.isRequired,
   patientsExecuted: PropTypes.array.isRequired,
-  results: PropTypes.object.isRequired
+  results: PropTypes.object.isRequired,
+  cqlFiles: PropTypes.array.isRequired,
+  elmFiles: PropTypes.array.isRequired
 };
 
 export default TestResults;

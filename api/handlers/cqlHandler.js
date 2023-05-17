@@ -1524,6 +1524,7 @@ function objConvert(req, res, callback) {
   const user = req.user.uid;
   const artifactId = req.body._id;
   const artifactFromRequest = req.body;
+  const includeCQL = req.query['includeCQL'] === 'true';
   artifactFromRequest.externalLibs = [];
   const externalLibs = [];
   // Add all external libraries
@@ -1573,7 +1574,7 @@ function objConvert(req, res, callback) {
           if (err == null && formattedCQL != null && /^library/.test(formattedCQL)) {
             artifactJson.text = formattedCQL;
           }
-          callback(artifact, artifactJson, externalLibs, res, err => {
+          callback(artifact, artifactJson, externalLibs, includeCQL, res, err => {
             if (err) {
               res.status(500).send({ error: err.message });
             }
@@ -1581,7 +1582,7 @@ function objConvert(req, res, callback) {
         });
       } else {
         // Skip reformatting the CQL
-        callback(artifact, artifactJson, externalLibs, res, err => {
+        callback(artifact, artifactJson, externalLibs, includeCQL, res, err => {
           if (err) {
             res.status(500).send({ error: err.message });
           }
@@ -1593,7 +1594,7 @@ function objConvert(req, res, callback) {
 
 // While the artifact argument is not used, it's required because the callback
 // that calls this function requires that argument to be present
-function validateELM(artifact, artifactJson, externalLibs, writeStream, callback) {
+function validateELM(artifact, artifactJson, externalLibs, includeCQL, writeStream, callback) {
   const artifacts = [artifactJson, ...externalLibs];
   convertToElm(artifacts, false, (err, elmFiles) => {
     if (err) {
@@ -1611,7 +1612,16 @@ function validateELM(artifact, artifactJson, externalLibs, writeStream, callback
         }
       }
     });
-    writeStream.json({ elmFiles, elmErrors });
+    if (includeCQL) {
+      // Include CQL text along with the ELM
+      // TODO: Also include any libraries
+      let cqlFiles = artifacts.map(artifact => {
+        return { name: artifact.name || artifact.filename, text: artifact.text };
+      });
+      writeStream.json({ elmFiles, elmErrors, cqlFiles });
+    } else {
+      writeStream.json({ elmFiles, elmErrors });
+    }
   });
 }
 
@@ -1635,7 +1645,9 @@ function convertToCPGPL(cqlArtifact, cqlText) {
     });
 }
 
-function writeZip(artifact, artifactJson, externalLibs, writeStream, callback /* (error) */) {
+// Note: This callback ignores an argument (via a _ placeholder) specifying whether CQL should be included
+// since it always includes CQL
+function writeZip(artifact, artifactJson, externalLibs, _, writeStream, callback /* (error) */) {
   const artifacts = [artifactJson, ...externalLibs];
   // convert the artifact to a CPG Publishable Library, passing in the text directly (since it was likely modified)
   convertToCPGPL(artifact, artifactJson.text).then(function (cpgString) {

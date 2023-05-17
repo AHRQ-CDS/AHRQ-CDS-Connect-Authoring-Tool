@@ -46,20 +46,8 @@ function convertParameters(params = []) {
         paramsObj[p.name] = new cql.Interval(parseInt(p.value.firstInteger), parseInt(p.value.secondInteger));
         break;
       case 'interval_of_quantity': {
-        const q1 =
-          p.value.firstQuantity != null
-            ? new cql.Quantity({
-                value: p.value.firstQuantity,
-                unit: p.value.unit
-              })
-            : null;
-        const q2 =
-          p.value.secondQuantity != null
-            ? new cql.Quantity({
-                value: p.value.secondQuantity,
-                unit: p.value.unit
-              })
-            : null;
+        const q1 = p.value.firstQuantity != null ? new cql.Quantity(p.value.firstQuantity, p.value.unit) : null;
+        const q2 = p.value.secondQuantity != null ? new cql.Quantity(p.value.secondQuantity, p.value.unit) : null;
         paramsObj[p.name] = new cql.Interval(q1, q2);
         break;
       }
@@ -74,14 +62,11 @@ function convertParameters(params = []) {
         paramsObj[p.name] = new cql.Concept([new cql.Code(p.value.code, p.value.uri)]);
         break;
       case 'system_quantity':
-        paramsObj[p.name] = new cql.Quantity({
-          value: p.value.quantity,
-          unit: p.value.unit
-        });
+        paramsObj[p.name] = new cql.Quantity(p.value.quantity, p.value.unit);
         break;
       case 'time':
         // CQL exec doesn't expose a Time class, so we must construct a DT and then get the Time
-        paramsObj[p.name] = cql.DateTime.parse(`@0000-01-01${p.value.str.slice(1)}`).getTime();
+        paramsObj[p.name] = cql.DateTime.parse(`0000-01-01${p.value.str.slice(1)}`).getTime();
         break;
       default: // do nothing
     }

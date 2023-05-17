@@ -76,6 +76,10 @@ export default makeStyles(
       fontWeight: 'bold',
       marginBottom: '2em'
     },
+    testResultsButtonSection: {
+      paddingTop: '15px',
+      borderTop: `1px solid ${theme.palette.common.grayLighter}`
+    },
     trueIcon: {
       fill: theme.palette.common.green
     },

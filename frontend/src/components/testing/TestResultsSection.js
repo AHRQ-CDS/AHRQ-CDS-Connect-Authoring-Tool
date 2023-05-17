@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { Button, Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import {
   AccountCircle as AccountCircleIcon,
   Check as CheckIcon,
   Close as CloseIcon,
-  ExpandMore as ExpandMoreIcon
+  ExpandMore as ExpandMoreIcon,
+  Visibility as VisibilityIcon
 } from '@mui/icons-material';
 
+import TestResultsCqlModal from './modals/TestResultsCqlModal';
 import { KeyValueList } from 'components/elements';
 import useStyles from './styles';
 
-const TestResultsSection = ({ patientName, results }) => {
+const TestResultsSection = ({ patientName, results, cqlFiles, elmFiles }) => {
+  const [showTestResultsCqlModal, setShowTestResultsCqlModal] = useState(false);
   const styles = useStyles();
 
   const getValue = result => {
@@ -56,14 +59,37 @@ const TestResultsSection = ({ patientName, results }) => {
 
       <AccordionDetails>
         <KeyValueList dense list={resultDetails} />
+
+        <div className={styles.testResultsButtonSection}>
+          <Button
+            color="primary"
+            size="small"
+            onClick={() => setShowTestResultsCqlModal(true)}
+            startIcon={<VisibilityIcon />}
+            variant="contained"
+          >
+            View Detailed Results
+          </Button>
+        </div>
       </AccordionDetails>
+
+      {showTestResultsCqlModal && (
+        <TestResultsCqlModal
+          handleCloseModal={() => setShowTestResultsCqlModal(false)}
+          results={results}
+          cqlFiles={cqlFiles}
+          elmFiles={elmFiles}
+        />
+      )}
     </Accordion>
   );
 };
 
 TestResultsSection.propTypes = {
   patientName: PropTypes.string.isRequired,
-  results: PropTypes.object.isRequired
+  results: PropTypes.object.isRequired,
+  cqlFiles: PropTypes.array.isRequired,
+  elmFiles: PropTypes.array.isRequired
 };
 
 export default TestResultsSection;
