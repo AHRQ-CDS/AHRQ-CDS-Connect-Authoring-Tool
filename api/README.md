@@ -146,7 +146,7 @@ For information on running the CDS Authoring Tool in Docker, see the main [READM
 
 ## LICENSE
 
-Copyright 2016-2018 Agency for Healthcare Research and Quality
+Copyright 2016-2023 Agency for Healthcare Research and Quality
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

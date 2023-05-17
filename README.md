@@ -253,7 +253,7 @@ docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/api cdsauthoring
 
 ## LICENSE
 
-Copyright 2016-2018 Agency for Healthcare Research and Quality
+Copyright 2016-2023 Agency for Healthcare Research and Quality
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
