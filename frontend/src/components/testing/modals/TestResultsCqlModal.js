@@ -5,35 +5,32 @@ import _ from 'lodash';
 
 // Given a CQL execution result format it for display, returning an array of lines (since there can be more than one)
 const formatResult = result => {
-  // Handle each type of result we might see
-  switch (result?.constructor?.name) {
-    case 'Array':
-      // It's a list of items, which we handle recursively
-      let formattedResult = [
-        `List of ${result.length} item${result.length === 1 ? '' : 's'}${result.length === 0 ? '' : ':'}`
-      ];
-      formattedResult = formattedResult.concat(result.map(r => formatResult(r)));
-      return formattedResult;
-    case 'Quantity':
-    case 'Concept':
-    case 'Code':
-      // It's a simple type where we can just show the JSON representation
-      return [JSON.stringify(result)];
-    case 'FHIRObject':
-      // It's a FHIR object; For patients we try to pull out the name, otherwise we just pull out the type and ID
-      if (result?.getTypeInfo?.()?.name === 'Patient') {
-        // NOTE: getPatientFullName operates on a different object type, so we can't use that
-        const given = _.get(result, 'name[0].given[0]')?.value || '';
-        const family = _.get(result, 'name[0].family')?.value || '';
-        const name = given.length > 0 || family.length > 0 ? `${given} ${family}` : 'Unknown Name';
-        return [`Patient ${name}`];
-      } else {
-        const type = result.getTypeInfo().name;
-        return [`${type} with ID ${result.id.value}`];
-      }
-    default:
-      // For everything else we just rely on native string conversion
-      return [String(result)];
+  // Handle each type of result we might see. Use getters instead of constructor names since webpack may mangle names.
+  if (Array.isArray(result)) {
+    // It's a list of items, which we handle recursively
+    let formattedResult = [
+      `List of ${result.length} item${result.length === 1 ? '' : 's'}${result.length === 0 ? '' : ':'}`
+    ];
+    formattedResult = formattedResult.concat(result.map(r => formatResult(r)));
+    return formattedResult;
+  } else if (result?.isQuantity || result?.isConcept || result?.isCode) {
+    // It's a simple type where we can just show the JSON representation
+    return [JSON.stringify(result)];
+  } else if (typeof result?.getTypeInfo === 'function') {
+    // It's a FHIR object; For patients we try to pull out the name, otherwise we just pull out the type and ID
+    if (result.getTypeInfo()?.name === 'Patient') {
+      // NOTE: getPatientFullName operates on a different object type, so we can't use that
+      const given = _.get(result, 'name[0].given[0]')?.value || '';
+      const family = _.get(result, 'name[0].family')?.value || '';
+      const name = given.length > 0 || family.length > 0 ? `${given} ${family}` : 'Unknown Name';
+      return [`Patient ${name}`];
+    } else {
+      const type = result.getTypeInfo()?.name || 'Unknown type';
+      return [`${type} with ID ${result.id?.value}`];
+    }
+  } else {
+    // For everything else we just rely on native string conversion
+    return [String(result)];
   }
 };
 
