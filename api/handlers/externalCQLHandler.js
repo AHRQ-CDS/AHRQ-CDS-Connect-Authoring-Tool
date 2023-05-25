@@ -3,6 +3,7 @@ const unzipper = require('unzipper');
 const CQLLibrary = require('../models/cqlLibrary');
 const Artifact = require('../models/artifact');
 const makeCQLtoELMRequest = require('../handlers/cqlHandler').makeCQLtoELMRequest;
+const { sendUnauthorized } = require('./common');
 
 const supportedFHIRVersions = ['1.0.2', '3.0.0', '4.0.0', '4.0.1'];
 
@@ -379,7 +380,7 @@ function allGet(req, res) {
       else res.json(libraries);
     });
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }
 
@@ -393,7 +394,7 @@ function singleGet(req, res) {
       else res.json(library);
     });
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }
 
@@ -868,7 +869,7 @@ function singlePost(req, res) {
       });
     }
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }
 
@@ -970,6 +971,6 @@ function singleDelete(req, res) {
       }
     });
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }

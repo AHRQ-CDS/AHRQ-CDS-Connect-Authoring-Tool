@@ -16,6 +16,7 @@
     "express-session": "^1.17.3",
     "fs-extra": "^11.1.0",
     "glob": "^8.1.0",
+    "helmet": "^7.0.0",
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
     "migrate-mongo": "^9.0.0",

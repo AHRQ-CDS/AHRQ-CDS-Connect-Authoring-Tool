@@ -34,6 +34,7 @@
     "express-http-proxy": "^1.6.3",
     "file-saver": "^2.0.5",
     "formik": "^2.2.9",
+    "helmet": "^7.0.0",
     "immer": "^9.0.18",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

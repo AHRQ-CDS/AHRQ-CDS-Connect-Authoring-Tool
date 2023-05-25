@@ -1,10 +1,11 @@
 const FHIRClient = require('../vsac/FHIRClient');
-var auth = require('basic-auth');
+const auth = require('basic-auth');
+const { sendUnauthorized } = require('./common');
 
 function login(req, res) {
   const user = auth(req);
   if (user == null) {
-    return res.sendStatus(401);
+    return sendUnauthorized(res);
   }
 
   // Since NLM uses basic auth, try to get one value set with username/password. Success means correct credentials.
@@ -25,7 +26,7 @@ function login(req, res) {
 function getValueSet(req, res) {
   const user = auth(req);
   if (user == null) {
-    return res.sendStatus(401);
+    return sendUnauthorized(res);
   }
   const id = req.params.id;
   FHIRClient.getValueSet(id, user.name, user.pass)
@@ -40,7 +41,7 @@ function getValueSet(req, res) {
 function searchForValueSets(req, res) {
   const user = auth(req);
   if (user == null) {
-    return res.sendStatus(401);
+    return sendUnauthorized(res);
   }
   const keyword = req.query.keyword;
   FHIRClient.searchForValueSets(keyword, user.name, user.pass)
@@ -55,7 +56,7 @@ function searchForValueSets(req, res) {
 function getCode(req, res) {
   const user = auth(req);
   if (user == null) {
-    return res.sendStatus(401);
+    return sendUnauthorized(res);
   }
   const code = req.query.code;
   const system = req.query.system;

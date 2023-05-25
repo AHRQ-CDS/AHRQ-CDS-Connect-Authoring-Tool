@@ -10,6 +10,7 @@
 require('dotenv-expand').expand(require('dotenv').config());
 
 const express = require('express');
+const helmet = require('helmet');
 const https = require('https');
 const proxy = require('express-http-proxy');
 const morgan = require('morgan');
@@ -36,13 +37,34 @@ if (useHTTPS) {
 
 const app = express();
 
+// Use Helmet, a module that "helps secure Express apps by setting HTTP response headers."
+// See: https://helmetjs.github.io/
+app.use(
+  helmet({
+    // Allow loading resources from the same domain and the NIH sub-domain that supports UCUM unit lookups.
+    contentSecurityPolicy: {
+      directives: {
+        'default-src': ["'self'", 'clin-table-search.lhc.nlm.nih.gov']
+      }
+    }
+  })
+);
+
 const logRequests = /^true$/i.test(process.env.LOG_REQUESTS) || /^true$/i.test(process.env.LOG_FRONTEND_REQUESTS);
 if (logRequests) {
   // Log HTTP requests and responses
   app.use(morgan('combined'));
 }
 
-app.use('/authoring', express.static(path.join(__dirname, 'build')));
+app.use(
+  '/authoring',
+  express.static(path.join(__dirname, 'build'), {
+    setHeaders: function (res, path, stat) {
+      // Set to private and no-cache, which may be overkill for static content, but recommended by AHRQ
+      res.set('Cache-Control', 'private, no-cache, max-age=0, must-revalidate');
+    }
+  })
+);
 
 // When running this in Docker without a proxy in front of it, we need to proxy /authoring/api in Express.
 const proxyActive = !/^(false|f|no|n|0)$/i.test(process.env.API_PROXY_ACTIVE);
@@ -66,7 +88,12 @@ if (proxyActive) {
 }
 
 app.get('/authoring/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'build', 'index.html'), {
+    // Set to private and no-cache, which may be overkill for static content, but recommended by AHRQ
+    headers: {
+      'Cache-Control': 'private, no-cache, max-age=0, must-revalidate'
+    }
+  });
 });
 
 app.get('/', (req, res) => {

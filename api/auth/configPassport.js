@@ -53,7 +53,7 @@ module.exports = app => {
   // Configuring cookie security as suggested at: https://github.com/expressjs/session#cookiesecure
   const sess = {
     secret: config.get('auth.session.secret'),
-    cookie: {},
+    cookie: { sameSite: 'strict' },
     unset: 'destroy',
     resave: false,
     saveUninitialized: false,

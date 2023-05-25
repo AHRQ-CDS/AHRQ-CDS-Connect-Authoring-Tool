@@ -1,5 +1,6 @@
 const Artifact = require('../models/artifact');
 const CQLLibrary = require('../models/cqlLibrary');
+const { sendUnauthorized } = require('./common');
 
 module.exports = {
   allGet,
@@ -19,7 +20,7 @@ function allGet(req, res) {
       else res.json(artifacts);
     });
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }
 
@@ -33,7 +34,7 @@ function singleGet(req, res) {
       else res.json(artifact);
     });
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }
 
@@ -47,7 +48,7 @@ function singlePost(req, res) {
       else res.status(201).json(response);
     });
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }
 
@@ -62,7 +63,7 @@ function singlePut(req, res) {
       else res.sendStatus(200);
     });
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }
 
@@ -81,7 +82,7 @@ function singleDelete(req, res) {
       }
     });
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }
 
@@ -149,5 +150,5 @@ async function duplicate(req, res) {
           });
       }
     });
-  } else res.sendStatus(401);
+  } else sendUnauthorized(res);
 }

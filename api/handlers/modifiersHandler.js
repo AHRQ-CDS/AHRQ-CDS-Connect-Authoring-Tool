@@ -1,5 +1,6 @@
 const modifiers = require('../data/modifiers');
 const CQLLibrary = require('../models/cqlLibrary');
+const { sendUnauthorized } = require('./common');
 
 module.exports = {
   allGet
@@ -73,6 +74,6 @@ function allGet(req, res) {
       }
     });
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }

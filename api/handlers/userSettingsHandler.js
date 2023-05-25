@@ -1,4 +1,5 @@
 const UserSettings = require('../models/userSettings');
+const { sendUnauthorized } = require('./common');
 
 module.exports = {
   get,
@@ -24,7 +25,7 @@ function get(req, res) {
       }
     });
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }
 
@@ -45,6 +46,6 @@ function put(req, res) {
       }
     );
   } else {
-    res.sendStatus(401);
+    sendUnauthorized(res);
   }
 }

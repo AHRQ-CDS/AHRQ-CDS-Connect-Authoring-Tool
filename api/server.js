@@ -2,6 +2,7 @@
 const fs = require('fs');
 const process = require('process');
 const express = require('express');
+const helmet = require('helmet');
 const https = require('https');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -32,6 +33,10 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.get('tlsRejectUnauthorized');
 // Create App
 const app = express();
 
+// Use Helmet, a module that "helps secure Express apps by setting HTTP response headers."
+// See: https://helmetjs.github.io/
+app.use(helmet());
+
 const logRequests = /^true$/i.test(process.env.LOG_REQUESTS) || /^true$/i.test(process.env.LOG_API_REQUESTS);
 if (logRequests) {
   // Log HTTP requests and responses
@@ -52,18 +57,10 @@ app.use(express.json({ limit: '50mb' }));
 // Configure passport authentication
 configPassport(app);
 
-// Setting headers to Prevent Errors from Cross Origin Resource Sharing
+// Setting headers to handle cache-control
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    // eslint-disable-next-line max-len
-    'Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'
-  );
-  // Remove caching for most recent authors
-  res.setHeader('Cache-Control', 'no-cache');
+  // Remove caching and set to private, as recommended by AHRQ
+  res.setHeader('Cache-Control', 'private, no-store');
   next();
 });
 
