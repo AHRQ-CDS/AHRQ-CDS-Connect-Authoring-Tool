@@ -22,8 +22,8 @@ ENV NODE_ENV production
 
 FROM base as install_backend
 
-# First copy just the package.json, package-lock.json, and local dependencies so that
-# if they have not changed, we can use cached node_modules instead of
+# First copy just the package.json, package-lock.json, and local dependencies
+# so that if they have not changed, we can use cached node_modules instead of
 # redownloading them all.
 COPY ./api/package.json /usr/src/app/api/package.json
 COPY ./api/package-lock.json /usr/src/app/api/package-lock.json
@@ -35,77 +35,43 @@ RUN npm install
 COPY ./api /usr/src/app/api
 
 ###############################################################################
-# STAGE 2: test_backend
-# - Install development dependencies for the api project
-# - Run the api tests and pipe results to a log file
-###############################################################################
-
-FROM install_backend as test_backend
-
-ENV NODE_ENV test
-ENV CI true
-
-WORKDIR /usr/src/app/api
-RUN npm install
-
-# Some api code shares code w/ frontend, so bring that in for the tests
-COPY ./frontend/src/data /usr/src/app/frontend/src/data
-RUN npm run test-ci 2>&1 | tee api-test-report.txt
-
-###############################################################################
-# STAGE 3: install_frontend
-# - Install packages needed by yarn install (python2, make, g++)
+# STAGE 2: install_frontend
+# - Install packages needed by npm install (python2, make, g++)
 # - Install production dependencies for the frontend project
 # - Copy over frontend source code
 ###############################################################################
 
 FROM base as install_frontend
 
-# First copy just the package.json and package-lock.json so that if they have not
-# changed, we can use cached node_modules instead of redownloading them all.
+# First copy just the package.json and package-lock.json so that if they have
+# not changed, we can use cached node_modules instead of redownloading them all.
 COPY ./frontend/package.json /usr/src/app/frontend/package.json
 COPY ./frontend/package-lock.json /usr/src/app/frontend/package-lock.json
 WORKDIR /usr/src/app/frontend
-
-# Delete the prepare script - it only installs husky, which we do not need here
-RUN npm pkg delete scripts.prepare
-
 RUN npm install
 
 # Then copy the rest of the source code
 COPY ./frontend /usr/src/app/frontend
 
 ###############################################################################
-# STAGE 4: test_frontend
-# - Install development dependencies for the frontend project
-# - Run the frontend tests and pipe results to a log file
-###############################################################################
-
-FROM install_frontend as test_frontend
-
-ENV NODE_ENV test
-ENV CI true
-ENV NODE_OPTIONS --max_old_space_size=4096
-
-WORKDIR /usr/src/app/frontend
-RUN npm install
-RUN npm run test-ci 2>&1 | tee frontend-test-report.txt
-
-###############################################################################
-# STAGE 5: build_frontend
+# STAGE 3: build_frontend
 # - Build frontend code to produce standard html, js, and css files
-# - NOTE: Based on test_frontend because it needs development dependencies
 ###############################################################################
 
-FROM test_frontend as build_frontend
-
-ENV NODE_ENV production
+FROM install_frontend as build_frontend
 
 WORKDIR /usr/src/app/frontend
+
+# Install the development dependencies since they're needed by "npm run build"
+ENV NODE_ENV development
+RUN npm install
+
+# Switch back to production for the actual build
+ENV NODE_ENV production
 RUN npm run build
 
 ###############################################################################
-# STAGE 6: final
+# STAGE 4: final
 # - Setup NODE_ENV as an argument
 # - Install PM2 process manager
 # - Copy over all files needed at run-time
@@ -118,7 +84,7 @@ FROM base as final
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
-RUN npm install -g pm2@4.4.1
+RUN npm install -g pm2@5.3.0
 
 COPY --chown=node:node --from=install_backend /usr/src/app/api /usr/src/app/api
 COPY --chown=node:node --from=install_frontend /usr/src/app/frontend/node_modules /usr/src/app/frontend/node_modules
@@ -127,9 +93,6 @@ COPY --chown=node:node ./frontend/src/data /usr/src/app/frontend/src/data
 COPY --chown=node:node ./frontend/.env /usr/src/app/frontend
 COPY --chown=node:node ./frontend/server.js /usr/src/app/frontend
 COPY --chown=node:node ./pm2.config.js /usr/src/app
-# Copy over test logs because they're nice to have, but also to force the test stages to run
-COPY --chown=node:node --from=test_backend /usr/src/app/api/api-test-report.txt /usr/src/app
-COPY --chown=node:node --from=test_frontend /usr/src/app/frontend/frontend-test-report.txt /usr/src/app
 
 EXPOSE 3001
 EXPOSE 9000

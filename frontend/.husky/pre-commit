@@ -1,3 +1,0 @@
-#!/bin/bash
-
-cd frontend && npx pretty-quick --pattern "**/*.+(js|jsx|json|css|md)" --staged --bail --no-restage

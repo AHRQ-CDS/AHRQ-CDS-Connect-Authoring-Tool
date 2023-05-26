@@ -235,22 +235,6 @@ To stop _and remove_ the containers, run:
 docker-compose down
 ```
 
-### Bonus: Running Tests in Docker
-
-CDS Authoring Tool tests are broken up into frontend and backend tests.
-
-To run the frontend tests in a temporary docker container (for example, to ensure it works before deploying), run the following command:
-
-```bash
-docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/frontend cdsauthoringtool npm test
-```
-
-To run the backend tests in a temporary docker container:
-
-```bash
-docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/api cdsauthoringtool npm test
-```
-
 ## LICENSE
 
 Copyright 2016-2023 Agency for Healthcare Research and Quality
