@@ -10,21 +10,33 @@ function login(req, res, next) {
 
   // Add strategies for authentication based on configuration
   const strategies = [];
-  if (config.get('auth.ldap.active')) {
-    strategies.push('ldapauth');
-  }
   if (config.get('auth.local.active')) {
     strategies.push('local');
   }
+  // Note that due to bugs in how the LDAP strategy handles errors, it needs to go last
+  // when there are multiple strategies (else it throws and skips remaining strategies)
+  if (config.get('auth.ldap.active')) {
+    strategies.push('ldapauth');
+  }
 
+  // Remember if we already got an authentication response, because sometimes the LDAP
+  // strategy invokes the callback more than one time!
+  let handledAuthResponse = false;
   passport.authenticate(strategies, { failWithError: true })(req, res, err => {
+    if (handledAuthResponse) {
+      return;
+    }
+    handledAuthResponse = true;
     const remoteIP = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     if (err) {
-      console.log(`${new Date().toISOString()}: Login FAILURE: ${req?.body?.username || 'unknown'} (${remoteIP})`, err);
-      sendUnauthorized(res);
+      console.log(
+        `${new Date().toISOString()}: Login FAILURE: ${req?.body?.username || 'unknown'} (${remoteIP})`,
+        err.message ?? err
+      );
+      return sendUnauthorized(res);
     } else {
       console.log(`${new Date().toISOString()}: Login SUCCESS: ${req?.user?.uid || 'unknown'} (${remoteIP})`);
-      res.json(req.user);
+      return res.json(req.user);
     }
   });
 }

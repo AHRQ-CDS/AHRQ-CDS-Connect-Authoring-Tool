@@ -1,4 +1,4 @@
-const rpn = require('request-promise-native');
+const axios = require('axios');
 const _ = require('lodash');
 const config = require('../config');
 
@@ -65,7 +65,7 @@ function cleanId(id, version) {
   return stripDashFromId(stripBarFromId(id), version);
 }
 
-function getValueSet(oid, username, password) {
+async function getValueSet(oid, username, password) {
   const options = {
     method: 'GET',
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet/${oid}/$expand`,
@@ -75,26 +75,25 @@ function getValueSet(oid, username, password) {
     }
   };
 
-  return rpn(options).then(res => {
-    const response = JSON.parse(res);
-    return {
-      oid: cleanId(response.id, response.version),
-      version: response.meta.versionId,
-      displayName: response.name,
-      codes: response.expansion.contains.map(c => {
-        return {
-          code: c.code,
-          codeSystemURI: c.system,
-          codeSystemName: codeLookups[c.system] || c.system,
-          codeSystemVersion: c.version,
-          displayName: c.display
-        };
-      })
-    };
-  });
+  const res = await axios(options);
+  const response = res.data;
+  return {
+    oid: cleanId(response.id, response.version),
+    version: response.meta.versionId,
+    displayName: response.name,
+    codes: response.expansion.contains.map(c => {
+      return {
+        code: c.code,
+        codeSystemURI: c.system,
+        codeSystemName: codeLookups[c.system] || c.system,
+        codeSystemVersion: c.version,
+        displayName: c.display
+      };
+    })
+  };
 }
 
-function searchForValueSets(search, username, password) {
+async function searchForValueSets(search, username, password) {
   const options = {
     method: 'GET',
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet?name:contains=${search}`,
@@ -104,28 +103,26 @@ function searchForValueSets(search, username, password) {
     }
   };
 
-  return rpn(options).then(res => {
-    const response = JSON.parse(res);
-
-    const results = (response.entry || []).map((v, i) => {
-      return {
-        name: v.resource.name,
-        steward: v.resource.publisher,
-        oid: cleanId(v.resource.id, v.resource.version),
-        codeSystem: [],
-        codeCount: (v.resource.expansion || {}).total || 0
-      };
-    });
+  const res = await axios(options);
+  const response = res.data;
+  const results = (response.entry || []).map((v, i) => {
     return {
-      _total: response.total,
-      count: results.length,
-      page: 1,
-      results
+      name: v.resource.name,
+      steward: v.resource.publisher,
+      oid: cleanId(v.resource.id, v.resource.version),
+      codeSystem: [],
+      codeCount: (v.resource.expansion || {}).total || 0
     };
   });
+  return {
+    _total: response.total,
+    count: results.length,
+    page: 1,
+    results
+  };
 }
 
-function getCode(code, system, username, password) {
+async function getCode(code, system, username, password) {
   const options = {
     method: 'GET',
     url: `${VSAC_FHIR_ENDPOINT}/CodeSystem/$lookup?code=${code}&system=${system}`,
@@ -134,21 +131,21 @@ function getCode(code, system, username, password) {
       Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
     }
   };
-  return rpn(options).then(res => {
-    const codeJSON = JSON.parse(res).parameter;
-    let codeObject = _.zipObject(_.map(codeJSON, 'name'), _.map(codeJSON, 'valueString'));
-    return {
-      system,
-      systemName: codeObject.name,
-      systemOID: codeObject.Oid,
-      version: codeObject.version,
-      code,
-      display: codeObject.display
-    };
-  });
+
+  const res = await axios(options);
+  const codeJSON = res.data.parameter;
+  let codeObject = _.zipObject(_.map(codeJSON, 'name'), _.map(codeJSON, 'valueString'));
+  return {
+    system,
+    systemName: codeObject.name,
+    systemOID: codeObject.Oid,
+    version: codeObject.version,
+    code,
+    display: codeObject.display
+  };
 }
 
-function getOneValueSet(username, password) {
+async function getOneValueSet(username, password) {
   const oneCodeVSOID = '2.16.840.1.113762.1.4.1034.65';
   const options = {
     method: 'GET',
@@ -158,9 +155,9 @@ function getOneValueSet(username, password) {
       Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
     }
   };
-  return rpn(options).then(res => {
-    return res;
-  });
+
+  const res = await axios(options);
+  return res.data;
 }
 
 module.exports = {

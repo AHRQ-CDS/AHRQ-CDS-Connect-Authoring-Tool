@@ -1,6 +1,6 @@
 #  Run application tests
 
-image: node:16.18.1
+image: node:18
 
 pipelines:
   default:

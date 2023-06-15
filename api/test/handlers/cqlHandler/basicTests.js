@@ -2687,8 +2687,12 @@ describe('CQL to ELM tests', () => {
 
     // Make the request!
     makeCQLtoELMRequest(inputFiles, inputFileStreams, true, err => {
-      expect(err).to.be.null;
-      done();
+      try {
+        expect(err).to.be.null;
+        done();
+      } catch (e) {
+        done(e);
+      }
     });
   });
 
@@ -2702,8 +2706,12 @@ describe('CQL to ELM tests', () => {
 
     // Make the request!
     makeCQLtoELMRequest(inputFiles, inputFileStreams, true, err => {
-      expect(err).to.be.null;
-      done();
+      try {
+        expect(err).to.be.null;
+        done();
+      } catch (e) {
+        done(e);
+      }
     });
   });
 
@@ -2717,8 +2725,12 @@ describe('CQL to ELM tests', () => {
 
     // Make the request!
     makeCQLtoELMRequest(inputFiles, inputFileStreams, false, err => {
-      expect(err).to.be.null;
-      done();
+      try {
+        expect(err).to.be.null;
+        done();
+      } catch (e) {
+        done(e);
+      }
     });
   });
 
@@ -2730,21 +2742,25 @@ describe('CQL to ELM tests', () => {
 
     // Make the request!
     makeCQLtoELMRequest(inputFiles, inputFileStreams, true, (err, elmFiles) => {
-      expect(err).to.be.null;
-      expect(elmFiles).to.have.length(4);
-      expect(elmFiles[0].name).to.equal('FHIRHelpers.cql');
-      expect(elmFiles[0].content).to.match(
-        /\{\s*"library"[\s\S]*"identifier"\s*:\s*\{\s*"id"\s*:\s*"FHIRHelpers"[\s\S]*\}/m
-      );
-      expect(elmFiles[1].name).to.equal('FHIRHelpers.cql');
-      expect(elmFiles[1].content).to.match(/<library[\s\S]*<identifier id="FHIRHelpers"[\s\S]*/m);
-      expect(elmFiles[2].name).to.equal('Simple.cql');
-      expect(elmFiles[2].content).to.match(
-        /\{\s*"library"[\s\S]*"identifier"\s*:\s*\{\s*"id"\s*:\s*"SimpleLibrary"[\s\S]*\}/m
-      );
-      expect(elmFiles[3].name).to.equal('Simple.cql');
-      expect(elmFiles[3].content).to.match(/<library[\s\S]*<identifier id="SimpleLibrary"[\s\S]*/m);
-      done();
+      try {
+        expect(err).to.be.null;
+        expect(elmFiles).to.have.length(4);
+        expect(elmFiles[0].name).to.equal('FHIRHelpers.cql');
+        expect(elmFiles[0].content).to.match(
+          /\{\s*"library"[\s\S]*"identifier"\s*:\s*\{\s*"id"\s*:\s*"FHIRHelpers"[\s\S]*\}/m
+        );
+        expect(elmFiles[1].name).to.equal('FHIRHelpers.cql');
+        expect(elmFiles[1].content).to.match(/<library[\s\S]*<identifier id="FHIRHelpers"[\s\S]*/m);
+        expect(elmFiles[2].name).to.equal('Simple.cql');
+        expect(elmFiles[2].content).to.match(
+          /\{\s*"library"[\s\S]*"identifier"\s*:\s*\{\s*"id"\s*:\s*"SimpleLibrary"[\s\S]*\}/m
+        );
+        expect(elmFiles[3].name).to.equal('Simple.cql');
+        expect(elmFiles[3].content).to.match(/<library[\s\S]*<identifier id="SimpleLibrary"[\s\S]*/m);
+        done();
+      } catch (e) {
+        done(e);
+      }
     });
   });
 });
@@ -2782,9 +2798,13 @@ describe('CQL Formatter tests', () => {
 
     // Make the request!
     formatCQL(inputContent, (err, output) => {
-      expect(err).to.be.null;
-      expect(output).to.equal(outputContent);
-      done();
+      try {
+        expect(err).to.be.null;
+        expect(output).to.equal(outputContent);
+        done();
+      } catch (e) {
+        done(e);
+      }
     });
   });
 
@@ -2801,10 +2821,14 @@ describe('CQL Formatter tests', () => {
 
     // Make the request!
     formatCQL(inputContent, (err, output) => {
-      expect(err).to.be.instanceOf(Error);
-      expect(err.message).to.equal(outputContent);
-      expect(output).to.be.undefined;
-      done();
+      try {
+        expect(err).to.be.instanceOf(Error);
+        expect(err.message).to.equal(outputContent);
+        expect(output).to.be.undefined;
+        done();
+      } catch (e) {
+        done(e);
+      }
     });
   });
 });

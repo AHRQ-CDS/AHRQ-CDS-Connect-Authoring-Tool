@@ -8,7 +8,8 @@ const fs = require('fs');
 const archiver = require('archiver');
 const path = require('path');
 const glob = require('glob');
-const request = require('request');
+const axios = require('axios');
+const FormData = require('form-data');
 const busboy = require('busboy');
 const { exportCQL, importCQL, RawCQL } = require('cql-merge');
 
@@ -1735,25 +1736,14 @@ function makeCQLtoELMRequest(files, fileStreams, getXML, callback) {
     'disable-list-traversal=false',
     'signatures=All'
   ];
-  const options = {
-    url: `${config.get('cqlToElm.url')}?${requestParams.join('&')}`
-  };
+  const url = `${config.get('cqlToElm.url')}?${requestParams.join('&')}`;
+  const options = {};
   if (getXML) {
     options.headers = {
       'X-TargetFormat': 'application/elm+json,application/elm+xml'
     };
   }
-  // NOTE: the request isn't posted until the next event loop, so we can modify it after calling request.post
-  const cqlReq = request.post(options, (err2, resp, body) => {
-    if (err2) {
-      callback(err2);
-      return;
-    }
-    const contentType = resp.headers['Content-Type'] || resp.headers['content-type'];
-    // The body is multi-part containing an ELM file in each part, so we need to split it
-    splitELM(body, contentType, callback);
-  });
-  const form = cqlReq.form();
+  const form = new FormData();
   if (files) {
     files.forEach(file => {
       form.append(file.filename, file.text, {
@@ -1767,6 +1757,21 @@ function makeCQLtoELMRequest(files, fileStreams, getXML, callback) {
       form.append(path.basename(f.path, '.cql'), f);
     });
   }
+
+  axios
+    .post(url, form, options)
+    .then(res => {
+      const contentType = res.headers['Content-Type'] || res.headers['content-type'];
+      // The body is multi-part containing an ELM file in each part, so we need to split it
+      splitELM(res.data, contentType, callback);
+    })
+    .catch(err => {
+      if (err.response?.status && err.response.status !== 200 && err.response.data) {
+        callback(new Error(err.response.data));
+      } else {
+        callback(err);
+      }
+    });
 }
 
 function splitELM(body, contentType, callback /* (error, elmFiles) */) {
@@ -1793,21 +1798,23 @@ function splitELM(body, contentType, callback /* (error, elmFiles) */) {
 }
 
 function formatCQL(cqlText, callback) {
+  const url = config.get('cqlFormatter.url');
   const options = {
-    url: config.get('cqlFormatter.url'),
-    headers: { 'Content-Type': 'application/cql', Accept: 'application/cql' },
-    body: cqlText
+    headers: { 'Content-Type': 'application/cql', Accept: 'application/cql' }
   };
-  request.post(options, (err, resp, body) => {
-    if (err) {
-      callback(err);
-      return;
-    } else if (resp.statusCode !== 200) {
-      callback(new Error(body));
-      return;
-    }
-    callback(null, body);
-  });
+
+  axios
+    .post(url, cqlText, options)
+    .then(res => {
+      callback(null, res.data);
+    })
+    .catch(err => {
+      if (err.response?.status && err.response.status !== 200 && err.response.data) {
+        callback(new Error(err.response.data));
+      } else {
+        callback(err);
+      }
+    });
 }
 
 function buildCQL(artifactBody) {

@@ -14,7 +14,7 @@ For information about contributing to this project, please see [CONTRIBUTING](..
 
 This project provides the R (React) in the MERN application architecture. It was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Relevant files are in the `src/` filter. Refer to the Create React App [User Guide](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md) for guidance on features and how to perform common tasks.
 
-To develop this project, you must node, which will also install npm. On Mac OS X, this can be done through Homebrew:
+To develop this project, you must install a Node.js LTS release, which will also install npm. On Mac OS X, this can be done through Homebrew:
 
 ```bash
 brew install node # install node

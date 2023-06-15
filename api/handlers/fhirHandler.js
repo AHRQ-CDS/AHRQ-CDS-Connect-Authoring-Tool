@@ -15,10 +15,10 @@ function login(req, res) {
     })
     .catch(error => {
       // If credentials are correct but VS is not found, can still be considered logged in.
-      if (error.statusCode === 404) {
+      if (error.response?.status === 404) {
         res.sendStatus(200);
       } else {
-        res.sendStatus(error.statusCode);
+        res.sendStatus(error.response?.status ?? 500);
       }
     });
 }
@@ -34,7 +34,7 @@ function getValueSet(req, res) {
       res.json(t);
     })
     .catch(t => {
-      res.sendStatus(t.statusCode);
+      res.sendStatus(t.response?.status ?? 500);
     });
 }
 
@@ -49,7 +49,7 @@ function searchForValueSets(req, res) {
       res.json(t);
     })
     .catch(t => {
-      res.sendStatus(t.statusCode);
+      res.sendStatus(t.response?.status ?? 500);
     });
 }
 
@@ -65,7 +65,7 @@ function getCode(req, res) {
       res.json(t);
     })
     .catch(t => {
-      res.sendStatus(t.statusCode);
+      res.sendStatus(t.response?.status ?? 500);
     });
 }
 

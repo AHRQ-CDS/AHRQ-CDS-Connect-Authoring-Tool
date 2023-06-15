@@ -16,7 +16,7 @@ For information about contributing to this project, please see [CONTRIBUTING](..
 
 This project represents the M, E, and N in the MERN application architecture, using MongoDB, Express, and Node.
 
-To develop and run this project, your must install mongodb and node. On Mac OS X, this can be done through brew:
+To develop and run this project, your must install MongoDB and Node.js LTS edition. On Mac OS X, this can be done through brew:
 
 ```bash
 brew install mongodb # install mongodb on host system
