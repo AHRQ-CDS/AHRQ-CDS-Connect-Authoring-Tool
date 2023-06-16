@@ -6,7 +6,7 @@ const helmet = require('helmet');
 const https = require('https');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const mm = require('migrate-mongo');
+const migrate = require('./migrations/migrate-mongo');
 const config = require('./config');
 const configPassport = require('./auth/configPassport');
 const routes = require('./routes');
@@ -87,30 +87,8 @@ if (!module.parent) {
   if (config.get('migrations.active')) {
     // Run any necessary migrations before starting the server
     console.log('Checking migrations...');
-    mm.database
-      .connect()
-      .then(({ db, client }) => {
-        return mm.status(db).then(status => {
-          const pending = status.filter(s => s.appliedAt === 'PENDING');
-          console.log(`Previously applied migrations: ${status.length - pending.length}`);
-          if (pending.length) {
-            console.log('Pending migrations:');
-            pending.forEach(({ fileName }) => console.log(`  - ${fileName}`));
-            console.log('Applying pending migrations...');
-          } else {
-            console.log('Pending migrations: 0');
-          }
-          return { db, client };
-        });
-      })
-      .then(({ db, client }) => {
-        return mm.up(db, client);
-      })
-      .then(migrated => {
-        migrated.forEach(fileName => console.log('Migrated:', fileName));
-        if (migrated.length) {
-          console.log(`Newly applied migrations: ${migrated.length}`);
-        }
+    migrate()
+      .then(() => {
         startServer();
       })
       .catch(err => {

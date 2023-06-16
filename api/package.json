@@ -43,6 +43,8 @@
     "mocha": "^10.2.0",
     "nock": "^13.3.0",
     "nodemon": "^2.0.20",
+    "nyc": "^15.1.0",
+    "opener": "^1.5.2",
     "prettier": "^2.8.3"
   },
   "scripts": {
@@ -51,10 +53,11 @@
     "prettier": "prettier --check \"**/*.+(js|jsx|json|css|md)\"",
     "prettier:fix": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
     "start-dev": "nodemon",
-    "start": "node ./server.js",
-    "test-ci": "./node_modules/.bin/mocha --reporter spec --recursive --no-colors",
-    "test-watch": "./node_modules/.bin/mocha --reporter spec --recursive --watch",
-    "test": "./node_modules/.bin/mocha --reporter spec --recursive"
+    "start": "node src/server.js",
+    "test-ci": "mocha --reporter spec --recursive --no-colors",
+    "test-cov": "nyc --reporter=html --reporter=text --report-dir=./.nyc_output/coverage mocha --reporter spec --recursive",
+    "test": "mocha --reporter spec --recursive",
+    "open-cov": "opener ./.nyc_output/coverage/index.html"
   },
   "prettier": {
     "trailingComma": "none",

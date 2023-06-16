@@ -1,5 +1,5 @@
 const chai = require('chai');
-const { fixArtifactErrorStatement } = require('../../old-migrations/18-error-statement-conversion-fix');
+const { fixArtifactErrorStatement } = require('../../src/migrations/old-migrations/18-error-statement-conversion-fix');
 
 chai.use(require('chai-exclude'));
 

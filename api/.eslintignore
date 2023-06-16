@@ -1,4 +1,4 @@
 # /node_modules/* and /bower_components/* ignored by default
 
 localDependencies/*
-api/data/query/data/*
+api/src/data/query/data/*

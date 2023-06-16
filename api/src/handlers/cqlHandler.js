@@ -20,11 +20,11 @@ const queryResources = {
   operators: require('../data/query_builder/operators.json')
 };
 
-const templatePath = './data/cql/templates';
-const specificPath = './data/cql/specificTemplates';
-const modifierPath = './data/cql/modifiers';
-const rulePath = './data/cql/rules';
-const artifactPath = './data/cql/artifact.ejs';
+const templatePath = path.join(__dirname, '..', 'data', 'cql', 'templates');
+const specificPath = path.join(__dirname, '..', 'data', 'cql', 'specificTemplates');
+const modifierPath = path.join(__dirname, '..', 'data', 'cql', 'modifiers');
+const rulePath = path.join(__dirname, '..', 'data', 'cql', 'rules');
+const artifactPath = path.join(__dirname, '..', 'data', 'cql', 'artifact.ejs');
 const specificMap = loadTemplates(specificPath);
 const templateMap = loadTemplates(templatePath);
 const modifierMap = loadTemplates(modifierPath);
@@ -1479,7 +1479,7 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
       code.codeSystem.id = uri.replace(/'/g, "\\'");
       code.codeSystem.name = system;
       // If the codeName variable is ever modified, make sure to update the templates
-      // in api/data/cql/rules that use similar logic (such as codeConceptMatchesConcept)
+      // in api/src/data/cql/rules that use similar logic (such as codeConceptMatchesConcept)
       const codeName = code.display && code.display.length < 60 ? code.display.replace(/"/g, '\\"') : code.code;
       const concept = {
         name: `${code.codeSystem.name} ${code.code} Concept`,

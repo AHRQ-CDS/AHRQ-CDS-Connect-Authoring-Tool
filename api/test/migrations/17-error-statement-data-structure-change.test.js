@@ -1,5 +1,7 @@
 const chai = require('chai');
-const { convertArtifactErrorStatement } = require('../../old-migrations/17-error-statement-data-structure-change');
+const {
+  convertArtifactErrorStatement
+} = require('../../src/migrations/old-migrations/17-error-statement-data-structure-change');
 
 chai.use(require('chai-exclude'));
 

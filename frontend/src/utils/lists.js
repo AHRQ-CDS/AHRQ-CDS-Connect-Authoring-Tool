@@ -3,7 +3,7 @@ import { plural } from 'pluralize';
 import { getReturnType } from 'utils/instances';
 import { findValueAtPath } from './find';
 
-// These lists are based off the lists defined in api//data/modifiers.js
+// These lists are based off the lists defined in api/src/data/modifiers.js
 // in order to ensure any type will have modifiers available for it.
 const listTypes = [
   'list_of_allergy_intolerances',

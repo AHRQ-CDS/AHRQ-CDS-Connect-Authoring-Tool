@@ -9,7 +9,7 @@ module.exports = {
     // API Server
     {
       name: 'API',
-      script: 'server.js',
+      script: 'src/server.js',
       cwd: 'api',
       env_production: {
         NODE_ENV: 'production'

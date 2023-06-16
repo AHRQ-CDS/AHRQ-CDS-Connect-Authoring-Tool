@@ -6,6 +6,8 @@ services:
       MONGO_URL: mongodb://cat-mongo/cds_authoring
       CQL_TO_ELM_URL: http://cat-cql2elm:8080/cql/translator
       NODE_ENV: development
+    volumes:
+      - ./api/config:/usr/src/app/api/config
     ports:
       - "3001:3001"
       - "9000:9000"
@@ -13,6 +15,6 @@ services:
       - cat-mongo
       - cat-cql2elm
   cat-mongo:
-    image: mongo:4.4
+    image: mongo:6.0
   cat-cql2elm:
-    image: cqframework/cql-translation-service:v1.5.2
+    image: cqframework/cql-translation-service:v2.1.0

@@ -1,3 +1,4 @@
+const path = require('path');
 const convict = require('convict');
 const validator = require('validator');
 const json5 = require('json5');
@@ -181,12 +182,12 @@ const config = convict({
 // Load environment dependent configuration
 const files = [];
 // Look for an environment-based file (e.g., config/production.json)
-const envFile = `./config/${config.get('env')}.json`;
+const envFile = path.join(process.cwd(), 'config', `${config.get('env')}.json`);
 if (fs.existsSync(envFile)) {
   files.push(envFile);
 }
 // Look for a local config file to override config locally (in development)
-const localFile = './config/local.json';
+const localFile = path.join(process.cwd(), 'config', 'local.json');
 if (fs.existsSync(localFile)) {
   files.push(localFile);
 }

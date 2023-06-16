@@ -34,14 +34,6 @@ docker run --name=mongodb --volume=$PWD/db:/data/db -p 27017:27017 --restart=unl
 
 This creates a local db directory and then runs a MongoDB docker container that will store files in that directory.
 
-### Install Node Foreman
-
-To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode. To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman).
-
-```bash
-npm install -g foreman
-```
-
 ### Install Dependencies
 
 Each of the subprojects (_api_ and _frontend_) must have the dependencies installed via _npm_. This can be done as follows:
@@ -82,17 +74,25 @@ This will enable the following two users:
 
 Of course, these default users and passwords should _never_ be enabled on a public-facing system.
 
-### Run Node Foreman
+### Run the API and Frontend
 
-Run the Node Foreman Procfile via:
+In one terminal, run the backend API server:
 
 ```bash
-nf start
+cd api
+npm start
+```
+
+In another terminal, run the frontend server:
+
+```bash
+cd frontend
+npm start
 ```
 
 NOTE: Ensure MongoDB is running before starting the CDS Authoring Tool.
 
-When running, the Authoring Tool will be available at [http://localhost:5100/authoring](http://localhost:5100/authoring).
+When running, the Authoring Tool will be available at [http://localhost:3000/authoring](http://localhost:3000/authoring).
 
 ### Testing CQL Execution Results
 
@@ -116,7 +116,7 @@ Once the configuration is updated and the API has been restarted the translation
 locally in docker via:
 
 ```bash
-docker run -p 8080:8080 cqframework/cql-translation-service:v2.0.0
+docker run -p 8080:8080 cqframework/cql-translation-service:v2.1.0
 ```
 
 ### Running tests
@@ -150,7 +150,7 @@ docker build -t cdsauthoringtool .
 For the authoring tool to run in a docker container, MongoDB and CQL-to-ELM docker containers must be linked. The following commands run the necessary containers, with the required links and exposed ports:
 
 ```bash
-docker run --name cat-cql2elm -d cqframework/cql-translation-service:v2.0.0
+docker run --name cat-cql2elm -d cqframework/cql-translation-service:v2.1.0
 docker run --name cat-mongo -d mongo:6.0
 docker run --name cat \
   --link cat-cql2elm:cql2elm \
@@ -224,7 +224,7 @@ docker rm cat cat-mongo cat-cql2elm
 Alternately, use Docker Compose to build and run all of the containers. Execute:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 The first time, it will build the cdsauthoringtoolapi_cat and cdsauthoringtool_cat images. Subsequent times it may re-use the already built images. To force it to rebuild, pass in the `--build` flag.
@@ -232,7 +232,7 @@ The first time, it will build the cdsauthoringtoolapi_cat and cdsauthoringtool_c
 To stop _and remove_ the containers, run:
 
 ```
-docker-compose down
+docker compose down
 ```
 
 ## LICENSE

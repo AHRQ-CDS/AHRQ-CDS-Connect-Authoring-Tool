@@ -2,9 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const nock = require('nock');
 const { expect } = require('chai');
-const { buildCQL, makeCQLtoELMRequest, formatCQL } = require('../../../handlers/cqlHandler');
+const { buildCQL, makeCQLtoELMRequest, formatCQL } = require('../../../src/handlers/cqlHandler');
 const _ = require('lodash');
-const Artifact = require('../../../models/artifact');
+const Artifact = require('../../../src/models/artifact');
 
 const testEmptyPublishableLibrary = require('./fixtures/Library-Test-Empty-Artifact');
 const testPublishableLibraryWithDates = require('./fixtures/Library-Test-Artifact-With-Dates');

@@ -5,7 +5,7 @@ const chai = require('chai');
 chai.use(require('chai-as-promised'));
 const expect = chai.expect;
 
-const client = require('../../vsac/FHIRClient');
+const client = require('../../src/vsac/FHIRClient');
 
 const FHIRMocks = require('./fixtures/FHIRfixtures');
 

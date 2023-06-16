@@ -24,7 +24,7 @@ export function getTypeByCqlArgument(cqlArgument) {
   // Supported non-interval types
 
   // Note: there is a large overlap between this type map and one stored
-  // in the backend in the file api/handlers/cqlHandler.js
+  // in the backend in the file api/src/handlers/cqlHandler.js
   // If you update something here, be sure to update it there
   const argumentTypeMap = {
     '{urn:hl7-org:elm-types:r1}Boolean': 'boolean',

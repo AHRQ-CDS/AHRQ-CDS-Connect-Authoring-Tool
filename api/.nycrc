@@ -1,0 +1,11 @@
+{
+  "all": true,
+  "include": [
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "src/migrations",
+    "src/server.js",
+    "src/vsac/FHIR-test-script.js"
+  ]
+}
