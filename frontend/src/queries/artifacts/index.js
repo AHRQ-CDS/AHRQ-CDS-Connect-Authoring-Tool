@@ -4,3 +4,4 @@ export { default as deleteArtifact } from './deleteArtifact';
 export { default as fetchArtifacts } from './fetchArtifacts';
 export { default as saveArtifact } from './saveArtifact';
 export { default as updateArtifact } from './updateArtifact';
+export { default as viewCql } from './viewCql';

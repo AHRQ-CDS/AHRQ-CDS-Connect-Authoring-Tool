@@ -10,6 +10,7 @@ import {
   Edit as EditIcon,
   Error as ErrorIcon,
   GetApp as GetAppIcon,
+  Visibility as VisibilityIcon,
   MenuBook as MenuBookIcon,
   Save as SaveIcon
 } from '@mui/icons-material';
@@ -29,7 +30,7 @@ import {
   clearArtifactValidationWarnings
 } from 'actions/artifacts';
 
-import { ELMErrorModal } from 'components/modals';
+import { CQLModal, ELMErrorModal } from 'components/modals';
 import BaseElements from 'components/builder/BaseElements';
 import ConjunctionGroup from 'components/builder/ConjunctionGroup';
 import { ArtifactModal } from 'components/artifact';
@@ -73,8 +74,9 @@ export class Builder extends Component {
     this.state = {
       showArtifactModal: false,
       showELMErrorModal: false,
-      showMenu: false,
-      downloadMenuAnchorElement: null
+      showCQLModal: false,
+      dataModel: null,
+      dataModelMenuAnchorElement: null
     };
   }
 
@@ -306,6 +308,14 @@ export class Builder extends Component {
     this.setState({ showArtifactModal: false });
   };
 
+  openCQLModal = dataModel => {
+    this.setState({ showCQLModal: true, dataModel });
+  };
+
+  closeCQLModal = () => {
+    this.setState({ showCQLModal: false });
+  };
+
   handleSaveArtifact = (artifactEditing, artifactPropsChanged) => {
     this.props.updateAndSaveArtifact(artifactEditing, artifactPropsChanged);
     this.closeArtifactModal(false);
@@ -394,18 +404,28 @@ export class Builder extends Component {
     this.props.updateArtifact(this.props.artifact, { errorStatement });
   };
 
-  handleClickDownloadMenu = event => {
-    this.setState({ downloadMenuAnchorElement: event.currentTarget });
+  showDataModelMenu = event => {
+    this.setState({ dataModelMenuAnchorElement: event.currentTarget });
   };
 
-  handleCloseDownloadMenu = () => {
-    this.setState({ downloadMenuAnchorElement: null });
+  closeDataModelMenu = () => {
+    this.setState({ dataModelMenuAnchorElement: null });
   };
 
-  downloadOptionSelected = (disabled, version) => {
-    const { artifact } = this.props;
-    if (!disabled) this.props.downloadArtifact(artifact, { name: 'FHIR', version });
-    this.handleCloseDownloadMenu();
+  dataModelSelected = (disabled, version) => {
+    const { dataModelMenuAnchorElement } = this.state;
+    switch (dataModelMenuAnchorElement.textContent) {
+      case 'View CQL':
+        if (!disabled) this.openCQLModal({ name: 'FHIR', version });
+        break;
+      case 'Download CQL':
+        const { artifact } = this.props;
+        if (!disabled) this.props.downloadArtifact(artifact, { name: 'FHIR', version });
+        break;
+      default:
+        break;
+    }
+    this.closeDataModelMenu();
   };
 
   // ----------------------- RENDER ---------------------------------------- //
@@ -441,7 +461,7 @@ export class Builder extends Component {
 
   renderHeader() {
     const { statusMessage, artifact } = this.props;
-    const { downloadMenuAnchorElement } = this.state;
+    const { dataModelMenuAnchorElement } = this.state;
     const artifactName = artifact ? artifact.name : null;
     let disableDSTU2 = false;
     let disableSTU3 = false;
@@ -486,7 +506,18 @@ export class Builder extends Component {
               aria-controls="download-menu"
               aria-haspopup="true"
               color="inherit"
-              onClick={this.handleClickDownloadMenu}
+              onClick={this.showDataModelMenu}
+              startIcon={<VisibilityIcon />}
+              variant="contained"
+            >
+              View CQL
+            </Button>
+
+            <Button
+              aria-controls="download-menu"
+              aria-haspopup="true"
+              color="inherit"
+              onClick={this.showDataModelMenu}
               startIcon={<GetAppIcon />}
               variant="contained"
             >
@@ -494,25 +525,25 @@ export class Builder extends Component {
             </Button>
 
             <Menu
-              anchorEl={downloadMenuAnchorElement}
+              anchorEl={dataModelMenuAnchorElement}
               id="download-menu"
               keepMounted
-              onClose={this.handleCloseDownloadMenu}
-              open={Boolean(downloadMenuAnchorElement)}
+              onClose={this.closeDataModelMenu}
+              open={Boolean(dataModelMenuAnchorElement)}
             >
-              <MenuItem disabled={disableDSTU2} onClick={() => this.downloadOptionSelected(disableDSTU2, '1.0.2')}>
+              <MenuItem disabled={disableDSTU2} onClick={() => this.dataModelSelected(disableDSTU2, '1.0.2')}>
                 FHIR<sup>®</sup> DSTU2
               </MenuItem>
 
-              <MenuItem disabled={disableSTU3} onClick={() => this.downloadOptionSelected(disableSTU3, '3.0.0')}>
+              <MenuItem disabled={disableSTU3} onClick={() => this.dataModelSelected(disableSTU3, '3.0.0')}>
                 FHIR<sup>®</sup> STU3
               </MenuItem>
 
-              <MenuItem disabled={disableR400} onClick={() => this.downloadOptionSelected(disableR400, '4.0.0')}>
+              <MenuItem disabled={disableR400} onClick={() => this.dataModelSelected(disableR400, '4.0.0')}>
                 FHIR<sup>®</sup> R4 (4.0.0)
               </MenuItem>
 
-              <MenuItem disabled={disableR401} onClick={() => this.downloadOptionSelected(disableR401, '4.0.1')}>
+              <MenuItem disabled={disableR401} onClick={() => this.dataModelSelected(disableR401, '4.0.1')}>
                 FHIR<sup>®</sup> R4 (4.0.1)
               </MenuItem>
             </Menu>
@@ -666,7 +697,7 @@ export class Builder extends Component {
       templates,
       vsacApiKey
     } = this.props;
-    const { showArtifactModal, showELMErrorModal } = this.state;
+    const { showArtifactModal, showELMErrorModal, showCQLModal } = this.state;
 
     let namedParameters = [];
     if (artifact) {
@@ -829,6 +860,10 @@ export class Builder extends Component {
 
         {showELMErrorModal && (
           <ELMErrorModal handleCloseModal={this.closeELMErrorModal} errors={downloadedArtifact.elmErrors} />
+        )}
+
+        {showCQLModal && (
+          <CQLModal handleCloseModal={this.closeCQLModal} artifact={artifact} dataModel={this.state.dataModel} />
         )}
       </div>
     );

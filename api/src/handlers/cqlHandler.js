@@ -166,7 +166,8 @@ const queryAliasMap = {
 let fhirTarget;
 
 module.exports = {
-  objToCql,
+  objToZippedCql,
+  objToViewableCql,
   objToELM,
   makeCQLtoELMRequest,
   formatCQL,
@@ -1513,8 +1514,12 @@ function addValueSets(field, valueSetObject, attribute) {
   }
 }
 
-function objToCql(req, res) {
+function objToZippedCql(req, res) {
   objConvert(req, res, writeZip);
+}
+
+function objToViewableCql(req, res) {
+  objConvert(req, res, writeCql);
 }
 
 function objToELM(req, res) {
@@ -1697,6 +1702,16 @@ function writeZip(artifact, artifactJson, externalLibs, _, writeStream, callback
       archive.finalize();
     });
   });
+}
+
+// Note: This callback ignores an argument (via a _ placeholder) specifying whether CQL should be included
+// since it always includes CQL
+function writeCql(artifact, artifactJson, externalLibs, _, writeStream, callback /* (error) */) {
+  const artifacts = [artifactJson, ...externalLibs];
+  let cqlFiles = artifacts.map(artifact => {
+    return { name: artifact.name || artifact.filename, text: artifact.text };
+  });
+  writeStream.json({ cqlFiles });
 }
 
 function convertToElm(artifacts, getXML, callback /* (error, elmFiles) */) {

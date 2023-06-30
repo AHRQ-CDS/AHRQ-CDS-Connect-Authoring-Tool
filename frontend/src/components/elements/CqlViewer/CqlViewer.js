@@ -12,7 +12,7 @@ const CqlViewer = ({ code }) => {
   return (
     <Highlight {...defaultProps} code={code} language="cql" theme={cqlStylingTheme}>
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
-        <pre className={className} style={{ ...style, padding: '10px' }}>
+        <pre className={className} style={{ ...style, padding: '10px', marginBottom: '0px' }}>
           {tokens.map((line, i) => (
             <div {...getLineProps({ line, key: i })}>
               {line.map((token, key) => (

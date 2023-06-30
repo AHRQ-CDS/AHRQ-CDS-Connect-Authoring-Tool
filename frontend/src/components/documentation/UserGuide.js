@@ -354,6 +354,14 @@ const UserGuide = () => {
                 edit it.
               </li>
               <li>
+                <strong>View CQL Button</strong>: Allows the author to view the FHIR-based CQL of the artifact. When you
+                click this button, you can choose which version of FHIR to use in the CQL view (DSTU2, STU3, or R4). For
+                FHIR R4, you can choose between 4.0.0 and 4.0.1 depending on which CQL data model your system supports.
+                If you are unsure, FHIR R4 (4.0.1) is preferred. NOTE: The FHIR version may be restricted depending on
+                several factors, including external CQL that you've uploaded, custom modifiers that you've built, and/or
+                your use of version-specific element types (e.g., Service Request).
+              </li>
+              <li>
                 <strong>Download CQL Button</strong>: Allows the author to download the artifact as both FHIR-based CQL
                 and as a Clinical Practice Guidelines (a.k.a. CPG on FHIR) Publishable Library. When you click this
                 button, you can choose which version of FHIR to use in the exported CQL (DSTU2, STU3, or R4). For FHIR

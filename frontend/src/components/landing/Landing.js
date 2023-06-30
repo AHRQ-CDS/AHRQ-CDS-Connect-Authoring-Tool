@@ -135,7 +135,7 @@ const Landing = ({ isAuthenticated }) => {
         <div className={clsx(styles.homeFooter, spacingStyles.fullBleed)}>
           <p>
             The CDS Authoring Tool is currently under development. Users should be aware of the following known
-            limitations in current releases of the authoring tool:
+            limitations in current releases of the Authoring Tool:
           </p>
 
           <ul>

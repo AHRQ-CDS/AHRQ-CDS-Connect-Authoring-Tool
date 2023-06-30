@@ -4,6 +4,22 @@ import React from 'react';
 const whatsNewData = [
   {
     id: 1,
+    name: 'View CQL',
+    ariaLabel: 'View CQL',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-view-cql.png`,
+    description: (
+      <>
+        Authors can now quickly see the CQL for their artifacts directly within the CDS Authoring Tool. This new feature
+        adds a "View CQL" button to the artifact "Workspace" view. This button allows an author to select their desired
+        version of FHIR (DSTU2, STU3, or R4) and then instantly view the CQL for their artifact. The CQL is displayed
+        with syntax highlighting to increase readability.
+      </>
+    ),
+    linkText: 'View CQL Documentation',
+    link: `${process.env.PUBLIC_URL}/documentation#Building_Artifacts`
+  },
+  {
+    id: 2,
     name: 'Detailed CQL Results',
     ariaLabel: 'Detailed CQL Results',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-detailed-cql.png`,
@@ -11,17 +27,17 @@ const whatsNewData = [
       <>
         In addition to seeing high level CQL execution results when testing artifacts, authors can now see the detailed
         results of executing each CQL statement within an artifact. This new feature extends the existing testing
-        functionality to allow the CQL for an artifact to be viewed directly in the authoring tool. The CQL is displayed
-        with syntax highlighting to increase readability. In addition to the CQL itself, the result of each CQL
-        expression is displayed for the selected patient record. Results can include boolean values, numerical values,
-        strings, quantities, codes, and FHIR object type and ID references.
+        functionality to allow the CQL for an artifact to be viewed directly in the CDS Authoring Tool. The CQL is
+        displayed with syntax highlighting to increase readability. In addition to the CQL itself, the result of each
+        CQL expression is displayed for the selected patient record. Results can include boolean values, numerical
+        values, strings, quantities, codes, and FHIR object type and ID references.
       </>
     ),
     linkText: 'Detailed CQL Results Documentation',
     link: `${process.env.PUBLIC_URL}/documentation#Detailed_Test_Execution_Results`
   },
   {
-    id: 2,
+    id: 3,
     name: 'FHIR 4.0.1',
     ariaLabel: 'FHIR 4.0.1',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-fhir-401.png`,
@@ -37,7 +53,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Building_Artifacts`
   },
   {
-    id: 3,
+    id: 4,
     name: 'Build Modifiers',
     ariaLabel: 'Build Modifiers',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-build-modifiers.png`,
@@ -51,22 +67,6 @@ const whatsNewData = [
     ),
     linkText: 'Build Modifiers Documentation',
     link: `${process.env.PUBLIC_URL}/documentation#Modifier_Builder`
-  },
-  {
-    id: 4,
-    name: 'Recommendation Links',
-    ariaLabel: 'Recommendation Links',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-rec-links.png`,
-    description: (
-      <>
-        In addition to specifying recommendation text and rationale, authors can now add links to recommendations. These
-        may be absolute links, such as links to educational materials, source documents, and online calculators, or they
-        may be SMART links to local SMART on FHIR applications. Recommendation links follow the same basic format as the
-        links returned in CDS Hooks cards, having a type (absolute or smart), label, and URL.
-      </>
-    ),
-    linkText: 'Recommendation Links Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation#Adding_Links_to_Recommendations`
   }
 ];
 
