@@ -40,12 +40,23 @@ npm uninstall <package> # remove a package.
 
 ### Configuration
 
-This project has very few configuration needs. Currently, four data points are configurable:
+This project has very few configuration needs, most of which are configurable via environment variables:
 
 - `REACT_APP_API_URL`: the URL for the backend API (defaults to `/authoring/api`)
 - `REACT_APP_DAP_URL`: the URL for the DAP analytics endpoint (blank by default, indicating no analytics)
 - `REACT_APP_GTM_KEY`: the Google Tag Manager key for analytics (blank by default, indicating no analytics)
-  The default values can be found in the `.env` file and overridden via environment variables. Note that during a production build, the current values in the environment and/or `.env` will be hard-coded into the resulting HTML and JS.
+
+The default values can be found in the `.env` file and overridden via environment variables. Note that during a production build, the current values in the environment and/or `.env` will be hard-coded into the resulting HTML and JS.
+
+In addition, when running a production build via `server.js`, the [Content-Security-Policy](https://content-security-policy.com/) is active, requiring a [hash](https://content-security-policy.com/hash/) of the inline GoogleTagManager script in order for it to be invoked. Since the hash varies depending on the GTM key, it needs to be provided via an environment variable as well:
+
+- `CSP_SCRIPT_HASH`: a hash that will be added to the `script-src` policy directive (e.g., `sha256-RFWPLDbv2BY+rCkDzsE+0fr8ylGr2R2faWMhq4lfEQc=`)
+
+The easiest way to determine the required hash value is to do the following:
+
+- Ensure `REACT_APP_GTM_KEY` is set via the `.env` file or environment variable
+- Build the frontend and run it (`npm run start-prod`)
+- Open the local Authoring Tool page in Google Chrome and look in the console for an error message with the hash
 
 ### Enabling HTTPS
 

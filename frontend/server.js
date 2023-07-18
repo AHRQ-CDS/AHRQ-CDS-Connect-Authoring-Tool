@@ -39,16 +39,34 @@ const app = express();
 
 // Use Helmet, a module that "helps secure Express apps by setting HTTP response headers."
 // See: https://helmetjs.github.io/
-app.use(
-  helmet({
-    // Allow loading resources from the same domain and the NIH sub-domain that supports UCUM unit lookups.
-    contentSecurityPolicy: {
-      directives: {
-        'default-src': ["'self'", 'clin-table-search.lhc.nlm.nih.gov']
-      }
-    }
-  })
-);
+// Allow loading resources from the same domain, the NIH sub-domain that supports UCUM unit lookups,
+// and domains related to required analytics.
+const contentSecurityPolicy = {
+  directives: {
+    'default-src': ["'self'", 'clin-table-search.lhc.nlm.nih.gov', 'www.google-analytics.com'],
+    'script-src': [
+      "'self'",
+      'clin-table-search.lhc.nlm.nih.gov',
+      'gateway.foresee.com',
+      'dap.digitalgov.gov',
+      'www.google-analytics.com'
+    ],
+    'img-src': ["'self'", 'www.google-analytics.com']
+  }
+};
+// GoogleTagManager uses an inline script, so we need to add its hash to the CSP. The hash varies
+// depending on the GTM key, so get it from an ENV var. If you don't know the hash, look at the CSP
+// error in the console, as it usually lists the expected hash. Since the CSP hash is needed to load
+// GoogleTagManager, only add the other GTM stuff to the CSP if CSP_SCRIPT_HASH is available.
+if (process.env.CSP_SCRIPT_HASH?.length) {
+  contentSecurityPolicy.directives['default-src'].push('analytics.google.com', 'stats.g.doubleclick.net');
+  contentSecurityPolicy.directives['script-src'].push(
+    `'${process.env.CSP_SCRIPT_HASH}'`,
+    "'unsafe-eval'",
+    'www.googletagmanager.com'
+  );
+}
+app.use(helmet({ contentSecurityPolicy }));
 
 const logRequests = /^true$/i.test(process.env.LOG_REQUESTS) || /^true$/i.test(process.env.LOG_FRONTEND_REQUESTS);
 if (logRequests) {

@@ -161,7 +161,7 @@ const config = convict({
     src: {
       doc: 'The special ForeSee source string to include in the ForeSee javascript snippet.',
       format: 'String',
-      default: '//gateway.foresee.com/sites/[your sitekey]/staging/gateway.min.js',
+      default: 'https://gateway.foresee.com/sites/[your sitekey]/staging/gateway.min.js',
       env: 'FORESEE_SRC'
     },
     active: {
