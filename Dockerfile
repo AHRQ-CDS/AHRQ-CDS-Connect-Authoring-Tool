@@ -90,7 +90,7 @@ COPY --chown=node:node --from=install_backend /usr/src/app/api /usr/src/app/api
 COPY --chown=node:node --from=install_frontend /usr/src/app/frontend/node_modules /usr/src/app/frontend/node_modules
 COPY --chown=node:node --from=build_frontend /usr/src/app/frontend/build /usr/src/app/frontend/build
 COPY --chown=node:node ./frontend/src/data /usr/src/app/frontend/src/data
-COPY --chown=node:node ./frontend/.env /usr/src/app/frontend
+COPY --chown=node:node ./frontend/.env* /usr/src/app/frontend
 COPY --chown=node:node ./frontend/server.js /usr/src/app/frontend
 COPY --chown=node:node ./pm2.config.js /usr/src/app
 

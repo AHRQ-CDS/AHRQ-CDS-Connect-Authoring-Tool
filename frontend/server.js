@@ -7,7 +7,7 @@
  *
  * This is mainly used by PM2 and our Docker image.
  */
-require('dotenv-expand').expand(require('dotenv').config());
+require('dotenv-expand').expand(require('dotenv-flow').config());
 
 const express = require('express');
 const helmet = require('helmet');
