@@ -29,7 +29,9 @@ const ValueSetSearchResultsTable = ({ keyword, setSearchCount, setSelectedValueS
     () => searchVSACByKeyword(query),
     { enabled: keyword != null }
   );
+
   const searchResultCount = data?.count;
+  const searchResultTotal = data?.total;
 
   const handleViewValueSetDetails = (event, valueSet) => {
     event.stopPropagation();
@@ -37,8 +39,8 @@ const ValueSetSearchResultsTable = ({ keyword, setSearchCount, setSelectedValueS
   };
 
   useEffect(() => {
-    if (searchResultCount != null) setSearchCount(searchResultCount);
-  }, [searchResultCount, setSearchCount]);
+    if (searchResultCount != null) setSearchCount({ count: searchResultCount, total: searchResultTotal });
+  }, [searchResultCount, searchResultTotal, setSearchCount]);
 
   return (
     <>

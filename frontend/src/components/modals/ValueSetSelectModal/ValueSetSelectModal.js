@@ -12,7 +12,7 @@ import useStyles from '../styles';
 const ValueSetSelectModal = ({ handleCloseModal, handleSelectValueSet, readOnly = false, savedValueSet }) => {
   const [selectedValueSet, setSelectedValueSet] = useState(savedValueSet);
   const [searchKeyword, setSearchKeyword] = useState(null);
-  const [searchCount, setSearchCount] = useState(null);
+  const [searchCount, setSearchCount] = useState({ count: 0, total: 0 });
   const selectedValueSetRef = useLatest(selectedValueSet);
   const styles = useStyles();
 
@@ -32,7 +32,7 @@ const ValueSetSelectModal = ({ handleCloseModal, handleSelectValueSet, readOnly 
       isOpen
       hasCancelButton
       hasEnterKeySubmit={false}
-      hasTitleIcon={searchCount > 0}
+      hasTitleIcon={searchCount.count > 0}
       hideSubmitButton={readOnly || !selectedValueSet}
       Header={
         <ValueSetSelectModalHeader
@@ -48,7 +48,8 @@ const ValueSetSelectModal = ({ handleCloseModal, handleSelectValueSet, readOnly 
       title={readOnly ? 'View value set' : 'Choose value set'}
       TitleIcon={
         <>
-          <ListIcon /> {selectedValueSet ? 1 : searchCount}
+          <ListIcon /> {selectedValueSet ? 1 : searchCount.count}
+          {searchCount.total > searchCount.count ? ` of ${searchCount.total}` : ''}
         </>
       }
     >

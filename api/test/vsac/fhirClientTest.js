@@ -185,6 +185,10 @@ describe('vsac/FHIRClient', () => {
       nock('https://cts.nlm.nih.gov')
         .get(/ValueSet/)
         .reply(200, FHIRMocks.Search);
+      nock('https://cts.nlm.nih.gov')
+        .get(/expand/)
+        .times(67)
+        .reply(200, FHIRMocks.ValueSetWithCounts);
       const result = client.searchForValueSets('Diabetes', username, password);
       const expResults = FHIRMocks.Search.entry.map(v => {
         return {
@@ -192,10 +196,10 @@ describe('vsac/FHIRClient', () => {
           name: v.resource.name,
           steward: v.resource.publisher,
           oid: v.resource.id,
-          codeCount: 0
+          codeCount: 33
         };
       });
-      return expect(result).to.eventually.eql({ _total: 67, count: 50, page: 1, results: expResults });
+      return expect(result).to.eventually.eql({ total: 67, count: 50, page: 1, results: expResults });
     });
 
     it('should get a list of OIDs and strip versions', () => {
@@ -208,6 +212,10 @@ describe('vsac/FHIRClient', () => {
       nock('https://cts.nlm.nih.gov')
         .get(/ValueSet/)
         .reply(200, searchWithVersions);
+      nock('https://cts.nlm.nih.gov')
+        .get(/expand/)
+        .times(67)
+        .reply(200, FHIRMocks.ValueSetWithCounts);
       const result = client.searchForValueSets('Diabetes', username, password);
       // Build results using original (non-modified / non-versioned results mock)
       const expResults = FHIRMocks.Search.entry.map(v => {
@@ -216,10 +224,10 @@ describe('vsac/FHIRClient', () => {
           name: v.resource.name,
           steward: v.resource.publisher,
           oid: v.resource.id,
-          codeCount: 0
+          codeCount: 33
         };
       });
-      return expect(result).to.eventually.eql({ _total: 67, count: 50, page: 1, results: expResults });
+      return expect(result).to.eventually.eql({ total: 67, count: 50, page: 1, results: expResults });
     });
   });
 

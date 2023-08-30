@@ -7,6 +7,7 @@ const searchVSACByKeyword = async ({ keyword, apiKey }) => {
 
   return {
     count: data.count,
+    total: data.total,
     results: data.results.sort((a, b) => b.codeCount - a.codeCount)
   };
 };

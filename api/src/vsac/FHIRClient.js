@@ -93,6 +93,27 @@ async function getValueSet(oid, username, password) {
   };
 }
 
+// In 2023 the VSAC FHIR API stopped returning the count for the number of codes in each value set as part of
+// the results for value set searches, and to fill this gap NLM suggested performing additional queries to
+// access the code counts. This function queries the API for the number of codes in a value set given the OID
+// for the value set.
+async function getValueSetCodeCount(username, password, oid) {
+  const options = {
+    method: 'GET',
+    url: `${VSAC_FHIR_ENDPOINT}/ValueSet/${oid}/$expand?count=1`,
+    timeout: 2500, // There are lots of these requests, and any one hanging can hold things up, so use a timeout
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
+    }
+  };
+  // Because this is only used to get a count, we don't need to care about any errors. Just catch and ignore.
+  // This avoids 500 errors being thrown in the browser console and appearing in the modal when searching.
+  const result = await axios(options).catch(() => {});
+  const count = result?.data?.expansion?.total || 0;
+  return count;
+}
+
 async function searchForValueSets(search, username, password) {
   const options = {
     method: 'GET',
@@ -105,20 +126,26 @@ async function searchForValueSets(search, username, password) {
 
   const res = await axios(options);
   const response = res.data;
-  const results = (response.entry || []).map((v, i) => {
+  const results = (response.entry || []).map(async (v, i) => {
+    const oid = cleanId(v.resource.id, v.resource.version);
     return {
       name: v.resource.name,
       steward: v.resource.publisher,
-      oid: cleanId(v.resource.id, v.resource.version),
+      oid,
       codeSystem: [],
-      codeCount: (v.resource.expansion || {}).total || 0
+      // The code counts are not currently returned in the response from the original request, so if we don't
+      // see a code count send a separate request to get the counts for this value set; this results in 1+n
+      // requests but appears to be sufficiently performant to be worthwhile
+      codeCount: v.resource?.expansion?.total || (await getValueSetCodeCount(username, password, oid))
     };
   });
+  // Wait for all the results from the code count requests to resolve
+  const resolvedResults = await Promise.all(results);
   return {
-    _total: response.total,
-    count: results.length,
+    total: response.total,
+    count: resolvedResults.length,
     page: 1,
-    results
+    results: resolvedResults
   };
 }
 

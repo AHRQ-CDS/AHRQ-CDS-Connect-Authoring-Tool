@@ -1311,6 +1311,12 @@ let ValueSet = {
   }
 };
 
+const ValueSetWithCounts = {
+  expansion: {
+    total: 33
+  }
+};
+
 const Code = {
   resourceType: 'Parameters',
   parameter: [
@@ -1336,5 +1342,6 @@ const Code = {
 module.exports = {
   Search,
   ValueSet,
+  ValueSetWithCounts,
   Code
 };
