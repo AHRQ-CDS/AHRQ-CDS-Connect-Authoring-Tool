@@ -196,7 +196,14 @@ describe('vsac/FHIRClient', () => {
           name: v.resource.name,
           steward: v.resource.publisher,
           oid: v.resource.id,
-          codeCount: 33
+          codeCount: 33,
+          description: v.resource.description || '',
+          experimental: v.resource.experimental || false,
+          date: v.resource.date || '',
+          lastReviewDate:
+            v.resource.extension?.find(e => e.url === 'http://hl7.org/fhir/StructureDefinition/resource-lastReviewDate')
+              ?.valueDate || '',
+          purpose: null // Note: purpose construction tested separately
         };
       });
       return expect(result).to.eventually.eql({ total: 67, count: 50, page: 1, results: expResults });
@@ -224,10 +231,61 @@ describe('vsac/FHIRClient', () => {
           name: v.resource.name,
           steward: v.resource.publisher,
           oid: v.resource.id,
-          codeCount: 33
+          codeCount: 33,
+          description: v.resource.description || '',
+          experimental: v.resource.experimental || false,
+          date: v.resource.date || '',
+          lastReviewDate:
+            v.resource.extension?.find(e => e.url === 'http://hl7.org/fhir/StructureDefinition/resource-lastReviewDate')
+              ?.valueDate || '',
+          purpose: null // Note: purpose construction tested separately
         };
       });
       return expect(result).to.eventually.eql({ total: 67, count: 50, page: 1, results: expResults });
+    });
+
+    it('should construct purpose object if specified purpose matches expected format', () => {
+      const [username, password] = ['test-user', 'test-pass'];
+      nock('https://cts.nlm.nih.gov')
+        .get(/ValueSet/)
+        .reply(200, FHIRMocks.SearchWithPurpose);
+      nock('https://cts.nlm.nih.gov')
+        .get(/expand/)
+        .times(67)
+        .reply(200, FHIRMocks.ValueSetWithCounts);
+      const result = client.searchForValueSets('Diabetes', username, password);
+      const expResults = FHIRMocks.SearchWithPurpose.entry.map(v => {
+        return {
+          codeSystem: [],
+          name: v.resource.name,
+          steward: v.resource.publisher,
+          oid: v.resource.id,
+          codeCount: 33,
+          description: v.resource.description || '',
+          experimental: v.resource.experimental || false,
+          date: v.resource.date || '',
+          lastReviewDate:
+            v.resource.extension?.find(e => e.url === 'http://hl7.org/fhir/StructureDefinition/resource-lastReviewDate')
+              ?.valueDate || '',
+          purpose: null // purpose added next for the first entries where it is defined
+        };
+      });
+
+      // purpose matches format so parses out meaning
+      expResults[0].purpose = {
+        clinicalFocus: 'CPT codes for AETNA Diabetes: Hemoglobin A1c testing measure numerator',
+        dataElementScope: 'Codes defined in measure.', // trims white space
+        inclusionCriteria: 'Codes \rdefined in \nmeasure.', // handles \r and \n
+        exclusionCriteria: `None specified (TBD).` // handles () chars within content
+      };
+      // purpose is defined but doesn't match format so leaves it as is
+      expResults[1].purpose = {
+        purpose: 'A different format purpose definition'
+      };
+      // expResults[2] has no purpose, so it stays null
+      // expResults[3] has no meaningful content within the expected format, so it stays null
+
+      return expect(result).to.eventually.eql({ total: 4, count: 4, page: 1, results: expResults });
     });
   });
 

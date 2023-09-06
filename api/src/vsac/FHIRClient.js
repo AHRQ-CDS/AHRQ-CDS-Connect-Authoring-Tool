@@ -65,6 +65,47 @@ function cleanId(id, version) {
   return stripDashFromId(stripBarFromId(id), version);
 }
 
+/**
+ * Value Sets returned from VSAC contain a purpose element in the format:
+ * "(Clinical Focus: ),(Data Element Scope: ),(Inclusion Criteria: ),(Exclusion Criteria: )"
+ * If none of the fields contain meaningful text, return null.
+ * Otherwise, return an object with each of the descriptions.
+ * If the purpose string doesn't match the format, just return it as is.
+ * If no purpose is provided, return null
+ */
+function parsePurpose(purpose) {
+  // purpose is 0..1 so it is not guaranteed to be included
+  if (purpose == null) {
+    return null;
+  }
+
+  const vsacPurposeFormat =
+    /\(Clinical Focus: (.*)\),\(Data Element Scope: (.*)\),\(Inclusion Criteria: (.*)\),\(Exclusion Criteria: (.*)\)/s;
+  const purposeMatch = purpose.match(vsacPurposeFormat);
+  if (purposeMatch) {
+    const clinicalFocus = purposeMatch[1].trim();
+    const dataElementScope = purposeMatch[2].trim();
+    const inclusionCriteria = purposeMatch[3].trim();
+    const exclusionCriteria = purposeMatch[4].trim();
+
+    // the "empty" purpose returned from VSAC has 4 basic fields included with nothing specified for all 4
+    if (clinicalFocus == '' && dataElementScope == '' && inclusionCriteria == '' && exclusionCriteria == '') {
+      return null;
+    }
+
+    // return the values for each of the items
+    return {
+      clinicalFocus,
+      dataElementScope,
+      inclusionCriteria,
+      exclusionCriteria
+    };
+  }
+
+  // Purpose is specified but it doesn't match the above format. Return it without manipulating it.
+  return { purpose };
+}
+
 async function getValueSet(oid, username, password) {
   const options = {
     method: 'GET',
@@ -132,6 +173,13 @@ async function searchForValueSets(search, username, password) {
       name: v.resource.name,
       steward: v.resource.publisher,
       oid,
+      description: v.resource.description || '',
+      experimental: v.resource.experimental || false,
+      date: v.resource.date || '',
+      lastReviewDate:
+        v.resource.extension?.find(e => e.url === 'http://hl7.org/fhir/StructureDefinition/resource-lastReviewDate')
+          ?.valueDate || '',
+      purpose: parsePurpose(v.resource.purpose),
       codeSystem: [],
       // The code counts are not currently returned in the response from the original request, so if we don't
       // see a code count send a separate request to get the counts for this value set; this results in 1+n

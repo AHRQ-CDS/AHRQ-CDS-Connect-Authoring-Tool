@@ -108,7 +108,7 @@ describe('<VSACOptionsAction />', () => {
       expect(dialog.getByText('Choose value set')).toBeInTheDocument();
       fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
       userEvent.click(dialog.getByRole('button', { name: 'Search' }));
-      expect(await dialog.findByText('Name/OID')).toBeInTheDocument();
+      expect(await dialog.findByText('Value Set')).toBeInTheDocument();
       userEvent.click(dialog.getByText('Test VS'));
 
       expect(handleUpdateElement).toHaveBeenCalledTimes(1);

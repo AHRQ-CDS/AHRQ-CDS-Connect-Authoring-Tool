@@ -8,8 +8,32 @@ import ValueSetSelectModal from '../ValueSetSelectModal';
 describe('<ValueSetSelectModal />', () => {
   const apiKey = 'api-123';
   const testVsacSearchResults = [
-    { name: 'Test VS', type: 'Grouping', steward: 'Test Steward', oid: '1.2.3', codeCount: 4, codeSystem: ['Test CS'] },
-    { name: 'New VS', type: 'Extentional', steward: 'New Steward', oid: '3.4.5', codeCount: 8, codeSystem: ['New CS'] }
+    {
+      name: 'Test VS',
+      steward: 'Test Steward',
+      oid: '1.2.3',
+      codeCount: 4,
+      codeSystem: ['Test CS'],
+      date: '2020-01-01',
+      lastReviewDate: '2023-10-21',
+      description: 'A test value set',
+      experimental: true,
+      purpose: {
+        clinicalFocus: 'Example clinical focus',
+        dataElementScope: 'Example data element scope',
+        inclusionCriteria: 'Example inclusion criteria',
+        exclusionCriteria: 'Example exclusion criteria'
+      }
+    },
+    {
+      name: 'Other VS',
+      steward: 'Other Steward',
+      oid: '3.2.1',
+      codeCount: 2,
+      codeSystem: ['Other CS'],
+      purpose: { purpose: 'A generic purpose in any format string' }
+    },
+    { name: 'New VS', steward: 'New Steward', oid: '3.4.5', codeCount: 8, codeSystem: ['New CS'] }
   ];
   const testVsacDetails = [
     {
@@ -78,7 +102,7 @@ describe('<ValueSetSelectModal />', () => {
     fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
     userEvent.click(dialog.getByRole('button', { name: 'Search' }));
 
-    expect(await dialog.findByText('Name/OID')).toBeInTheDocument();
+    expect(await dialog.findByText('Value Set')).toBeInTheDocument();
     expect(dialog.getByText('Test VS')).toBeInTheDocument();
     expect(dialog.getByText('New VS')).toBeInTheDocument();
 
@@ -86,6 +110,55 @@ describe('<ValueSetSelectModal />', () => {
 
     expect(handleSelectValueSet).toHaveBeenCalledWith({ name: 'New VS', oid: '3.4.5' });
     expect(handleCloseModal).toHaveBeenCalled();
+  });
+
+  it('can search for and render all value set info available', async () => {
+    const handleSelectValueSet = jest.fn();
+    const handleCloseModal = jest.fn();
+    renderComponent({ handleSelectValueSet, handleCloseModal });
+
+    const dialog = within(screen.getByRole('dialog'));
+
+    expect(dialog.getByText('Choose value set')).toBeInTheDocument();
+
+    fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
+    userEvent.click(dialog.getByRole('button', { name: 'Search' }));
+
+    expect(await dialog.findByText('Value Set')).toBeInTheDocument();
+    expect(dialog.getByText('Test VS')).toBeInTheDocument();
+    expect(dialog.getByText('New VS')).toBeInTheDocument();
+
+    expect(dialog.getByText('Oct 21, 2023').parentElement.textContent).toEqual('Reviewed:Oct 21, 2023');
+    expect(dialog.getByText('Jan 1, 2020').parentElement.textContent).toEqual('Updated:Jan 1, 2020');
+    expect(dialog.getByLabelText('Experimental')).toBeInTheDocument();
+
+    // the second vs without dates or experimental doesn't render blanks
+    expect(dialog.getAllByText(/Reviewed:/)).toHaveLength(1);
+    expect(dialog.getAllByText(/Updated:/)).toHaveLength(1);
+    expect(dialog.getAllByLabelText('Experimental')).toHaveLength(1);
+
+    userEvent.click(dialog.getByRole('button', { name: 'Expand details for Test VS' }));
+    expect(dialog.getByText('Description:').parentElement.textContent).toEqual('Description: A test value set');
+    expect(dialog.getByText('Clinical Focus:').parentElement.textContent).toEqual(
+      'Clinical Focus: Example clinical focus'
+    );
+    expect(dialog.getByText('Data Element Scope:').parentElement.textContent).toEqual(
+      'Data Element Scope: Example data element scope'
+    );
+    expect(dialog.getByText('Inclusion Criteria:').parentElement.textContent).toEqual(
+      'Inclusion Criteria: Example inclusion criteria'
+    );
+    expect(dialog.getByText('Exclusion Criteria:').parentElement.textContent).toEqual(
+      'Exclusion Criteria: Example exclusion criteria'
+    );
+
+    userEvent.click(dialog.getByRole('button', { name: 'Expand details for Other VS' }));
+    expect(dialog.getByText('Purpose:').parentElement.textContent).toEqual(
+      'Purpose: A generic purpose in any format string'
+    );
+
+    userEvent.click(dialog.getByRole('button', { name: 'Expand details for New VS' }));
+    expect(dialog.getByText('No additional information provided')).toBeInTheDocument();
   });
 
   it('can search for and select a value set after viewing codes', async () => {
@@ -100,7 +173,7 @@ describe('<ValueSetSelectModal />', () => {
     fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
     userEvent.click(dialog.getByRole('button', { name: 'Search' }));
 
-    expect(await dialog.findByText('Name/OID')).toBeInTheDocument();
+    expect(await dialog.findByText('Value Set')).toBeInTheDocument();
     expect(dialog.getByText('Test VS')).toBeInTheDocument();
     expect(dialog.getByText('New VS')).toBeInTheDocument();
 
@@ -126,7 +199,7 @@ describe('<ValueSetSelectModal />', () => {
     fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
     userEvent.click(dialog.getByRole('button', { name: 'Search' }));
 
-    expect(await dialog.findByText('Name/OID')).toBeInTheDocument();
+    expect(await dialog.findByText('Value Set')).toBeInTheDocument();
     expect(dialog.getByText('Test VS')).toBeInTheDocument();
     expect(dialog.getByText('New VS')).toBeInTheDocument();
 
