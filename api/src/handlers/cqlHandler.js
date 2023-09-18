@@ -7,7 +7,6 @@ const ejs = require('ejs');
 const fs = require('fs');
 const archiver = require('archiver');
 const path = require('path');
-const glob = require('glob');
 const axios = require('axios');
 const FormData = require('form-data');
 const busboy = require('busboy');
@@ -1723,17 +1722,8 @@ function convertToElm(artifacts, getXML, callback /* (error, elmFiles) */) {
 
   // Load all the supplementary CQL files, open file streams to them, and convert to ELM
   const helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', fhirTarget.version || '4.0.1');
-  // We might not need glob anymore, but we keep it just in case we need to bundle more
-  // helper libraries into the CQL to ELM request again eventually
-  glob(`${helperPath}/FHIRHelpers.cql`, (err, files) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-
-    const fileStreams = files.map(f => fs.createReadStream(f));
-    makeCQLtoELMRequest(artifacts, fileStreams, getXML, callback);
-  });
+  const fileStream = fs.createReadStream(`${helperPath}/FHIRHelpers.cql`);
+  makeCQLtoELMRequest(artifacts, [fileStream], getXML, callback);
 }
 
 function makeCQLtoELMRequest(files, fileStreams, getXML, callback) {
