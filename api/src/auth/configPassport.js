@@ -5,16 +5,23 @@ const passport = require('passport');
 const LdapStrategy = require('passport-ldapauth');
 const LocalStrategy = require('passport-local').Strategy;
 const MongoStore = require('connect-mongo');
+const { cloneDeep } = require('lodash');
 const config = require('../config');
 const findLocalUserById = require('./localAuthUsers').findByUsername;
 
 function getLdapConfiguration(req, callback) {
   // Replace {{username}} and {{password}} with values from request
-  const ldapConfig = JSON.parse(
-    JSON.stringify(config.get('auth.ldap'))
-      .replace(/\{\{username\}\}/g, req.body.username)
-      .replace(/\{\{password\}\}/g, req.body.password)
-  );
+  const ldapConfig = cloneDeep(config.get('auth.ldap'));
+  if (ldapConfig && ldapConfig.server) {
+    const server = ldapConfig.server;
+    Object.keys(server).forEach(key => {
+      if (typeof server[key] === 'string') {
+        server[key] = server[key]
+          .replace(/\{\{username\}\}/g, req.body.username)
+          .replace(/\{\{password\}\}/g, req.body.password);
+      }
+    });
+  }
   if (
     ldapConfig &&
     ldapConfig.server &&

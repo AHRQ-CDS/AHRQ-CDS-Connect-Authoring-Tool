@@ -120,7 +120,7 @@ const config = convict({
         tlsOptions: {
           minVersion: {
             doc: 'The minimum TLS version to allow (TLSv1.3, TLSv1.2, TLSv1.1, or TLSv1)',
-            format: String,
+            format: 'String',
             default: 'TLSv1.2',
             env: 'AUTH_LDAP_TLS_MIN_VERSION'
           },
@@ -197,7 +197,7 @@ if (files.length > 0) {
 }
 
 // Perform validation
-config.validate({ allowed: 'strict' });
+config.validate({ allowed: 'warn' });
 
 console.log('Loaded config:', config.toString());
 
