@@ -1,0 +1,136 @@
+{
+  "_id": "629d0f545a38860011068c9f",
+  "patient": {
+    "resourceType": "Bundle",
+    "id": "Excluded - Myocardial Infarction",
+    "type": "collection",
+    "entry": [
+      {
+        "resource": {
+          "resourceType": "Patient",
+          "id": "13254391-41d2-49ff-bfe0-f322cd6e1563",
+          "name": [
+            {
+              "given": ["EliExcluded"],
+              "family": "HadMI"
+            }
+          ],
+          "gender": "male",
+          "birthDate": "2002-02-16"
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Observation",
+          "id": "96c29c5c-b4b8-4821-b808-4f7245a10d83",
+          "subject": {
+            "reference": "Patient/13254391-41d2-49ff-bfe0-f322cd6e1563"
+          },
+          "status": "final",
+          "code": {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "39156-5",
+                "display": "Body mass index (BMI) [Ratio]"
+              }
+            ],
+            "text": "Body mass index (BMI) [Ratio]"
+          },
+          "valueQuantity": {
+            "value": 25,
+            "unit": "kg/m2",
+            "system": "http://unitsofmeasure.org",
+            "code": "kg/m2"
+          },
+          "effectiveDateTime": "2021-04-05T16:00:00.000Z"
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Condition",
+          "id": "084a93af-a5df-46ac-966e-cc09da35a421",
+          "subject": {
+            "reference": "Patient/13254391-41d2-49ff-bfe0-f322cd6e1563"
+          },
+          "clinicalStatus": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                "code": "active",
+                "display": "Active"
+              }
+            ],
+            "text": "Active"
+          },
+          "verificationStatus": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                "code": "confirmed",
+                "display": "Confirmed"
+              }
+            ],
+            "text": "Confirmed"
+          },
+          "code": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/sid/icd-10-cm",
+                "code": "I10",
+                "display": "Essential (primary) hypertension"
+              }
+            ],
+            "text": "Essential (primary) hypertension"
+          },
+          "onsetDateTime": "2020-04-05T00:00:00.000Z"
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Condition",
+          "id": "b29ad07c-848a-4a33-b6e2-2297f2cb27f0",
+          "subject": {
+            "reference": "Patient/13254391-41d2-49ff-bfe0-f322cd6e1563"
+          },
+          "clinicalStatus": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                "code": "active",
+                "display": "Active"
+              }
+            ],
+            "text": "Active"
+          },
+          "verificationStatus": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                "code": "confirmed",
+                "display": "Confirmed"
+              }
+            ],
+            "text": "Confirmed"
+          },
+          "code": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/sid/icd-10-cm",
+                "code": "I21.9",
+                "display": "Acute myocardial infarction, unspecified"
+              }
+            ],
+            "text": "Acute myocardial infarction, unspecified"
+          },
+          "onsetDateTime": "2020-12-02T16:00:00.000Z"
+        }
+      }
+    ]
+  },
+  "fhirVersion": "R4",
+  "user": "bob",
+  "createdAt": "2022-06-05T20:17:24.185Z",
+  "updatedAt": "2022-06-05T20:17:24.185Z",
+  "__v": 0
+}

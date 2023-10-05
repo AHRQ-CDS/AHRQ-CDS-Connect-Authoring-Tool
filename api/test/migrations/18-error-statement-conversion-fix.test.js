@@ -6,7 +6,7 @@ chai.use(require('chai-exclude'));
 const { expect } = chai;
 
 describe('Error Statement Conversion Fix', () => {
-  it('corrects the data format for an empty error statement', () => {
+  it('should correct the data format for an empty error statement', () => {
     const result = fixArtifactErrorStatement({
       errorStatement: {
         id: 'root',
@@ -24,7 +24,7 @@ describe('Error Statement Conversion Fix', () => {
       });
   });
 
-  it('does not modify an error statement that has if then clauses', () => {
+  it('should not modify an error statement that has if then clauses', () => {
     const result = fixArtifactErrorStatement({
       errorStatement: {
         id: 'root',

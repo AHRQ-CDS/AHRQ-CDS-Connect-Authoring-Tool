@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 let Search = {
   resourceType: 'Bundle',
   meta: {

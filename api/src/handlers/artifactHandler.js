@@ -108,9 +108,15 @@ function prepareDuplicateArtifact(artifact, artifactNames) {
   return artifactCopy;
 }
 
-async function duplicate(req, res) {
+async function duplicate(req, res, next) {
   if (req.user) {
-    const artifactNames = await Artifact.find({ user: req.user.uid });
+    let artifactNames;
+    try {
+      artifactNames = await Artifact.find({ user: req.user.uid });
+    } catch (e) {
+      res.status(500).send(e);
+      return;
+    }
     const parentID = req.params.artifact;
     Artifact.findById(parentID, (error, artifact) => {
       if (error) res.status(500).send(error);

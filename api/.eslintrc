@@ -4,7 +4,6 @@
   },
   "rules": {
     "comma-dangle": 0,
-    "max-len": ["error", { "code": 120, "ignoreUrls": true , "ignoreTrailingComments": true, "ignoreRegExpLiterals": true }], // allow longer lines when there is a url or trailing comment
     "no-console": 0, // allow console.log statements
     "no-param-reassign": ["error", {"props": false}],
     "no-underscore-dangle": ["error", { "allow": ["_id"] }], // because mongo

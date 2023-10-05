@@ -24,7 +24,7 @@ function allGet(req, res) {
       'interval_of_quantity'
     ];
     const parentID = req.params.artifact;
-    CQLLibrary.find({ linkedArtifactId: parentID }, (error, libraries) => {
+    CQLLibrary.find({ user: req.user.uid, linkedArtifactId: parentID }, (error, libraries) => {
       if (!error && libraries.length !== 0) {
         const externalModifiers = [];
         libraries.map(lib => {

@@ -1,0 +1,179 @@
+{
+  "_id": "64c2ccf67124220b222f5f91",
+  "name": "SimpleArtifact",
+  "version": "0.0.1",
+  "description": "",
+  "url": "",
+  "status": null,
+  "experimental": null,
+  "publisher": "",
+  "context": [],
+  "purpose": "",
+  "usage": "",
+  "copyright": "",
+  "approvalDate": null,
+  "lastReviewDate": null,
+  "effectivePeriod": {
+    "start": null,
+    "end": null
+  },
+  "topic": [],
+  "author": [],
+  "reviewer": [],
+  "endorser": [],
+  "relatedArtifact": [],
+  "strengthOfRecommendation": {
+    "strengthOfRecommendation": null,
+    "code": "",
+    "system": "",
+    "other": ""
+  },
+  "qualityOfEvidence": {
+    "qualityOfEvidence": null,
+    "code": "",
+    "system": "",
+    "other": ""
+  },
+  "fhirVersion": "",
+  "expTreeInclude": {
+    "id": "And",
+    "name": "And",
+    "conjunction": true,
+    "returnType": "boolean",
+    "fields": [
+      {
+        "id": "element_name",
+        "type": "string",
+        "name": "Group Name",
+        "value": "MeetsInclusionCriteria"
+      },
+      {
+        "id": "comment",
+        "type": "textarea",
+        "name": "Comment"
+      }
+    ],
+    "uniqueId": "And-a7a0ae6e-00a1-4f6a-91bd-9e7ee443da1c",
+    "childInstances": [
+      {
+        "id": "AgeRange",
+        "name": "Age Range",
+        "returnType": "boolean",
+        "validator": {
+          "type": "requiredIfThenOne",
+          "fields": ["unit_of_time", "min_age", "max_age"]
+        },
+        "suppressedModifiers": ["BooleanNot", "BooleanComparison"],
+        "fields": [
+          {
+            "id": "element_name",
+            "type": "string",
+            "name": "Element Name",
+            "value": "Is Child"
+          },
+          {
+            "id": "comment",
+            "type": "textarea",
+            "name": "Comment"
+          },
+          {
+            "id": "min_age",
+            "type": "number",
+            "typeOfNumber": "integer",
+            "name": "Minimum Age"
+          },
+          {
+            "id": "max_age",
+            "type": "number",
+            "typeOfNumber": "integer",
+            "name": "Maximum Age",
+            "value": 17
+          },
+          {
+            "id": "unit_of_time",
+            "type": "valueset",
+            "select": "demographics/units_of_time",
+            "name": "Unit of Time",
+            "value": {
+              "id": "a",
+              "name": "years",
+              "value": "AgeInYears()"
+            }
+          }
+        ],
+        "uniqueId": "AgeRange-622a5994-adaf-4110-96e7-960e7046d512",
+        "tab": "expTreeInclude",
+        "modifiers": []
+      }
+    ],
+    "path": ""
+  },
+  "expTreeExclude": {
+    "id": "Or",
+    "name": "Or",
+    "conjunction": true,
+    "returnType": "boolean",
+    "fields": [
+      {
+        "id": "element_name",
+        "type": "string",
+        "name": "Group Name",
+        "value": "MeetsExclusionCriteria"
+      },
+      {
+        "id": "comment",
+        "type": "textarea",
+        "name": "Comment"
+      }
+    ],
+    "uniqueId": "Or-d7ef83dc-983b-4502-a343-f00e9f9e086c",
+    "childInstances": [],
+    "path": ""
+  },
+  "recommendations": [
+    {
+      "uid": "9d535374-1844-4370-b6be-0f9e87ab3db1",
+      "grade": "A",
+      "subpopulations": [],
+      "text": "Have Fun!",
+      "rationale": "",
+      "comment": "",
+      "links": []
+    }
+  ],
+  "subpopulations": [
+    {
+      "special": true,
+      "subpopulationName": "Doesn't Meet Inclusion Criteria",
+      "special_subpopulationName": "not \"MeetsInclusionCriteria\"",
+      "uniqueId": "default-subpopulation-1"
+    },
+    {
+      "special": true,
+      "subpopulationName": "Meets Exclusion Criteria",
+      "special_subpopulationName": "\"MeetsExclusionCriteria\"",
+      "uniqueId": "default-subpopulation-2"
+    }
+  ],
+  "baseElements": [],
+  "parameters": [],
+  "errorStatement": {
+    "id": "root",
+    "ifThenClauses": [
+      {
+        "ifCondition": {
+          "label": null,
+          "value": null
+        },
+        "statements": [],
+        "thenClause": ""
+      }
+    ],
+    "elseClause": ""
+  },
+  "uniqueIdCounter": 0,
+  "user": "bob",
+  "createdAt": "2023-07-27T20:00:54.035Z",
+  "updatedAt": "2023-07-27T20:03:19.167Z",
+  "__v": 0
+}

@@ -221,7 +221,7 @@ async function getCode(code, system, username, password) {
 }
 
 async function getOneValueSet(username, password) {
-  const oneCodeVSOID = '2.16.840.1.113762.1.4.1034.65';
+  const oneCodeVSOID = '2.16.840.1.113762.1.4.1';
   const options = {
     method: 'GET',
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet/${oneCodeVSOID}`,

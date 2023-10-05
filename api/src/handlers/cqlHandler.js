@@ -1,6 +1,7 @@
 const config = require('../config');
 const Artifact = require('../models/artifact');
 const CQLLibrary = require('../models/cqlLibrary');
+const { sendUnauthorized } = require('./common');
 const _ = require('lodash');
 const slug = require('slug');
 const ejs = require('ejs');
@@ -1526,6 +1527,10 @@ function objToELM(req, res) {
 }
 
 function objConvert(req, res, callback) {
+  if (req.user == null) {
+    sendUnauthorized(res);
+    return;
+  }
   const user = req.user.uid;
   const artifactId = req.body._id;
   const artifactFromRequest = req.body;
@@ -1573,7 +1578,8 @@ function objConvert(req, res, callback) {
 
       // Attempt to reformat the primary CQL library if CQL Formatter is active
       if (config.get('cqlFormatter.active')) {
-        formatCQL(artifactJson.text, (err, formattedCQL) => {
+        // NOTE: using module.exports prefix to allow for mocking formatCQL in tests
+        module.exports.formatCQL(artifactJson.text, (err, formattedCQL) => {
           // Sanity check: only replace the CQL if no errors and it starts with "library";
           // Otherwise just ignore the error since formatting isn't critical.
           if (err == null && formattedCQL != null && /^library/.test(formattedCQL)) {
@@ -1723,7 +1729,8 @@ function convertToElm(artifacts, getXML, callback /* (error, elmFiles) */) {
   // Load all the supplementary CQL files, open file streams to them, and convert to ELM
   const helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', fhirTarget.version || '4.0.1');
   const fileStream = fs.createReadStream(`${helperPath}/FHIRHelpers.cql`);
-  makeCQLtoELMRequest(artifacts, [fileStream], getXML, callback);
+  // NOTE: using module.exports prefix to allow for mocking makeCQLtoELMRequest in tests
+  module.exports.makeCQLtoELMRequest(artifacts, [fileStream], getXML, callback);
 }
 
 function makeCQLtoELMRequest(files, fileStreams, getXML, callback) {

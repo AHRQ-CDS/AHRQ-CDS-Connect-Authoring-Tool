@@ -1,0 +1,428 @@
+{
+  "_id": "603e4576d6242800116cfd6d",
+  "linkedArtifactId": "603e453ad6242800116cfd6c",
+  "user": "bob",
+  "name": "FunctionsMultiTest",
+  "version": "1.0.0",
+  "fhirVersion": "4.0.0",
+  "details": {
+    "cqlFileText": "library FunctionsMultiTest version '1.0.0'\nusing FHIR version '4.0.0'\ncontext Patient\ndefine function One(): 1\ndefine function Increment(int Integer): int + 1\ndefine function SumTwo(first_int Integer, second_int Integer): first_int + second_int\ndefine function SumThree(first_int Integer, second_int Integer, third_int Integer): first_int + second_int + third_int\ndefine function UseAll(input Integer, boolean Boolean, integer Integer, decimal Decimal, code Code, concept Concept, datetime DateTime, string String, time Time, quantity System.Quantity, interval_quantity Interval<System.Quantity>, interval_decimal Interval<Decimal>, interval_integer Interval<Integer>, interval_datetime Interval<DateTime>): input\ndefine function UseObservation(input Integer, observation Observation): input\n",
+    "fileName": "FunctionsMultiTest_cql.txt",
+    "parameters": [],
+    "definitions": [],
+    "functions": [
+      {
+        "accessLevel": "Public",
+        "name": "One",
+        "type": "FunctionDef",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+        "operand": [],
+        "calculatedReturnType": "integer"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "Increment",
+        "type": "FunctionDef",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+        "operand": [
+          {
+            "name": "int",
+            "operandTypeSpecifier": {
+              "localId": "4",
+              "locator": "5:31-5:37",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            }
+          }
+        ],
+        "calculatedReturnType": "integer",
+        "argumentTypes": [
+          {
+            "calculated": "integer"
+          }
+        ],
+        "inputTypes": ["integer"]
+      },
+      {
+        "accessLevel": "Public",
+        "name": "SumTwo",
+        "type": "FunctionDef",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+        "operand": [
+          {
+            "name": "first_int",
+            "operandTypeSpecifier": {
+              "localId": "9",
+              "locator": "6:34-6:40",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "second_int",
+            "operandTypeSpecifier": {
+              "localId": "10",
+              "locator": "6:54-6:60",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            }
+          }
+        ],
+        "calculatedReturnType": "integer",
+        "argumentTypes": [
+          {
+            "calculated": "integer"
+          },
+          {
+            "calculated": "integer"
+          }
+        ],
+        "inputTypes": ["integer"]
+      },
+      {
+        "accessLevel": "Public",
+        "name": "SumThree",
+        "type": "FunctionDef",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+        "operand": [
+          {
+            "name": "first_int",
+            "operandTypeSpecifier": {
+              "localId": "15",
+              "locator": "7:36-7:42",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "second_int",
+            "operandTypeSpecifier": {
+              "localId": "16",
+              "locator": "7:56-7:62",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "third_int",
+            "operandTypeSpecifier": {
+              "localId": "17",
+              "locator": "7:75-7:81",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            }
+          }
+        ],
+        "calculatedReturnType": "integer",
+        "argumentTypes": [
+          {
+            "calculated": "integer"
+          },
+          {
+            "calculated": "integer"
+          },
+          {
+            "calculated": "integer"
+          }
+        ],
+        "inputTypes": ["integer"]
+      },
+      {
+        "accessLevel": "Public",
+        "name": "UseAll",
+        "type": "FunctionDef",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+        "operand": [
+          {
+            "name": "input",
+            "operandTypeSpecifier": {
+              "localId": "24",
+              "locator": "8:30-8:36",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "boolean",
+            "operandTypeSpecifier": {
+              "localId": "25",
+              "locator": "8:47-8:53",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "name": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "integer",
+            "operandTypeSpecifier": {
+              "localId": "26",
+              "locator": "8:64-8:70",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "decimal",
+            "operandTypeSpecifier": {
+              "localId": "27",
+              "locator": "8:81-8:87",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+              "name": "{urn:hl7-org:elm-types:r1}Decimal",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "code",
+            "operandTypeSpecifier": {
+              "localId": "28",
+              "locator": "8:95-8:98",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Code",
+              "name": "{urn:hl7-org:elm-types:r1}Code",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "concept",
+            "operandTypeSpecifier": {
+              "localId": "29",
+              "locator": "8:109-8:115",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Concept",
+              "name": "{urn:hl7-org:elm-types:r1}Concept",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "datetime",
+            "operandTypeSpecifier": {
+              "localId": "30",
+              "locator": "8:127-8:134",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "string",
+            "operandTypeSpecifier": {
+              "localId": "31",
+              "locator": "8:144-8:149",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+              "name": "{urn:hl7-org:elm-types:r1}String",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "time",
+            "operandTypeSpecifier": {
+              "localId": "32",
+              "locator": "8:157-8:160",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Time",
+              "name": "{urn:hl7-org:elm-types:r1}Time",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "quantity",
+            "operandTypeSpecifier": {
+              "localId": "33",
+              "locator": "8:172-8:186",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+              "name": "{urn:hl7-org:elm-types:r1}Quantity",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "interval_quantity",
+            "operandTypeSpecifier": {
+              "localId": "35",
+              "locator": "8:207-8:231",
+              "type": "IntervalTypeSpecifier",
+              "resultTypeSpecifier": {
+                "type": "IntervalTypeSpecifier",
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                  "type": "NamedTypeSpecifier"
+                }
+              },
+              "pointType": {
+                "localId": "34",
+                "locator": "8:216-8:230",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          },
+          {
+            "name": "interval_decimal",
+            "operandTypeSpecifier": {
+              "localId": "37",
+              "locator": "8:251-8:267",
+              "type": "IntervalTypeSpecifier",
+              "resultTypeSpecifier": {
+                "type": "IntervalTypeSpecifier",
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Decimal",
+                  "type": "NamedTypeSpecifier"
+                }
+              },
+              "pointType": {
+                "localId": "36",
+                "locator": "8:260-8:266",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+                "name": "{urn:hl7-org:elm-types:r1}Decimal",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          },
+          {
+            "name": "interval_integer",
+            "operandTypeSpecifier": {
+              "localId": "39",
+              "locator": "8:287-8:303",
+              "type": "IntervalTypeSpecifier",
+              "resultTypeSpecifier": {
+                "type": "IntervalTypeSpecifier",
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                }
+              },
+              "pointType": {
+                "localId": "38",
+                "locator": "8:296-8:302",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          },
+          {
+            "name": "interval_datetime",
+            "operandTypeSpecifier": {
+              "localId": "41",
+              "locator": "8:324-8:341",
+              "type": "IntervalTypeSpecifier",
+              "resultTypeSpecifier": {
+                "type": "IntervalTypeSpecifier",
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "NamedTypeSpecifier"
+                }
+              },
+              "pointType": {
+                "localId": "40",
+                "locator": "8:333-8:340",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          }
+        ],
+        "calculatedReturnType": "integer",
+        "argumentTypes": [
+          {
+            "calculated": "integer"
+          },
+          {
+            "calculated": "boolean"
+          },
+          {
+            "calculated": "integer"
+          },
+          {
+            "calculated": "decimal"
+          },
+          {
+            "calculated": "system_code"
+          },
+          {
+            "calculated": "system_concept"
+          },
+          {
+            "calculated": "datetime"
+          },
+          {
+            "calculated": "string"
+          },
+          {
+            "calculated": "time"
+          },
+          {
+            "calculated": "system_quantity"
+          },
+          {
+            "calculated": "interval_of_quantity"
+          },
+          {
+            "calculated": "interval_of_decimal"
+          },
+          {
+            "calculated": "interval_of_integer"
+          },
+          {
+            "calculated": "interval_of_datetime"
+          }
+        ],
+        "inputTypes": ["integer"]
+      },
+      {
+        "accessLevel": "Public",
+        "name": "UseObservation",
+        "type": "FunctionDef",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+        "operand": [
+          {
+            "name": "input",
+            "operandTypeSpecifier": {
+              "localId": "44",
+              "locator": "9:38-9:44",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            }
+          },
+          {
+            "name": "observation",
+            "operandTypeSpecifier": {
+              "localId": "45",
+              "locator": "9:59-9:69",
+              "resultTypeName": "{http://hl7.org/fhir}Observation",
+              "name": "{http://hl7.org/fhir}Observation",
+              "type": "NamedTypeSpecifier"
+            }
+          }
+        ],
+        "calculatedReturnType": "integer",
+        "argumentTypes": [
+          {
+            "calculated": "integer"
+          },
+          {
+            "calculated": "observation"
+          }
+        ],
+        "inputTypes": ["integer"]
+      }
+    ],
+    "dependencies": []
+  },
+  "__v": 0,
+  "createdAt": "2021-03-02T14:02:30.753Z",
+  "updatedAt": "2021-03-02T14:02:30.753Z"
+}

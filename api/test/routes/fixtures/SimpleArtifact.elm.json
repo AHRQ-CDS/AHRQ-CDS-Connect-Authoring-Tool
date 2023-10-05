@@ -1,0 +1,528 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "translatorVersion": "2.10.0",
+        "translatorOptions": "EnableDateRangeOptimization,EnableAnnotations,EnableLocators,EnableResultTypes,DisableListDemotion,DisableListPromotion,DisableMethodInvocation",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "type": "Annotation",
+        "s": {
+          "r": "27",
+          "s": [
+            {
+              "value": ["", "library \"SimpleArtifact\" version '0.0.1'"]
+            }
+          ]
+        }
+      }
+    ],
+    "identifier": {
+      "id": "SimpleArtifact",
+      "version": "0.0.1"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localId": "1",
+          "locator": "3:1-3:26",
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "1",
+                "s": [
+                  {
+                    "value": ["", "using "]
+                  },
+                  {
+                    "s": [
+                      {
+                        "value": ["FHIR"]
+                      }
+                    ]
+                  },
+                  {
+                    "value": [" version ", "'4.0.1'"]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "includes": {
+      "def": [
+        {
+          "localId": "2",
+          "locator": "5:1-5:56",
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "2",
+                "s": [
+                  {
+                    "value": ["", "include "]
+                  },
+                  {
+                    "s": [
+                      {
+                        "value": ["\"FHIRHelpers\""]
+                      }
+                    ]
+                  },
+                  {
+                    "value": [" version ", "'4.0.1'", " called ", "FHIRHelpers"]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "contexts": {
+      "def": [
+        {
+          "locator": "7:1-7:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "statements": {
+      "def": [
+        {
+          "locator": "7:1-7:15",
+          "name": "Patient",
+          "context": "Patient",
+          "expression": {
+            "type": "SingletonFrom",
+            "operand": {
+              "locator": "7:1-7:15",
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            }
+          }
+        },
+        {
+          "localId": "6",
+          "locator": "9:1-10:20",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+          "name": "Is Child",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "6",
+                "s": [
+                  {
+                    "value": ["", "define ", "\"Is Child\"", ":\n  "]
+                  },
+                  {
+                    "r": "5",
+                    "s": [
+                      {
+                        "r": "3",
+                        "s": [
+                          {
+                            "value": ["AgeInYears", "()"]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "4",
+                        "value": [" ", "<=", " ", "17"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "5",
+            "locator": "10:3-10:20",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "type": "LessOrEqual",
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "operand": [
+              {
+                "localId": "3",
+                "locator": "10:3-10:14",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "precision": "Year",
+                "type": "CalculateAge",
+                "signature": [
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  }
+                ],
+                "operand": {
+                  "path": "birthDate.value",
+                  "type": "Property",
+                  "source": {
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  }
+                }
+              },
+              {
+                "localId": "4",
+                "locator": "10:19-10:20",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "17",
+                "type": "Literal"
+              }
+            ]
+          }
+        },
+        {
+          "localId": "8",
+          "locator": "12:1-13:12",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+          "name": "MeetsInclusionCriteria",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "8",
+                "s": [
+                  {
+                    "value": ["", "define ", "\"MeetsInclusionCriteria\"", ":\n  "]
+                  },
+                  {
+                    "r": "7",
+                    "s": [
+                      {
+                        "value": ["\"Is Child\""]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "7",
+            "locator": "13:3-13:12",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "name": "Is Child",
+            "type": "ExpressionRef"
+          }
+        },
+        {
+          "localId": "10",
+          "locator": "15:1-16:26",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+          "name": "InPopulation",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "10",
+                "s": [
+                  {
+                    "value": ["", "define ", "\"InPopulation\"", ":\n  "]
+                  },
+                  {
+                    "r": "9",
+                    "s": [
+                      {
+                        "value": ["\"MeetsInclusionCriteria\""]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "9",
+            "locator": "16:3-16:26",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "name": "MeetsInclusionCriteria",
+            "type": "ExpressionRef"
+          }
+        },
+        {
+          "localId": "15",
+          "locator": "18:1-20:13",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+          "name": "Recommendation",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "15",
+                "s": [
+                  {
+                    "value": ["", "define ", "\"Recommendation\"", ":\n  "]
+                  },
+                  {
+                    "r": "14",
+                    "s": [
+                      {
+                        "value": ["if "]
+                      },
+                      {
+                        "r": "11",
+                        "s": [
+                          {
+                            "value": ["\"InPopulation\""]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [" then "]
+                      },
+                      {
+                        "r": "12",
+                        "s": [
+                          {
+                            "value": ["'Have Fun!'"]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "13",
+                        "value": [" \n    else ", "null"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "14",
+            "locator": "19:3-20:13",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+            "type": "If",
+            "condition": {
+              "localId": "11",
+              "locator": "19:6-19:19",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "name": "InPopulation",
+              "type": "ExpressionRef"
+            },
+            "then": {
+              "localId": "12",
+              "locator": "19:26-19:36",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+              "valueType": "{urn:hl7-org:elm-types:r1}String",
+              "value": "Have Fun!",
+              "type": "Literal"
+            },
+            "else": {
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "type": "As",
+              "operand": {
+                "localId": "13",
+                "locator": "20:10-20:13",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "Null"
+              }
+            }
+          }
+        },
+        {
+          "localId": "20",
+          "locator": "22:1-24:13",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+          "name": "Rationale",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "20",
+                "s": [
+                  {
+                    "value": ["", "define ", "\"Rationale\"", ":\n  "]
+                  },
+                  {
+                    "r": "19",
+                    "s": [
+                      {
+                        "value": ["if "]
+                      },
+                      {
+                        "r": "16",
+                        "s": [
+                          {
+                            "value": ["\"InPopulation\""]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "17",
+                        "value": [" then ", "null", " \n    else ", "null"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "19",
+            "locator": "23:3-24:13",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+            "type": "If",
+            "condition": {
+              "localId": "16",
+              "locator": "23:6-23:19",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "name": "InPopulation",
+              "type": "ExpressionRef"
+            },
+            "then": {
+              "localId": "17",
+              "locator": "23:26-23:29",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+              "type": "Null"
+            },
+            "else": {
+              "localId": "18",
+              "locator": "24:10-24:13",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+              "type": "Null"
+            }
+          }
+        },
+        {
+          "localId": "25",
+          "locator": "26:1-28:13",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+          "name": "Links",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "25",
+                "s": [
+                  {
+                    "value": ["", "define ", "\"Links\"", ":\n  "]
+                  },
+                  {
+                    "r": "24",
+                    "s": [
+                      {
+                        "value": ["if "]
+                      },
+                      {
+                        "r": "21",
+                        "s": [
+                          {
+                            "value": ["\"InPopulation\""]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "22",
+                        "value": [" then ", "null", " \n    else ", "null"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "24",
+            "locator": "27:3-28:13",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+            "type": "If",
+            "condition": {
+              "localId": "21",
+              "locator": "27:6-27:19",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "name": "InPopulation",
+              "type": "ExpressionRef"
+            },
+            "then": {
+              "localId": "22",
+              "locator": "27:26-27:29",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+              "type": "Null"
+            },
+            "else": {
+              "localId": "23",
+              "locator": "28:10-28:13",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+              "type": "Null"
+            }
+          }
+        },
+        {
+          "localId": "27",
+          "locator": "30:1-31:6",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+          "name": "Errors",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "27",
+                "s": [
+                  {
+                    "r": "26",
+                    "value": ["", "define ", "\"Errors\"", ":\n  ", "null"]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "26",
+            "locator": "31:3-31:6",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+            "type": "Null"
+          }
+        }
+      ]
+    }
+  }
+}

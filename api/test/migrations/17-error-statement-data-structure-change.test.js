@@ -8,7 +8,7 @@ chai.use(require('chai-exclude'));
 const { expect } = chai;
 
 describe('Error Statement Data Migration', () => {
-  it('converts an artifacts error statement document to the new format', () => {
+  it('should convert an artifacts error statement document to the new format', () => {
     const result = convertArtifactErrorStatement({
       errorStatement: {
         statements: [
@@ -111,7 +111,7 @@ describe('Error Statement Data Migration', () => {
       });
   });
 
-  it('converts nulls into empty strings for if and else clauses', () => {
+  it('should convert nulls into empty strings for if and else clauses', () => {
     const result = convertArtifactErrorStatement({
       errorStatement: {
         statements: [

@@ -1,0 +1,28 @@
+{
+  "oid": "2.16.840.1.113883.1.11.1",
+  "version": "9",
+  "displayName": "Administrative Gender (HL7 V3)",
+  "codes": [
+    {
+      "code": "F",
+      "codeSystemURI": "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+      "codeSystemName": "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+      "codeSystemVersion": "2023-02-01",
+      "displayName": "Female"
+    },
+    {
+      "code": "M",
+      "codeSystemURI": "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+      "codeSystemName": "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+      "codeSystemVersion": "2023-02-01",
+      "displayName": "Male"
+    },
+    {
+      "code": "UN",
+      "codeSystemURI": "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+      "codeSystemName": "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+      "codeSystemVersion": "2023-02-01",
+      "displayName": "Undifferentiated"
+    }
+  ]
+}

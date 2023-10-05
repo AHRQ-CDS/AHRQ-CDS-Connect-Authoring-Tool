@@ -1,0 +1,8 @@
+{
+  "system": "http://snomed.info/sct",
+  "systemName": "SNOMEDCT",
+  "systemOID": "2.16.840.1.113883.6.96",
+  "version": "http://snomed.info/sct/731000124108/version/20230301",
+  "code": "237613005",
+  "display": "Hyperproinsulinemia (disorder)"
+}

@@ -9,7 +9,7 @@ const client = require('../../src/vsac/FHIRClient');
 
 const FHIRMocks = require('./fixtures/FHIRfixtures');
 
-describe('vsac/FHIRClient', () => {
+describe('FHIRClient', () => {
   // before the tests, disable network connections to ensure tests never hit real network
   before(() => {
     // if another test suite de-activated nock, we need to re-activate it
@@ -292,7 +292,7 @@ describe('vsac/FHIRClient', () => {
   describe('#getOneValueSet', () => {
     it('should get a list of one valueset with good credentials', () => {
       const [username, password] = ['test-user', 'test-pass'];
-      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/2.16.840.1.113762.1.4.1034.65').reply(200, '');
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/2.16.840.1.113762.1.4.1').reply(200, '');
       const result = client.getOneValueSet(username, password);
       // No data manipulation happens in this function. The request should succeed and return the result.
       return expect(result).to.eventually.be.fulfilled;
@@ -300,7 +300,7 @@ describe('vsac/FHIRClient', () => {
 
     it('should handle bad authentication and send 401 back', () => {
       const [username, password] = ['test-user', 'test-wrong-pass'];
-      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/2.16.840.1.113762.1.4.1034.65').reply(401, '');
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/2.16.840.1.113762.1.4.1').reply(401, '');
       const result = client.getOneValueSet(username, password);
       // No data manipulation happens in this function. The request should success and return the result.
       return expect(result).to.be.rejectedWith(/401/);

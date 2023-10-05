@@ -1,0 +1,21 @@
+{
+  "_total": 2,
+  "count": 2,
+  "page": 1,
+  "results": [
+    {
+      "name": "Administrative Gender (HL7 V3)",
+      "steward": "HL7 Terminology",
+      "oid": "2.16.840.1.113883.1.11.1",
+      "codeSystem": [],
+      "codeCount": 3
+    },
+    {
+      "name": "ONC Administrative Sex",
+      "steward": "ONC",
+      "oid": "2.16.840.1.113762.1.4.1",
+      "codeSystem": [],
+      "codeCount": 2
+    }
+  ]
+}

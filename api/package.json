@@ -42,7 +42,10 @@
     "nodemon": "^3.0.1",
     "nyc": "^15.1.0",
     "opener": "^1.5.2",
-    "prettier": "^3.0.3"
+    "prettier": "^3.0.3",
+    "rewire": "^7.0.0",
+    "sinon": "^16.0.0",
+    "supertest": "^6.3.3"
   },
   "scripts": {
     "lint:fix": "eslint --fix .; exit 0",
