@@ -6,8 +6,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { act, screen, fireEvent } from '@testing-library/react';
 
 import configureStore from '../store/configureStore';
 import lightTheme from 'styles/theme';
@@ -28,14 +27,16 @@ const ProviderWrapper = ({ children }) => (
 
 export const render = (ui, options) => testingLibRender(ui, { wrapper: ProviderWrapper, ...options });
 
-export const changeDate = (value, index = 0) => {
-  userEvent.click(screen.queryAllByRole('button', { name: /change date/i })[index]);
-  fireEvent.change(screen.getAllByPlaceholderText(/mm\/dd\/yyyy/i)[index], { target: { value } });
+export const changeDate = async (value, index = 0) => {
+  await act(async () => {
+    fireEvent.change(screen.getAllByPlaceholderText(/mm\/dd\/yyyy/i)[index], { target: { value } });
+  });
 };
 
-export const changeTime = (value, index = 0) => {
-  userEvent.click(screen.queryAllByRole('button', { name: /change time/i })[index]);
-  fireEvent.change(screen.getAllByPlaceholderText(/hh:mm:ss/i)[index], { target: { value } });
+export const changeTime = async (value, index = 0) => {
+  await act(async () => {
+    fireEvent.change(screen.getAllByPlaceholderText(/hh:mm:ss/i)[index], { target: { value } });
+  });
 };
 
 export { getRoles, logRoles } from '@testing-library/dom';

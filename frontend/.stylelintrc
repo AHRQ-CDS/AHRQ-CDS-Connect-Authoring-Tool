@@ -1,5 +1,5 @@
 {
-  "extends": "stylelint-config-standard-scss",
+  "extends": ["stylelint-config-standard-scss"],
   "rules": {
     "at-rule-no-unknown": [
       true,
@@ -8,12 +8,6 @@
       }
     ],
     "no-descending-specificity": null,
-    "block-closing-brace-newline-after": [
-      "always",
-      {
-        "ignoreAtRules": ["if", "else"]
-      }
-    ],
     "at-rule-empty-line-before": null,
     "selector-class-pattern": null,
     "scss/at-mixin-pattern": null

@@ -17,10 +17,14 @@ dependencies are currently fixed to older versions:
   These errors increased after version `v4.17.3`.
   [This commit](https://github.com/tscanlin/tocbot/commit/be66ad95284ebd21299a203d5479e12d85e34d62) may be related to new errors.
   Eventually, it will be good upgrade this package, but it may require reaching out for input on Github.
+- **change-case**: Change Case is tracking the latest v4 versions because v5 removed support for CommonJS and only supports ESM imports, which was causing problems with the app. This may be due to some of the built in configuration from create-react-app, or it may just required additional configuration.
+- **immer**: Immer is tracking the latest v9 versions because ES5 mode for legacy browsers was dropped in v10. Because we use `enableES5()`, which was removed, this library should be updated only once support for legacy browsers is evaluated and determined not to be needed.
+- **@mui/material** and **@mui/styles**: Tracking the latest v5.13 version. Updating to the latest v5 version requires changes to multiple tests.
 
 ## Notes about overrides
 
 - **nth-check**: nth-check is updated to the latest major version in the overrides list because `react-scripts` has dependencies that require a version with a vulnerability.
   If/When react-scripts updates to address the vulnerability, this override can be safely removed.
+- **postcss**: postcss is fixed to the latest version while other packages still require older version.
 - **react-side-effect**: react-side-effect is updated to the latest patch version in the overrides list because `react-helmet` requires an older version of `react-side-effects` that causes a conflicting peer dependency error.
   If `react-helmet` updates the version of `react-side-effects` it uses, this can be safely removed.

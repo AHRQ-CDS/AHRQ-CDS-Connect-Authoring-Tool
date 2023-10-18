@@ -126,24 +126,24 @@ describe('<ArtifactModal />', () => {
       // test any specific changes if needed. Recommend looking into end-to-end testing in a browser (like
       // https://www.cypress.io/).
 
-      // changeDate('01/01/2000'); // approvalDate
+      // await changeDate('01/01/2000'); // approvalDate
       // await waitFor(() => {
-      //   expect(screen.queryAllByRole('textbox', { name: /choose date/i })).toHaveLength(4);
+      //   expect(screen.queryAllByRole('button', { name: /change date/i })).toHaveLength(4);
       // });
 
-      // changeDate('01/02/2000', 1); // lastReviewDate
+      // await changeDate('01/02/2000', 1); // lastReviewDate
       // await waitFor(() => {
-      //   expect(screen.queryAllByRole('textbox', { name: /choose date/i })).toHaveLength(4);
+      //   expect(screen.queryAllByRole('button', { name: /change date/i })).toHaveLength(4);
       // });
 
-      // changeDate('01/03/2000', 2); // effectivePeriodStart
+      // await changeDate('01/03/2000', 2); // effectivePeriodStart
       // await waitFor(() => {
-      //   expect(screen.queryAllByRole('textbox', { name: /choose date/i })).toHaveLength(4);
+      //   expect(screen.queryAllByRole('button', { name: /change date/i })).toHaveLength(4);
       // });
 
-      // changeDate('01/04/2000', 3); // effectivePeriodEnd
+      // await changeDate('01/04/2000', 3); // effectivePeriodEnd
       // await waitFor(() => {
-      //   expect(screen.queryAllByRole('textbox', { name: /choose date/i })).toHaveLength(4);
+      //   expect(screen.queryAllByRole('button', { name: /change date/i })).toHaveLength(4);
       // });
 
       userEvent.click(dialog.getAllByLabelText('Select...')[0]); // status

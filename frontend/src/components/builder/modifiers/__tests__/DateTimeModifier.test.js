@@ -11,7 +11,8 @@ describe('<DateTimeModifier />', () => {
     const values = { date: '', time: '' };
     renderComponent({ handleUpdateModifier, values });
 
-    changeDate('01/01/2020');
+    await changeDate('01/01/2020');
+    expect(handleUpdateModifier).toBeCalledTimes(1);
     expect(handleUpdateModifier).toBeCalledWith({
       date: '@2020-01-01',
       time: null
@@ -22,7 +23,8 @@ describe('<DateTimeModifier />', () => {
       interval: 200
     });
 
-    changeTime('10:00:00');
+    await changeTime('10:00:00');
+    expect(handleUpdateModifier).toBeCalledTimes(2);
     expect(handleUpdateModifier).toBeCalledWith({
       date: null,
       time: '@T10:00:00'
@@ -34,7 +36,7 @@ describe('<DateTimeModifier />', () => {
     const values = { date: '', time: '', precision: '' };
     renderComponent({ handleUpdateModifier, values });
 
-    changeDate('01/01/2020');
+    await changeDate('01/01/2020');
     await waitFor(() => expect(screen.queryByRole('button', { name: /ok/i })).toBeNull(), {
       timeout: 5000,
       interval: 200
@@ -44,7 +46,7 @@ describe('<DateTimeModifier />', () => {
       time: null
     });
 
-    changeTime('10:00:00');
+    await changeTime('10:00:00');
     await waitFor(() => expect(screen.queryByRole('button', { name: /ok/i })).toBeNull(), {
       timeout: 5000,
       interval: 200
@@ -68,7 +70,7 @@ describe('<DateTimeModifier />', () => {
     const values = { time: '', precision: '' };
     renderComponent({ handleUpdateModifier, values });
 
-    changeTime('10:00:00');
+    await changeTime('10:00:00');
     await waitFor(() => expect(screen.queryByRole('button', { name: /ok/i })).toBeNull(), {
       timeout: 5000,
       interval: 200

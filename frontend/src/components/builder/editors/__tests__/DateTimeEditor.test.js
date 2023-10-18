@@ -7,11 +7,11 @@ describe('<DateTimeEditor />', () => {
     render(<DateTimeEditor handleUpdateEditor={jest.fn()} isTime={false} isInterval={false} value={null} {...props} />);
 
   describe('Time Editor', () => {
-    it('calls handleUpdateEditor with time', () => {
+    it('calls handleUpdateEditor with time', async () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isTime: true });
 
-      changeTime('10:00:00');
+      await changeTime('10:00:00');
       expect(handleUpdateEditor).toBeCalledWith({
         str: '@T10:00:00',
         time: '10:00:00'
@@ -20,11 +20,11 @@ describe('<DateTimeEditor />', () => {
   });
 
   describe('DateTime Editor', () => {
-    it('calls handleUpdateEditor with date', () => {
+    it('calls handleUpdateEditor with date', async () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor });
 
-      changeDate('01/01/2020');
+      await changeDate('01/01/2020');
       expect(handleUpdateEditor).toBeCalledWith({
         date: '2020-01-01',
         time: null,
@@ -32,14 +32,14 @@ describe('<DateTimeEditor />', () => {
       });
     });
 
-    it('calls handleUpdateEditor with date and time', () => {
+    it('calls handleUpdateEditor with date and time', async () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({
         handleUpdateEditor,
         value: { date: '2020-01-01', time: null, str: '@2020-01-01' }
       });
 
-      changeTime('10:00:00');
+      await changeTime('10:00:00');
       expect(handleUpdateEditor).toBeCalledWith({
         date: '2020-01-01',
         time: '10:00:00',
@@ -55,11 +55,11 @@ describe('<DateTimeEditor />', () => {
   });
 
   describe('Interval of DateTime Editor', () => {
-    it('calls handleUpdateEditor with first date', () => {
+    it('calls handleUpdateEditor with first date', async () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isInterval: true });
 
-      changeDate('01/01/2020');
+      await changeDate('01/01/2020');
       expect(handleUpdateEditor).toBeCalledWith({
         firstDate: '2020-01-01',
         firstTime: null,
@@ -69,7 +69,7 @@ describe('<DateTimeEditor />', () => {
       });
     });
 
-    it('calls handleUpdateEditor with first date and time', () => {
+    it('calls handleUpdateEditor with first date and time', async () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({
         handleUpdateEditor,
@@ -83,7 +83,7 @@ describe('<DateTimeEditor />', () => {
         }
       });
 
-      changeTime('10:00:00');
+      await changeTime('10:00:00');
       expect(handleUpdateEditor).toBeCalledWith({
         firstDate: '2020-01-01',
         firstTime: '10:00:00',
@@ -93,11 +93,11 @@ describe('<DateTimeEditor />', () => {
       });
     });
 
-    it('calls handleUpdateEditor with second date', () => {
+    it('calls handleUpdateEditor with second date', async () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isInterval: true });
 
-      changeDate('01/01/2020', 1);
+      await changeDate('01/01/2020', 1);
       expect(handleUpdateEditor).toBeCalledWith({
         firstDate: null,
         firstTime: null,
@@ -107,7 +107,7 @@ describe('<DateTimeEditor />', () => {
       });
     });
 
-    it('calls handleUpdateEditor with second date and time', () => {
+    it('calls handleUpdateEditor with second date and time', async () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({
         handleUpdateEditor,
@@ -121,7 +121,7 @@ describe('<DateTimeEditor />', () => {
         }
       });
 
-      changeTime('10:00:00', 1);
+      await changeTime('10:00:00', 1);
       expect(handleUpdateEditor).toBeCalledWith({
         firstDate: null,
         firstTime: null,
@@ -131,7 +131,7 @@ describe('<DateTimeEditor />', () => {
       });
     });
 
-    it('calls handleUpdateEditor with both dates', () => {
+    it('calls handleUpdateEditor with both dates', async () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({
         handleUpdateEditor,
@@ -145,7 +145,7 @@ describe('<DateTimeEditor />', () => {
         }
       });
 
-      changeDate('02/01/2020', 1);
+      await changeDate('02/01/2020', 1);
       expect(handleUpdateEditor).toBeCalledWith({
         firstDate: '2020-01-01',
         firstTime: null,
@@ -155,7 +155,7 @@ describe('<DateTimeEditor />', () => {
       });
     });
 
-    it('calls handleUpdateEditor with both dates and times', () => {
+    it('calls handleUpdateEditor with both dates and times', async () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({
         handleUpdateEditor,
@@ -169,7 +169,7 @@ describe('<DateTimeEditor />', () => {
         }
       });
 
-      changeTime('11:00:00', 1);
+      await changeTime('11:00:00', 1);
       expect(handleUpdateEditor).toBeCalledWith({
         firstDate: '2020-01-01',
         firstTime: '10:00:00',

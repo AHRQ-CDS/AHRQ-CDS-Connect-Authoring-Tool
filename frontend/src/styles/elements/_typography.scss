@@ -10,10 +10,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (min-width: 600px) {
+@media (width >= 600px) {
   :root { font-size: 14px; }
 }
 
-@media (min-width: 1440px) {
+@media (width >= 1440px) {
   :root { font-size: 20px; }
 }
