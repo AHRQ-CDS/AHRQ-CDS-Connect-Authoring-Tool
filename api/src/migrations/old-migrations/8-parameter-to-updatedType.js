@@ -9,6 +9,9 @@
  */
 'use strict';
 
+// NOTE: This dependency was removed from the api module in Oct 2023.
+// If this migration needs to be run, first run `npm install change-case`
+// to add the dependency back.
 const changeCase = require('change-case');
 
 module.exports.id = 'parameter-to-updatedType';
