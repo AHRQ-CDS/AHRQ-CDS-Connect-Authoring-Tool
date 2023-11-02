@@ -561,9 +561,11 @@ const UserGuide = () => {
               </div>
               <div>
                 After clicking "Search", a set of results will be displayed. Each item in the results represents a value
-                set in the VSAC, including its name, Object Identifier (OID), Steward, and the number of codes in the
-                value set. Click on the value set you'd like to add, or to see the contents of a specific value set,
-                click its eye icon <VisibilityIcon fontSize="small" /> under codes.
+                set in the VSAC. Each row contains information about the value set, including its name, object
+                identifier (OID), steward, reviewed and updated dates, and the number of codes in the value set. Each
+                row can be expanded for further details about the value set. Click on the value set you'd like to add,
+                or to see the contents of a specific value set, click its eye icon <VisibilityIcon fontSize="small" />{' '}
+                under codes.
               </div>
               <div>
                 <img

@@ -4,6 +4,21 @@ import React from 'react';
 const whatsNewData = [
   {
     id: 1,
+    name: 'Enhanced Value Set Search',
+    ariaLabel: 'Enhanced Value Set Search',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-value-set-search.png`,
+    description: (
+      <>
+        Value set search results have been enhanced with additional information about each value set. Search results now
+        display last reviewed and last updated dates. Each row can be expanded to view additional details about the
+        value set. The contents of the value set can still be viewed by clicking the "eye" icon.
+      </>
+    ),
+    linkText: 'Add Value Set Documentation',
+    link: `${process.env.PUBLIC_URL}/documentation#Add_Value_Set`
+  },
+  {
+    id: 2,
     name: 'View CQL',
     ariaLabel: 'View CQL',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-view-cql.png`,
@@ -19,7 +34,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Building_Artifacts`
   },
   {
-    id: 2,
+    id: 3,
     name: 'Detailed CQL Results',
     ariaLabel: 'Detailed CQL Results',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-detailed-cql.png`,
@@ -37,7 +52,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Detailed_Test_Execution_Results`
   },
   {
-    id: 3,
+    id: 4,
     name: 'FHIR 4.0.1',
     ariaLabel: 'FHIR 4.0.1',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-fhir-401.png`,
@@ -51,22 +66,6 @@ const whatsNewData = [
     ),
     linkText: 'Building Artifacts Documentation',
     link: `${process.env.PUBLIC_URL}/documentation#Building_Artifacts`
-  },
-  {
-    id: 4,
-    name: 'Build Modifiers',
-    ariaLabel: 'Build Modifiers',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-build-modifiers.png`,
-    description: (
-      <>
-        Authors can now build their own modifiers by defining sets of rules using resource properties and operators.
-        This capability provides authors with more precise control over the criteria used to filter element data. Rules
-        can be combined into groups to represent complex boolean criteria using 'and' and 'or'. As part of this feature,
-        the user interface for selecting built-in modifiers has also been updated.
-      </>
-    ),
-    linkText: 'Build Modifiers Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation#Modifier_Builder`
   }
 ];
 
