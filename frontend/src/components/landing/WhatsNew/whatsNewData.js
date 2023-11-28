@@ -4,6 +4,22 @@ import React from 'react';
 const whatsNewData = [
   {
     id: 1,
+    name: 'ONC Tech Forum',
+    ariaLabel: 'ONC Tech Forum: Clinical Decision Support Series',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-onc-forum.png`,
+    description: (
+      <>
+        CDS Connect was part of the Office of the National Coordinator (ONC) Tech Forum's Clinical Decision Support
+        Series in September 2023. The CDS Connect portion of the forum presents an overview of the CDS Connect project,
+        the CDS Connect Repository, and the CDS Authoring Tool.
+      </>
+    ),
+    linkText: 'ONC Tech Forum Recording',
+    linkExternal: true,
+    link: `https://youtu.be/boZT7CHln5g?si=IIZjsqSUkL-p1gZr&t=1789`
+  },
+  {
+    id: 2,
     name: 'Enhanced Value Set Search',
     ariaLabel: 'Enhanced Value Set Search',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-value-set-search.png`,
@@ -18,7 +34,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Add_Value_Set`
   },
   {
-    id: 2,
+    id: 3,
     name: 'View CQL',
     ariaLabel: 'View CQL',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-view-cql.png`,
@@ -34,7 +50,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Building_Artifacts`
   },
   {
-    id: 3,
+    id: 4,
     name: 'Detailed CQL Results',
     ariaLabel: 'Detailed CQL Results',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-detailed-cql.png`,
@@ -50,22 +66,6 @@ const whatsNewData = [
     ),
     linkText: 'Detailed CQL Results Documentation',
     link: `${process.env.PUBLIC_URL}/documentation#Detailed_Test_Execution_Results`
-  },
-  {
-    id: 4,
-    name: 'FHIR 4.0.1',
-    ariaLabel: 'FHIR 4.0.1',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-fhir-401.png`,
-    description: (
-      <>
-        Authors can now download their artifacts using CQL that leverages the FHIR 4.0.1 data model. In addition,
-        authors can upload FHIR 4.0.1 CQL libraries to External CQL and test their FHIR 4.0.1 artifacts using the built
-        in testing capability. The Authoring Tool continues to also support these capabilities for the FHIR 1.0.2, FHIR
-        3.0.0, and FHIR 4.0.0 data models.
-      </>
-    ),
-    linkText: 'Building Artifacts Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation#Building_Artifacts`
   }
 ];
 

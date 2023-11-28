@@ -64,17 +64,24 @@ const UserGuide = () => {
           more.
         </div>
         <div>
+          The CDS Authoring Tool is part of the <a href="https://cds.ahrq.gov/cdsconnect">CDS Connect</a> project,
+          sponsored by the Agency for Healthcare Research and Quality (AHRQ), and developed under contract with AHRQ by
+          MITRE's CMS Alliance to Modernize Healthcare (CAMH) FFRDC. For an overview of CDS Connect and how the CDS
+          Authoring Tool fits in to the CDS Connect lifecycle, watch the{' '}
+          <Link
+            external
+            href="https://youtu.be/boZT7CHln5g?si=IIZjsqSUkL-p1gZr&t=1789"
+            text={'ONC Tech Forum: Clinical Decision Support Series Session #2'}
+          />
+          , recorded in September 2023.
+        </div>
+        <div>
           For an in-depth tutorial on using the CDS Authoring Tool, watch{' '}
           <a href="https://digital.ahrq.gov/events/national-web-conference-clinical-decision-support-authoring-tool">
             "A National Web Conference on the Clinical Decision Support Authoring Tool"
           </a>
           , recorded in February 2019. While new features have been added since then, the basic approach to authoring
-          remains the same. This webinar is an execellent introduction for new users of the CDS Authoring Tool.
-        </div>
-        <div>
-          The CDS Authoring Tool is part of the <a href="https://cds.ahrq.gov/cdsconnect">CDS Connect</a> project,
-          sponsored by the Agency for Healthcare Research and Quality (AHRQ), and developed under contract with AHRQ by
-          MITRE's CMS Alliance to Modernize Healthcare (CAMH) FFRDC.
+          remains the same. This webinar is an excellent introduction for new users of the CDS Authoring Tool.
         </div>
 
         <div className={styles.h2Wrapper}>
