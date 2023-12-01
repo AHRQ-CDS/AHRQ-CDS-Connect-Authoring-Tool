@@ -6,23 +6,15 @@ import ConjunctionGroup from './ConjunctionGroup';
 const Subpopulation = ({
   addInstance,
   alerts,
-  baseElements,
   deleteInstance,
   disableDeleteSubpopulationElement,
   editInstance,
-  getAllInstancesInAllTrees,
   handleDeleteSubpopulationElement,
   handleUpdateSubpopulationElement,
   hasErrors,
-  instanceNames,
-  isLoadingModifiers,
-  modifiersByInputType,
-  parameters,
   subpopulation,
   subpopulationUniqueId,
-  templates,
-  updateInstanceModifiers,
-  vsacApiKey
+  updateInstanceModifiers
 }) => {
   return (
     <GroupElement
@@ -43,22 +35,14 @@ const Subpopulation = ({
     >
       <ConjunctionGroup
         addInstance={addInstance}
-        baseElements={baseElements}
         baseIndentLevel={1}
         deleteInstance={deleteInstance}
         editInstance={editInstance}
-        getAllInstancesInAllTrees={getAllInstancesInAllTrees}
         instance={subpopulation}
-        instanceNames={instanceNames}
-        isLoadingModifiers={isLoadingModifiers}
-        modifiersByInputType={modifiersByInputType}
-        parameters={parameters}
         root={true}
         subpopulationUniqueId={subpopulationUniqueId}
-        templates={templates}
         treeName={'subpopulations'}
         updateInstanceModifiers={updateInstanceModifiers}
-        vsacApiKey={vsacApiKey}
       />
     </GroupElement>
   );
@@ -67,23 +51,15 @@ const Subpopulation = ({
 Subpopulation.propTypes = {
   addInstance: PropTypes.func.isRequired,
   alerts: PropTypes.array,
-  baseElements: PropTypes.array.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   disableDeleteSubpopulationElement: PropTypes.bool.isRequired,
   editInstance: PropTypes.func.isRequired,
-  getAllInstancesInAllTrees: PropTypes.func.isRequired,
   handleDeleteSubpopulationElement: PropTypes.func.isRequired,
   handleUpdateSubpopulationElement: PropTypes.func.isRequired,
   hasErrors: PropTypes.bool.isRequired,
-  instanceNames: PropTypes.array.isRequired,
-  isLoadingModifiers: PropTypes.bool,
-  modifiersByInputType: PropTypes.object.isRequired,
-  parameters: PropTypes.array,
   subpopulation: PropTypes.object.isRequired,
   subpopulationUniqueId: PropTypes.string.isRequired,
-  templates: PropTypes.array,
-  updateInstanceModifiers: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string
+  updateInstanceModifiers: PropTypes.func.isRequired
 };
 
 export default Subpopulation;

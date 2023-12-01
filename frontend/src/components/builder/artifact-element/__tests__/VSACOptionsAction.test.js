@@ -7,28 +7,15 @@ import VSACOptionsAction from '../VSACOptionsAction';
 
 describe('<VSACOptionsAction />', () => {
   const apiKey = 'api-123';
-  const renderComponent = ({
-    allowsVSAC = false,
-    elementInstance = {},
-    handleUpdateElement = jest.fn(),
-    ...props
-  } = {}) =>
-    render(
-      <VSACOptionsAction
-        allowsVSAC={allowsVSAC}
-        elementInstance={elementInstance}
-        handleUpdateElement={handleUpdateElement}
-        {...props}
-      />
-    );
   const renderComponentWithState = ({
     allowsVSAC = false,
     elementInstance = {},
     handleUpdateElement = jest.fn(),
+    vsacApiKey = apiKey, // not a prop - just passed in to change value in tests
     ...props
   } = {}) =>
     render(
-      <Provider store={createStore(x => x, { vsac: { apiKey } })}>
+      <Provider store={createStore(x => x, { vsac: { apiKey: vsacApiKey } })}>
         <VSACOptionsAction
           allowsVSAC={allowsVSAC}
           elementInstance={elementInstance}
@@ -41,26 +28,26 @@ describe('<VSACOptionsAction />', () => {
   afterAll(() => nock.restore());
 
   it('renders nothing if vsac is not allowed', () => {
-    renderComponent({ allowsVSAC: false });
+    renderComponentWithState({ allowsVSAC: false });
 
     const button = screen.queryByRole('button');
     expect(button).not.toBeInTheDocument();
   });
 
   it('should render authenticated text when api key provided', () => {
-    renderComponent({ allowsVSAC: true });
+    renderComponentWithState({ allowsVSAC: true, vsacApiKey: null });
     let button = screen.getByRole('button', { name: 'Authenticate VSAC' });
     expect(button).toBeInTheDocument();
     expect(button).not.toBeDisabled(); // button not disabled in order to authenticate
 
-    renderComponent({ allowsVSAC: true, vsacApiKey: apiKey });
+    renderComponentWithState({ allowsVSAC: true, vsacApiKey: apiKey });
     button = screen.getByRole('button', { name: 'VSAC Authenticated' });
     expect(button).toBeInTheDocument();
     expect(button).toBeDisabled(); // button disabled when already authenticated
   });
 
   it('should open VSAC Auth modal to authenticate', () => {
-    renderComponent({ allowsVSAC: true });
+    renderComponentWithState({ allowsVSAC: true, vsacApiKey: null });
     const button = screen.getByRole('button', { name: 'Authenticate VSAC' });
     userEvent.click(button);
 

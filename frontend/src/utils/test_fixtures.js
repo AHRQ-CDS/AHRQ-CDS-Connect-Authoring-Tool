@@ -433,7 +433,7 @@ const elementGroups = [
         returnType: 'boolean',
         fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
-          { id: 'comment', type: 'string', name: 'Comment' }
+          { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
       },
       {
@@ -443,7 +443,7 @@ const elementGroups = [
         returnType: 'boolean',
         fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
-          { id: 'comment', type: 'string', name: 'Comment' }
+          { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
       }
     ]

@@ -10,7 +10,7 @@ jest.mock('components/base/ErrorPage', () => () => <div>ErrorPage Component</div
 jest.mock('components/documentation/Documentation', () => () => <div>Documentation Component</div>);
 jest.mock('components/landing/Landing', () => () => <div>Landing Component</div>);
 jest.mock('components/testing/Tester', () => () => <div>Tester Component</div>);
-jest.mock('containers/Builder', () => () => <div>Builder Container</div>);
+jest.mock('components/builder/workspace/Workspace', () => () => <div>Workspace Component</div>);
 
 describe('<Root />', () => {
   const renderComponent = ({ path = '/', store = reduxState, ...props } = {}) =>
@@ -61,16 +61,16 @@ describe('<Root />', () => {
         expect(getByText('ErrorPage Component')).toBeDefined();
       });
 
-      it('renders the Builder index page', () => {
+      it('renders the Workspace index page', () => {
         let { getByText } = renderComponent({ path: '/build' });
 
-        expect(getByText('Builder Container')).toBeDefined();
+        expect(getByText('Workspace Component')).toBeDefined();
       });
 
-      it('renders the Builder show page', () => {
+      it('renders the Workspace show page', () => {
         let { getByText } = renderComponent({ path: '/build/123' });
 
-        expect(getByText('Builder Container')).toBeDefined();
+        expect(getByText('Workspace Component')).toBeDefined();
       });
 
       it('renders the Testing page', () => {

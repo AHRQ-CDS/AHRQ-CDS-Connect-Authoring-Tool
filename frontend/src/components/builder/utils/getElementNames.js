@@ -7,9 +7,7 @@ const getElementName = element => {
 };
 
 const getElementNames = allElements => {
-  const names = [];
-  allElements.forEach(element => names.push({ name: getElementName(element), id: element.uniqueId }));
-  return names;
+  return allElements.map(element => ({ name: getElementName(element), id: element.uniqueId }));
 };
 
 export default getElementNames;

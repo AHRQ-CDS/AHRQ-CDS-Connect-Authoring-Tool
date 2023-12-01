@@ -19,7 +19,9 @@ const SelectModifierAction = ({
   const baseElementIsUsed = elementInstance.usedBy ? elementInstance.usedBy.length !== 0 : false;
 
   useEffect(() => {
-    if (elementInstance.modifiers == null) elementInstance.modifiers = [];
+    if (elementInstance.modifiers == null) {
+      updateModifiers([]);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -49,9 +51,9 @@ const SelectModifierAction = ({
       {showModifierModal && (
         <ModifierModal
           elementInstance={elementInstance}
-          handleUpdateModifiers={modifiers => {
+          handleUpdateModifiers={(modifiers, fhirVersion) => {
             setReturnType(getReturnType(elementInstance.returnType, modifiers));
-            updateModifiers(modifiers);
+            updateModifiers(modifiers, fhirVersion);
           }}
           handleCloseModal={() => setShowModifierModal(false)}
           hasLimitedModifiers={Boolean(baseElementIsUsed || hasLimitedModifiers)}

@@ -22,7 +22,7 @@ function initializeTrees(andTemplate, orTemplate) {
   };
 }
 
-function initializeArtifact(templates) {
+function initialArtifact(templates) {
   const operations = templates.find(template => template.name === 'Operations');
   const andTemplate = operations.entries.find(entry => entry.name === 'And');
   const orTemplate = operations.entries.find(entry => entry.name === 'Or');
@@ -52,15 +52,23 @@ function initializeArtifact(templates) {
     ],
     baseElements: [],
     parameters: [],
-    errorStatement: generateErrorStatement('root'),
-    uniqueIdCounter: 0
+    errorStatement: generateErrorStatement('root')
   };
+}
+
+// Same as addArtifact but does not save to database when initializing
+export async function initializeArtifact() {
+  const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/config/templates`);
+  const artifact = {
+    ...initialArtifact(data)
+  };
+  return artifact;
 }
 
 const addArtifact = async ({ artifactProps }) => {
   const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/config/templates`);
   const artifact = {
-    ...initializeArtifact(data),
+    ...initialArtifact(data),
     ...artifactProps
   };
 

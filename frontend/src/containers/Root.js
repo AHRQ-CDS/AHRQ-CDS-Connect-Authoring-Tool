@@ -9,8 +9,8 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
 import App from './App';
 import { Artifact } from 'components/artifact';
-import Builder from 'containers/Builder';
 import { Tester } from 'components/testing';
+import { Workspace } from 'components/builder/workspace';
 import { Documentation } from 'components/documentation';
 import { ErrorPage } from 'components/base';
 import { Landing } from 'components/landing';
@@ -36,8 +36,8 @@ const Root = ({ store }) => (
                 <Route exact path="/">
                   <Landing />
                 </Route>
-                <PrivateRoute path="/build/:id" component={Builder} />
-                <PrivateRoute path="/build" component={Builder} />
+                <PrivateRoute path="/build/:id" component={Workspace} />
+                <PrivateRoute path="/build" component={Workspace} />
                 <PrivateRoute path="/artifacts" component={Artifact} />
                 <PrivateRoute path="/testing" component={Tester} />
                 <Route path="/documentation">

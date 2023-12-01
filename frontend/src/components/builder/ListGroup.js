@@ -11,34 +11,32 @@ import {
   calculateReturnTypeWithNewModifiers
 } from 'utils/lists';
 import { getListGroupErrors, hasGroupNestedWarning } from 'utils/warnings';
+import { getAllElements, getElementNames } from 'components/builder/utils';
+import { useSelector } from 'react-redux';
 
 const ListGroup = ({
   addInstance,
-  baseElements,
   deleteInstance,
   deleteLists,
   editInstance,
-  getAllInstancesInAllTrees,
-  instanceNames,
-  isLoadingModifiers,
   listInstance,
-  modifiersByInputType,
-  parameters,
-  templates,
   updateInstanceModifiers,
-  updateLists,
-  vsacApiKey
+  updateLists
 }) => {
-  const allInstancesInAllTrees = getAllInstancesInAllTrees();
+  const artifact = useSelector(state => state.artifacts.artifact);
+  const allElements = getAllElements(artifact) ?? [];
+  const instanceNames = getElementNames(allElements);
+  const baseElements = artifact.baseElements;
+  const parameters = artifact.parameters.filter(({ name }) => name?.length);
   const isListInstanceUsed = isBaseElementListUsed(listInstance);
   const isAndOrElement = isElementAndOr(listInstance.id);
-  const alerts = getListGroupErrors(listInstance, instanceNames, baseElements, parameters, allInstancesInAllTrees);
+  const alerts = getListGroupErrors(listInstance, instanceNames, baseElements, parameters, allElements);
   const hasNestedWarning = hasGroupNestedWarning(
     listInstance.childInstances,
     instanceNames,
     baseElements,
     parameters,
-    allInstancesInAllTrees,
+    allElements,
     isAndOrElement
   );
   const hasErrors = alerts.filter(a => a.showAlert && a.alertSeverity === 'error').length > 0 || hasNestedWarning;
@@ -88,26 +86,18 @@ const ListGroup = ({
     >
       <ConjunctionGroup
         addInstance={addInstanceInGroup}
-        baseElements={baseElements}
         baseIndentLevel={1}
         deleteInstance={deleteInstanceInGroup}
         disableAddElement={isListInstanceUsed}
         disableIndent={!isAndOrElement}
         editInstance={editInstanceInGroup}
         elementUniqueId={listInstance.uniqueId} // Ensures the current Base Element list isn't added to itself from ElementSelect
-        getAllInstancesInAllTrees={getAllInstancesInAllTrees}
         instance={listInstance}
-        instanceNames={instanceNames}
-        isLoadingModifiers={isLoadingModifiers}
-        modifiersByInputType={modifiersByInputType}
         options={isAndOrElement ? '' : 'listOperations'}
-        parameters={parameters}
         root={true}
-        templates={templates}
         treeName={'baseElements'}
         updateInstanceModifiers={updateInstanceModifiersInGroup}
         validateReturnType={isAndOrElement}
-        vsacApiKey={vsacApiKey}
       />
     </GroupElement>
   );
@@ -115,20 +105,12 @@ const ListGroup = ({
 
 ListGroup.propTypes = {
   addInstance: PropTypes.func.isRequired,
-  baseElements: PropTypes.array.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   deleteLists: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
-  getAllInstancesInAllTrees: PropTypes.func.isRequired,
-  instanceNames: PropTypes.array.isRequired,
-  isLoadingModifiers: PropTypes.bool,
   listInstance: PropTypes.object.isRequired,
-  modifiersByInputType: PropTypes.object.isRequired,
-  parameters: PropTypes.array.isRequired,
-  templates: PropTypes.array.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
-  updateLists: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string
+  updateLists: PropTypes.func.isRequired
 };
 
 export default ListGroup;

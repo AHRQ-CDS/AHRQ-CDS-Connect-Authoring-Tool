@@ -4,8 +4,9 @@ import { useSelector } from 'react-redux';
 
 import SummaryDetails from './SummaryDetails';
 import SummaryHeader from './SummaryHeader';
+import { CircularProgress } from '@mui/material';
 
-const Summary = ({ handleOpenArtifactModal }) => {
+const Summary = ({ handleSaveArtifact }) => {
   const artifact = useSelector(state => state.artifacts.artifact);
 
   const getSummaryDetailsFromInstance = instance => {
@@ -48,13 +49,17 @@ const Summary = ({ handleOpenArtifactModal }) => {
     }
   };
 
+  if (artifact == null) {
+    return <CircularProgress />;
+  }
+
   const inclusionsDetails = getSummaryDetailsFromArtifact('expTreeInclude');
   const exclusionsDetails = getSummaryDetailsFromArtifact('expTreeExclude');
   const recommendationsDetails = getSummaryDetailsFromArtifact('recommendations');
 
   return (
     <>
-      <SummaryHeader handleOpenArtifactModal={handleOpenArtifactModal} />
+      <SummaryHeader handleSaveArtifact={handleSaveArtifact} />
       <SummaryDetails summaryType="expTreeInclude" summaryDetails={inclusionsDetails} />
       <SummaryDetails summaryType="expTreeExclude" summaryDetails={exclusionsDetails} />
       <SummaryDetails summaryType="recommendations" summaryDetails={recommendationsDetails} />
@@ -63,7 +68,7 @@ const Summary = ({ handleOpenArtifactModal }) => {
 };
 
 Summary.propTypes = {
-  handleOpenArtifactModal: PropTypes.func.isRequired
+  handleSaveArtifact: PropTypes.func.isRequired
 };
 
 export default Summary;

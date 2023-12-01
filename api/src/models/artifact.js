@@ -42,7 +42,6 @@ const ArtifactSchema = new Schema(
     baseElements: Array,
     parameters: Array,
     errorStatement: Object,
-    uniqueIdCounter: Number,
     user: { type: String, immutable: true }
   },
   {

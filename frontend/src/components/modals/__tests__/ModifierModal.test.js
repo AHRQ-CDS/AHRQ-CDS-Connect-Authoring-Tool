@@ -322,7 +322,7 @@ describe('<ModifierModal />', () => {
 
       userEvent.click(screen.getByRole('button', { name: /add/i }));
       const existsModifier = mockModifiers.find(({ id }) => id === 'BooleanExists');
-      expect(handleUpdateModifiers).toHaveBeenCalledWith([{ ...existsModifier, uniqueId: expect.any(String) }]);
+      expect(handleUpdateModifiers).toHaveBeenCalledWith([{ ...existsModifier, uniqueId: expect.any(String) }], ''); // '' is any fhir version
     });
 
     it('can add more than one modifier', async () => {
@@ -341,10 +341,13 @@ describe('<ModifierModal />', () => {
       userEvent.click(screen.getByRole('button', { name: /add/i }));
       const existsModifier = mockModifiers.find(({ id }) => id === 'BooleanExists');
       const notModifier = mockModifiers.find(({ id }) => id === 'BooleanNot');
-      expect(handleUpdateModifiers).toHaveBeenCalledWith([
-        { ...existsModifier, uniqueId: expect.any(String) },
-        { ...notModifier, uniqueId: expect.any(String) }
-      ]);
+      expect(handleUpdateModifiers).toHaveBeenCalledWith(
+        [
+          { ...existsModifier, uniqueId: expect.any(String) },
+          { ...notModifier, uniqueId: expect.any(String) }
+        ],
+        '' // any fhir version
+      );
     });
   });
 
@@ -573,33 +576,36 @@ describe('<ModifierModal />', () => {
       userEvent.click(screen.getByRole('button', { name: 'Add' }));
 
       await waitFor(() => {
-        expect(handleUpdateModifiers).toHaveBeenCalledWith([
-          {
-            inputTypes: ['list_of_conditions'],
-            returnType: 'list_of_conditions',
-            type: 'UserDefinedModifier',
-            where: {
-              id: 'root',
-              conjunctionType: 'and',
-              rules: [
-                {
-                  id: expect.any(String),
-                  resourceProperty: 'clinicalStatus',
-                  operator: {
-                    id: 'isNull',
-                    name: 'Is Null',
-                    description: 'Check to see if the element is null',
-                    operatorTemplate: 'isNull',
-                    primaryOperand: {
-                      typeSpecifier: 'NamedTypeSpecifier',
-                      elementTypes: ['System.Any']
+        expect(handleUpdateModifiers).toHaveBeenCalledWith(
+          [
+            {
+              inputTypes: ['list_of_conditions'],
+              returnType: 'list_of_conditions',
+              type: 'UserDefinedModifier',
+              where: {
+                id: 'root',
+                conjunctionType: 'and',
+                rules: [
+                  {
+                    id: expect.any(String),
+                    resourceProperty: 'clinicalStatus',
+                    operator: {
+                      id: 'isNull',
+                      name: 'Is Null',
+                      description: 'Check to see if the element is null',
+                      operatorTemplate: 'isNull',
+                      primaryOperand: {
+                        typeSpecifier: 'NamedTypeSpecifier',
+                        elementTypes: ['System.Any']
+                      }
                     }
                   }
-                }
-              ]
+                ]
+              }
             }
-          }
-        ]);
+          ],
+          '4.0.x' // R4 was selected
+        );
       });
     });
 
@@ -643,33 +649,36 @@ describe('<ModifierModal />', () => {
       userEvent.click(screen.getByRole('button', { name: 'Save' }));
 
       await waitFor(() => {
-        expect(handleUpdateModifiers).toHaveBeenCalledWith([
-          {
-            inputTypes: ['list_of_conditions'],
-            returnType: 'list_of_conditions',
-            type: 'UserDefinedModifier',
-            where: {
-              id: 'root',
-              conjunctionType: 'and',
-              rules: [
-                {
-                  id: expect.any(String),
-                  resourceProperty: 'clinicalStatus',
-                  operator: {
-                    id: 'isNotNull',
-                    name: 'Is Not Null',
-                    description: 'Check to see if the element is not null',
-                    operatorTemplate: 'isNotNull',
-                    primaryOperand: {
-                      typeSpecifier: 'NamedTypeSpecifier',
-                      elementTypes: ['System.Any']
+        expect(handleUpdateModifiers).toHaveBeenCalledWith(
+          [
+            {
+              inputTypes: ['list_of_conditions'],
+              returnType: 'list_of_conditions',
+              type: 'UserDefinedModifier',
+              where: {
+                id: 'root',
+                conjunctionType: 'and',
+                rules: [
+                  {
+                    id: expect.any(String),
+                    resourceProperty: 'clinicalStatus',
+                    operator: {
+                      id: 'isNotNull',
+                      name: 'Is Not Null',
+                      description: 'Check to see if the element is not null',
+                      operatorTemplate: 'isNotNull',
+                      primaryOperand: {
+                        typeSpecifier: 'NamedTypeSpecifier',
+                        elementTypes: ['System.Any']
+                      }
                     }
                   }
-                }
-              ]
+                ]
+              }
             }
-          }
-        ]);
+          ],
+          '4.0.1'
+        );
       });
     });
   });

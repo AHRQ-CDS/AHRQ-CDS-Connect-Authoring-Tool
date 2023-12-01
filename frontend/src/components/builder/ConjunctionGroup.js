@@ -1,54 +1,58 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { CircularProgress } from '@mui/material';
+import { useQuery } from 'react-query';
+import fetchTemplates from 'queries/fetchTemplates';
 import { ArtifactElement } from 'components/builder/artifact-element';
 import { GroupElement, ConjunctionTypeSelect } from 'components/builder/group-element';
 import createTemplateInstance from 'utils/templates';
 import { getElementErrors, hasDuplicateName, hasGroupNestedWarning, hasWarnings } from 'utils/warnings';
 import requiredIf from 'utils/prop_types';
 import { getLabelForInstance } from 'utils/instances';
+import { getAllElements, getElementNames } from './utils';
 
 const ConjunctionGroup = ({
   addInstance,
-  baseElements,
   baseIndentLevel,
   deleteInstance,
   disableAddElement,
   disableIndent,
   editInstance,
   elementUniqueId,
-  getAllInstancesInAllTrees,
   getPath: getPathOfParent,
   instance,
-  instanceNames,
-  isLoadingModifiers,
-  modifiersByInputType,
   options,
-  parameters,
   root,
   subpopulationUniqueId,
-  templates,
   treeName,
   updateInstanceModifiers,
-  validateReturnType,
-  vsacApiKey
+  validateReturnType
 }) => {
-  const conjunctionGroupOptions = templates.find(t => t.name === 'Operations').entries;
-  const listOperationOptions = templates.find(t => t.name === 'List Operations').entries;
-  const selectOptions = options === 'listOperations' ? listOperationOptions : conjunctionGroupOptions;
-  const allInstancesInAllTrees = getAllInstancesInAllTrees();
-  const hasDuplicateNameWarning = hasDuplicateName(
-    instance,
-    instanceNames,
-    baseElements,
-    parameters,
-    allInstancesInAllTrees
-  );
+  const artifact = useSelector(state => state.artifacts.artifact);
+  const { data: templates, isLoading: isTemplatesLoading } = useQuery('templates', () => fetchTemplates(), {
+    staleTime: Infinity
+  });
+
+  if (isTemplatesLoading) {
+    return <CircularProgress />;
+  }
+
+  const baseElements = artifact.baseElements;
+  const allElements = getAllElements(artifact) ?? [];
+  const instanceNames = getElementNames(allElements);
+  const parameters = artifact.parameters.filter(({ name }) => name?.length);
+
+  const conjunctionGroupOptions = templates.find(t => t.name === 'Operations').entries ?? [];
+  const listOperationOptions = templates.find(t => t.name === 'List Operations').entries ?? [];
+  const selectOptions = options === 'listOperations' ? listOperationOptions : conjunctionGroupOptions ?? [];
+  const hasDuplicateNameWarning = hasDuplicateName(instance, instanceNames, baseElements, parameters, allElements);
   const hasNestedWarning = hasGroupNestedWarning(
     instance.childInstances,
     instanceNames,
     baseElements,
     parameters,
-    allInstancesInAllTrees,
+    allElements,
     validateReturnType
   );
 
@@ -135,8 +139,7 @@ const ConjunctionGroup = ({
   const renderArtifactElement = (instance, group) => (
     <div key={instance.uniqueId} className="card-group-section" id={instance.uniqueId}>
       <ArtifactElement
-        alerts={getElementErrors(instance, allInstancesInAllTrees, baseElements, instanceNames, parameters)}
-        allInstancesInAllTrees={allInstancesInAllTrees}
+        alerts={getElementErrors(instance, allElements, baseElements, instanceNames, parameters)}
         allowIndent={!disableIndent}
         allowOutdent={getPath() !== ''} // cannot outdent if at the root
         baseElementInUsedList={!!disableAddElement}
@@ -147,24 +150,20 @@ const ConjunctionGroup = ({
         handleUpdateElement={newElementField =>
           editInstance(treeName, newElementField, getChildsPath(instance.uniqueId), false)
         }
-        hasErrors={hasWarnings(
-          instance,
-          instanceNames,
-          baseElements,
-          parameters,
-          allInstancesInAllTrees,
-          validateReturnType
-        )}
+        hasErrors={hasWarnings(instance, instanceNames, baseElements, parameters, allElements, validateReturnType)}
         indentParity={getIndentParity(getChildsPath(instance.uniqueId))}
-        instanceNames={instanceNames}
-        isLoadingModifiers={isLoadingModifiers}
         label={getLabelForInstance(instance, baseElements)}
-        modifiersByInputType={modifiersByInputType}
-        updateModifiers={modifiers =>
-          updateInstanceModifiers(treeName, modifiers, getChildsPath(instance.uniqueId), subpopulationUniqueId)
+        updateModifiers={(modifiers, fhirVersion) =>
+          updateInstanceModifiers(
+            treeName,
+            modifiers,
+            getChildsPath(instance.uniqueId),
+            subpopulationUniqueId,
+            null,
+            fhirVersion
+          )
         }
         validateReturnType={validateReturnType}
-        vsacApiKey={vsacApiKey}
       />
 
       <ConjunctionTypeSelect
@@ -183,26 +182,18 @@ const ConjunctionGroup = ({
           <div key={child.uniqueId} className="card-group">
             <ConjunctionGroup
               addInstance={addInstance}
-              baseElements={baseElements}
               baseIndentLevel={baseIndentLevel}
               deleteInstance={deleteInstance}
               disableAddElement={disableAddElement}
               editInstance={editInstance}
               elementUniqueId={elementUniqueId}
-              getAllInstancesInAllTrees={getAllInstancesInAllTrees}
               getPath={getChildsPath}
               instance={child}
-              instanceNames={instanceNames}
-              isLoadingModifiers={isLoadingModifiers}
-              modifiersByInputType={modifiersByInputType}
-              parameters={parameters}
               root={false}
               subpopulationUniqueId={subpopulationUniqueId}
-              templates={templates}
               treeName={treeName}
               updateInstanceModifiers={updateInstanceModifiers}
               validateReturnType={validateReturnType}
-              vsacApiKey={vsacApiKey}
             />
 
             <ConjunctionTypeSelect
@@ -241,28 +232,20 @@ const ConjunctionGroup = ({
 
 ConjunctionGroup.propTypes = {
   addInstance: PropTypes.func.isRequired,
-  baseElements: PropTypes.array.isRequired,
   baseIndentLevel: PropTypes.number,
   deleteInstance: PropTypes.func.isRequired,
   disableAddElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
   editInstance: PropTypes.func.isRequired,
   elementUniqueId: PropTypes.string,
-  getAllInstancesInAllTrees: PropTypes.func.isRequired,
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   instance: PropTypes.object.isRequired,
-  instanceNames: PropTypes.array.isRequired,
-  isLoadingModifiers: PropTypes.bool,
-  modifiersByInputType: PropTypes.object.isRequired,
   options: PropTypes.string,
-  parameters: PropTypes.array,
   root: PropTypes.bool.isRequired,
   subpopulationUniqueId: PropTypes.string,
-  templates: PropTypes.array,
   treeName: PropTypes.string.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
-  validateReturnType: PropTypes.bool,
-  vsacApiKey: PropTypes.string
+  validateReturnType: PropTypes.bool
 };
 
 export default ConjunctionGroup;

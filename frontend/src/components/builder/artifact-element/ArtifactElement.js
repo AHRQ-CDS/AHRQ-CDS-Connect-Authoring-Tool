@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
+import { useQuery } from 'react-query';
+import { fetchModifiers } from 'queries/modifiers';
 import { ElementCard } from 'components/elements';
 import ExpressionPhrase from 'components/builder/ExpressionPhrase';
 import { filterRelevantModifiers, getFieldWithId, getReturnType } from 'utils/instances';
@@ -12,7 +14,6 @@ const ArtifactElement = ({
   alerts,
   allowIndent = true,
   allowOutdent,
-  allInstancesInAllTrees,
   baseElementInUsedList,
   handleDeleteElement,
   handleIndent,
@@ -20,21 +21,23 @@ const ArtifactElement = ({
   handleUpdateElement,
   hasErrors,
   elementInstance,
-  instanceNames,
-  isLoadingModifiers,
   label,
-  modifiersByInputType,
   indentParity,
   updateModifiers,
-  validateReturnType,
-  vsacApiKey
+  validateReturnType
 }) => {
   const artifact = useSelector(state => state.artifacts.artifact);
-  const { baseElements } = artifact;
+  const { baseElements, _id: artifactId } = artifact;
   const [showAllContent, setShowAllContent] = useState(true);
   const commentField = getFieldWithId(elementInstance.fields, 'comment');
   const titleField = getFieldWithId(elementInstance.fields, 'element_name');
   const baseElementIsUsed = elementInstance.usedBy ? elementInstance.usedBy.length !== 0 : false;
+
+  const modifiersQuery = useQuery(['modifiers', { artifactId }], () => fetchModifiers({ artifactId }), {
+    enabled: artifactId != null
+  });
+  const modifiersByInputType = useMemo(() => modifiersQuery.data?.modifiersByInputType ?? {}, [modifiersQuery.data]);
+  const isLoadingModifiers = useMemo(() => modifiersQuery.isLoading, [modifiersQuery.isLoading]);
 
   // Base element uses will have _vsac included in the id, but should not support additional VS and codes
   const allowsVSAC =
@@ -57,7 +60,6 @@ const ArtifactElement = ({
               isLoadingModifiers={isLoadingModifiers}
               modifiersByInputType={modifiersByInputType}
               updateModifiers={updateModifiers}
-              vsacApiKey={vsacApiKey}
             />
           ) : null
         }
@@ -89,11 +91,9 @@ const ArtifactElement = ({
       >
         <Stack>
           <ArtifactElementBody
-            allInstancesInAllTrees={allInstancesInAllTrees}
             baseElementIsUsed={baseElementIsUsed || baseElementInUsedList}
             elementInstance={elementInstance}
             handleUpdateElement={handleUpdateElement}
-            instanceNames={instanceNames}
             updateModifiers={updateModifiers}
             validateReturnType={validateReturnType}
           />
@@ -105,7 +105,6 @@ const ArtifactElement = ({
 
 ArtifactElement.propTypes = {
   alerts: PropTypes.array,
-  allInstancesInAllTrees: PropTypes.array.isRequired,
   allowIndent: PropTypes.bool,
   allowOutdent: PropTypes.bool,
   baseElementInUsedList: PropTypes.bool.isRequired,
@@ -116,13 +115,9 @@ ArtifactElement.propTypes = {
   handleUpdateElement: PropTypes.func.isRequired,
   hasErrors: PropTypes.bool.isRequired,
   indentParity: PropTypes.string,
-  instanceNames: PropTypes.array.isRequired,
-  isLoadingModifiers: PropTypes.bool,
   label: PropTypes.string.isRequired,
-  modifiersByInputType: PropTypes.object.isRequired,
   updateModifiers: PropTypes.func.isRequired,
-  validateReturnType: PropTypes.bool,
-  vsacApiKey: PropTypes.string
+  validateReturnType: PropTypes.bool
 };
 
 export default ArtifactElement;

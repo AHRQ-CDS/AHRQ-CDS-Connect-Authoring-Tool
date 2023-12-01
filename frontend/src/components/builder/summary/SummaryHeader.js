@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSpacingStyles } from 'styles/hooks';
 import { useSelector } from 'react-redux';
-import { renderDate } from 'utils/dates';
 import { Card, CardContent, IconButton } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
+import { useSpacingStyles } from 'styles/hooks';
 import useStyles from './styles';
+import { renderDate } from 'utils/dates';
+import { ArtifactModal } from 'components/artifact';
 
-const SummaryHeader = ({ handleOpenArtifactModal }) => {
+const SummaryHeader = ({ handleSaveArtifact }) => {
+  const [showArtifactModal, setShowArtifactModal] = useState(false);
   const artifact = useSelector(state => state.artifacts.artifact);
   const spacingStyles = useSpacingStyles();
   const styles = useStyles();
@@ -31,16 +33,24 @@ const SummaryHeader = ({ handleOpenArtifactModal }) => {
           ))}
         </div>
 
-        <IconButton aria-label="edit" color="primary" onClick={handleOpenArtifactModal} size="large">
+        <IconButton aria-label="edit" color="primary" onClick={() => setShowArtifactModal(true)} size="large">
           <EditIcon fontSize="small" />
         </IconButton>
+
+        {showArtifactModal && (
+          <ArtifactModal
+            artifactEditing={artifact}
+            handleCloseModal={() => setShowArtifactModal(false)}
+            handleUpdateArtifact={handleSaveArtifact}
+          />
+        )}
       </CardContent>
     </Card>
   );
 };
 
 SummaryHeader.propTypes = {
-  handleOpenArtifactModal: PropTypes.func.isRequired
+  handleSaveArtifact: PropTypes.func.isRequired
 };
 
 export default SummaryHeader;

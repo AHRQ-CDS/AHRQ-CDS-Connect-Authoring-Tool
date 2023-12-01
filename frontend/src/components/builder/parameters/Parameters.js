@@ -16,7 +16,7 @@ const Parameters = ({ handleUpdateParameters }) => {
   const tabStyles = useTabStyles();
   const artifact = useSelector(state => state.artifacts.artifact);
   const { parameters } = artifact;
-  const allElements = getAllElements(artifact);
+  const allElements = getAllElements(artifact) ?? [];
   const elementNames = getElementNames(allElements);
 
   useEffect(() => {

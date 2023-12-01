@@ -1,11 +1,16 @@
 import _ from 'lodash';
 
-function getElements(tabName, elements, flattenedElements = []) {
+export const elementsInclude = (elements, elementName) => {
+  if (!elements || elements.length === 0) return false;
+  if (elements.some(e => e.name === elementName)) return true;
+  return false;
+};
+
+export function getElements(tabName, elements, flattenedElements = []) {
   elements.forEach(childElement => {
     const elementToPush = _.cloneDeep(childElement);
     childElement.tab = tabName;
-    if (tabName !== 'subpopulations' || !childElement.childInstances || childElement.childInstances.length === 0)
-      flattenedElements.push(elementToPush);
+    flattenedElements.push(elementToPush);
     if (childElement.childInstances?.length > 0) getElements(tabName, childElement.childInstances, flattenedElements);
   });
 

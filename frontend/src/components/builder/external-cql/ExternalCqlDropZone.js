@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQueryClient } from 'react-query';
 import { useDropzone } from 'react-dropzone';
@@ -7,7 +7,8 @@ import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
 import clsx from 'clsx';
 
 import { Modal } from 'components/elements';
-import { loadArtifact, saveArtifact } from 'actions/artifacts';
+import { loadArtifact } from 'actions/artifacts';
+import { fetchArtifact, saveArtifact } from 'queries/artifacts';
 import { addExternalCql } from 'queries/external-cql';
 import { useDropZoneStyles, useSpacingStyles } from 'styles/hooks';
 
@@ -20,12 +21,23 @@ const ExternalCqlDropZone = () => {
   const dropZoneStyles = useDropZoneStyles();
   const spacingStyles = useSpacingStyles();
   const queryClient = useQueryClient();
+  const { mutate: invokeFetchArtifact } = useMutation(fetchArtifact);
+  const handleLoadArtifact = useCallback(
+    id => {
+      invokeFetchArtifact({ artifactId: id }, { onSuccess: data => dispatch(loadArtifact(data)) });
+    },
+    [invokeFetchArtifact, dispatch]
+  );
+  const { mutateAsync: invokeSaveArtifact } = useMutation(saveArtifact);
+  const handleSaveArtifact = useCallback(async () => {
+    invokeSaveArtifact({ artifact }, { onSuccess: data => dispatch(loadArtifact(data)) });
+  }, [invokeSaveArtifact, artifact, dispatch]);
   const addMutation = useMutation(addExternalCql, {
     onSuccess: message => {
       if (typeof message === 'string') setMessage(message);
       queryClient.invalidateQueries('externalCql');
       queryClient.invalidateQueries('modifiers');
-      dispatch(loadArtifact(artifact._id)); // TODO: switch to query once artifact actions are removed from redux
+      handleLoadArtifact(artifact._id);
     },
     onError: ({ statusText, cqlErrors }) => {
       setUploadErrorMessage(statusText || 'An error occurred.');
@@ -50,7 +62,7 @@ const ExternalCqlDropZone = () => {
         if (cqlFileType !== 'application/zip' || (cqlFileType === 'application/zip' && cqlFileName.endsWith('.zip'))) {
           const library = { cqlFileName, cqlFileContent: fileContentToSend, fileType: cqlFileType, artifact };
           setUploadErrorMessage(null);
-          await dispatch(saveArtifact(artifact)); // TODO: switch to query once artifact actions are removed from redux
+          handleSaveArtifact();
           addMutation.mutate(library);
         } else {
           setUploadErrorMessage('Invalid file type. Only .cql and .zip files can be uploaded.');

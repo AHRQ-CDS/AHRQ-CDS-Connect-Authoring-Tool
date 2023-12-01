@@ -19,7 +19,7 @@ const createMockStore = state => {
 
   store.dispatch = (...args) => {
     dispatch(...args);
-    return Promise.resolve({ templates: state.templates.templates });
+    return Promise.resolve({});
   };
 
   return store;

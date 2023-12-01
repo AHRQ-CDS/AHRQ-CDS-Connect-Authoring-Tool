@@ -3,12 +3,13 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import nock from 'nock';
 import _ from 'lodash';
-import { render, fireEvent, userEvent, screen, within } from 'utils/test-utils';
+import { render, fireEvent, userEvent, screen, within, waitFor } from 'utils/test-utils';
 import { createTemplateInstance } from 'utils/test_helpers';
 import { instanceTree, elementGroups } from 'utils/test_fixtures';
 import { mockArtifact } from 'mocks/artifacts';
 import { mockExternalCqlLibrary } from 'mocks/external-cql';
 import { mockTemplates } from 'mocks/templates';
+import mockModifiers from 'mocks/modifiers/mockModifiers';
 import ConjunctionGroup from '../ConjunctionGroup';
 
 describe('<ConjunctionGroup />', () => {
@@ -23,27 +24,20 @@ describe('<ConjunctionGroup />', () => {
       <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact } })}>
         <ConjunctionGroup
           addInstance={jest.fn()}
-          baseElements={[]}
+          baseIndentLevel={0}
           deleteInstance={jest.fn()}
           disableAddElement={false}
           disableIndent={false}
           editInstance={jest.fn()}
           elementUniqueId=""
-          getAllInstancesInAllTrees={jest.fn().mockReturnValue([])}
           getPath={jest.fn()}
           instance={groupInstance}
-          instanceNames={[]}
-          isLoadingModifiers={false}
-          modifiersByInputType={{}}
           options=""
-          parameters={[]}
           root={true}
           subpopulationUniqueId={null}
-          templates={elementGroups}
           treeName="MeetsInclusionCriteria"
           updateInstanceModifiers={jest.fn()}
           validateReturnType={false}
-          vsacApiKey="key"
           {...props}
         />
       </Provider>
@@ -56,6 +50,8 @@ describe('<ConjunctionGroup />', () => {
       .reply(200, { expansion: [] })
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
       .reply(200, [mockExternalCqlLibrary])
+      .get(`/authoring/api/modifiers/${mockArtifact._id}`)
+      .reply(200, mockModifiers)
       .get('/authoring/api/config/templates')
       .reply(200, mockTemplates);
   });
@@ -64,10 +60,12 @@ describe('<ConjunctionGroup />', () => {
 
   afterAll(() => nock.restore());
 
-  it('applies correct nesting classes', () => {
+  it('applies correct nesting classes', async () => {
     const { container } = renderComponent();
 
-    expect(screen.getByTestId('root')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('root')).toBeInTheDocument();
+    });
 
     const cardGroups = container.querySelectorAll('.card-group');
     expect(cardGroups).toHaveLength(1); // One group within Inclusions
@@ -75,9 +73,14 @@ describe('<ConjunctionGroup />', () => {
     expect(cardGroups[0].firstChild.className).toMatch(/ElementCard-odd/); // Group has the correct class applied
   });
 
-  it('can delete group', () => {
+  it('can delete group', async () => {
     const deleteInstance = jest.fn();
     renderComponent({ deleteInstance });
+
+    // wait for templates to load so ConjunctionGroup renders
+    await waitFor(() => {
+      expect(screen.getByTestId('root')).toBeInTheDocument();
+    });
 
     userEvent.click(screen.getByLabelText('delete Group'));
     userEvent.click(screen.getByRole('button', { name: 'Delete' }));
@@ -85,9 +88,14 @@ describe('<ConjunctionGroup />', () => {
     expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.2');
   });
 
-  it('edits own type', () => {
+  it('edits own type', async () => {
     const editInstance = jest.fn();
     renderComponent({ editInstance });
+
+    // wait for templates to load so ConjunctionGroup renders
+    await waitFor(() => {
+      expect(screen.getByTestId('root')).toBeInTheDocument();
+    });
 
     userEvent.click(screen.getAllByRole('button', { name: 'And' })[0]);
     userEvent.click(screen.getByRole('option', { name: 'Or' }));
@@ -97,11 +105,16 @@ describe('<ConjunctionGroup />', () => {
     expect(editInstance).toBeCalledWith('MeetsInclusionCriteria', orType, '', true);
   });
 
-  it('edits own name', () => {
+  it('edits own name', async () => {
     const newName = 'new name';
     const editInstance = jest.fn();
 
     const { container } = renderComponent({ editInstance });
+
+    // wait for templates to load so ConjunctionGroup renders
+    await waitFor(() => {
+      expect(screen.getByTestId('root')).toBeInTheDocument();
+    });
 
     const childConjunction = container.querySelector('.card-group, [class^="ElementCard-odd"]');
     const nameField = childConjunction.querySelector('input[type="text"]');
@@ -116,10 +129,15 @@ describe('<ConjunctionGroup />', () => {
     );
   });
 
-  it("can't indent or outdent root group", () => {
+  it("can't indent or outdent root group", async () => {
     const { queryByLabelText, getAllByLabelText } = renderComponent({
       // same as instance defined above but no group
       groupInstance: { ...instanceTree, path: '', childInstances: [...instanceTree.childInstances] }
+    });
+
+    // wait for templates to load so ConjunctionGroup renders
+    await waitFor(() => {
+      expect(screen.getByTestId('root')).toBeInTheDocument();
     });
 
     // Inclusions without any groups should have no outdent buttons available
@@ -128,9 +146,14 @@ describe('<ConjunctionGroup />', () => {
     expect(getAllByLabelText('Indent')).toHaveLength(2);
   });
 
-  it('can indent a child group', () => {
+  it('can indent a child group', async () => {
     const deleteInstance = jest.fn();
     const { container } = renderComponent({ deleteInstance });
+
+    // wait for templates to load so ConjunctionGroup renders
+    await waitFor(() => {
+      expect(screen.getByTestId('root')).toBeInTheDocument();
+    });
 
     const childConjunction = container.querySelector('.card-group');
     fireEvent.click(childConjunction.querySelector('button[aria-label="indent"]'));
@@ -149,9 +172,14 @@ describe('<ConjunctionGroup />', () => {
     ]);
   });
 
-  it('can outdent a child group', () => {
+  it('can outdent a child group', async () => {
     const deleteInstance = jest.fn();
     const { container } = renderComponent({ deleteInstance });
+
+    // wait for templates to load so ConjunctionGroup renders
+    await waitFor(() => {
+      expect(screen.getByTestId('root')).toBeInTheDocument();
+    });
 
     const childConjunction = container.querySelector('.card-group');
     fireEvent.click(childConjunction.querySelector('button[aria-label="outdent"]'));
@@ -159,7 +187,7 @@ describe('<ConjunctionGroup />', () => {
     expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.2', []);
   });
 
-  it('has an expression phrase', () => {
+  it('has an expression phrase', async () => {
     const topLevelChildInstances = _.cloneDeep(instanceTree.childInstances);
     topLevelChildInstances[0].fields.find(f => f.id === 'element_name').value = 'Top Level Age';
     topLevelChildInstances[1].fields.find(f => f.id === 'element_name').value = 'Top Level LDL_Test';
@@ -170,6 +198,12 @@ describe('<ConjunctionGroup />', () => {
     };
 
     const { container } = renderComponent({ instance: childGroupInstance });
+
+    // wait for templates to load so ConjunctionGroup renders
+    await waitFor(() => {
+      expect(screen.getByTestId('root')).toBeInTheDocument();
+    });
+
     expect(container.querySelectorAll('[class^="ElementCard-expressionPhrase"]')).toHaveLength(3);
     expect(container.querySelectorAll('[class^="ElementCard-expressionPhrase"]')[1]).toHaveTextContent(
       'AgeandLDL_Test'
@@ -187,9 +221,14 @@ describe('<ConjunctionGroup />', () => {
       childInstances: [deeperOr]
     };
 
-    it('can indent a child group', () => {
+    it('can indent a child group', async () => {
       const deleteInstance = jest.fn();
       const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
+
+      // wait for templates to load so ConjunctionGroup renders
+      await waitFor(() => {
+        expect(screen.getByTestId('root')).toBeInTheDocument();
+      });
 
       const childConjunction = container.querySelector('.card-group');
       fireEvent.click(childConjunction.querySelector('button[aria-label="indent"]'));
@@ -197,9 +236,14 @@ describe('<ConjunctionGroup />', () => {
       expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.0', expect.anything());
     });
 
-    it('can outdent a child group', () => {
+    it('can outdent a child group', async () => {
       const deleteInstance = jest.fn();
       const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
+
+      // wait for templates to load so ConjunctionGroup renders
+      await waitFor(() => {
+        expect(screen.getByTestId('root')).toBeInTheDocument();
+      });
 
       const childConjunction = container.querySelector('.card-group');
       fireEvent.click(childConjunction.querySelector('button[aria-label="outdent"]'));
@@ -207,9 +251,14 @@ describe('<ConjunctionGroup />', () => {
       expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.0', expect.anything());
     });
 
-    it('can indent a child TemplateInstance', () => {
+    it('can indent a child TemplateInstance', async () => {
       const deleteInstance = jest.fn();
       const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
+
+      // wait for templates to load so ConjunctionGroup renders
+      await waitFor(() => {
+        expect(screen.getByTestId('root')).toBeInTheDocument();
+      });
 
       fireEvent.click(
         within(
@@ -224,9 +273,14 @@ describe('<ConjunctionGroup />', () => {
       );
     });
 
-    it('can outdent a child TemplateInstance', () => {
+    it('can outdent a child TemplateInstance', async () => {
       const deleteInstance = jest.fn();
       const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
+
+      // wait for templates to load so ConjunctionGroup renders
+      await waitFor(() => {
+        expect(screen.getByTestId('root')).toBeInTheDocument();
+      });
 
       fireEvent.click(
         within(
@@ -243,15 +297,27 @@ describe('<ConjunctionGroup />', () => {
   });
 
   describe('conjunctions that are in base elements in use', () => {
-    it('cannot delete main or nested conjunctions', () => {
+    it('cannot delete main or nested conjunctions', async () => {
       const { container } = renderComponent({ disableAddElement: true });
+
+      // wait for templates to load so ConjunctionGroup renders
+      await waitFor(() => {
+        expect(screen.getByTestId('root')).toBeInTheDocument();
+      });
+
       const disabledConjunction = within(container.querySelector('.card-group'));
 
       expect(disabledConjunction.getByRole('button', { name: 'delete Group' })).toBeDisabled();
     });
 
-    it('cannot indent or outdent nested conjunctions', () => {
+    it('cannot indent or outdent nested conjunctions', async () => {
       const { container } = renderComponent({ disableAddElement: true });
+
+      // wait for templates to load so ConjunctionGroup renders
+      await waitFor(() => {
+        expect(screen.getByTestId('root')).toBeInTheDocument();
+      });
+
       const disabledConjunction = within(container.querySelector('.card-group'));
 
       const indentButton = disabledConjunction.getByRole('button', { name: 'indent' });

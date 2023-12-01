@@ -4,9 +4,8 @@ import { Provider } from 'react-redux';
 import nock from 'nock';
 import _ from 'lodash';
 import { createTemplateInstance } from 'utils/test_helpers';
-import { render, screen, userEvent, within } from 'utils/test-utils';
+import { render, screen, userEvent, waitFor, within } from 'utils/test-utils';
 import {
-  elementGroups,
   genericBaseElementUseInstance,
   genericBaseElementListInstance,
   genericInstance,
@@ -17,33 +16,28 @@ import ListGroup from '../ListGroup';
 import { mockArtifact } from 'mocks/artifacts';
 import { mockExternalCqlLibrary } from 'mocks/external-cql';
 import { mockTemplates } from 'mocks/templates';
+import mockModifiers from 'mocks/modifiers/mockModifiers';
 
 describe('<ListGroup />', () => {
   const genericBaseElementListTemplateInstance = createTemplateInstance(genericBaseElementListInstance);
   const genericBaseElementUseTemplateInstance = createTemplateInstance(genericBaseElementUseInstance);
 
-  const renderComponent = (props = {}) =>
+  const renderComponent = ({ baseElements = [], expTreeInclude = mockArtifact.expTreeInclude, ...props } = {}) =>
     render(
-      <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact }, vsac: { apiKey: '1234' } })}>
+      <Provider
+        store={createStore(x => x, {
+          artifacts: { artifact: { ...mockArtifact, expTreeInclude, baseElements } },
+          vsac: { apiKey: '1234' }
+        })}
+      >
         <ListGroup
           addInstance={jest.fn()}
-          alerts={[]}
-          artifact={{ baseElements: [genericBaseElementListTemplateInstance] }}
-          baseElements={[]}
           deleteInstance={jest.fn()}
           deleteLists={jest.fn()}
           editInstance={jest.fn()}
-          getAllInstancesInAllTrees={() => []}
-          hasErrors={false}
-          instanceNames={[]}
-          isLoadingModifiers={false}
           listInstance={genericBaseElementListTemplateInstance}
-          modifiersByInputType={{}}
-          parameters={[]}
-          templates={elementGroups}
           updateInstanceModifiers={jest.fn()}
           updateLists={jest.fn()}
-          vsacApiKey="key"
           {...props}
         />
       </Provider>
@@ -54,6 +48,8 @@ describe('<ListGroup />', () => {
       .persist()
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
       .reply(200, [mockExternalCqlLibrary])
+      .get(`/authoring/api/modifiers/${mockArtifact._id}`)
+      .reply(200, mockModifiers)
       .get('/authoring/api/config/templates')
       .reply(200, mockTemplates);
   });
@@ -82,7 +78,7 @@ describe('<ListGroup />', () => {
     };
 
     renderComponent({
-      artifact: { baseElements: [templateInstance] },
+      baseElements: [templateInstance],
       listInstance: templateInstance,
       deleteLists
     });
@@ -93,28 +89,32 @@ describe('<ListGroup />', () => {
     expect(deleteLists).toBeCalled();
   });
 
-  it('should not have indent button on children when the list is an intersect/union type', () => {
+  it('should not have indent button on children when the list is an intersect/union type', async () => {
     const unionElement = _.cloneDeep(genericBaseElementListTemplateInstance);
     unionElement.childInstances = [createTemplateInstance(genericInstance)];
     const { container } = renderComponent({
-      artifact: { baseElements: [unionElement] },
+      baseElements: [unionElement],
       listInstance: unionElement
     });
 
-    const indentButton = within(container).queryByLabelText('indent');
-    expect(indentButton).not.toBeInTheDocument();
+    await waitFor(() => {
+      const indentButton = within(container).queryByLabelText('indent');
+      expect(indentButton).not.toBeInTheDocument();
+    });
   });
 
-  it('should have indent button on children when the list is an and/or type', () => {
+  it('should have indent button on children when the list is an and/or type', async () => {
     const andElement = createTemplateInstance(genericBaseElementListAndInstance);
     andElement.childInstances = [createTemplateInstance(genericInstance)];
     const { container } = renderComponent({
-      artifact: { baseElements: [andElement] },
+      baseElements: [andElement],
       listInstance: andElement
     });
 
-    const indentButton = within(container).getByLabelText('indent');
-    expect(indentButton).toBeInTheDocument();
+    await waitFor(() => {
+      const indentButton = within(container).getByLabelText('indent');
+      expect(indentButton).toBeInTheDocument();
+    });
   });
 
   it('should call updateLists when list name is updated', () => {
@@ -164,24 +164,28 @@ describe('<ListGroup />', () => {
     expect(checkIcon).toBeDefined();
   });
 
-  it('should give Intersect/Union conjunction options for intersect/union lists', () => {
+  it('should give Intersect/Union conjunction options for intersect/union lists', async () => {
     const listInstance = _.cloneDeep(genericBaseElementListTemplateInstance);
     listInstance.childInstances = [genericInstance]; // a child needs to be present for conjunction types to render
     const { container } = renderComponent({ listInstance });
-    const dropdown = within(container).getAllByRole('button', { name: 'Union' })[0];
-    userEvent.click(dropdown);
+    await waitFor(() => {
+      const dropdown = within(container).getAllByRole('button', { name: 'Union' })[0];
+      userEvent.click(dropdown);
+    });
     expect(screen.getByRole('option', { name: 'Union' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Intersect' })).toBeInTheDocument();
     expect(screen.queryByRole('option', { name: 'And' })).not.toBeInTheDocument();
     expect(screen.queryByRole('option', { name: 'Or' })).not.toBeInTheDocument();
   });
 
-  it('should give And/Or conjunction options for and/or lists', () => {
+  it('should give And/Or conjunction options for and/or lists', async () => {
     const listInstance = createTemplateInstance(genericBaseElementListAndInstance);
     listInstance.childInstances = [genericInstance]; // a child needs to be present for conjunction types to render
     const { container } = renderComponent({ listInstance });
-    const dropdown = within(container).getAllByRole('button', { name: 'And' })[0];
-    userEvent.click(dropdown);
+    await waitFor(() => {
+      const dropdown = within(container).getAllByRole('button', { name: 'And' })[0];
+      userEvent.click(dropdown);
+    });
     expect(screen.getByRole('option', { name: 'And' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Or' })).toBeInTheDocument();
     expect(screen.queryByRole('option', { name: 'Union' })).not.toBeInTheDocument();
@@ -191,13 +195,10 @@ describe('<ListGroup />', () => {
   describe('alerts and warnings', () => {
     it('should have no warnings on base element lists when in use and unmodified', () => {
       const list = _.cloneDeep(genericBaseElementListTemplateInstance);
-      const nameField = getFieldWithId(list.fields, 'element_name');
+      const list2 = _.cloneDeep(genericBaseElementListTemplateInstance);
 
       const { container } = renderComponent({
-        instanceNames: [
-          { id: 'testId1', name: 'UnionListName' },
-          { id: genericBaseElementListTemplateInstance.uniqueId, name: nameField.value }
-        ]
+        baseElements: [list, list2]
       });
 
       expect(container.querySelectorAll('.warning')).toHaveLength(0);
@@ -214,16 +215,9 @@ describe('<ListGroup />', () => {
         value: 'foo'
       });
 
-      const instanceNames = [
-        { id: genericBaseElementUseTemplateInstance.uniqueId, name: 'UnionListName' },
-        { id: modifiedUse.uniqueId, name: 'UnionListName' }
-      ];
-      const getAllInstancesInAllTrees = () => [genericBaseElementListTemplateInstance, modifiedUse];
-
       const { container, getByText } = renderComponent({
         baseElements: [genericBaseElementListTemplateInstance],
-        getAllInstancesInAllTrees,
-        instanceNames,
+        expTreeInclude: { childInstances: [modifiedUse] },
         listInstance: genericBaseElementListTemplateInstance
       });
 
@@ -240,15 +234,9 @@ describe('<ListGroup />', () => {
       instanceWithSameName.uniqueId = 'id-for-instance-1';
       nameField.value = 'UnionListName'; // Same name as Base Element List
 
-      const instanceNames = [
-        { id: genericBaseElementListTemplateInstance.uniqueId, name: 'UnionListName' },
-        { id: instanceWithSameName.uniqueId, name: 'UnionListName' }
-      ];
-      const getAllInstancesInAllTrees = () => [genericBaseElementListTemplateInstance, instanceWithSameName];
       const { container, getByText } = renderComponent({
         baseElements: [genericBaseElementListTemplateInstance],
-        getAllInstancesInAllTrees,
-        instanceNames,
+        expTreeInclude: { childInstances: [instanceWithSameName] },
         listInstance: genericBaseElementListTemplateInstance
       });
 
@@ -270,13 +258,8 @@ describe('<ListGroup />', () => {
       intersectionListInstance.fields[0].value = 'IntersectionListName';
       intersectionListInstance.childInstances = [observationList, procedureList];
 
-      const instanceNames = [{ id: intersectionListInstance.uniqueId, name: 'IntersectionListName' }];
-      const getAllInstancesInAllTrees = () => [intersectionListInstance];
-
       const { container, getByText } = renderComponent({
         baseElements: [intersectionListInstance],
-        getAllInstancesInAllTrees,
-        instanceNames,
         listInstance: intersectionListInstance
       });
 
@@ -286,10 +269,11 @@ describe('<ListGroup />', () => {
       ).toBeInTheDocument();
     });
 
-    it('should have a boolean return type warning when different types are combined in an and/or list', () => {
+    it('should have a boolean return type warning when different types are combined in an and/or list', async () => {
       const observationList1 = _.cloneDeep(createTemplateInstance(genericInstance));
       const observationList2 = _.cloneDeep(observationList1);
       observationList2.uniqueId = 'obs2';
+      observationList2.fields[0].value = 'obs2 name';
 
       // Create the Or List Element and add two different types as children
       const orListInstance = _.cloneDeep(genericBaseElementListTemplateInstance);
@@ -299,17 +283,14 @@ describe('<ListGroup />', () => {
       orListInstance.fields[0].value = 'OrListName';
       orListInstance.childInstances = [observationList1, observationList2];
 
-      const instanceNames = [{ id: orListInstance.uniqueId, name: 'OrListName' }];
-      const getAllInstancesInAllTrees = () => [orListInstance];
-
       const { container, getByText } = renderComponent({
         baseElements: [orListInstance],
-        getAllInstancesInAllTrees,
-        instanceNames,
         listInstance: orListInstance
       });
 
-      expect(within(container).queryAllByRole('alert')).toHaveLength(3); // One intersection warning, one return type warnings on both children
+      await waitFor(() => {
+        expect(within(container).queryAllByRole('alert')).toHaveLength(3); // One intersection warning, one return type warnings on both children
+      });
       expect(
         getByText("Warning: Elements in groups combined with and/or must all have return type 'boolean'.")
       ).toBeInTheDocument();
@@ -320,15 +301,10 @@ describe('<ListGroup />', () => {
       const nameField = getFieldWithId(instanceWithSameName.fields, 'element_name');
       instanceWithSameName.uniqueId = 'id-for-instance-1';
       nameField.value = 'UnionListName'; // Same name as Base Element List
-      const instanceNames = [
-        { id: genericBaseElementListTemplateInstance.uniqueId, name: 'UnionListName' },
-        { id: instanceWithSameName.uniqueId, name: 'UnionListName' }
-      ];
-      const getAllInstancesInAllTrees = () => [genericBaseElementListTemplateInstance, instanceWithSameName];
+
       const { container, getByText, getByLabelText } = renderComponent({
         baseElements: [genericBaseElementListTemplateInstance],
-        getAllInstancesInAllTrees,
-        instanceNames,
+        expTreeInclude: { childInstances: [instanceWithSameName] },
         listInstance: genericBaseElementListTemplateInstance
       });
 
@@ -341,13 +317,18 @@ describe('<ListGroup />', () => {
       expect(getByText('Has errors.')).toBeInTheDocument();
     });
 
-    it('should render a simple "Has Errors" warning when collapsed if child has errors', () => {
+    it('should render a simple "Has Errors" warning when collapsed if child has errors', async () => {
       const listInstance = createTemplateInstance(genericBaseElementListAndInstance);
       const nonBooleanChild = _.cloneDeep(createTemplateInstance(genericInstance));
       listInstance.childInstances = [nonBooleanChild];
-      const { container, getByText, getAllByLabelText } = renderComponent({ listInstance });
+      const { container, getByText, getAllByLabelText } = renderComponent({
+        listInstance,
+        baseElements: [listInstance]
+      });
 
-      expect(within(container).queryAllByRole('alert')).toHaveLength(1);
+      await waitFor(() => {
+        expect(within(container).queryAllByRole('alert')).toHaveLength(1);
+      });
       expect(getByText(/Element must have return type 'boolean' \(true\/false\)/)).toBeInTheDocument();
 
       // Collapse to element to get condensed warning

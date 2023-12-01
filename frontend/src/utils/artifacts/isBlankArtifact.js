@@ -18,11 +18,6 @@ export default function isBlankArtifact(artifact) {
   if (artifact.name !== 'Untitled Artifact' || artifact.version !== '1') {
     return false;
   }
-  // If the counter is above 4, the user must have entered something somewhere.
-  // This is probably the fastest detection of many changes, but is not complete.
-  if (artifact.uniqueIdCounter > 4) {
-    return false;
-  }
   // If it has any inclusion elements, it is NOT blank
   if (artifact.expTreeInclude.childInstances && artifact.expTreeInclude.childInstances.length > 0) {
     return false;

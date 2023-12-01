@@ -13,6 +13,7 @@ import {
   getReferenceArguments,
   getReturnType
 } from 'utils/instances';
+import { getAllElements, getElementNames } from 'components/builder/utils';
 import ExpressionPhrase from 'components/builder/ExpressionPhrase';
 import {
   CodeListTemplate,
@@ -25,11 +26,9 @@ import {
 } from 'components/builder/templates';
 
 const ArtifactElementBody = ({
-  allInstancesInAllTrees,
   baseElementIsUsed,
   elementInstance,
   handleUpdateElement,
-  instanceNames,
   updateModifiers,
   validateReturnType
 }) => {
@@ -40,6 +39,8 @@ const ArtifactElementBody = ({
   const externalCqlField = getFieldWithId(fields, 'externalCqlReference');
   const vsacField = getFieldWithType(fields, '_vsac');
   const referenceField = getFieldWithType(fields, 'reference');
+  const allElements = getAllElements(artifact) ?? [];
+  const instanceNames = getElementNames(allElements);
 
   const validationError = validateElement(elementInstance);
   const returnTypeError = hasReturnTypeError(
@@ -131,7 +132,7 @@ const ArtifactElementBody = ({
           <ReferenceTemplate
             key={index}
             elementNames={instanceNames}
-            referenceInstanceTab={getInstanceByReference(allInstancesInAllTrees, referenceField).tab}
+            referenceInstanceTab={getInstanceByReference(allElements, referenceField).tab}
             referenceField={{
               id: arg.value.argSource === 'baseElement' ? 'baseElementArgumentReference' : 'parameterArgumentReference',
               value: { id: arg.value?.selected, elementName: arg.value?.elementName }
@@ -142,7 +143,7 @@ const ArtifactElementBody = ({
       {referenceField && (
         <ReferenceTemplate
           elementNames={instanceNames}
-          referenceInstanceTab={getInstanceByReference(allInstancesInAllTrees, referenceField).tab}
+          referenceInstanceTab={getInstanceByReference(allElements, referenceField).tab}
           referenceField={referenceField}
         />
       )}
@@ -153,7 +154,7 @@ const ArtifactElementBody = ({
             <ReferenceTemplate
               key={`standalone-${link}-${index}`}
               elementNames={instanceNames}
-              referenceInstanceTab={getInstanceById(allInstancesInAllTrees, link).tab}
+              referenceInstanceTab={getInstanceById(allElements, link).tab}
               referenceField={{ id: 'baseElementUse', value: { id: link } }}
             />
           )
@@ -177,11 +178,9 @@ const ArtifactElementBody = ({
 };
 
 ArtifactElementBody.propTypes = {
-  allInstancesInAllTrees: PropTypes.array.isRequired,
   baseElementIsUsed: PropTypes.bool.isRequired,
   elementInstance: PropTypes.object.isRequired,
   handleUpdateElement: PropTypes.func.isRequired,
-  instanceNames: PropTypes.array.isRequired,
   updateModifiers: PropTypes.func.isRequired,
   validateReturnType: PropTypes.bool
 };

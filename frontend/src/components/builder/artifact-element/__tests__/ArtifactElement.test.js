@@ -45,16 +45,14 @@ describe('<ArtifactElement />', () => {
   };
 
   const renderComponentWithState = ({
-    allInstancesInAllTrees = [],
     baseElements = [],
     baseElementInUsedList = false,
     elementInstance = {},
-    hasErrors = false,
+    expTreeInclude = { childInstances: [] },
     handleDeleteElement = jest.fn(),
     handleUpdateElement = jest.fn(),
-    instanceNames = [],
+    hasErrors = false,
     label = '',
-    modifiersByInputType = defaultModifiersByInputType,
     updateModifiers = jest.fn(),
     ...props
   } = {}) =>
@@ -65,6 +63,9 @@ describe('<ArtifactElement />', () => {
             artifact: {
               _id: 'artifact-id',
               fhirVersion: '4.0.1',
+              expTreeInclude,
+              expTreeExclude: { childInstances: [] },
+              subpopulations: [],
               baseElements,
               parameters: []
             }
@@ -73,15 +74,12 @@ describe('<ArtifactElement />', () => {
         })}
       >
         <ArtifactElement
-          allInstancesInAllTrees={allInstancesInAllTrees}
           baseElementInUsedList={baseElementInUsedList}
           elementInstance={elementInstance}
-          hasErrors={hasErrors}
           handleDeleteElement={handleDeleteElement}
           handleUpdateElement={handleUpdateElement}
-          instanceNames={instanceNames}
+          hasErrors={hasErrors}
           label={label || elementInstance.name}
-          modifiersByInputType={modifiersByInputType}
           updateModifiers={updateModifiers}
           {...props}
         />
@@ -140,23 +138,21 @@ describe('<ArtifactElement />', () => {
   describe('BaseElements instances', () => {
     const renderBaseElementComponent = (props = {}) =>
       renderComponentWithState({
-        allInstancesInAllTrees: [baseElementBeingUsed, baseElementNotBeingUsed, useOfBaseElementInInclusions],
+        expTreeInclude: { childInstances: [useOfBaseElementInInclusions] },
         baseElements: [baseElementBeingUsed, baseElementNotBeingUsed],
         elementInstance: baseElementBeingUsed,
         ...props
       });
 
     const renderBaseElementComponentWithState = ({
-      allInstancesInAllTrees = [baseElementBeingUsed, baseElementNotBeingUsed, useOfBaseElementInInclusions],
+      expTreeInclude = { childInstances: [useOfBaseElementInInclusions] },
       baseElements = [baseElementBeingUsed, baseElementNotBeingUsed],
       baseElementInUsedList = false,
       elementInstance = baseElementBeingUsed,
-      hasErrors = false,
       handleDeleteElement = jest.fn(),
       handleUpdateElement = jest.fn(),
-      instanceNames = [],
+      hasErrors = false,
       label = '',
-      modifiersByInputType = defaultModifiersByInputType,
       updateModifiers = jest.fn(),
       ...props
     } = {}) =>
@@ -167,6 +163,9 @@ describe('<ArtifactElement />', () => {
               artifact: {
                 _id: 'artifact-id',
                 fhirVersion: '4.0.1',
+                expTreeInclude,
+                expTreeExclude: { childInstances: [] },
+                subpopulations: [],
                 baseElements,
                 parameters: []
               }
@@ -175,15 +174,12 @@ describe('<ArtifactElement />', () => {
           })}
         >
           <ArtifactElement
-            allInstancesInAllTrees={allInstancesInAllTrees}
             baseElementInUsedList={baseElementInUsedList}
             elementInstance={elementInstance}
-            hasErrors={hasErrors}
             handleDeleteElement={handleDeleteElement}
             handleUpdateElement={handleUpdateElement}
-            instanceNames={instanceNames}
+            hasErrors={hasErrors}
             label={label || elementInstance.name}
-            modifiersByInputType={modifiersByInputType}
             updateModifiers={updateModifiers}
             {...props}
           />
@@ -214,7 +210,9 @@ describe('<ArtifactElement />', () => {
     it('cannot add modifiers that change the return type if in use in the artifact', async () => {
       renderBaseElementComponentWithState();
 
-      userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
+      await waitFor(() => {
+        userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+      });
       const modal = within(await screen.findByRole('dialog'));
       userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
       userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -236,7 +234,9 @@ describe('<ArtifactElement />', () => {
           usedBy: []
         }
       });
-      userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+      await waitFor(() => {
+        userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+      });
       const modal = within(await screen.findByRole('dialog'));
       userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
       userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -249,7 +249,6 @@ describe('<ArtifactElement />', () => {
       renderBaseElementComponent({
         elementInstance: {
           ...baseElementBeingUsed,
-          getAllInstancesInAllTrees: () => baseElementBeingUsed.childInstances,
           modifiers
         },
         updateModifiers
@@ -268,7 +267,6 @@ describe('<ArtifactElement />', () => {
       renderBaseElementComponent({
         elementInstance: {
           ...baseElementBeingUsed,
-          getAllInstancesInAllTrees: () => baseElementBeingUsed.childInstances,
           modifiers
         },
         updateModifiers
@@ -298,12 +296,14 @@ describe('<ArtifactElement />', () => {
     });
 
     it('visualizes original base element information on base element uses', () => {
+      const baseElementUse = { ...useOfBaseElementInInclusions };
+      baseElementUse.fields[0].value = 'Use of Base Element in Inclusions';
+      const baseElement = { ...baseElementBeingUsed };
+      baseElement.fields[0].value = 'Base Element Being Used';
       renderBaseElementComponent({
-        elementInstance: useOfBaseElementInInclusions,
-        instanceNames: [
-          { id: 'element-1', name: 'Base Element Being Used' },
-          { id: 'element-2', name: 'Use of Base Element in Inclusions' }
-        ]
+        expTreeInclude: { childInstances: [baseElementUse] },
+        baseElements: [baseElement, baseElementNotBeingUsed],
+        elementInstance: baseElementUse
       });
 
       expect(screen.getByText(/base element being used/i)).toBeInTheDocument();
@@ -343,18 +343,13 @@ describe('<ArtifactElement />', () => {
       existsUseOfBaseElementInInclusions.uniqueId = 'element-5';
       existsUseOfBaseElementInInclusions.fields[useNameFieldIndex].value = 'Exists use of Base Element in Inclusions';
 
+      // reset the name of the base element being used for clarity
+      const baseElement = { ...baseElementBeingUsed };
+      baseElement.fields[0].value = 'Base Element Being Used';
+
       const { container } = renderComponentWithState({
-        allInstancesInAllTrees: [
-          baseElementBeingUsed,
-          verifiedUseOfBaseElementInInclusions,
-          existsUseOfBaseElementInInclusions
-        ],
-        baseElements: [baseElementBeingUsed],
-        instanceNames: [
-          { id: 'element-1', name: 'Base Element Being Used' },
-          { id: 'element-4', name: 'Verified use of Base Element in Inclusions' },
-          { id: 'element-5', name: 'Exists use of Base Element in Inclusions' }
-        ],
+        baseElements: [baseElement],
+        expTreeInclude: { childInstances: [verifiedUseOfBaseElementInInclusions] },
         elementInstance: existsUseOfBaseElementInInclusions,
         label: 'Observation' // This is calculated by getLabelForInstance and passed in as a prop
       });
@@ -428,7 +423,9 @@ describe('<ArtifactElement />', () => {
           baseElementInUsedList: true,
           elementInstance: templateWithModifiersInstance
         });
-        userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+        await waitFor(() => {
+          userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+        });
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -489,7 +486,7 @@ describe('<ArtifactElement />', () => {
         const { container } = renderComponentWithState({
           elementInstance,
           baseElements,
-          allInstancesInAllTrees,
+          expTreeInclude: { childInstances: [newUseOfBaseElementInInclusions] },
           alerts
         });
 
@@ -529,7 +526,7 @@ describe('<ArtifactElement />', () => {
         const { container } = renderComponentWithState({
           elementInstance,
           baseElements,
-          allInstancesInAllTrees,
+          expTreeInclude: { childInstances: [notNullUseOfBaseElementInInclusions] },
           alerts
         });
 
@@ -545,7 +542,7 @@ describe('<ArtifactElement />', () => {
         useOfBaseElementInBaseElements.tab = 'baseElements';
 
         const elementInstance = useOfBaseElementInBaseElements;
-        const baseElements = [newBaseElementBeingUsed];
+        const baseElements = [newBaseElementBeingUsed, useOfBaseElementInBaseElements];
         const allInstancesInAllTrees = [newBaseElementBeingUsed, useOfBaseElementInBaseElements];
         const alerts = getElementErrors(
           elementInstance,
@@ -561,7 +558,7 @@ describe('<ArtifactElement />', () => {
         const { container } = renderComponentWithState({
           elementInstance,
           baseElements,
-          allInstancesInAllTrees,
+          expTreeInclude: { childInstances: [] },
           alerts
         });
 
@@ -588,7 +585,7 @@ describe('<ArtifactElement />', () => {
         const { container } = renderComponentWithState({
           elementInstance,
           baseElements,
-          allInstancesInAllTrees,
+          expTreeInclude: { childInstances: [elementInstance] },
           alerts
         });
 
@@ -628,7 +625,7 @@ describe('<ArtifactElement />', () => {
         const { container, getByText } = renderComponentWithState({
           elementInstance,
           baseElements,
-          allInstancesInAllTrees,
+          expTreeInclude: { childInstances: [newUseOfBaseElementInInclusions, elementInstance] },
           alerts
         });
 
@@ -661,9 +658,9 @@ describe('<ArtifactElement />', () => {
         );
 
         const { container } = renderComponentWithState({
-          allInstancesInAllTrees,
           baseElements,
           elementInstance,
+          expTreeInclude: { childInstances: [newUseOfBaseElementInInclusions, elementInstance] },
           alerts
         });
 

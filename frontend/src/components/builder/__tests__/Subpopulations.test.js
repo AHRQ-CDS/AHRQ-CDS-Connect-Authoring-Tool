@@ -2,8 +2,7 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import nock from 'nock';
-import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
-import { elementGroups } from 'utils/test_fixtures';
+import { render, fireEvent, userEvent, screen, waitFor } from 'utils/test-utils';
 import Subpopulations from '../Subpopulations';
 import { mockArtifact } from 'mocks/artifacts';
 import { mockExternalCqlLibrary } from 'mocks/external-cql';
@@ -33,25 +32,22 @@ const specialSubpop = {
 };
 
 describe('<Subpopulations />', () => {
-  const renderComponent = (props = {}) =>
+  const renderComponent = ({
+    recommendations = [],
+    subpopulations = [specialSubpop],
+    updateSubpopulations = jest.fn(),
+    ...props
+  } = {}) =>
     render(
-      <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact } })}>
+      <Provider
+        store={createStore(x => x, { artifacts: { artifact: { ...mockArtifact, subpopulations, recommendations } } })}
+      >
         <Subpopulations
           addInstance={jest.fn()}
-          artifact={{ subpopulations: [specialSubpop], recommendations: [] }}
-          baseElements={[]}
           deleteInstance={jest.fn()}
           editInstance={jest.fn()}
-          getAllInstancesInAllTrees={jest.fn()}
-          instanceNames={[]}
-          isLoadingModifiers={false}
-          modifiersByInputType={{}}
-          parameters={[]}
-          subpopulations={[specialSubpop]}
-          templates={elementGroups}
           updateInstanceModifiers={jest.fn()}
-          updateSubpopulations={jest.fn()}
-          vsacApiKey="key"
+          updateSubpopulations={updateSubpopulations}
           {...props}
         />
       </Provider>
@@ -86,11 +82,13 @@ describe('<Subpopulations />', () => {
     expect(queryAllByText('Subpopulation:')).toHaveLength(0);
   });
 
-  it('can add subpopulations', () => {
+  it('can add subpopulations', async () => {
     const updateSubpopulations = jest.fn();
     renderComponent({ updateSubpopulations });
 
-    userEvent.click(screen.getByRole('button', { name: 'New subpopulation' }));
+    await waitFor(() => {
+      userEvent.click(screen.getByRole('button', { name: 'New subpopulation' }));
+    });
 
     expect(updateSubpopulations).toHaveBeenCalledWith(
       [
@@ -105,18 +103,19 @@ describe('<Subpopulations />', () => {
     );
   });
 
-  it('can update a subpopulation name', () => {
+  it('can update a subpopulation name', async () => {
     const newSubpopulationName = 'New Subpopulation Name v2.0';
     const updateSubpopulations = jest.fn();
     const subpopulations = [specialSubpop, subpopulation];
 
     const { container } = renderComponent({
-      artifact: { subpopulations, recommendations: [] },
       subpopulations,
       updateSubpopulations
     });
 
-    fireEvent.change(container.querySelector('input[type=text]'), { target: { value: newSubpopulationName } });
+    await waitFor(() => {
+      fireEvent.change(container.querySelector('input[type=text]'), { target: { value: newSubpopulationName } });
+    });
 
     expect(updateSubpopulations).toHaveBeenCalledWith(
       [
@@ -129,41 +128,42 @@ describe('<Subpopulations />', () => {
     );
   });
 
-  it('can delete subpopulation not in use', () => {
+  it('can delete subpopulation not in use', async () => {
     const updateSubpopulations = jest.fn();
     const subpopulations = [specialSubpop, subpopulation];
 
     const { getByRole } = renderComponent({
-      artifact: {
-        subpopulations,
-        recommendations: [{ text: 'Talk to dr.', subpopulations: [] }] // doesn't use any subpopulation
-      },
+      recommendations: [{ text: 'Talk to dr.', subpopulations: [] }], // doesn't use any subpopulation
       subpopulations,
       updateSubpopulations
     });
 
-    userEvent.click(getByRole('button', { name: 'delete Subpopulation' })); // delete button on subpopulation
-    userEvent.click(getByRole('button', { name: 'Delete' })); // modal delete
+    await waitFor(() => {
+      userEvent.click(getByRole('button', { name: 'delete Subpopulation' })); // delete button on subpopulation
+      userEvent.click(getByRole('button', { name: 'Delete' })); // modal delete
+    });
 
     expect(updateSubpopulations).toHaveBeenCalledWith([specialSubpop], 'subpopulations', true);
   });
 
-  it("can't delete subpopulation or edit its name when used by a recommendation", () => {
+  it("can't delete subpopulation or edit its name when used by a recommendation", async () => {
     const updateSubpopulations = jest.fn();
     const subpopulations = [specialSubpop, subpopulation];
 
     const { getByRole } = renderComponent({
-      artifact: {
-        subpopulations,
-        recommendations: [
-          { text: 'Talk to dr.', subpopulations: [{ subpopulationName: 'Subpopulation 1', uniqueId: 'foo123' }] } // uses a subpopulation
-        ]
-      },
+      recommendations: [
+        { text: 'Talk to dr.', subpopulations: [{ subpopulationName: 'Subpopulation 1', uniqueId: 'foo123' }] } // uses a subpopulation
+      ],
       subpopulations,
       updateSubpopulations
     });
 
-    userEvent.click(getByRole('button', { name: 'delete Subpopulation' }), undefined, { skipPointerEventsCheck: true });
+    await waitFor(() => {
+      userEvent.click(getByRole('button', { name: 'delete Subpopulation' }), undefined, {
+        skipPointerEventsCheck: true
+      });
+    });
+
     expect(updateSubpopulations).not.toHaveBeenCalled();
 
     // Delete button on subpopulation is disabled

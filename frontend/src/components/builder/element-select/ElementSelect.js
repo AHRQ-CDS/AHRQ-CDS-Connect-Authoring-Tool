@@ -41,8 +41,10 @@ const ElementSelect = ({
   const [selectedCqlOption, setSelectedCqlOption] = useState(null);
   const [showVSACSelect, setShowVSACSelect] = useState(false);
   const artifact = useSelector(state => state.artifacts.artifact);
-  const query = { artifactId: artifact._id };
-  const { data: externalCqlList } = useQuery(['externalCql', query], () => fetchExternalCqlList(query));
+  const { _id: artifactId } = artifact;
+  const { data: externalCqlList } = useQuery(['externalCql', { artifactId }], () =>
+    fetchExternalCqlList({ artifactId })
+  );
   const { data: elementTemplates } = useQuery('templates', () => fetchTemplates(), { staleTime: Infinity });
   const styles = useStyles();
 

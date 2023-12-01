@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQueryClient } from 'react-query';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } from '@mui/material';
 
 import ExternalCqlTableRow from './ExternalCqlTableRow';
-import { loadArtifact, saveArtifact } from 'actions/artifacts';
+import { loadArtifact } from 'actions/artifacts';
+import { fetchArtifact, saveArtifact } from 'queries/artifacts';
 import { deleteExternalCql } from 'queries/external-cql';
 import { sortByName, sortByVersion, sortByDateEdited } from 'utils/sort';
 import { useTextStyles } from 'styles/hooks';
@@ -18,15 +19,26 @@ const ExternalCqlTable = ({ externalCqlList }) => {
   const textStyles = useTextStyles();
   const artifact = useSelector(state => state.artifacts.artifact);
   const librariesInUse = useSelector(state => state.artifacts.librariesInUse);
+  const { mutate: invokeFetchArtifact } = useMutation(fetchArtifact);
+  const handleLoadArtifact = useCallback(
+    id => {
+      invokeFetchArtifact({ artifactId: id }, { onSuccess: data => dispatch(loadArtifact(data)) });
+    },
+    [invokeFetchArtifact, dispatch]
+  );
+  const { mutate: invokeSaveArtifact } = useMutation(saveArtifact);
+  const handleSaveArtifact = useCallback(() => {
+    invokeSaveArtifact({ artifact }, { onSuccess: data => dispatch(loadArtifact(data)) });
+  }, [invokeSaveArtifact, artifact, dispatch]);
   const deleteMutation = useMutation(deleteExternalCql, {
     onSuccess: () => {
       queryClient.invalidateQueries('externalCql');
       queryClient.invalidateQueries('modifiers');
-      dispatch(loadArtifact(artifact._id)); // TODO: switch to query once artifact actions are removed from redux
+      handleLoadArtifact(artifact._id);
     }
   });
   const handleDeleteLibrary = async library => {
-    await dispatch(saveArtifact(artifact)); // TODO: switch to query once artifact actions are removed from redux
+    handleSaveArtifact();
     deleteMutation.mutate({ library });
   };
 

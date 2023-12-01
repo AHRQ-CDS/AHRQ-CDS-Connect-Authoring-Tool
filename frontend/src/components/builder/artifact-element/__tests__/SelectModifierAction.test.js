@@ -62,14 +62,14 @@ describe('<SelectModifierAction />', () => {
   });
 
   it('renders add modifiers button when there are relevant modifiers', () => {
-    const elementInstance = { returnType: 'list_of_conditions' }; // cannotHaveModifiers is not specified, so they are allowed
+    const elementInstance = { returnType: 'list_of_conditions', modifiers: [] }; // cannotHaveModifiers is not specified, so they are allowed
     const modifiersByInputType = { list_of_conditions: [{ name: 'TestModifier' }] };
     renderComponent({ elementInstance, modifiersByInputType });
     expect(screen.getByRole('button', { name: 'Add Modifiers' })).toBeInTheDocument();
   });
 
   it('renders modifier select modal when clicking add modifiers', () => {
-    const elementInstance = { returnType: 'list_of_conditions', fields: [] }; // cannotHaveModifiers is not specified, so they are allowed
+    const elementInstance = { returnType: 'list_of_conditions', fields: [], modifiers: [] }; // cannotHaveModifiers is not specified, so they are allowed
     const modifiersByInputType = { list_of_conditions: [{ name: 'TestModifier' }] };
     renderComponentWithState({ elementInstance, modifiersByInputType });
 

@@ -3,10 +3,9 @@ import promiseMiddleware from 'redux-promise-middleware';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
-import templateMerger from '../middleware/template_merger';
 
 export default function configureStore(initialState) {
-  const middleware = [promiseMiddleware, thunkMiddleware, templateMerger];
+  const middleware = [promiseMiddleware, thunkMiddleware];
   // disable the redux-logger in a production environment
   if (process.env.NODE_ENV === 'development') {
     middleware.push(createLogger());

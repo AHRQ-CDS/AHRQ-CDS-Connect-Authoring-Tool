@@ -12,7 +12,7 @@ import { simpleConditionInstanceTree } from 'utils/test_fixtures';
 import { simpleProcedureInstanceTree } from 'utils/test_fixtures';
 import { simpleImmunizationInstanceTree } from 'utils/test_fixtures';
 import { getFieldWithId } from 'utils/instances';
-import Builder from '../Builder';
+import Workspace from '../Workspace';
 import { mockArtifact } from 'mocks/artifacts';
 import { mockExternalCqlLibrary } from 'mocks/external-cql';
 import { mockTemplates } from 'mocks/templates';
@@ -69,7 +69,7 @@ const createMockStore = state => {
 
   store.dispatch = (...args) => {
     dispatch(...args);
-    return Promise.resolve({ templates: state.templates.templates });
+    return Promise.resolve({});
   };
 
   return store;
@@ -82,17 +82,21 @@ const expandAction = action => {
   return args;
 };
 
-describe('<Builder />', () => {
+describe('<Workspace />', () => {
   const renderComponent = ({ store = createMockStore(defaultState), ...props } = {}) =>
     render(
       <Provider store={store}>
-        <Builder match={{ params: {} }} {...props} />
+        <Workspace match={{ params: { id: 'artifact123' } }} {...props} />
       </Provider>
     );
 
   beforeEach(() => {
     nock('http://localhost')
       .persist()
+      .put('/authoring/api/artifacts') // mock any put request so can make updates to artifact in tests
+      .reply(200, 'OK')
+      .get('/authoring/api/artifacts/artifact123')
+      .reply(200, [{ ...artifact, expTreeInclude: instanceTree }])
       .get('/authoring/api/config/valuesets/demographics/units_of_time')
       .reply(200, { expansion: [] })
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
@@ -108,10 +112,16 @@ describe('<Builder />', () => {
 
   it('can edit a template instance', async () => {
     const store = createMockStore(defaultState);
-    renderComponent({ store });
+    const { unmount } = renderComponent({ store });
 
-    fireEvent.change(document.querySelector('input[type=text]'), {
-      target: { value: '30 to 45' }
+    await waitFor(() => {
+      fireEvent.click(screen.getByLabelText('Age Range'));
+    });
+
+    await waitFor(() => {
+      fireEvent.change(document.querySelector('input[type=text]'), {
+        target: { value: '30 to 45' }
+      });
     });
 
     const updateAction = expandAction(_.last(store.getActions()));
@@ -119,13 +129,17 @@ describe('<Builder />', () => {
 
     expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
     expect(nameField.value).toEqual('30 to 45');
+
+    unmount();
   });
 
   it('can edit a conjunction instance', async () => {
     const store = createMockStore(defaultState);
-    renderComponent({ store });
+    const { unmount } = renderComponent({ store });
 
-    userEvent.click(screen.getAllByRole('button', { name: 'And' })[0]);
+    await waitFor(() => {
+      userEvent.click(screen.getAllByRole('button', { name: 'And' })[0]);
+    });
     userEvent.click(screen.getByText('Or'));
 
     const updateAction = expandAction(_.last(store.getActions()));
@@ -134,9 +148,10 @@ describe('<Builder />', () => {
     expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
     expect(instance.id).toEqual('Or');
     expect(instance.name).toEqual('Or');
+    unmount();
   });
 
-  it('can delete an instance', () => {
+  it('can delete an instance', async () => {
     const store = createMockStore({
       ...defaultState,
       artifacts: {
@@ -151,15 +166,18 @@ describe('<Builder />', () => {
       }
     });
 
-    renderComponent({ store });
+    const { unmount } = renderComponent({ store });
 
-    fireEvent.click(screen.getByLabelText('delete Age Range'));
+    await waitFor(() => {
+      fireEvent.click(screen.getByLabelText('delete Age Range'));
+    });
     fireEvent.click(screen.getByText('Delete'));
 
     const updateAction = expandAction(_.last(store.getActions()));
 
     expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
     expect(updateAction.artifact.expTreeInclude.childInstances).toHaveLength(0);
+    unmount();
   });
 
   describe('Test that certain modifiers appear given current return type of list_of_observations', () => {
@@ -173,7 +191,7 @@ describe('<Builder />', () => {
       const store = createMockStore(getDefaultStateWithInstanceTree(simpleObservationInstanceTree));
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
-        renderComponent({ store });
+        const { unmount } = renderComponent({ store });
 
         userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
@@ -190,6 +208,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstObservation');
         expect(modifier.name).toEqual('First');
+        unmount();
       });
     });
 
@@ -197,7 +216,7 @@ describe('<Builder />', () => {
       const store = createMockStore(getDefaultStateWithInstanceTree(simpleObservationInstanceTree));
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
-        renderComponent({ store });
+        const { unmount } = renderComponent({ store });
 
         userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
@@ -216,6 +235,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('AverageObservationValue');
         expect(modifier.name).toEqual('Average Observation Value');
+        unmount();
       });
     });
 
@@ -223,7 +243,7 @@ describe('<Builder />', () => {
       const store = createMockStore(getDefaultStateWithInstanceTree(simpleConditionInstanceTree));
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
-        renderComponent({ store });
+        const { unmount } = renderComponent({ store });
 
         userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
@@ -240,6 +260,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstCondition');
         expect(modifier.name).toEqual('First');
+        unmount();
       });
     });
 
@@ -247,7 +268,7 @@ describe('<Builder />', () => {
       const store = createMockStore(getDefaultStateWithInstanceTree(simpleProcedureInstanceTree));
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
-        renderComponent({ store });
+        const { unmount } = renderComponent({ store });
 
         userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
@@ -264,6 +285,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstProcedure');
         expect(modifier.name).toEqual('First');
+        unmount();
       });
     });
 
@@ -271,7 +293,7 @@ describe('<Builder />', () => {
       const store = createMockStore(getDefaultStateWithInstanceTree(simpleImmunizationInstanceTree));
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
-        renderComponent({ store });
+        const { unmount } = renderComponent({ store });
 
         userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
@@ -288,6 +310,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstImmunization');
         expect(modifier.name).toEqual('First');
+        unmount();
       });
     });
   });

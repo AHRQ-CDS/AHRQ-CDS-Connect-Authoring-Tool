@@ -71,8 +71,7 @@ export default makeStyles(
       marginTop: '10px'
     },
     modifierModalContent: {
-      minHeight: '200px',
-      minWidth: '1000px'
+      minHeight: '200px'
     },
     navHeader: {
       marginBottom: '1em'

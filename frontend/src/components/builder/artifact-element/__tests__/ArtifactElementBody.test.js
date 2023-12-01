@@ -7,28 +7,35 @@ import ArtifactElementBody from '../ArtifactElementBody';
 
 describe('<ArtifactElementBody />', () => {
   const renderComponentWithState = ({
-    allInstancesInAllTrees = [],
     baseElements = [],
     baseElementIsUsed = false,
     elementInstance = {},
+    expTreeInclude = { childInstances: [] },
     handleUpdateElement = jest.fn(),
-    instanceNames = [],
     updateModifiers = jest.fn(),
     ...props
   } = {}) =>
     render(
       <Provider
         store={createStore(x => x, {
-          artifacts: { artifact: { _id: 'artifact-id', fhirVersion: '4.0.1', baseElements, parameters: [] } },
+          artifacts: {
+            artifact: {
+              _id: 'artifact-id',
+              fhirVersion: '4.0.1',
+              expTreeInclude,
+              expTreeExclude: { childInstances: [] },
+              subpopulations: [],
+              baseElements,
+              parameters: []
+            }
+          },
           vsac: { apiKey: 'api-123' }
         })}
       >
         <ArtifactElementBody
-          allInstancesInAllTrees={allInstancesInAllTrees}
           baseElementIsUsed={baseElementIsUsed}
           elementInstance={elementInstance}
           handleUpdateElement={handleUpdateElement}
-          instanceNames={instanceNames}
           updateModifiers={updateModifiers}
           {...props}
         />
@@ -170,7 +177,7 @@ describe('<ArtifactElementBody />', () => {
     };
     renderComponentWithState({
       elementInstance: externalCQLElementInstance,
-      allInstancesInAllTrees: [externalCQLElementInstance]
+      expTreeInclude: { childInstances: [externalCQLElementInstance] }
     });
     expect(screen.getByTestId('external-cql-template')).toBeInTheDocument();
   });
@@ -257,7 +264,7 @@ describe('<ArtifactElementBody />', () => {
     const { container } = renderComponentWithState({
       elementInstance: externalCQLElementInstance,
       baseElements: [observation],
-      allInstancesInAllTrees: [externalCQLElementInstance, observation]
+      expTreeInclude: { childInstances: [externalCQLElementInstance] }
     });
     const baseElementReference = container.childNodes[3];
     // Because the external CQL uses an argument that references a base element, the base element reference template is displayed
@@ -309,11 +316,7 @@ describe('<ArtifactElementBody />', () => {
     const { container } = renderComponentWithState({
       elementInstance: baseElementUseElementInstance,
       baseElements: [procedureBaseElement],
-      instanceNames: [
-        { id: 'GenericProcedure_vsac-123', name: 'ExampleProcedure' },
-        { id: '345', name: 'Procedure' }
-      ],
-      allInstancesInAllTrees: [baseElementUseElementInstance, procedureBaseElement]
+      expTreeInclude: { childInstances: [baseElementUseElementInstance] }
     });
     const baseElementReference = container.childNodes[1];
     expect(baseElementReference.textContent).toEqual('Base Element:ExampleProcedure ');
@@ -337,7 +340,7 @@ describe('<ArtifactElementBody />', () => {
     };
     const { container } = renderComponentWithState({
       elementInstance: externalCQLElementInstance,
-      allInstancesInAllTrees: [externalCQLElementInstance]
+      expTreeInclude: { childInstances: [externalCQLElementInstance] }
     });
     const externalCQLReference = container.childNodes[2];
     expect(externalCQLReference.textContent).toEqual('External CQL Element:Age from MyLibrary ');
@@ -387,11 +390,7 @@ describe('<ArtifactElementBody />', () => {
     const { container } = renderComponentWithState({
       elementInstance: procedureBaseElement,
       baseElements: [procedureBaseElement],
-      allInstancesInAllTrees: [procedureBaseElement, baseElementUseElementInstance],
-      instanceNames: [
-        { id: '345', name: 'Procedure Exists' },
-        { id: 'GenericProcedure_vsac-123', name: 'ExampleProcedure' }
-      ]
+      expTreeInclude: { childInstances: [baseElementUseElementInstance] }
     });
     const elementUseReference = container.childNodes[4];
     expect(elementUseReference.textContent).toEqual('Element Use:Procedure Exists → Inclusions');

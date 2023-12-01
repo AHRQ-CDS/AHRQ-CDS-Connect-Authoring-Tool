@@ -40,7 +40,10 @@ const ModifierModal = ({
 
   const handleSaveModal = async () => {
     if (fhirVersion !== artifact.fhirVersion) await dispatch(updateArtifact(artifact, { fhirVersion: fhirVersion }));
-    handleUpdateModifiers(modifierToEdit ? modifiersToAdd : elementInstance.modifiers.concat(modifiersToAdd));
+    handleUpdateModifiers(
+      modifierToEdit ? modifiersToAdd : elementInstance.modifiers.concat(modifiersToAdd),
+      fhirVersion
+    );
     handleCloseModal();
   };
 

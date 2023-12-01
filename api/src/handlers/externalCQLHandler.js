@@ -879,7 +879,7 @@ const artifactHasCustomModifiers = artifact => {
 
     return Boolean(
       instance.childInstances.some(child =>
-        child.conjunction ? parseElementTree(child) : child.modifiers.some(({ where }) => Boolean(where))
+        child.conjunction ? parseElementTree(child) : child.modifiers?.some(({ where }) => Boolean(where))
       )
     );
   };

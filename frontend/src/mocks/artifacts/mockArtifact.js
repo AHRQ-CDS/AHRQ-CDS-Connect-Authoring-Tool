@@ -3,7 +3,6 @@ const mockArtifact = {
   name: 'Untitled Artifact',
   version: '1',
   fhirVersion: '',
-  uniqueIdCounter: 0,
   expTreeInclude: {
     id: 'And',
     uniqueId: 'And-TEST-1',

@@ -129,3 +129,17 @@ export const calculateReturnTypeWithNewModifiers = (baseElement, modifiers, path
 };
 
 export const isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
+
+export const checkForNeedToPromote = baseElementSetList => {
+  baseElementSetList.childInstances.forEach(child => {
+    // Unions/Intersects only have children one level deep
+    let childReturnType = getReturnType(child.returnType, child.modifiers);
+    // All set lists will have a return type of list_of_SOMETHING. If any child on its own
+    // has a singular return type, it needs to be promoted to a list in the CQL.
+    if (!childReturnType.startsWith('list_of_') && baseElementSetList.childInstances.length > 1) {
+      child.needToPromote = true;
+    } else {
+      child.needToPromote = false;
+    }
+  });
+};

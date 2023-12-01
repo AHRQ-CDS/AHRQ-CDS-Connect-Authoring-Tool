@@ -2,8 +2,7 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import nock from 'nock';
-import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
-import { elementGroups } from 'utils/test_fixtures';
+import { render, fireEvent, userEvent, screen, waitFor } from 'utils/test-utils';
 import Subpopulation from '../Subpopulation';
 import { mockArtifact } from 'mocks/artifacts';
 import { mockExternalCqlLibrary } from 'mocks/external-cql';
@@ -34,24 +33,15 @@ describe('<Subpopulation />', () => {
         <Subpopulation
           addInstance={jest.fn()}
           alerts={[]}
-          artifact={{}}
-          baseElements={[]}
           deleteInstance={jest.fn()}
           disableDeleteSubpopulationElement={false}
           editInstance={jest.fn()}
-          getAllInstancesInAllTrees={jest.fn(() => [])} // return empty array of instances
           handleDeleteSubpopulationElement={jest.fn()}
           handleUpdateSubpopulationElement={jest.fn()}
           hasErrors={false}
-          instanceNames={[]}
-          isLoadingModifiers={false}
-          modifiersByInputType={{}}
-          parameters={[]}
           subpopulation={subpopulation}
           subpopulationUniqueId={'subpop-1'}
-          templates={elementGroups}
           updateInstanceModifiers={jest.fn()}
-          vsaApiKey="key"
           {...props}
         />
       </Provider>
@@ -107,13 +97,15 @@ describe('<Subpopulation />', () => {
     expect(handleDeleteSubpopulationElement).toBeCalledWith(subpopulation.uniqueId);
   });
 
-  it('renders an element select inside the subpopulation', () => {
+  it('renders an element select inside the subpopulation', async () => {
     const { getAllByText } = renderComponent();
 
-    expect(getAllByText(/new element:/i)).toHaveLength(1);
+    await waitFor(() => {
+      expect(getAllByText(/new element:/i)).toHaveLength(1);
+    });
   });
 
-  it('renders a conjunction group with nested elements inside the subpopulation', () => {
+  it('renders a conjunction group with nested elements inside the subpopulation', async () => {
     const element1 = {
       uniqueId: 'el-1',
       id: 'GenericProcedure_vsac',
@@ -169,9 +161,12 @@ describe('<Subpopulation />', () => {
     const { getAllByText, getAllByRole } = renderComponent({
       subpopulation: subpopulationWithChildren
     });
-    expect(getAllByText('Procedure:')).toHaveLength(2); // One top level procedure, one in the group
-    expect(getAllByText('Group:')).toHaveLength(1); // One group
-    expect(getAllByRole('button', { name: 'And' })).toHaveLength(3); // Two "And" dropdowns on top level subpopulation groups and one from Group
+
+    await waitFor(() => {
+      expect(getAllByText('Procedure:')).toHaveLength(2); // One top level procedure, one in the group
+      expect(getAllByText('Group:')).toHaveLength(1); // One group
+      expect(getAllByRole('button', { name: 'And' })).toHaveLength(3); // Two "And" dropdowns on top level subpopulation groups and one from Group
+    });
   });
 
   it('displays an alert if no elements are inside the subpopulation', () => {

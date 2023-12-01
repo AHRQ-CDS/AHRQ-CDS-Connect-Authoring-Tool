@@ -8,11 +8,13 @@ import {
   Lock as LockIcon
 } from '@mui/icons-material';
 import _ from 'lodash';
+import { useSelector } from 'react-redux';
 
 import { CodeSelectModal, VSACAuthenticationModal, ValueSetSelectModal } from 'components/modals';
 import { getFieldWithType, getFieldWithId } from 'utils/instances';
 
-const VSACOptionsAction = ({ allowsVSAC, elementInstance, handleUpdateElement, vsacApiKey }) => {
+const VSACOptionsAction = ({ allowsVSAC, elementInstance, handleUpdateElement }) => {
+  const vsacApiKey = useSelector(state => state.vsac.apiKey);
   const [showVSACAuthenticationModal, setShowVSACAuthenticationModal] = useState(false);
   const [showValueSetSelectModal, setShowValueSetSelectModal] = useState(false);
   const [showCodeSelectModal, setShowCodeSelectModal] = useState(false);

@@ -15,8 +15,7 @@ const baseArtifact = {
   baseElements: [],
   recommendations: [],
   parameters: [],
-  errorStatement: {},
-  uniqueIdCounter: 9999
+  errorStatement: {}
 };
 
 describe('cqlHandler', () => {

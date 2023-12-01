@@ -12,8 +12,7 @@ const ArtifactElementActions = ({
   handleUpdateElement,
   isLoadingModifiers,
   modifiersByInputType,
-  updateModifiers,
-  vsacApiKey
+  updateModifiers
 }) => {
   return (
     <Stack>
@@ -28,7 +27,6 @@ const ArtifactElementActions = ({
         allowsVSAC={allowsVSAC}
         elementInstance={elementInstance}
         handleUpdateElement={handleUpdateElement}
-        vsacApiKey={vsacApiKey}
       />
     </Stack>
   );
@@ -41,8 +39,7 @@ ArtifactElementActions.propTypes = {
   handleUpdateElement: PropTypes.func.isRequired,
   isLoadingModifiers: PropTypes.bool,
   modifiersByInputType: PropTypes.object.isRequired,
-  updateModifiers: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string
+  updateModifiers: PropTypes.func.isRequired
 };
 
 export default ArtifactElementActions;

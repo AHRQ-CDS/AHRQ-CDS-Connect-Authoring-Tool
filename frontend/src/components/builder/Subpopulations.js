@@ -1,36 +1,42 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import _ from 'lodash';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 
+import fetchTemplates from 'queries/fetchTemplates';
 import Subpopulation from './Subpopulation';
 import createTemplateInstance from 'utils/templates';
 import { getSubpopulationErrors, hasGroupNestedWarning, isSubpopulationUsed } from 'utils/warnings';
+import { getAllElements, getElementNames } from 'components/builder/utils';
 
 const TREE_NAME = 'subpopulations';
 
 const Subpopulations = ({
   addInstance,
-  artifact,
-  baseElements,
   deleteInstance,
   editInstance,
-  getAllInstancesInAllTrees,
-  instanceNames,
-  isLoadingModifiers,
-  modifiersByInputType,
-  parameters,
-  subpopulations,
-  templates,
   updateInstanceModifiers,
-  updateSubpopulations,
-  vsacApiKey
+  updateSubpopulations
 }) => {
+  const artifact = useSelector(state => state.artifacts.artifact);
+  const { data: templates, isLoading: isTemplatesLoading } = useQuery('templates', () => fetchTemplates(), {
+    staleTime: Infinity
+  });
+
+  if (isTemplatesLoading) {
+    return <CircularProgress />;
+  }
+
   const operations = templates.find(g => g.name === 'Operations');
   const andTemplate = operations.entries.find(e => e.name === 'And');
 
+  const { baseElements, recommendations, subpopulations } = artifact;
+  const parameters = artifact.parameters.filter(({ name }) => name?.length);
   const numOfSpecialSubpopulations = subpopulations.filter(s => s.special).length;
-  const allInstancesInAllTrees = getAllInstancesInAllTrees();
+  const allElements = getAllElements(artifact) ?? [];
+  const instanceNames = getElementNames(allElements);
 
   const addSubpopulation = () => {
     const newSubpopulation = createTemplateInstance(andTemplate);
@@ -67,13 +73,13 @@ const Subpopulations = ({
       {subpopulations
         .filter(s => !s.special)
         .map((subpopulation, i) => {
-          const subpopulationAlerts = getSubpopulationErrors(subpopulation, artifact.recommendations, instanceNames);
+          const subpopulationAlerts = getSubpopulationErrors(subpopulation, recommendations, instanceNames);
           const hasNestedWarning = hasGroupNestedWarning(
             subpopulation.childInstances,
             instanceNames,
             baseElements,
             parameters,
-            allInstancesInAllTrees,
+            allElements,
             true // validate
           );
           const hasErrors =
@@ -83,25 +89,17 @@ const Subpopulations = ({
               key={subpopulation.uniqueId}
               addInstance={(name, template, path) => addInstance(name, template, path, subpopulation.uniqueId)} // Add elements inside subpopulations
               alerts={subpopulationAlerts}
-              baseElements={baseElements}
               deleteInstance={(treeName, path, toAdd) => deleteInstance(treeName, path, toAdd, subpopulation.uniqueId)} // Delete elements inside subpopulations
-              disableDeleteSubpopulationElement={isSubpopulationUsed(artifact.recommendations, subpopulation.uniqueId)}
+              disableDeleteSubpopulationElement={isSubpopulationUsed(recommendations, subpopulation.uniqueId)}
               editInstance={(treeName, fields, path, editingConjunction) =>
                 editInstance(treeName, fields, path, editingConjunction, subpopulation.uniqueId)
               } // Edit elements inside subpopulations
-              getAllInstancesInAllTrees={getAllInstancesInAllTrees}
               handleDeleteSubpopulationElement={deleteSubpopulation}
               handleUpdateSubpopulationElement={setSubpopulationName}
               hasErrors={hasErrors}
-              instanceNames={instanceNames}
-              isLoadingModifiers={isLoadingModifiers}
-              modifiersByInputType={modifiersByInputType}
-              parameters={parameters}
               subpopulation={subpopulation}
               subpopulationUniqueId={subpopulation.uniqueId}
-              templates={templates}
               updateInstanceModifiers={updateInstanceModifiers}
-              vsacApiKey={vsacApiKey}
             />
           );
         })}
@@ -115,20 +113,10 @@ const Subpopulations = ({
 
 Subpopulations.propTypes = {
   addInstance: PropTypes.func.isRequired,
-  artifact: PropTypes.object.isRequired,
-  baseElements: PropTypes.array.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
-  getAllInstancesInAllTrees: PropTypes.func.isRequired,
-  instanceNames: PropTypes.array.isRequired,
-  isLoadingModifiers: PropTypes.bool,
-  modifiersByInputType: PropTypes.object.isRequired,
-  parameters: PropTypes.array.isRequired,
-  subpopulations: PropTypes.array.isRequired,
-  templates: PropTypes.array.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
-  updateSubpopulations: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string
+  updateSubpopulations: PropTypes.func.isRequired
 };
 
 export default Subpopulations;
