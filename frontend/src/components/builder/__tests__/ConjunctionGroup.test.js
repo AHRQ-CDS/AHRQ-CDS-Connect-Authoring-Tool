@@ -21,7 +21,7 @@ describe('<ConjunctionGroup />', () => {
 
   const renderComponent = ({ groupInstance = instance, ...props } = {}) =>
     render(
-      <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact } })}>
+      <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact }, vsac: { apiKey: '1234' } })}>
         <ConjunctionGroup
           addInstance={jest.fn()}
           baseIndentLevel={0}
@@ -82,8 +82,8 @@ describe('<ConjunctionGroup />', () => {
       expect(screen.getByTestId('root')).toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByLabelText('delete Group'));
-    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await waitFor(() => userEvent.click(screen.getByLabelText('delete Group')));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Delete' })));
 
     expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.2');
   });
@@ -97,8 +97,8 @@ describe('<ConjunctionGroup />', () => {
       expect(screen.getByTestId('root')).toBeInTheDocument();
     });
 
-    userEvent.click(screen.getAllByRole('button', { name: 'And' })[0]);
-    userEvent.click(screen.getByRole('option', { name: 'Or' }));
+    await waitFor(() => userEvent.click(screen.getAllByRole('combobox', { name: '' })[0]));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Or' })));
 
     const orType = operations.entries.find(({ id }) => id === 'Or');
 

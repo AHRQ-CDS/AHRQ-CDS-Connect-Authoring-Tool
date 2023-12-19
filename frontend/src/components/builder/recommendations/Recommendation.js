@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, Card, CardActions, CardContent, CardHeader, TextField } from '@mui/material';
-import produce from 'immer';
+import { produce } from 'immer';
 import { v4 as uuidv4 } from 'uuid';
 
 import RecommendationActions from './RecommendationActions';

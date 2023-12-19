@@ -70,7 +70,7 @@ describe('<ListGroup />', () => {
     expect(screen.getByRole('button', { name: 'delete List Group' })).toBeDisabled();
   });
 
-  it('can be deleted when not in use', () => {
+  it('can be deleted when not in use', async () => {
     const deleteLists = jest.fn();
     const templateInstance = {
       ...genericBaseElementListTemplateInstance,
@@ -83,8 +83,8 @@ describe('<ListGroup />', () => {
       deleteLists
     });
 
-    userEvent.click(screen.getByRole('button', { name: 'delete List Group' }));
-    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'delete List Group' })));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Delete' })));
 
     expect(deleteLists).toBeCalled();
   });
@@ -117,22 +117,22 @@ describe('<ListGroup />', () => {
     });
   });
 
-  it('should call updateLists when list name is updated', () => {
+  it('should call updateLists when list name is updated', async () => {
     const updateLists = jest.fn();
     const listInstance = _.cloneDeep(genericBaseElementListTemplateInstance);
     const { container } = renderComponent({ listInstance, updateLists });
     const nameInput = within(container).getByLabelText('Group Name');
-    userEvent.type(nameInput, 'new list name');
+    await userEvent.type(nameInput, 'new list name');
     expect(updateLists).toBeCalled();
   });
 
-  it('should call updateLists when list comment is updated', () => {
+  it('should call updateLists when list comment is updated', async () => {
     const updateLists = jest.fn();
     const listInstance = _.cloneDeep(genericBaseElementListTemplateInstance);
     const { container } = renderComponent({ listInstance, updateLists });
-    userEvent.click(screen.getByRole('button', { name: 'show comment' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'show comment' })));
     const commentInput = within(container).getByLabelText('Comment');
-    userEvent.type(commentInput, 'new list comment');
+    await userEvent.type(commentInput, 'new list comment');
     expect(updateLists).toBeCalled();
   });
 
@@ -169,11 +169,11 @@ describe('<ListGroup />', () => {
     listInstance.childInstances = [genericInstance]; // a child needs to be present for conjunction types to render
     const { container } = renderComponent({ listInstance });
     await waitFor(() => {
-      const dropdown = within(container).getAllByRole('button', { name: 'Union' })[0];
-      userEvent.click(dropdown);
+      const dropdown = within(container).getAllByRole('combobox', { name: '' })[0];
+      return userEvent.click(dropdown);
     });
-    expect(screen.getByRole('option', { name: 'Union' })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: 'Intersect' })).toBeInTheDocument();
+    expect(await screen.findByRole('option', { name: 'Union' })).toBeInTheDocument();
+    expect(await screen.findByRole('option', { name: 'Intersect' })).toBeInTheDocument();
     expect(screen.queryByRole('option', { name: 'And' })).not.toBeInTheDocument();
     expect(screen.queryByRole('option', { name: 'Or' })).not.toBeInTheDocument();
   });
@@ -183,11 +183,11 @@ describe('<ListGroup />', () => {
     listInstance.childInstances = [genericInstance]; // a child needs to be present for conjunction types to render
     const { container } = renderComponent({ listInstance });
     await waitFor(() => {
-      const dropdown = within(container).getAllByRole('button', { name: 'And' })[0];
-      userEvent.click(dropdown);
+      const dropdown = within(container).getAllByRole('combobox', { name: '' })[0];
+      return userEvent.click(dropdown);
     });
-    expect(screen.getByRole('option', { name: 'And' })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: 'Or' })).toBeInTheDocument();
+    expect(await screen.findByRole('option', { name: 'And' })).toBeInTheDocument();
+    expect(await screen.findByRole('option', { name: 'Or' })).toBeInTheDocument();
     expect(screen.queryByRole('option', { name: 'Union' })).not.toBeInTheDocument();
     expect(screen.queryByRole('option', { name: 'Intersect' })).not.toBeInTheDocument();
   });
@@ -296,13 +296,13 @@ describe('<ListGroup />', () => {
       ).toBeInTheDocument();
     });
 
-    it('should render a simple "Has Errors" warning when collapsed if List has errors', () => {
+    it('should render a simple "Has Errors" warning when collapsed if List has errors', async () => {
       const instanceWithSameName = createTemplateInstance(genericInstance);
       const nameField = getFieldWithId(instanceWithSameName.fields, 'element_name');
       instanceWithSameName.uniqueId = 'id-for-instance-1';
       nameField.value = 'UnionListName'; // Same name as Base Element List
 
-      const { container, getByText, getByLabelText } = renderComponent({
+      const { container, getByText, getByLabelText, findByText } = renderComponent({
         baseElements: [genericBaseElementListTemplateInstance],
         expTreeInclude: { childInstances: [instanceWithSameName] },
         listInstance: genericBaseElementListTemplateInstance
@@ -312,16 +312,16 @@ describe('<ListGroup />', () => {
       expect(getByText(/Warning: Name already in use/)).toBeInTheDocument();
 
       // Collapse to element to get condensed warning
-      userEvent.click(getByLabelText('collapse'));
+      await waitFor(() => userEvent.click(getByLabelText('collapse')));
 
-      expect(getByText('Has errors.')).toBeInTheDocument();
+      expect(await findByText('Has errors.')).toBeInTheDocument();
     });
 
     it('should render a simple "Has Errors" warning when collapsed if child has errors', async () => {
       const listInstance = createTemplateInstance(genericBaseElementListAndInstance);
       const nonBooleanChild = _.cloneDeep(createTemplateInstance(genericInstance));
       listInstance.childInstances = [nonBooleanChild];
-      const { container, getByText, getAllByLabelText } = renderComponent({
+      const { container, getByText, getAllByLabelText, findByText } = renderComponent({
         listInstance,
         baseElements: [listInstance]
       });
@@ -332,9 +332,9 @@ describe('<ListGroup />', () => {
       expect(getByText(/Element must have return type 'boolean' \(true\/false\)/)).toBeInTheDocument();
 
       // Collapse to element to get condensed warning
-      userEvent.click(getAllByLabelText('collapse')[0]);
+      await waitFor(() => userEvent.click(getAllByLabelText('collapse')[0]));
 
-      expect(getByText('Has errors.')).toBeInTheDocument();
+      expect(await findByText('Has errors.')).toBeInTheDocument();
     });
   });
 });

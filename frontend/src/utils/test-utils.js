@@ -41,4 +41,4 @@ export const changeTime = async (value, index = 0) => {
 
 export { getRoles, logRoles } from '@testing-library/dom';
 export { act, fireEvent, waitFor, waitForElementToBeRemoved, prettyDOM, screen, within } from '@testing-library/react';
-export { default as userEvent } from '@testing-library/user-event';
+export { default as userEvent, PointerEventsCheckLevel } from '@testing-library/user-event';

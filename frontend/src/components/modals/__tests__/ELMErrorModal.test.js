@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, userEvent, screen, within } from 'utils/test-utils';
+import { render, userEvent, screen, within, waitFor } from 'utils/test-utils';
 import { ELMErrorModal } from 'components/modals';
 
 describe('<ELMErrorModal />', () => {
@@ -21,7 +21,7 @@ describe('<ELMErrorModal />', () => {
     expect(errorMessages[1]).toHaveTextContent('Message 2');
   });
 
-  it('calls the closeModal prop when closed', () => {
+  it('calls the closeModal prop when closed', async () => {
     const closeModal = jest.fn();
 
     render(
@@ -32,7 +32,7 @@ describe('<ELMErrorModal />', () => {
     );
 
     const dialog = within(screen.getByRole('dialog'));
-    userEvent.click(dialog.getByText('Close'));
+    await waitFor(() => userEvent.click(dialog.getByText('Close')));
 
     expect(closeModal).toBeCalled();
   });

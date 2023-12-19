@@ -2,7 +2,7 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import _ from 'lodash';
-import { fireEvent, render, userEvent, screen } from 'utils/test-utils';
+import { fireEvent, render, userEvent, screen, waitFor } from 'utils/test-utils';
 import Parameters from '../Parameters';
 import { mockArtifact } from 'mocks/artifacts';
 
@@ -104,12 +104,12 @@ describe('<Parameters />', () => {
     expect(screen.getAllByText(/parameter:/i)).toHaveLength(3);
   });
 
-  it('can add a new parameter with the New Parameter button', () => {
+  it('can add a new parameter with the New Parameter button', async () => {
     const handleUpdateParameters = jest.fn();
     const newParameters = _.cloneDeep(parameters);
     renderComponent({ handleUpdateParameters });
 
-    userEvent.click(screen.getByRole('button', { name: /new parameter/i }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /new parameter/i })));
 
     expect(handleUpdateParameters).toBeCalledWith(
       newParameters.concat([
@@ -124,25 +124,25 @@ describe('<Parameters />', () => {
     );
   });
 
-  it('can update a parameter', () => {
+  it('can update a parameter', async () => {
     const handleUpdateParameters = jest.fn();
     const newParameters = _.cloneDeep(parameters);
     renderComponent({ handleUpdateParameters });
 
-    userEvent.click(screen.getByRole('button', { name: 'Boolean value True' }));
-    userEvent.click(screen.getByRole('option', { name: 'False' }));
+    await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Boolean value' })));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'False' })));
 
     newParameters[0].value = 'false';
     expect(handleUpdateParameters).toBeCalledWith(newParameters);
   });
 
-  it('can delete a parameter', () => {
+  it('can delete a parameter', async () => {
     const handleUpdateParameters = jest.fn();
     const newParameters = _.cloneDeep(parameters);
     renderComponent({ handleUpdateParameters });
 
-    userEvent.click(screen.queryAllByRole('button', { name: 'delete parameter' })[0]);
-    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: 'delete parameter' })[0]));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Delete' })));
 
     expect(handleUpdateParameters).toBeCalledWith(newParameters.slice(1));
   });
@@ -158,47 +158,47 @@ describe('<Parameters />', () => {
     expect(handleUpdateParameters).toBeCalledWith(newParameters);
   });
 
-  it('can change a parameter type', () => {
+  it('can change a parameter type', async () => {
     const handleUpdateParameters = jest.fn();
     const newParameters = _.cloneDeep(parameters);
     renderComponent({ handleUpdateParameters });
 
-    userEvent.click(screen.queryAllByRole('button', { name: 'Boolean' })[0]);
-    userEvent.click(screen.getByRole('option', { name: 'Integer' }));
+    await waitFor(() => userEvent.click(screen.queryAllByRole('combobox', { name: '' })[0]));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Integer' })));
     newParameters[0].type = 'integer';
     newParameters[0].value = null;
 
     expect(handleUpdateParameters).toBeCalledWith(newParameters);
   });
 
-  it('can collapse and expand a parameter', () => {
+  it('can collapse and expand a parameter', async () => {
     renderComponent();
 
     expect(screen.queryByText(/istrue:/i)).not.toBeInTheDocument();
 
-    userEvent.click(screen.queryAllByRole('button', { name: /collapse/i })[0]);
-    expect(screen.getByText(/istrue:/i)).toBeInTheDocument();
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /collapse/i })[0]));
+    await waitFor(() => expect(screen.getByText(/istrue:/i)).toBeInTheDocument());
 
-    userEvent.click(screen.queryAllByRole('button', { name: /expand/i })[0]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /expand/i })[0]));
     expect(screen.queryByText(/istrue:/i)).not.toBeInTheDocument();
   });
 
-  it('can collapse and expand all parameters', () => {
+  it('can collapse and expand all parameters', async () => {
     renderComponent();
 
     expect(screen.queryByText(/istrue:/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/isnow:/i)).not.toBeInTheDocument();
 
-    userEvent.click(screen.queryAllByRole('button', { name: /collapse/i })[0]);
-    expect(screen.getByText(/istrue:/i)).toBeInTheDocument();
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /collapse/i })[0]));
+    await waitFor(() => expect(screen.getByText(/istrue:/i)).toBeInTheDocument());
 
-    userEvent.click(screen.getByRole('button', { name: /expand all/i }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /expand all/i })));
     expect(screen.queryByText(/istrue:/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/isnow:/i)).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByRole('button', { name: /collapse all/i }));
-    expect(screen.getByText(/istrue:/i)).toBeInTheDocument();
-    expect(screen.getByText(/isnow:/i)).toBeInTheDocument();
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /collapse all/i })));
+    expect(await screen.findByText(/istrue:/i)).toBeInTheDocument();
+    expect(await screen.findByText(/isnow:/i)).toBeInTheDocument();
   });
 
   it('displays the editor when passed a valid parameter type', () => {

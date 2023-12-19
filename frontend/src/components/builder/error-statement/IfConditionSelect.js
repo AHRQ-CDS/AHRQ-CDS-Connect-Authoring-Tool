@@ -48,8 +48,8 @@ const IfConditionSelect = ({
       value: subpopulation.special
         ? subpopulation.special_subpopulationName
         : subpopulation.subpopulationName
-        ? `"${subpopulation.subpopulationName}"`
-        : `"${subpopulation.uniqueId}"`,
+          ? `"${subpopulation.subpopulationName}"`
+          : `"${subpopulation.uniqueId}"`,
       uniqueId: subpopulation.uniqueId,
       isDisabled: subpopulationIsDisabled(subpopulation.uniqueId)
     }));

@@ -120,8 +120,7 @@ const VSACOptionsAction = ({ allowsVSAC, elementInstance, handleUpdateElement })
 VSACOptionsAction.propTypes = {
   allowsVSAC: PropTypes.bool.isRequired,
   elementInstance: PropTypes.object.isRequired,
-  handleUpdateElement: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string
+  handleUpdateElement: PropTypes.func.isRequired
 };
 
 export default VSACOptionsAction;

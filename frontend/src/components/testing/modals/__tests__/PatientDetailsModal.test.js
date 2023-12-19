@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, userEvent } from 'utils/test-utils';
+import { render, screen, userEvent, waitFor } from 'utils/test-utils';
 
 import { mockPatientDstu2, mockPatientStu3, mockPatientR4 } from 'mocks/patients';
 import { getPatientAge } from 'utils/patients';
@@ -8,11 +8,11 @@ import PatientDetailsModal from '../PatientDetailsModal';
 describe('<PatientDetailsModal />', () => {
   const renderComponent = (props = {}) => render(<PatientDetailsModal handleCloseModal={jest.fn()} {...props} />);
 
-  it('calls handleCloseModal when closing the modal', () => {
+  it('calls handleCloseModal when closing the modal', async () => {
     const handleCloseModal = jest.fn();
     renderComponent({ handleCloseModal, patient: mockPatientDstu2 });
 
-    userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Close' })));
 
     expect(handleCloseModal).toHaveBeenCalled();
   });

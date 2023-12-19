@@ -94,12 +94,10 @@ describe('<BaseElements />', () => {
     expect(expressPhrase[2]).toHaveTextContent('VSAC Observation');
 
     // The Type options in the Conjunction group match the List options, not the usual operations
-    waitFor(() => {
-      userEvent.click(screen.getByRole('button', { name: 'Union' }));
-    });
+    await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: '' })));
 
     const listOperations = elementGroups[3].entries;
-    waitFor(() => {
+    await waitFor(() => {
       const menuOptions = screen.getAllByRole('option');
       expect(menuOptions).toHaveLength(2);
       expect(menuOptions[0]).toHaveTextContent(listOperations[0].name);
@@ -114,13 +112,13 @@ describe('<BaseElements />', () => {
 
   it('should call addBaseElement when adding a new base element', async () => {
     const addBaseElement = jest.fn();
-    const { getByLabelText, findByRole, findByLabelText } = renderComponent({ addBaseElement, baseElements: [] });
+    const { getByLabelText, getByRole } = renderComponent({ addBaseElement, baseElements: [] });
 
     const elementSelect = getByLabelText('Element type');
-    userEvent.click(elementSelect);
-    userEvent.click(await findByRole('option', { name: /demographics/i }));
-    userEvent.click(await findByLabelText('Demographics Element'));
-    userEvent.click(await findByRole('option', { name: /age range/i }));
+    await userEvent.click(elementSelect);
+    await waitFor(() => userEvent.click(getByRole('option', { name: /demographics/i })));
+    await waitFor(() => userEvent.click(getByLabelText('Demographics Element')));
+    await waitFor(() => userEvent.click(getByRole('option', { name: /age range/i })));
     expect(addBaseElement).toBeCalledTimes(1);
     const ageRangeElement = {
       fields: [
@@ -141,7 +139,7 @@ describe('<BaseElements />', () => {
     expect(addBaseElement).toBeCalledWith(ageRangeElement);
   });
 
-  it('should call updateBaseElementLists when changing base element lists', () => {
+  it('should call updateBaseElementLists when changing base element lists', async () => {
     const updateBaseElementLists = jest.fn();
     const baseElement = createTemplateInstance(genericBaseElementListInstance);
     baseElement.childInstances = [genericInstance];
@@ -151,11 +149,11 @@ describe('<BaseElements />', () => {
 
     const groupElement = getByTestId('group-element').parentNode.parentNode;
     const nameInput = groupElement.querySelector('input[type="text"]');
-    userEvent.type(nameInput, 'new list name');
+    await userEvent.type(nameInput, 'new list name');
     expect(updateBaseElementLists).toBeCalled();
   });
 
-  it('should call updateBaseElementLists when deleting a base element list', () => {
+  it('should call updateBaseElementLists when deleting a base element list', async () => {
     const updateBaseElementLists = jest.fn();
     const baseElement = createTemplateInstance(genericBaseElementListInstance);
     baseElement.childInstances = [genericInstance];
@@ -164,8 +162,8 @@ describe('<BaseElements />', () => {
 
     const { getByRole } = renderComponent({ updateBaseElementLists, baseElements });
 
-    userEvent.click(getByRole('button', { name: /delete list group/i }));
-    userEvent.click(getByRole('button', { name: 'Delete' }));
+    await waitFor(() => userEvent.click(getByRole('button', { name: /delete list group/i })));
+    await waitFor(() => userEvent.click(getByRole('button', { name: 'Delete' })));
     expect(updateBaseElementLists).toBeCalledTimes(1);
   });
 });

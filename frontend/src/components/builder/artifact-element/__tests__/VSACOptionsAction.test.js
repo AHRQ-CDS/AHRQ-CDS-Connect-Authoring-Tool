@@ -2,7 +2,7 @@ import React from 'react';
 import nock from 'nock';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { fireEvent, render, screen, userEvent, within } from 'utils/test-utils';
+import { fireEvent, render, screen, userEvent, within, waitFor } from 'utils/test-utils';
 import VSACOptionsAction from '../VSACOptionsAction';
 
 describe('<VSACOptionsAction />', () => {
@@ -46,10 +46,10 @@ describe('<VSACOptionsAction />', () => {
     expect(button).toBeDisabled(); // button disabled when already authenticated
   });
 
-  it('should open VSAC Auth modal to authenticate', () => {
+  it('should open VSAC Auth modal to authenticate', async () => {
     renderComponentWithState({ allowsVSAC: true, vsacApiKey: null });
     const button = screen.getByRole('button', { name: 'Authenticate VSAC' });
-    userEvent.click(button);
+    await userEvent.click(button);
 
     const dialog = screen.getByRole('dialog');
     expect(dialog).toBeInTheDocument();
@@ -90,13 +90,13 @@ describe('<VSACOptionsAction />', () => {
       });
 
       const addVSButton = screen.getByRole('button', { name: 'Add Value Set' });
-      userEvent.click(addVSButton);
+      await userEvent.click(addVSButton);
       const dialog = within(screen.getByRole('dialog'));
       expect(dialog.getByText('Choose value set')).toBeInTheDocument();
       fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
-      userEvent.click(dialog.getByRole('button', { name: 'Search' }));
+      await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Search' })));
       expect(await dialog.findByText('Value Set')).toBeInTheDocument();
-      userEvent.click(dialog.getByText('Test VS'));
+      await waitFor(() => userEvent.click(dialog.getByText('Test VS')));
 
       expect(handleUpdateElement).toHaveBeenCalledTimes(1);
     });
@@ -116,13 +116,13 @@ describe('<VSACOptionsAction />', () => {
       });
 
       const addCodeButton = screen.getByRole('button', { name: 'Add Code' });
-      userEvent.click(addCodeButton);
+      await userEvent.click(addCodeButton);
       const dialog = within(screen.getByRole('dialog'));
       expect(dialog.getByText('Choose code')).toBeInTheDocument();
       fireEvent.change(dialog.getByLabelText('Code'), { target: { value: '123-4' } });
-      userEvent.click(dialog.getByLabelText('Code system'));
-      userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
-      userEvent.click(dialog.getByRole('button', { name: 'Select' }));
+      await waitFor(() => userEvent.click(dialog.getByLabelText('Code system')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'SNOMED' })));
+      await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Select' })));
       expect(handleUpdateElement).toHaveBeenCalledTimes(1);
     });
   });

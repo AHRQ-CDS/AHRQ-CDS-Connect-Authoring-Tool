@@ -115,11 +115,11 @@ describe('<Workspace />', () => {
     const { unmount } = renderComponent({ store });
 
     await waitFor(() => {
-      fireEvent.click(screen.getByLabelText('Age Range'));
+      return fireEvent.click(screen.getByLabelText('Age Range'));
     });
 
     await waitFor(() => {
-      fireEvent.change(document.querySelector('input[type=text]'), {
+      return fireEvent.change(document.querySelector('input[type=text]'), {
         target: { value: '30 to 45' }
       });
     });
@@ -138,9 +138,9 @@ describe('<Workspace />', () => {
     const { unmount } = renderComponent({ store });
 
     await waitFor(() => {
-      userEvent.click(screen.getAllByRole('button', { name: 'And' })[0]);
+      return userEvent.click(screen.getAllByRole('combobox', { name: '' })[0]);
     });
-    userEvent.click(screen.getByText('Or'));
+    await waitFor(() => userEvent.click(screen.getByText('Or')));
 
     const updateAction = expandAction(_.last(store.getActions()));
     const instance = updateAction.artifact.expTreeInclude;
@@ -169,7 +169,7 @@ describe('<Workspace />', () => {
     const { unmount } = renderComponent({ store });
 
     await waitFor(() => {
-      fireEvent.click(screen.getByLabelText('delete Age Range'));
+      return fireEvent.click(screen.getByLabelText('delete Age Range'));
     });
     fireEvent.click(screen.getByText('Delete'));
 
@@ -193,12 +193,12 @@ describe('<Workspace />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         const { unmount } = renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
+        await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /Add Modifiers/i })[0]));
         const modal = within(await screen.findByRole('dialog'));
-        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
-        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() => userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]));
+        await waitFor(() => userEvent.click(modal.getByLabelText('Select modifier...')));
         await waitFor(() => userEvent.click(within(screen.queryByRole('listbox')).getByText('First')));
-        userEvent.click(modal.getByRole('button', { name: 'Add' }));
+        await waitFor(() => userEvent.click(modal.getByRole('button', { name: 'Add' })));
 
         const updateAction = expandAction(_.last(store.getActions()));
         const [instance] = updateAction.artifact.expTreeInclude.childInstances;
@@ -218,14 +218,14 @@ describe('<Workspace />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         const { unmount } = renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
+        await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /Add Modifiers/i })[0]));
         const modal = within(await screen.findByRole('dialog'));
-        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
-        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() => userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]));
+        await waitFor(() => userEvent.click(modal.getByLabelText('Select modifier...')));
         await waitFor(() =>
           userEvent.click(within(screen.queryByRole('listbox')).getByText('Average Observation Value'))
         );
-        userEvent.click(modal.getByRole('button', { name: 'Add' }));
+        await waitFor(() => userEvent.click(modal.getByRole('button', { name: 'Add' })));
 
         const updateAction = expandAction(_.last(store.getActions()));
         const [instance] = updateAction.artifact.expTreeInclude.childInstances;
@@ -245,12 +245,12 @@ describe('<Workspace />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         const { unmount } = renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
+        await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /Add Modifiers/i })[0]));
         const modal = within(await screen.findByRole('dialog'));
-        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
-        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() => userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]));
+        await waitFor(() => userEvent.click(modal.getByLabelText('Select modifier...')));
         await waitFor(() => userEvent.click(within(screen.queryByRole('listbox')).getByText('First')));
-        userEvent.click(modal.getByRole('button', { name: 'Add' }));
+        await waitFor(() => userEvent.click(modal.getByRole('button', { name: 'Add' })));
 
         const updateAction = expandAction(_.last(store.getActions()));
         const [instance] = updateAction.artifact.expTreeInclude.childInstances;
@@ -270,12 +270,14 @@ describe('<Workspace />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         const { unmount } = renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
+        await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /Add Modifiers/i })[0]), {
+          timeout: 15000
+        });
         const modal = within(await screen.findByRole('dialog'));
-        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
-        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() => userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]));
+        await waitFor(() => userEvent.click(modal.getByLabelText('Select modifier...')));
         await waitFor(() => userEvent.click(within(screen.queryByRole('listbox')).getByText('First')));
-        userEvent.click(modal.getByRole('button', { name: 'Add' }));
+        await waitFor(() => userEvent.click(modal.getByRole('button', { name: 'Add' })));
 
         const updateAction = expandAction(_.last(store.getActions()));
         const [instance] = updateAction.artifact.expTreeInclude.childInstances;
@@ -295,12 +297,12 @@ describe('<Workspace />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         const { unmount } = renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 30000 }))[0]);
+        await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /Add Modifiers/i })[0]));
         const modal = within(await screen.findByRole('dialog'));
-        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
-        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() => userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]));
+        await waitFor(() => userEvent.click(modal.getByLabelText('Select modifier...')));
         await waitFor(() => userEvent.click(within(screen.queryByRole('listbox')).getByText('First')));
-        userEvent.click(modal.getByRole('button', { name: 'Add' }));
+        await waitFor(() => userEvent.click(modal.getByRole('button', { name: 'Add' })));
 
         const updateAction = expandAction(_.last(store.getActions()));
         const [instance] = updateAction.artifact.expTreeInclude.childInstances;

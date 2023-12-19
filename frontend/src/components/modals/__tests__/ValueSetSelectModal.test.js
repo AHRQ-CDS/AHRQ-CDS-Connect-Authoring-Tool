@@ -2,7 +2,7 @@ import React from 'react';
 import nock from 'nock';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { render, screen, fireEvent, userEvent, within } from 'utils/test-utils';
+import { render, screen, fireEvent, userEvent, within, waitFor } from 'utils/test-utils';
 import ValueSetSelectModal from '../ValueSetSelectModal';
 
 describe('<ValueSetSelectModal />', () => {
@@ -85,7 +85,7 @@ describe('<ValueSetSelectModal />', () => {
 
     expect(screen.queryByRole('dialog')).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Cancel' })));
 
     expect(handleCloseModal).toHaveBeenCalled();
   });
@@ -100,13 +100,13 @@ describe('<ValueSetSelectModal />', () => {
     expect(dialog.getByText('Choose value set')).toBeInTheDocument();
 
     fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
-    userEvent.click(dialog.getByRole('button', { name: 'Search' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Search' })));
 
     expect(await dialog.findByText('Value Set')).toBeInTheDocument();
     expect(dialog.getByText('Test VS')).toBeInTheDocument();
     expect(dialog.getByText('New VS')).toBeInTheDocument();
 
-    userEvent.click(dialog.getByText('New VS'));
+    await waitFor(() => userEvent.click(dialog.getByText('New VS')));
 
     expect(handleSelectValueSet).toHaveBeenCalledWith({ name: 'New VS', oid: '3.4.5' });
     expect(handleCloseModal).toHaveBeenCalled();
@@ -122,7 +122,7 @@ describe('<ValueSetSelectModal />', () => {
     expect(dialog.getByText('Choose value set')).toBeInTheDocument();
 
     fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
-    userEvent.click(dialog.getByRole('button', { name: 'Search' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Search' })));
 
     expect(await dialog.findByText('Value Set')).toBeInTheDocument();
     expect(dialog.getByText('Test VS')).toBeInTheDocument();
@@ -137,7 +137,7 @@ describe('<ValueSetSelectModal />', () => {
     expect(dialog.getAllByText(/Updated:/)).toHaveLength(1);
     expect(dialog.getAllByLabelText('Experimental')).toHaveLength(1);
 
-    userEvent.click(dialog.getByRole('button', { name: 'Expand details for Test VS' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Expand details for Test VS' })));
     expect(dialog.getByText('Description:').parentElement.textContent).toEqual('Description: A test value set');
     expect(dialog.getByText('Clinical Focus:').parentElement.textContent).toEqual(
       'Clinical Focus: Example clinical focus'
@@ -152,12 +152,12 @@ describe('<ValueSetSelectModal />', () => {
       'Exclusion Criteria: Example exclusion criteria'
     );
 
-    userEvent.click(dialog.getByRole('button', { name: 'Expand details for Other VS' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Expand details for Other VS' })));
     expect(dialog.getByText('Purpose:').parentElement.textContent).toEqual(
       'Purpose: A generic purpose in any format string'
     );
 
-    userEvent.click(dialog.getByRole('button', { name: 'Expand details for New VS' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Expand details for New VS' })));
     expect(dialog.getByText('No additional information provided')).toBeInTheDocument();
   });
 
@@ -171,13 +171,13 @@ describe('<ValueSetSelectModal />', () => {
     expect(dialog.getByText('Choose value set')).toBeInTheDocument();
 
     fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
-    userEvent.click(dialog.getByRole('button', { name: 'Search' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Search' })));
 
     expect(await dialog.findByText('Value Set')).toBeInTheDocument();
     expect(dialog.getByText('Test VS')).toBeInTheDocument();
     expect(dialog.getByText('New VS')).toBeInTheDocument();
 
-    userEvent.click(dialog.getAllByRole('button', { name: 'View Value Set' })[0]);
+    await waitFor(() => userEvent.click(dialog.getAllByRole('button', { name: 'View Value Set' })[0]));
 
     expect(await dialog.findByText('Code System')).toBeInTheDocument();
     expect(dialog.getByRole('textbox')).toHaveValue('New VS (3.4.5)');
@@ -185,7 +185,7 @@ describe('<ValueSetSelectModal />', () => {
     expect(dialog.getByText('Code Display Name')).toBeInTheDocument();
     expect(dialog.getByText('CodeSysName')).toBeInTheDocument();
 
-    userEvent.click(dialog.getByRole('button', { name: 'Select' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Select' })));
 
     expect(handleSelectValueSet).toHaveBeenCalledWith({ name: 'New VS', oid: '3.4.5' });
     expect(handleCloseModal).toHaveBeenCalled();
@@ -197,17 +197,17 @@ describe('<ValueSetSelectModal />', () => {
     const dialog = within(screen.getByRole('dialog'));
 
     fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
-    userEvent.click(dialog.getByRole('button', { name: 'Search' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Search' })));
 
     expect(await dialog.findByText('Value Set')).toBeInTheDocument();
     expect(dialog.getByText('Test VS')).toBeInTheDocument();
     expect(dialog.getByText('New VS')).toBeInTheDocument();
 
-    userEvent.click(dialog.getAllByRole('button', { name: 'View Value Set' })[0]);
+    await waitFor(() => userEvent.click(dialog.getAllByRole('button', { name: 'View Value Set' })[0]));
 
     expect(await dialog.findByText('Code System')).toBeInTheDocument();
 
-    userEvent.click(dialog.getByRole('button', { name: 'Back' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Back' })));
 
     expect(await dialog.findByText('New VS')).toBeInTheDocument();
     expect(dialog.getByText('Test VS')).toBeInTheDocument();
@@ -250,7 +250,7 @@ describe('<ValueSetSelectModal />', () => {
     expect(dialog.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
     expect(dialog.queryByRole('button', { name: 'Search' })).not.toBeInTheDocument();
 
-    userEvent.click(dialog.getByRole('button', { name: 'Close' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Close' })));
 
     expect(handleCloseModal).toHaveBeenCalled();
   });

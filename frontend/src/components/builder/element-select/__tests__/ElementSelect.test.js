@@ -53,7 +53,7 @@ describe('<ElementSelect />', () => {
     renderComponent();
 
     expect(screen.getByText(/new element:/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /element type ​/i })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /element type/i })).toBeInTheDocument();
   });
 
   describe('select element field', () => {
@@ -66,14 +66,14 @@ describe('<ElementSelect />', () => {
     it('starts with a list of all elements', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByLabelText('Element type'));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Element type')));
       await waitFor(() => expect(screen.queryAllByRole('option').length).toEqual(16));
     });
 
     it('options display correct values and have key icon if VSAC auth required', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByLabelText('Element type'));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Element type')));
       await waitFor(() => expect(screen.queryAllByRole('option').length).toEqual(16));
 
       const vsacOptions = VSAC_OPTIONS.map(option => pluralize.singular(changeToCase(option, 'capitalCase')));
@@ -87,10 +87,10 @@ describe('<ElementSelect />', () => {
       const handleAddElement = jest.fn();
       renderComponent({ handleAddElement });
 
-      userEvent.click(screen.getByLabelText('Element type'));
-      userEvent.click(await screen.findByRole('option', { name: /demographics/i }));
-      userEvent.click(await screen.findByLabelText('Demographics Element'));
-      userEvent.click(await screen.findByRole('option', { name: /age range/i }));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Element type')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /demographics/i })));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Demographics Element')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /age range/i })));
 
       const element = {
         fields: [
@@ -113,10 +113,10 @@ describe('<ElementSelect />', () => {
       const handleAddElement = jest.fn();
       renderComponent({ handleAddElement });
 
-      userEvent.click(screen.getByLabelText('Element type'));
-      userEvent.click(await screen.findByRole('option', { name: /base elements/i }));
-      userEvent.click(await screen.findByLabelText('Base Element'));
-      userEvent.click(await screen.findByRole('option', { name: /isFemale/i }));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Element type')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /base elements/i })));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Base Element')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /isFemale/i })));
 
       const element = {
         fields: [
@@ -143,10 +143,10 @@ describe('<ElementSelect />', () => {
       const handleAddElement = jest.fn();
       renderComponent({ handleAddElement });
 
-      userEvent.click(screen.getByLabelText('Element type'));
-      userEvent.click(await screen.findByRole('option', { name: /parameters/i }));
-      userEvent.click(await screen.findByLabelText('Parameters Element'));
-      userEvent.click(await screen.findByRole('option', { name: /isTrue/i }));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Element type')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /parameters/i })));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Parameters Element')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /isTrue/i })));
 
       const element = {
         fields: [
@@ -174,12 +174,12 @@ describe('<ElementSelect />', () => {
       const handleAddElement = jest.fn();
       renderComponent({ handleAddElement });
 
-      userEvent.click(screen.getByLabelText('Element type'));
-      userEvent.click(await screen.findByRole('option', { name: /external cql/i }));
-      userEvent.click(await screen.findByLabelText('External CQL Element'));
-      userEvent.click(await screen.findByRole('option', { name: /cql-upload/i }));
-      userEvent.click(await screen.findByLabelText('Definition, function, or parameter'));
-      userEvent.click(await screen.findByRole('option', { name: /age/i }));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Element type')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /external cql/i })));
+      await waitFor(() => userEvent.click(screen.getByLabelText('External CQL Element')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /cql-upload/i })));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Definition, function, or parameter')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /age/i })));
 
       const element = {
         fields: [
@@ -206,8 +206,8 @@ describe('<ElementSelect />', () => {
       const handleAddElement = jest.fn();
       renderComponent({ handleAddElement });
 
-      userEvent.click(screen.getByLabelText('Element type'));
-      userEvent.click(await screen.findByRole('option', { name: /condition/i }));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Element type')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /condition/i })));
 
       await waitFor(() => expect(screen.getByText('Authenticate VSAC')).toBeInTheDocument());
     });
@@ -264,20 +264,20 @@ describe('<ElementSelect />', () => {
       const handleAddElement = jest.fn();
       renderComponent({ handleAddElement, apiKey });
 
-      userEvent.click(screen.getByLabelText('Element type'));
-      userEvent.click(await screen.findByRole('option', { name: /condition/i }));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Element type')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /condition/i })));
 
       await waitFor(() => expect(screen.queryByText('Authenticate VSAC')).not.toBeInTheDocument());
       expect(screen.getByText('VSAC Authenticated')).toBeInTheDocument();
       expect(screen.getByText('Add Value Set')).toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button', { name: /add value set/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add value set/i })));
       expect(screen.queryByRole('dialog')).toBeInTheDocument();
 
       const dialog = within(screen.getByRole('dialog'));
       fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
-      userEvent.click(dialog.getByRole('button', { name: 'Search' }));
-      userEvent.click(await dialog.findByText('New VS'));
+      await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Search' })));
+      await waitFor(() => userEvent.click(dialog.getByText('New VS')));
 
       const element = {
         extends: 'Base',
@@ -317,22 +317,22 @@ describe('<ElementSelect />', () => {
       const handleAddElement = jest.fn();
       renderComponent({ handleAddElement, apiKey: 'abc123' });
 
-      userEvent.click(screen.getByLabelText('Element type'));
-      userEvent.click(await screen.findByRole('option', { name: /condition/i }));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Element type')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /condition/i })));
 
       await waitFor(() => expect(screen.queryByText('Authenticate VSAC')).not.toBeInTheDocument());
       expect(screen.getByText('VSAC Authenticated')).toBeInTheDocument();
       expect(screen.getByText('Add Code')).toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button', { name: /add code/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add code/i })));
       expect(screen.queryByRole('dialog')).toBeInTheDocument();
 
       const dialog = within(screen.getByRole('dialog'));
       fireEvent.change(dialog.getByLabelText('Code'), { target: { value: code } });
-      userEvent.click(dialog.getByLabelText('Code system'));
-      userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
-      userEvent.click(dialog.getByRole('button', { name: 'Validate' }));
-      userEvent.click(await dialog.findByRole('button', { name: 'Select' }));
+      await waitFor(() => userEvent.click(dialog.getByLabelText('Code system')));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'SNOMED' })));
+      await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Validate' })));
+      await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Select' })));
 
       const element = {
         id: 'GenericCondition_vsac',
@@ -342,7 +342,7 @@ describe('<ElementSelect />', () => {
         extends: 'Base',
         template: 'GenericCondition',
         fields: [
-          { id: 'element_name', type: 'string', name: 'Element Name', value: '' },
+          { id: 'element_name', type: 'string', name: 'Element Name', value: 'One Two Three-Four' },
           { id: 'comment', type: 'textarea', name: 'Comment' },
           {
             id: 'condition',
@@ -353,7 +353,7 @@ describe('<ElementSelect />', () => {
               {
                 code: '123-4',
                 codeSystem: { id: 'http://snomed.info/sct', name: 'SNOMED' },
-                display: ''
+                display: 'One Two Three-Four'
               }
             ]
           }
@@ -375,7 +375,7 @@ describe('<ElementSelect />', () => {
 
     renderComponent({ artifact: mockArtifact });
 
-    userEvent.click(screen.getByLabelText('Element type'));
+    await waitFor(() => userEvent.click(screen.getByLabelText('Element type')));
     await waitFor(() => expect(screen.queryAllByRole('option').length).toEqual(16));
 
     expect(screen.getByRole('option', { name: /base elements/i })).toHaveAttribute('aria-disabled', 'true');

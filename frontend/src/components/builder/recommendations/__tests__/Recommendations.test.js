@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { fireEvent, render, screen, userEvent, within } from 'utils/test-utils';
+import { fireEvent, render, screen, userEvent, within, waitFor } from 'utils/test-utils';
 import Recommendations from '../Recommendations';
 import { mockArtifact } from 'mocks/artifacts';
 
@@ -61,11 +61,11 @@ describe('<Recommendations />', () => {
     expect(screen.getAllByText(/recommend\.\.\./i)).toHaveLength(3);
   });
 
-  it('can add a recommendation', () => {
+  it('can add a recommendation', async () => {
     const handleUpdateRecommendations = jest.fn();
     render(ui({ handleUpdateRecommendations }));
 
-    userEvent.click(screen.getByRole('button', { name: /new recommendation/i }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /new recommendation/i })));
 
     expect(handleUpdateRecommendations).toHaveBeenCalledWith(
       recommendations.concat({
@@ -98,15 +98,15 @@ describe('<Recommendations />', () => {
     ]);
   });
 
-  it('can delete a recommendation', () => {
+  it('can delete a recommendation', async () => {
     const handleUpdateRecommendations = jest.fn();
     render(ui({ handleUpdateRecommendations }));
 
-    userEvent.click(screen.queryAllByRole('button', { name: /delete recommendation/i })[2]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /delete recommendation/i })[2]));
 
     const dialog = within(screen.getByRole('dialog'));
     expect(dialog.getByText(/delete recommendation confirmation/i)).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /delete/i }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /delete/i })));
 
     expect(handleUpdateRecommendations).toHaveBeenCalledWith([recommendations[0], recommendations[1]]);
   });
@@ -132,28 +132,31 @@ describe('<Recommendations />', () => {
     );
   });
 
-  it('can display a recommendation comment', () => {
+  it('can display a recommendation comment', async () => {
     render(ui());
 
-    userEvent.click(screen.queryAllByRole('button', { name: /show comment/i })[0]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /show comment/i })[0]));
     expect(screen.queryAllByPlaceholderText('Add an optional comment')[0]).toHaveValue('Test comment');
   });
 
-  it('can display a recommendation link', () => {
+  it('can display a recommendation link', async () => {
     render(ui());
 
-    expect(screen.getByRole('button', { name: /absolute/i })).toBeInTheDocument();
+    // we need to click the combobox in order for the options to be queryable (not irl, but in the test)
+    await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: /link type/i })));
+    expect(screen.getByRole('option', { name: /absolute/i }).getAttribute('aria-selected')).toBe('true');
+    expect(screen.getByRole('option', { name: /smart/i }).getAttribute('aria-selected')).toBe('false');
     expect(screen.queryAllByPlaceholderText('Link Text')[0]).toHaveValue('Test Link');
     expect(screen.queryAllByPlaceholderText('Link Address')[0]).toHaveValue('https://test-link.com');
   });
 
-  it('can add a subpopulation to a recommendation', () => {
+  it('can add a subpopulation to a recommendation', async () => {
     const handleUpdateRecommendations = jest.fn();
     render(ui({ handleUpdateRecommendations }));
 
-    userEvent.click(screen.queryAllByRole('button', { name: /add subpopulation/i })[0]);
-    userEvent.click(screen.queryAllByTestId('add-subpopulation')[0]);
-    userEvent.click(screen.getByRole('option', { name: /meets exclusion criteria/i }));
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /add subpopulation/i })[0]));
+    await waitFor(() => userEvent.click(screen.queryAllByTestId('add-subpopulation')[0]));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: /meets exclusion criteria/i })));
 
     expect(handleUpdateRecommendations).toHaveBeenCalledWith([
       {
@@ -173,13 +176,13 @@ describe('<Recommendations />', () => {
     ]);
   });
 
-  it('can add a rationale to a recommendation', () => {
+  it('can add a rationale to a recommendation', async () => {
     const handleUpdateRecommendations = jest.fn();
     render(ui({ handleUpdateRecommendations }));
 
     expect(screen.queryAllByPlaceholderText('Describe the rationale for your recommendation')).toHaveLength(1);
 
-    userEvent.click(screen.queryAllByRole('button', { name: /add rationale/i })[0]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /add rationale/i })[0]));
     expect(screen.queryAllByPlaceholderText('Describe the rationale for your recommendation')).toHaveLength(2);
 
     fireEvent.change(screen.queryAllByPlaceholderText('Describe the rationale for your recommendation')[1], {
@@ -196,13 +199,13 @@ describe('<Recommendations />', () => {
     ]);
   });
 
-  it('can add a comment to a recommendation', () => {
+  it('can add a comment to a recommendation', async () => {
     const handleUpdateRecommendations = jest.fn();
     render(ui({ handleUpdateRecommendations }));
 
     expect(screen.queryAllByPlaceholderText('Add an optional comment')).toHaveLength(0);
 
-    userEvent.click(screen.queryAllByRole('button', { name: /show comment/i })[1]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /show comment/i })[1]));
     expect(screen.getByPlaceholderText('Add an optional comment')).toBeInTheDocument();
 
     fireEvent.change(screen.getByPlaceholderText('Add an optional comment'), {
@@ -219,13 +222,13 @@ describe('<Recommendations />', () => {
     ]);
   });
 
-  it('can add a link to a recommendation', () => {
+  it('can add a link to a recommendation', async () => {
     const handleUpdateRecommendations = jest.fn();
     render(ui({ handleUpdateRecommendations }));
 
     expect(screen.getByText(/link\.\.\./i)).toBeInTheDocument();
 
-    userEvent.click(screen.queryAllByRole('button', { name: /add link/i })[1]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /add link/i })[1]));
     expect(handleUpdateRecommendations).toHaveBeenCalledWith([
       recommendations[0],
       {
@@ -243,11 +246,11 @@ describe('<Recommendations />', () => {
     ]);
   });
 
-  it('can delete a subpopulation from a recommendation', () => {
+  it('can delete a subpopulation from a recommendation', async () => {
     const handleUpdateRecommendations = jest.fn();
     render(ui({ handleUpdateRecommendations }));
 
-    userEvent.click(screen.getByRole('button', { name: /remove subpopulation/i }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /remove subpopulation/i })));
     expect(handleUpdateRecommendations).toHaveBeenCalledWith([
       {
         ...recommendations[0],
@@ -258,11 +261,11 @@ describe('<Recommendations />', () => {
     ]);
   });
 
-  it('can delete a rationale from a recommendation', () => {
+  it('can delete a rationale from a recommendation', async () => {
     const handleUpdateRecommendations = jest.fn();
     render(ui({ handleUpdateRecommendations }));
 
-    userEvent.click(screen.queryAllByRole('button', { name: /remove field/i })[0]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /remove field/i })[0]));
     expect(handleUpdateRecommendations).toHaveBeenCalledWith([
       {
         ...recommendations[0],
@@ -273,11 +276,11 @@ describe('<Recommendations />', () => {
     ]);
   });
 
-  it('can delete a comment from a recommendation', () => {
+  it('can delete a comment from a recommendation', async () => {
     const handleUpdateRecommendations = jest.fn();
     render(ui({ handleUpdateRecommendations }));
 
-    userEvent.click(screen.queryAllByRole('button', { name: /show comment/i })[0]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /show comment/i })[0]));
     fireEvent.change(screen.getByPlaceholderText('Add an optional comment'), {
       target: { name: 'text', value: '' }
     });
@@ -291,11 +294,11 @@ describe('<Recommendations />', () => {
     ]);
   });
 
-  it('can delete a link from a recommendation', () => {
+  it('can delete a link from a recommendation', async () => {
     const handleUpdateRecommendations = jest.fn();
     render(ui({ handleUpdateRecommendations }));
 
-    userEvent.click(screen.getByRole('button', { name: /remove link/i }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /remove link/i })));
     expect(handleUpdateRecommendations).toHaveBeenCalledWith([
       {
         ...recommendations[0],

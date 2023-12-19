@@ -21,7 +21,7 @@ describe('<TermsAndConditions />', () => {
     expect(acceptCheckbox).toBeInTheDocument();
     await waitForCheckboxToCheck(acceptCheckbox, true);
 
-    userEvent.click(dialog.getByText('Accept'));
+    await waitFor(() => userEvent.click(dialog.getByText('Accept')));
 
     await waitFor(() => {
       expect(saveTermsDate).toHaveBeenCalled();
@@ -42,14 +42,14 @@ describe('<TermsAndConditions />', () => {
     expect(alert).not.toBeInTheDocument();
 
     // First time clicking the close button does not log you out and renders alert
-    userEvent.click(closeButton);
+    await userEvent.click(closeButton);
     await waitFor(() => {
       expect(logout).not.toHaveBeenCalled();
       expect(dialog.queryByRole('alert')).toBeInTheDocument();
     });
 
     // Second time clicking the close button logs you out
-    userEvent.click(closeButton);
+    await userEvent.click(closeButton);
     await waitFor(() => {
       expect(logout).toHaveBeenCalled();
     });

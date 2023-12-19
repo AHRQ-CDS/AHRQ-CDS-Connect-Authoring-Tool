@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Button } from '@mui/material';
-import produce from 'immer';
+import { produce } from 'immer';
 import { v4 as uuidv4 } from 'uuid';
 
 import Recommendation from './Recommendation';

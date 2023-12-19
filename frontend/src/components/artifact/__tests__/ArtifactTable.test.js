@@ -63,30 +63,30 @@ describe('<ArtifactTable />', () => {
       />
     );
 
-  it('renders artifacts', () => {
+  it('renders artifacts', async () => {
     renderComponent();
 
-    expect(screen.getByText('My Second CDS Artifact')).toBeInTheDocument();
-    expect(screen.getByText('My CDS Artifact')).toBeInTheDocument();
+    expect(await screen.findByText('My Second CDS Artifact')).toBeInTheDocument();
+    expect(await screen.findByText('My CDS Artifact')).toBeInTheDocument();
   });
 
   it('allows opening and closing of the edit modal', async () => {
     renderComponent();
 
-    userEvent.click(screen.getAllByRole('button', { name: 'edit info' })[0]);
-    expect(screen.getByText('Edit Artifact Details')).toBeInTheDocument();
+    await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: 'edit info' })[0]));
+    expect(await screen.findByText('Edit Artifact Details')).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole('button', { name: 'close' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'close' })));
     await waitFor(() => {
       expect(screen.queryByText('Edit Artifact Details')).not.toBeInTheDocument();
     });
   });
 
-  it('allows deleting of artifacts', () => {
+  it('allows deleting of artifacts', async () => {
     const handleDeleteArtifact = jest.fn();
     renderComponent({ handleDeleteArtifact });
 
-    userEvent.click(screen.getAllByRole('button', { name: /delete/i })[0]);
+    await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /delete/i })[0]));
     expect(screen.getByText('Delete CDS Artifact Confirmation')).toBeInTheDocument();
 
     const dialog = within(screen.getByRole('dialog'));
@@ -94,16 +94,16 @@ describe('<ArtifactTable />', () => {
     expect(dialog.getByText(/My Second CDS Artifact/)).toBeInTheDocument();
     expect(dialog.getByText(/1\.0\.1/)).toBeInTheDocument();
 
-    userEvent.click(dialog.getByRole('button', { name: /delete/i }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: /delete/i })));
 
     expect(handleDeleteArtifact).toBeCalledWith(artifactsMock[0]);
   });
 
-  it('allows duplication of artifacts', () => {
+  it('allows duplication of artifacts', async () => {
     const handleDuplicateArtifact = jest.fn();
     renderComponent({ handleDuplicateArtifact });
 
-    userEvent.click(screen.getAllByRole('button', { name: /duplicate/i })[0]);
+    await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /duplicate/i })[0]));
 
     expect(handleDuplicateArtifact).toBeCalledWith(artifactsMock[0]);
   });

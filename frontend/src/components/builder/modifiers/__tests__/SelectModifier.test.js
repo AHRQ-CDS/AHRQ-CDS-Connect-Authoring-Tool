@@ -1,6 +1,6 @@
 import React from 'react';
 import nock from 'nock';
-import { render, userEvent, screen } from 'utils/test-utils';
+import { render, userEvent, screen, waitFor } from 'utils/test-utils';
 import SelectModifier from '../SelectModifier';
 
 describe('<SelectModifier />', () => {
@@ -17,8 +17,8 @@ describe('<SelectModifier />', () => {
     const handleUpdateModifier = jest.fn();
     renderComponent({ handleUpdateModifier });
 
-    userEvent.click(await screen.findByRole('button', { name: /select-modifier-test/ }));
-    userEvent.click(screen.getByText('mmol/L to mg/dL'));
+    await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: /select-modifier-test/ })));
+    await waitFor(() => userEvent.click(screen.getByText('mmol/L to mg/dL')));
 
     expect(handleUpdateModifier).toBeCalledWith({
       value: 'Convert.to_mg_per_dL',

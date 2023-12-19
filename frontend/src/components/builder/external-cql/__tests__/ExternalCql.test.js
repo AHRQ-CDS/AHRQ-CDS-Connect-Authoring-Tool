@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import ExternalCql from '../ExternalCql';
-import { fireEvent, render, screen, userEvent, waitForElementToBeRemoved, within } from 'utils/test-utils';
+import { fireEvent, render, screen, userEvent, waitForElementToBeRemoved, within, waitFor } from 'utils/test-utils';
 import { createDataTransferEventWithFiles, createFile } from 'utils/test_helpers';
 import { mockArtifact } from 'mocks/artifacts';
 import {
@@ -213,7 +213,7 @@ describe('<ExternalCQL />', () => {
       renderComponent();
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
 
-      userEvent.click(screen.getAllByRole('button', { name: /view details/i })[0]);
+      await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /view details/i })[0]));
       const dialog = within(screen.getByRole('dialog'));
       expect(dialog.getByText(/view external cql details/i)).toBeInTheDocument();
       expect(dialog.getByRole('region', { name: 'Define (7)' })).toBeInTheDocument();
@@ -232,11 +232,11 @@ describe('<ExternalCQL />', () => {
       renderComponent();
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
 
-      userEvent.click(screen.getByRole('button', { name: /delete/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /delete/i })));
 
       const dialog = within(screen.getByRole('dialog'));
       expect(dialog.getByText(/delete external cql library confirmation/i)).toBeInTheDocument();
-      userEvent.click(screen.getByRole('button', { name: /delete/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /delete/i })));
 
       expect(await screen.findByText(/No external CQL libraries to show/i)).toBeInTheDocument();
     });

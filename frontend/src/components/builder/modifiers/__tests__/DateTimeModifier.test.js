@@ -19,7 +19,6 @@ describe('<DateTimeModifier />', () => {
     });
 
     await waitFor(() => expect(screen.queryByRole('button', { name: /ok/i })).toBeNull(), {
-      timeout: 5000,
       interval: 200
     });
 
@@ -38,7 +37,6 @@ describe('<DateTimeModifier />', () => {
 
     await changeDate('01/01/2020');
     await waitFor(() => expect(screen.queryByRole('button', { name: /ok/i })).toBeNull(), {
-      timeout: 5000,
       interval: 200
     });
     expect(handleUpdateModifier).toBeCalledWith({
@@ -48,7 +46,6 @@ describe('<DateTimeModifier />', () => {
 
     await changeTime('10:00:00');
     await waitFor(() => expect(screen.queryByRole('button', { name: /ok/i })).toBeNull(), {
-      timeout: 5000,
       interval: 200
     });
     expect(handleUpdateModifier).toBeCalledWith({
@@ -56,8 +53,8 @@ describe('<DateTimeModifier />', () => {
       time: '@T10:00:00'
     });
 
-    userEvent.click(screen.getByRole('button', { name: /Precision/ }));
-    userEvent.click(screen.getByRole('option', { name: 'year' }));
+    await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: /Precision/ })));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'year' })));
     expect(handleUpdateModifier).toBeCalledWith({
       date: null,
       time: null,
@@ -72,7 +69,6 @@ describe('<DateTimeModifier />', () => {
 
     await changeTime('10:00:00');
     await waitFor(() => expect(screen.queryByRole('button', { name: /ok/i })).toBeNull(), {
-      timeout: 5000,
       interval: 200
     });
     expect(handleUpdateModifier).toBeCalledWith({
@@ -80,8 +76,8 @@ describe('<DateTimeModifier />', () => {
       time: '@T10:00:00'
     });
 
-    userEvent.click(screen.getByRole('button', { name: /Precision/ }));
-    userEvent.click(screen.getByRole('option', { name: 'minute' }));
+    await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: /Precision/ })));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'minute' })));
     expect(handleUpdateModifier).toBeCalledWith({
       date: null,
       time: null,

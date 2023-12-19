@@ -71,7 +71,7 @@ describe('<ValueSetField />', () => {
   it('loads the value sets from the api', async () => {
     renderComponent();
 
-    userEvent.click(screen.getByLabelText('Unit of Time'));
+    await waitFor(() => userEvent.click(screen.getByLabelText('Unit of Time')));
 
     await waitFor(() => {
       expect(screen.getByText('months')).toBeInTheDocument();
@@ -82,8 +82,8 @@ describe('<ValueSetField />', () => {
     const handleUpdateField = jest.fn();
     renderComponent({ handleUpdateField });
 
-    userEvent.click(screen.getByLabelText('Unit of Time'));
-    userEvent.click(await screen.findByText('hours'));
+    await waitFor(() => userEvent.click(screen.getByLabelText('Unit of Time')));
+    await waitFor(() => userEvent.click(screen.getByText('hours')));
 
     expect(handleUpdateField).toBeCalledWith({
       unit_of_time: {

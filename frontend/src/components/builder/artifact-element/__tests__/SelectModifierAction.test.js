@@ -2,7 +2,7 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import nock from 'nock';
-import { render, screen, userEvent } from 'utils/test-utils';
+import { render, screen, userEvent, waitFor } from 'utils/test-utils';
 import SelectModifierAction from '../SelectModifierAction';
 
 describe('<SelectModifierAction />', () => {
@@ -68,13 +68,13 @@ describe('<SelectModifierAction />', () => {
     expect(screen.getByRole('button', { name: 'Add Modifiers' })).toBeInTheDocument();
   });
 
-  it('renders modifier select modal when clicking add modifiers', () => {
+  it('renders modifier select modal when clicking add modifiers', async () => {
     const elementInstance = { returnType: 'list_of_conditions', fields: [], modifiers: [] }; // cannotHaveModifiers is not specified, so they are allowed
     const modifiersByInputType = { list_of_conditions: [{ name: 'TestModifier' }] };
     renderComponentWithState({ elementInstance, modifiersByInputType });
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: 'Add Modifiers' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Add Modifiers' })));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
@@ -98,12 +98,12 @@ describe('<SelectModifierAction />', () => {
     const updateModifiers = jest.fn();
     renderComponentWithState({ elementInstance, modifiersByInputType, updateModifiers });
 
-    userEvent.click(screen.getByRole('button', { name: 'Add Modifiers' }));
-    userEvent.click(screen.getByRole('button', { name: 'Select Modifiers' }));
-    userEvent.click(screen.getByRole('button', { name: 'Select modifier... ​' }));
-    userEvent.click(await screen.findByRole('option', { name: 'Confirmed' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Add Modifiers' })));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Select Modifiers' })));
+    await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Select modifier...' })));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Confirmed' })));
     expect(screen.getByRole('button', { name: 'Add' })).not.toBeDisabled();
-    userEvent.click(screen.getByRole('button', { name: 'Add' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Add' })));
 
     expect(updateModifiers).toHaveBeenCalledTimes(1);
   });

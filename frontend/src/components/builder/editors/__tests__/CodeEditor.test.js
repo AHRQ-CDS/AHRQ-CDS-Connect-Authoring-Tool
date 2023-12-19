@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { render, userEvent, fireEvent, screen } from 'utils/test-utils';
+import { render, userEvent, fireEvent, screen, waitFor } from 'utils/test-utils';
 import CodeEditor from '../CodeEditor';
 
 describe('<CodeEditor />', () => {
@@ -22,17 +22,17 @@ describe('<CodeEditor />', () => {
       expect(getByText('Authenticate VSAC')).toBeInTheDocument();
     });
 
-    it('calls handleUpdateEditor with code', () => {
+    it('calls handleUpdateEditor with code', async () => {
       const handleUpdateEditor = jest.fn();
       const { getByText } = renderComponent({ handleUpdateEditor });
 
       expect(getByText('Add Code')).toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button'));
+      await waitFor(() => userEvent.click(screen.getByRole('button')));
       fireEvent.change(screen.getByRole('textbox', { name: 'Code' }), { target: { value: '123' } });
-      userEvent.click(screen.getByRole('button', { name: 'Code system ​' }));
-      userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
-      userEvent.click(screen.getByRole('button', { name: 'Select' }));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Code system' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'SNOMED' })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Select' })));
 
       expect(handleUpdateEditor).toBeCalledWith({
         id: expect.any(String),
@@ -44,23 +44,23 @@ describe('<CodeEditor />', () => {
       });
     });
 
-    it('can add more than one code', () => {
+    it('can add more than one code', async () => {
       const handleUpdateEditor = jest.fn();
       const { getByText } = renderComponent({ handleUpdateEditor });
 
       expect(getByText('Add Code')).toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button'));
+      await waitFor(() => userEvent.click(screen.getByRole('button')));
       fireEvent.change(screen.getByRole('textbox', { name: 'Code' }), { target: { value: '123' } });
-      userEvent.click(screen.getByRole('button', { name: 'Code system ​' }));
-      userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
-      userEvent.click(screen.getByRole('button', { name: 'Select' }));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Code system' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'SNOMED' })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Select' })));
 
-      userEvent.click(screen.getByRole('button', { hidden: true }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { hidden: true })));
       fireEvent.change(screen.getByRole('textbox', { name: 'Code' }), { target: { value: '456' } });
-      userEvent.click(screen.getByRole('button', { name: 'Code system ​' }));
-      userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
-      userEvent.click(screen.getByRole('button', { name: 'Select' }));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Code system' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'SNOMED' })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Select' })));
 
       expect(handleUpdateEditor).toBeCalledWith({
         id: expect.any(String),
@@ -89,17 +89,17 @@ describe('<CodeEditor />', () => {
       expect(getByText('Authenticate VSAC')).toBeInTheDocument();
     });
 
-    it('calls handleUpdateEditor with code', () => {
+    it('calls handleUpdateEditor with code', async () => {
       const handleUpdateEditor = jest.fn();
       const { getByText } = renderComponent({ handleUpdateEditor, isConcept: true });
 
       expect(getByText('Add Code')).toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button'));
+      await waitFor(() => userEvent.click(screen.getByRole('button')));
       fireEvent.change(screen.getByRole('textbox', { name: 'Code' }), { target: { value: '123' } });
-      userEvent.click(screen.getByRole('button', { name: 'Code system ​' }));
-      userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
-      userEvent.click(screen.getByRole('button', { name: 'Select' }));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Code system' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'SNOMED' })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Select' })));
 
       expect(handleUpdateEditor).toBeCalledWith({
         id: expect.any(String),

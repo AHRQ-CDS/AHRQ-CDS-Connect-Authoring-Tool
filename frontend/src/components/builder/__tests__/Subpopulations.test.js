@@ -2,7 +2,7 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import nock from 'nock';
-import { render, fireEvent, userEvent, screen, waitFor } from 'utils/test-utils';
+import { render, fireEvent, userEvent, screen, waitFor, PointerEventsCheckLevel } from 'utils/test-utils';
 import Subpopulations from '../Subpopulations';
 import { mockArtifact } from 'mocks/artifacts';
 import { mockExternalCqlLibrary } from 'mocks/external-cql';
@@ -86,9 +86,7 @@ describe('<Subpopulations />', () => {
     const updateSubpopulations = jest.fn();
     renderComponent({ updateSubpopulations });
 
-    await waitFor(() => {
-      userEvent.click(screen.getByRole('button', { name: 'New subpopulation' }));
-    });
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'New subpopulation' })));
 
     expect(updateSubpopulations).toHaveBeenCalledWith(
       [
@@ -114,7 +112,7 @@ describe('<Subpopulations />', () => {
     });
 
     await waitFor(() => {
-      fireEvent.change(container.querySelector('input[type=text]'), { target: { value: newSubpopulationName } });
+      return fireEvent.change(container.querySelector('input[type=text]'), { target: { value: newSubpopulationName } });
     });
 
     expect(updateSubpopulations).toHaveBeenCalledWith(
@@ -138,10 +136,8 @@ describe('<Subpopulations />', () => {
       updateSubpopulations
     });
 
-    await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'delete Subpopulation' })); // delete button on subpopulation
-      userEvent.click(getByRole('button', { name: 'Delete' })); // modal delete
-    });
+    await waitFor(() => userEvent.click(getByRole('button', { name: 'delete Subpopulation' }))); // delete button on subpopulation
+    await waitFor(() => userEvent.click(getByRole('button', { name: 'Delete' })));
 
     expect(updateSubpopulations).toHaveBeenCalledWith([specialSubpop], 'subpopulations', true);
   });
@@ -159,8 +155,8 @@ describe('<Subpopulations />', () => {
     });
 
     await waitFor(() => {
-      userEvent.click(getByRole('button', { name: 'delete Subpopulation' }), undefined, {
-        skipPointerEventsCheck: true
+      return userEvent.click(getByRole('button', { name: 'delete Subpopulation' }), {
+        pointerEventsCheck: PointerEventsCheckLevel.Never
       });
     });
 

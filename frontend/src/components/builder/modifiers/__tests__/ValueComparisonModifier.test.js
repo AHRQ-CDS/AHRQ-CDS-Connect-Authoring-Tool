@@ -25,8 +25,8 @@ describe('<ValueComparisonModifier />', () => {
     fireEvent.change(screen.getByRole('spinbutton', { name: 'minValue' }), { target: { value: '21' } });
     expect(handleUpdateModifier).toBeCalledWith({ minValue: 21 });
 
-    userEvent.click(screen.getByRole('combobox', { name: /minOp/ }));
-    userEvent.click(screen.getByRole('option', { name: '<' }));
+    await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: /minOp/ })));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: '<' })));
 
     await waitFor(() => {
       expect(screen.queryAllByRole('option')).toHaveLength(0);
@@ -36,9 +36,9 @@ describe('<ValueComparisonModifier />', () => {
     expect(handleUpdateModifier).toBeCalledWith({ maxValue: 189 });
 
     const maxOp = screen.getByRole('combobox', { name: /maxOp/ });
-    userEvent.click(maxOp);
+    await userEvent.click(maxOp);
     fireEvent.change(maxOp, { target: { value: '!=' } });
-    userEvent.tab();
+    await userEvent.tab();
 
     expect(handleUpdateModifier).toBeCalledWith({ maxOperator: '!=' });
   }, 30000);

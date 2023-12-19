@@ -1,6 +1,6 @@
 import React from 'react';
 import nock from 'nock';
-import { render, screen, fireEvent, userEvent } from 'utils/test-utils';
+import { render, screen, fireEvent, userEvent, waitFor } from 'utils/test-utils';
 import QuantityModifier from '../QuantityModifier';
 
 describe('<QuantityModifier />', () => {
@@ -29,9 +29,9 @@ describe('<QuantityModifier />', () => {
     renderComponent({ handleUpdateModifier });
 
     const unitAutocomplete = screen.getByRole('combobox', { name: 'Unit' });
-    userEvent.click(unitAutocomplete);
+    await userEvent.click(unitAutocomplete);
     fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
-    userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'mg/dL (milligram per deciliter)' })));
 
     expect(handleUpdateModifier).toBeCalledWith({ unit: 'mg/dL', value: '' });
 

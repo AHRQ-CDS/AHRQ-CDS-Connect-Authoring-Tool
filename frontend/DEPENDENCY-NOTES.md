@@ -9,17 +9,13 @@ dependencies are currently fixed to older versions:
 - **react-router-dom**: React Router DOM is currently tracking the latest v5 versions, as upgrading to v6 requires updating all components from class components to functional components.
   - This should be revisited once all refactoring tasks are completed.
 - **@testing-library/react**: The React Testing Library is currently tracking the latest v12 versions because v13 requires React 18.
-- **@testing-library/user-event**: The User Events library is currently tracking the latest v13 versions because upgrading to v14 requires significant changes to the test suite.
-  - These changes should be possible, so this upgrade should be revisited soon.
 - **react-tabs**: React Tabs is tracking the latest v4 versions because v5 requires React 18.
+- **react-redux**, **redux**, and **redux-thunk**: The latest Redux stack requires React 18.
 - **axios**: Axios is currently tracking the latest version, but it requires the `transformIgnorePatterns` in the Jest configuration in `package.json`. This should be monitored to see if Axios, Jest, or react-scripts update to support this natively. If so, the full `"jest"` property in `package.json` can be removed safely.
 - **tocbot**: Tocbot is currently fixed to `v4.17.3` (or other patch versions) in order to avoid multiple errors logged to the console. In this version, and all previous versions, there is only one error logged when navigating away from the Documentation page.
   These errors increased after version `v4.17.3`.
   [This commit](https://github.com/tscanlin/tocbot/commit/be66ad95284ebd21299a203d5479e12d85e34d62) may be related to new errors.
   Eventually, it will be good upgrade this package, but it may require reaching out for input on Github.
-- **change-case**: Change Case is tracking the latest v4 versions because v5 removed support for CommonJS and only supports ESM imports, which was causing problems with the app. This may be due to some of the built in configuration from create-react-app, or it may just required additional configuration.
-- **immer**: Immer is tracking the latest v9 versions because ES5 mode for legacy browsers was dropped in v10. Because we use `enableES5()`, which was removed, this library should be updated only once support for legacy browsers is evaluated and determined not to be needed.
-- **@mui/material** and **@mui/styles**: Tracking the latest v5.13 version. Updating to the latest v5 version requires changes to multiple tests.
 
 ## Notes about overrides
 

@@ -8,9 +8,10 @@ const getOperandExpression = (rule, operandId, field) => {
   if (operand.preLabel) expression = expression.concat(` ${operand.preLabel}`);
   if (operand.selectionValues && operand.selectionValues[0].label)
     expression = expression.concat(
-      ` ${changeToCase(operand.selectionValues.find(({ value }) => value === rule[operand.id]).label, 'noCase', {
-        stripRegexp: /[^A-Z0-9()]/gi // override default to allow parentheses
-      })}`
+      ` ${changeToCase(
+        operand.selectionValues.find(({ value }) => value === rule[operand.id]).label,
+        'noCaseWithParens'
+      )}`
     );
   else expression = expression.concat(` ${field ? rule[operand.id][field] : changeToCase(rule[operand.id], 'noCase')}`);
   if (operand.postLabel) expression = expression.concat(` ${operand.postLabel}`);

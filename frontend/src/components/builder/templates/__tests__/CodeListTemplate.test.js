@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, userEvent, screen } from 'utils/test-utils';
+import { render, userEvent, screen, waitFor } from 'utils/test-utils';
 import CodeListTemplate from '../CodeListTemplate';
 
 const code1 = {
@@ -35,11 +35,11 @@ describe('<CodeListTemplate />', () => {
     expect(codeLabels[1]).toHaveTextContent('Code 2');
   });
 
-  it('calls handleDeleteCode on code delete', () => {
+  it('calls handleDeleteCode on code delete', async () => {
     const handleDeleteCode = jest.fn();
     renderComponent({ codes: [code1], handleDeleteCode });
 
-    userEvent.click(screen.getByRole('button', { name: /delete code/ }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /delete code/ })));
 
     expect(handleDeleteCode).toBeCalledWith(code1);
   });

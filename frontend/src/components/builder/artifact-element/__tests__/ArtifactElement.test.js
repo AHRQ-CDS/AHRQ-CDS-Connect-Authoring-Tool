@@ -100,28 +100,28 @@ describe('<ArtifactElement />', () => {
     expect(selectedValueSet).toHaveTextContent(`Value Set 1: ${valueSets[0].name} (${valueSets[0].oid})`);
   });
 
-  it('should delete a value set from an artifact element', () => {
+  it('should delete a value set from an artifact element', async () => {
     const vsacField = getFieldWithType(elementInstance.fields, '_vsac');
     const { valueSets } = vsacField;
     const handleUpdateElement = jest.fn();
 
     renderComponentWithState({ handleUpdateElement, elementInstance });
 
-    userEvent.click(screen.getByRole('button', { name: 'Delete Value Set VS' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Delete Value Set VS' })));
 
     expect(handleUpdateElement).toHaveBeenCalledWith([
       { [vsacField.id]: [valueSets[1]], attributeToEdit: 'valueSets' }
     ]);
   });
 
-  it('should delete a code from an artifact element', () => {
+  it('should delete a code from an artifact element', async () => {
     const vsacField = getFieldWithType(elementInstance.fields, '_vsac');
     const { codes } = vsacField;
     const handleUpdateElement = jest.fn();
 
     renderComponentWithState({ elementInstance, handleUpdateElement });
 
-    userEvent.click(screen.getByRole('button', { name: 'delete code TestName (123-4)' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'delete code TestName (123-4)' })));
 
     expect(handleUpdateElement).toHaveBeenCalledWith([{ [vsacField.id]: [codes[1]], attributeToEdit: 'codes' }]);
   });
@@ -210,12 +210,10 @@ describe('<ArtifactElement />', () => {
     it('cannot add modifiers that change the return type if in use in the artifact', async () => {
       renderBaseElementComponentWithState();
 
-      await waitFor(() => {
-        userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
-      });
+      await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /Add Modifiers/i })[0]));
       const modal = within(await screen.findByRole('dialog'));
-      userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
-      userEvent.click(modal.getByLabelText('Select modifier...'));
+      await waitFor(() => userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]));
+      await waitFor(() => userEvent.click(modal.getByLabelText('Select modifier...')));
 
       await waitFor(() => {
         expect(screen.queryAllByRole('option').length).toBe(3);
@@ -234,16 +232,14 @@ describe('<ArtifactElement />', () => {
           usedBy: []
         }
       });
-      await waitFor(() => {
-        userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
-      });
+      await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /Add Modifiers/i })[0]));
       const modal = within(await screen.findByRole('dialog'));
-      userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
-      userEvent.click(modal.getByLabelText('Select modifier...'));
+      await waitFor(() => userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]));
+      await waitFor(() => userEvent.click(modal.getByLabelText('Select modifier...')));
       await waitFor(() => expect(screen.queryAllByRole('option').length).toBe(10));
     });
 
-    it('can remove modifiers that do not change the return type', () => {
+    it('can remove modifiers that do not change the return type', async () => {
       const modifiers = genericInstanceWithModifiers.modifiers;
       const updateModifiers = jest.fn();
       renderBaseElementComponent({
@@ -256,7 +252,7 @@ describe('<ArtifactElement />', () => {
 
       updateModifiers.mockClear();
       fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[0]);
-      userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Delete' })));
 
       expect(updateModifiers).toBeCalled();
     });
@@ -278,7 +274,7 @@ describe('<ArtifactElement />', () => {
       expect(updateModifiers).not.toBeCalled();
     });
 
-    it('can remove modifiers', () => {
+    it('can remove modifiers', async () => {
       const updateModifiers = jest.fn();
       renderBaseElementComponent({
         elementInstance: {
@@ -290,7 +286,7 @@ describe('<ArtifactElement />', () => {
 
       updateModifiers.mockClear();
       fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[2]);
-      userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Delete' })));
 
       expect(updateModifiers).toHaveBeenCalledWith(genericInstanceWithModifiers.modifiers.slice(0, -1));
     });
@@ -382,7 +378,7 @@ describe('<ArtifactElement />', () => {
         expect(within(container).queryByLabelText('indent')).not.toBeInTheDocument();
       });
 
-      it('can remove modifiers', () => {
+      it('can remove modifiers', async () => {
         const updateModifiers = jest.fn();
         renderComponentWithState({
           baseElementInUsedList: true,
@@ -392,8 +388,8 @@ describe('<ArtifactElement />', () => {
 
         updateModifiers.mockClear();
 
-        userEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[2]);
-        userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+        await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[2]));
+        await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Delete' })));
 
         expect(updateModifiers).toHaveBeenCalledWith(templateWithModifiersInstance.modifiers.slice(0, -1));
       });
@@ -423,12 +419,10 @@ describe('<ArtifactElement />', () => {
           baseElementInUsedList: true,
           elementInstance: templateWithModifiersInstance
         });
-        await waitFor(() => {
-          userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
-        });
+        await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /Add Modifiers/i })[0]));
         const modal = within(await screen.findByRole('dialog'));
-        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
-        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() => userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]));
+        await waitFor(() => userEvent.click(modal.getByLabelText('Select modifier...')));
 
         await waitFor(() => {
           expect(screen.queryAllByText('Limited modifiers', { exact: false }).length).toBeGreaterThan(0);

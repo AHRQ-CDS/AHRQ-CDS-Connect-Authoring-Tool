@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, userEvent, screen } from 'utils/test-utils';
+import { render, userEvent, screen, waitFor } from 'utils/test-utils';
 import { genericInstance } from 'utils/test_fixtures';
 import QualifierModifier from '../QualifierModifier';
 
@@ -23,12 +23,12 @@ describe('<QualifierModifier />', () => {
       />
     );
 
-  it('selects type of qualifier', () => {
+  it('selects type of qualifier', async () => {
     const handleUpdateModifier = jest.fn();
     renderComponent({ handleUpdateModifier });
 
-    userEvent.click(screen.getByLabelText('Qualifier'));
-    userEvent.click(screen.getByText('value is a code from'));
+    await waitFor(() => userEvent.click(screen.getByLabelText('Qualifier')));
+    await waitFor(() => userEvent.click(screen.getByText('value is a code from')));
 
     expect(handleUpdateModifier).toBeCalledWith({
       qualifier: 'value is a code from',

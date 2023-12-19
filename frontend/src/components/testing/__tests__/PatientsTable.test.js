@@ -27,7 +27,7 @@ describe('<PatientsTable />', () => {
     });
 
     const stu3PatientCheckboxes = screen.getAllByRole('checkbox', { name: /Arnulfo253 McClure239/ });
-    userEvent.click(stu3PatientCheckboxes[0]);
+    await userEvent.click(stu3PatientCheckboxes[0]);
 
     expect(stu3PatientCheckboxes[0].closest('.MuiCheckbox-root')).toHaveClass('Mui-checked');
     expect(stu3PatientCheckboxes[1]).not.toBeDisabled();
@@ -42,10 +42,10 @@ describe('<PatientsTable />', () => {
     ).toHaveLength(2);
   });
 
-  it('opens the patient details modal when the view button is clicked', () => {
+  it('opens the patient details modal when the view button is clicked', async () => {
     renderComponent();
 
-    userEvent.click(screen.getAllByRole('button', { name: 'View' })[0]);
+    await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: 'View' })[0]));
     const dialog = within(screen.getByRole('dialog'));
     expect(dialog.getByText('View Patient Details')).toBeInTheDocument();
   });
@@ -56,12 +56,12 @@ describe('<PatientsTable />', () => {
     const scope = nock('http://localhost').delete(`/authoring/api/testing/${mockPatientDstu2._id}`).reply(200);
 
     const row = within(screen.getByRole('row', { name: /DSTU2/ }));
-    userEvent.click(row.getByRole('button', { name: 'Delete' }));
+    await waitFor(() => userEvent.click(row.getByRole('button', { name: 'Delete' })));
 
     const dialog = within(screen.getByRole('dialog'));
     expect(dialog.getByText('Delete Patient Confirmation')).toBeInTheDocument();
 
-    userEvent.click(dialog.getByRole('button', { name: 'Delete' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Delete' })));
 
     await waitFor(() => scope.done());
   });

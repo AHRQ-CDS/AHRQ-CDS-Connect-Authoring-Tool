@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, Card, IconButton, Stack } from '@mui/material';
 import { Clear as ClearIcon } from '@mui/icons-material';
-import produce from 'immer';
+import { produce } from 'immer';
 import _ from 'lodash';
 
 import { Dropdown } from 'components/elements';

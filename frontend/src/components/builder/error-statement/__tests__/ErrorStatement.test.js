@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { fireEvent, render, userEvent, screen, within } from 'utils/test-utils';
+import { fireEvent, render, userEvent, screen, within, waitFor } from 'utils/test-utils';
 import ErrorStatement from '../ErrorStatement';
 import { mockArtifact } from 'mocks/artifacts';
 
@@ -103,14 +103,14 @@ describe('<ErrorStatement />', () => {
       </Provider>
     );
 
-  it('is able to select an if condition', () => {
+  it('is able to select an if condition', async () => {
     const handleUpdateErrorStatement = jest.fn();
     renderComponent({ handleUpdateErrorStatement });
 
-    expect(screen.getByRole('button', { name: /choose if condition/i })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /choose if condition/i })).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole('button', { name: /choose if condition/i }));
-    userEvent.click(screen.getAllByRole('option', { name: /recommendations is null/i })[0]);
+    await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: /choose if condition/i })));
+    await waitFor(() => userEvent.click(screen.getAllByRole('option', { name: /recommendations is null/i })[0]));
 
     expect(handleUpdateErrorStatement).toHaveBeenCalledWith({
       id: 'root',
@@ -128,13 +128,13 @@ describe('<ErrorStatement />', () => {
     });
   });
 
-  it('adds a nested if statement when `And also if...` is clicked', () => {
+  it('adds a nested if statement when `And also if...` is clicked', async () => {
     const handleUpdateErrorStatement = jest.fn();
     renderComponent({ artifact: mockArtifactWithIfCondition, handleUpdateErrorStatement });
 
     expect(screen.getByRole('button', { name: /and also if\.\.\./i })).not.toBeDisabled();
 
-    userEvent.click(screen.getByRole('button', { name: /and also if\.\.\./i }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /and also if\.\.\./i })));
 
     expect(handleUpdateErrorStatement).toHaveBeenCalledWith({
       id: 'root',
@@ -167,13 +167,13 @@ describe('<ErrorStatement />', () => {
     });
   });
 
-  it('adds an if then clause when `Or else if...` is clicked', () => {
+  it('adds an if then clause when `Or else if...` is clicked', async () => {
     const handleUpdateErrorStatement = jest.fn();
     renderComponent({ artifact: mockArtifactWithIfCondition, handleUpdateErrorStatement });
 
     expect(screen.getByRole('button', { name: /or else if\.\.\./i })).not.toBeDisabled();
 
-    userEvent.click(screen.getByRole('button', { name: /or else if\.\.\./i }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /or else if\.\.\./i })));
 
     expect(handleUpdateErrorStatement).toHaveBeenCalledWith({
       id: 'root',
@@ -259,13 +259,13 @@ describe('<ErrorStatement />', () => {
     });
   });
 
-  it('can remove nested if then clauses when "Remove nested statements" is clicked', () => {
+  it('can remove nested if then clauses when "Remove nested statements" is clicked', async () => {
     const handleUpdateErrorStatement = jest.fn();
     renderComponent({ artifact: mockArtifactWithNestedStatement, handleUpdateErrorStatement });
 
     expect(screen.getByRole('button', { name: /remove nested statements/i })).not.toBeDisabled();
 
-    userEvent.click(screen.getByRole('button', { name: /remove nested statements/i }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /remove nested statements/i })));
 
     expect(handleUpdateErrorStatement).toHaveBeenCalledWith({
       elseClause: '',
@@ -290,13 +290,13 @@ describe('<ErrorStatement />', () => {
     expect(screen.queryByRole('button', { name: /delete-if-then-clause/i })).not.toBeInTheDocument();
   });
 
-  it('can delete an if then clause if more than one exist', () => {
+  it('can delete an if then clause if more than one exist', async () => {
     const handleUpdateErrorStatement = jest.fn();
     renderComponent({ artifact: mockArtifactWithTwoStatements, handleUpdateErrorStatement });
 
     expect(screen.getAllByRole('button', { name: /delete-if-then-clause/i })).toHaveLength(2);
 
-    userEvent.click(screen.getAllByRole('button', { name: /delete-if-then-clause/i })[0]);
+    await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: /delete-if-then-clause/i })[0]));
 
     expect(handleUpdateErrorStatement).toHaveBeenCalledWith({
       id: 'root',

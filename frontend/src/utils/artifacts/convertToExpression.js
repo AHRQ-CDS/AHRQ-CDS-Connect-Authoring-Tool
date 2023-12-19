@@ -128,22 +128,19 @@ function getExpressionSentenceValue(modifier) {
         const maxOperatorWord = getOperation(modifier.values.maxOperator);
         expressionSentenceValues[modifier.id].modifierText = `is ${minOperatorWord} ${modifier.values.minValue}`;
         if (maxOperatorWord) {
-          expressionSentenceValues[
-            modifier.id
-          ].modifierText += ` and is ${maxOperatorWord} ${modifier.values.maxValue}`;
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` and is ${maxOperatorWord} ${modifier.values.maxValue}`;
         }
         break;
       }
       case 'ValueComparisonObservation': {
         const minOperatorWord = getOperation(modifier.values.minOperator);
         const maxOperatorWord = getOperation(modifier.values.maxOperator);
-        expressionSentenceValues[
-          modifier.id
-        ].modifierText = `is ${minOperatorWord} ${modifier.values.minValue} ${modifier.values.unit}`;
+        expressionSentenceValues[modifier.id].modifierText =
+          `is ${minOperatorWord} ${modifier.values.minValue} ${modifier.values.unit}`;
         if (maxOperatorWord) {
-          expressionSentenceValues[
-            modifier.id
-          ].modifierText += ` and is ${maxOperatorWord} ${modifier.values.maxValue} ${modifier.values.unit}`;
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` and is ${maxOperatorWord} ${modifier.values.maxValue} ${modifier.values.unit}`;
         }
         break;
       }
@@ -233,9 +230,8 @@ function getExpressionSentenceValue(modifier) {
       case 'LookBackServiceRequest':
       case 'LookBackProcedure':
       case 'LookBackEncounter': {
-        expressionSentenceValues[
-          modifier.id
-        ].modifierText = `within the last ${modifier.values.value} ${modifier.values.unit}`;
+        expressionSentenceValues[modifier.id].modifierText =
+          `within the last ${modifier.values.value} ${modifier.values.unit}`;
         break;
       }
       case 'BooleanComparison': {

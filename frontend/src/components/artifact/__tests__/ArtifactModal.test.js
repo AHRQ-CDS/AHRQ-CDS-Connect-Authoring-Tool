@@ -66,7 +66,7 @@ describe('<ArtifactModal />', () => {
     await waitForInputValueChange(dialog.getByLabelText(/Artifact Name/), 'NewArtifactName');
     await waitForInputValueChange(dialog.getByLabelText('Version:'), 'NewArtifactVersion');
 
-    userEvent.click(dialog.getByText('Create'));
+    await waitFor(() => userEvent.click(dialog.getByText('Create')));
 
     await waitFor(() => {
       expect(handleCloseModal).toHaveBeenCalled();
@@ -92,7 +92,7 @@ describe('<ArtifactModal />', () => {
       renderComponent();
 
       const dialog = within(await screen.findByRole('dialog'));
-      userEvent.click(dialog.getByText('Show CPG Fields'));
+      await waitFor(() => userEvent.click(dialog.getByText('Show CPG Fields')));
       const cpgTag = dialog.getAllByText('CPG')[0];
 
       expect(cpgTag).toHaveAttribute('class', expect.stringContaining('cpgTag'));
@@ -109,7 +109,7 @@ describe('<ArtifactModal />', () => {
       const dialog = within(await screen.findByRole('dialog'));
       await waitForInputValueChange(dialog.getByLabelText(/Artifact Name/), 'NewArtifactName');
       await waitForInputValueChange(dialog.getByLabelText('Version:'), 'NewArtifactVersion');
-      userEvent.click(dialog.getByText('Show CPG Fields'));
+      await waitFor(() => userEvent.click(dialog.getByText('Show CPG Fields')));
 
       await act(async () => {
         fireEvent.change(dialog.getByLabelText(/Description/), { target: { value: 'NewArtifactDescription' } });
@@ -146,34 +146,34 @@ describe('<ArtifactModal />', () => {
       //   expect(screen.queryAllByRole('button', { name: /change date/i })).toHaveLength(4);
       // });
 
-      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // status
-      userEvent.click(screen.getByRole('option', { name: 'draft' }));
+      await waitFor(() => userEvent.click(dialog.getAllByLabelText('Select...')[0])); // status
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'draft' })));
       await waitForDropdownToClose();
 
-      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // experimental
-      userEvent.click(screen.getByRole('option', { name: 'false' }));
+      await waitFor(() => userEvent.click(dialog.getAllByLabelText('Select...')[0])); // experimental
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'false' })));
       await waitForDropdownToClose();
 
-      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // strengthOfRecommendation
-      userEvent.click(screen.getByRole('option', { name: 'strong' }));
+      await waitFor(() => userEvent.click(dialog.getAllByLabelText('Select...')[0])); // strengthOfRecommendation
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'strong' })));
       await waitForDropdownToClose();
 
-      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // qualityOfEvidence
-      userEvent.click(screen.getByRole('option', { name: 'high' }));
+      await waitFor(() => userEvent.click(dialog.getAllByLabelText('Select...')[0])); // qualityOfEvidence
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'high' })));
       await waitForDropdownToClose();
 
-      userEvent.click(dialog.getByText('Add Context'));
-      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // context type
-      userEvent.click(screen.getByRole('option', { name: 'gender' }));
+      await waitFor(() => userEvent.click(dialog.getByText('Add Context')));
+      await waitFor(() => userEvent.click(dialog.getAllByLabelText('Select...')[0])); // context type
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'gender' })));
       await waitForDropdownToClose();
 
-      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // gender
-      userEvent.click(screen.getByRole('option', { name: 'female' }));
+      await waitFor(() => userEvent.click(dialog.getAllByLabelText('Select...')[0])); // gender
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'female' })));
       await waitForDropdownToClose();
 
-      userEvent.click(dialog.getByText('Add Author'));
-      userEvent.click(dialog.getByText('Add Reviewer'));
-      userEvent.click(dialog.getByText('Add Endorser'));
+      await waitFor(() => userEvent.click(dialog.getByText('Add Author')));
+      await waitFor(() => userEvent.click(dialog.getByText('Add Reviewer')));
+      await waitFor(() => userEvent.click(dialog.getByText('Add Endorser')));
 
       await act(async () => {
         fireEvent.change(document.querySelector('input[name="reviewer[0].reviewer"]'), {
@@ -188,9 +188,9 @@ describe('<ArtifactModal />', () => {
         );
       });
 
-      userEvent.click(dialog.getByText('Add Related Artifact'));
-      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // related artifact type
-      userEvent.click(screen.getByRole('option', { name: 'Citation' }));
+      await waitFor(() => userEvent.click(dialog.getByText('Add Related Artifact')));
+      await waitFor(() => userEvent.click(dialog.getAllByLabelText('Select...')[0])); // related artifact type
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Citation' })));
       await waitForDropdownToClose();
 
       await act(async () => {
@@ -206,7 +206,7 @@ describe('<ArtifactModal />', () => {
         );
       });
 
-      userEvent.click(dialog.getByText('Create'));
+      await waitFor(() => userEvent.click(dialog.getByText('Create')));
       await waitFor(() => {
         expect(handleAddArtifact).toHaveBeenCalledWith({
           name: 'NewArtifactName',
@@ -253,7 +253,7 @@ describe('<ArtifactModal />', () => {
       const dialog = within(await screen.findByRole('dialog'));
       await waitForInputValueChange(dialog.getByLabelText(/Artifact Name/), 'Edited Artifact Name');
 
-      userEvent.click(dialog.getByText('Save'));
+      await waitFor(() => userEvent.click(dialog.getByText('Save')));
 
       await waitFor(() => {
         expect(handleUpdateArtifact).toHaveBeenCalledWith(

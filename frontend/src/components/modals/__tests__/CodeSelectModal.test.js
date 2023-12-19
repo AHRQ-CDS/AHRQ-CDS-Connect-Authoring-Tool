@@ -1,6 +1,6 @@
 import React from 'react';
 import nock from 'nock';
-import { render, fireEvent, userEvent, screen, within } from 'utils/test-utils';
+import { render, fireEvent, userEvent, screen, within, waitFor } from 'utils/test-utils';
 import CodeSelectModal from '../CodeSelectModal';
 
 describe('<CodeSelectModal />', () => {
@@ -18,7 +18,7 @@ describe('<CodeSelectModal />', () => {
 
     renderComponent({ handleCloseModal });
 
-    userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Cancel' })));
 
     expect(handleCloseModal).toHaveBeenCalled();
   });
@@ -33,9 +33,9 @@ describe('<CodeSelectModal />', () => {
     const dialog = within(screen.getByRole('dialog'));
 
     setInputValue(dialog.getByLabelText('Code'), code);
-    userEvent.click(dialog.getByLabelText('Code system'));
-    userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
-    userEvent.click(dialog.getByRole('button', { name: 'Select' }));
+    await waitFor(() => userEvent.click(dialog.getByLabelText('Code system')));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'SNOMED' })));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Select' })));
 
     expect(handleSelectCode).toHaveBeenCalledWith({
       code,
@@ -56,11 +56,11 @@ describe('<CodeSelectModal />', () => {
     const dialog = within(screen.getByRole('dialog'));
 
     setInputValue(dialog.getByLabelText('Code'), code);
-    userEvent.click(dialog.getByLabelText('Code system'));
-    userEvent.click(screen.getByRole('option', { name: 'Other' }));
+    await waitFor(() => userEvent.click(dialog.getByLabelText('Code system')));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Other' })));
     setInputValue(dialog.getByLabelText('System URI'), codeSystemUri);
 
-    userEvent.click(dialog.getByRole('button', { name: 'Select' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Select' })));
 
     expect(handleSelectCode).toHaveBeenCalledWith({
       code,
@@ -89,13 +89,13 @@ describe('<CodeSelectModal />', () => {
     const dialog = within(screen.getByRole('dialog'));
 
     setInputValue(dialog.getByLabelText('Code'), code);
-    userEvent.click(dialog.getByLabelText('Code system'));
-    userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
-    userEvent.click(dialog.getByRole('button', { name: 'Validate' }));
+    await waitFor(() => userEvent.click(dialog.getByLabelText('Code system')));
+    await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'SNOMED' })));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Validate' })));
 
     expect(await dialog.findByText('Display')).toBeInTheDocument();
 
-    userEvent.click(dialog.getByRole('button', { name: 'Select' }));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Select' })));
 
     expect(handleSelectCode).toBeCalledWith({
       code,

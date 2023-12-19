@@ -66,14 +66,14 @@ describe('<Subpopulation />', () => {
     expect(getByText('Subpopulation:')).toBeInTheDocument();
   });
 
-  it('can be expanded and collapsed via header', () => {
+  it('can be expanded and collapsed via header', async () => {
     const { queryByText, getByText } = renderComponent();
 
-    userEvent.click(screen.queryAllByRole('button', { name: /collapse/i })[0]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /collapse/i })[0]));
     expect(queryByText('Subpopulation:')).not.toBeInTheDocument(); // Type is displayed next to title text box
     expect(getByText('First Subpopulation:')).toBeInTheDocument(); // Title is displayed when collapsed
 
-    userEvent.click(screen.queryAllByRole('button', { name: /expand/i })[0]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /expand/i })[0]));
     expect(getByText('Subpopulation:')).toBeInTheDocument(); // Type is displayed next to title text box
     expect(queryByText('First Subpopulation:')).not.toBeInTheDocument(); // Title is not displayed when expanded
   });
@@ -87,12 +87,12 @@ describe('<Subpopulation />', () => {
     expect(handleUpdateSubpopulationElement).toBeCalledWith('New name', subpopulation.uniqueId);
   });
 
-  it('calls handleDeleteSubpopulationElement when the subpopulation is deleted', () => {
+  it('calls handleDeleteSubpopulationElement when the subpopulation is deleted', async () => {
     const handleDeleteSubpopulationElement = jest.fn();
     const { getByRole } = renderComponent({ handleDeleteSubpopulationElement });
 
-    userEvent.click(getByRole('button', { name: 'delete Subpopulation' })); // delete button on subpopulation
-    userEvent.click(getByRole('button', { name: 'Delete' })); // modal delete
+    await waitFor(() => userEvent.click(getByRole('button', { name: 'delete Subpopulation' }))); // delete button on subpopulation
+    await waitFor(() => userEvent.click(getByRole('button', { name: 'Delete' }))); // modal delete
 
     expect(handleDeleteSubpopulationElement).toBeCalledWith(subpopulation.uniqueId);
   });
@@ -165,7 +165,7 @@ describe('<Subpopulation />', () => {
     await waitFor(() => {
       expect(getAllByText('Procedure:')).toHaveLength(2); // One top level procedure, one in the group
       expect(getAllByText('Group:')).toHaveLength(1); // One group
-      expect(getAllByRole('button', { name: 'And' })).toHaveLength(3); // Two "And" dropdowns on top level subpopulation groups and one from Group
+      expect(getAllByRole('combobox', { name: '' })).toHaveLength(3); // Two "And" dropdowns on top level subpopulation groups and one from Group
     });
   });
 
@@ -200,7 +200,7 @@ describe('<Subpopulation />', () => {
     ).toBeInTheDocument();
   });
 
-  it('displays an alert if any element in the subpopulation has an error when the subpopulation is collapsed', () => {
+  it('displays an alert if any element in the subpopulation has an error when the subpopulation is collapsed', async () => {
     const nonBooleanElement = {
       uniqueId: 'el-1',
       id: 'GenericProcedure_vsac',
@@ -236,7 +236,7 @@ describe('<Subpopulation />', () => {
     expect(alerts.filter(a => a.showAlert)).toHaveLength(0);
 
     // Collapse the Subpopulation
-    userEvent.click(screen.queryAllByRole('button', { name: /collapse/i })[0]);
+    await waitFor(() => userEvent.click(screen.queryAllByRole('button', { name: /collapse/i })[0]));
 
     expect(getByText('Has errors.')).toBeInTheDocument();
   });

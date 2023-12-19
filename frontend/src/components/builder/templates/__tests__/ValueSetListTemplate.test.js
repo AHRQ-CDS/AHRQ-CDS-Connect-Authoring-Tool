@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, userEvent, screen } from 'utils/test-utils';
+import { render, userEvent, screen, waitFor } from 'utils/test-utils';
 import ValueSetListTemplate from '../ValueSetListTemplate';
 
 const valueSet1 = { name: 'value-set-1', oid: '001' };
@@ -26,11 +26,11 @@ describe('<ValueSetListTemplate />', () => {
     expect(valueSetLabels[1]).toHaveTextContent('Value Set 2');
   });
 
-  it('calls handleDeleteValueSet on value set delete', () => {
+  it('calls handleDeleteValueSet on value set delete', async () => {
     const handleDeleteValueSet = jest.fn();
     renderComponent({ valueSets: [valueSet1], handleDeleteValueSet });
 
-    userEvent.click(screen.getByRole('button', { name: /delete value set/i }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: /delete value set/i })));
 
     expect(handleDeleteValueSet).toBeCalledWith(valueSet1);
   });

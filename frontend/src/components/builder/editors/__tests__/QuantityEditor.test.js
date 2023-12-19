@@ -1,6 +1,6 @@
 import React from 'react';
 import nock from 'nock';
-import { render, userEvent, fireEvent, screen } from 'utils/test-utils';
+import { render, userEvent, fireEvent, screen, waitFor } from 'utils/test-utils';
 import QuantityEditor from '../QuantityEditor';
 
 describe('<QuantityEditor />', () => {
@@ -59,9 +59,9 @@ describe('<QuantityEditor />', () => {
       });
 
       const unitAutocomplete = screen.getByRole('combobox', { name: 'Unit' });
-      userEvent.click(unitAutocomplete);
+      await userEvent.click(unitAutocomplete);
       fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
-      userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'mg/dL (milligram per deciliter)' })));
 
       expect(handleUpdateEditor).toBeCalledWith({ quantity: '1.0', unit: 'mg/dL', str: `1.0 'mg/dL'` });
 
@@ -135,9 +135,9 @@ describe('<QuantityEditor />', () => {
       });
 
       const unitAutocomplete = screen.getByRole('combobox', { name: 'Unit' });
-      userEvent.click(unitAutocomplete);
+      await userEvent.click(unitAutocomplete);
       fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
-      userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'mg/dL (milligram per deciliter)' })));
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstQuantity: '1.0',
@@ -190,9 +190,9 @@ describe('<QuantityEditor />', () => {
       });
 
       const unitAutocomplete = screen.getByRole('combobox', { name: 'Unit' });
-      userEvent.click(unitAutocomplete);
+      await userEvent.click(unitAutocomplete);
       fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
-      userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'mg/dL (milligram per deciliter)' })));
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstQuantity: null,
@@ -217,9 +217,9 @@ describe('<QuantityEditor />', () => {
       });
 
       const unitAutocomplete = screen.getByRole('combobox', { name: 'Unit' });
-      userEvent.click(unitAutocomplete);
+      await userEvent.click(unitAutocomplete);
       fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
-      userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'mg/dL (milligram per deciliter)' })));
 
       expect(handleUpdateEditor).toBeCalledWith({
         firstQuantity: '0.0',

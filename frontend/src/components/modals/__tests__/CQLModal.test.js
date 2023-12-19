@@ -1,6 +1,6 @@
 import React from 'react';
 import nock from 'nock';
-import { render, userEvent, screen } from 'utils/test-utils';
+import { render, userEvent, screen, waitFor } from 'utils/test-utils';
 import CQLModal from '../CQLModal';
 
 describe('<CQLModal />', () => {
@@ -19,7 +19,7 @@ describe('<CQLModal />', () => {
     nock('http://localhost').post('/authoring/api/cql/viewCql').reply(200, apiResponse);
     const handleCloseModal = jest.fn();
     render(<CQLModal handleCloseModal={handleCloseModal} artifact={{}} dataModel={{}} />);
-    userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Close' })));
     expect(handleCloseModal).toHaveBeenCalled();
   });
 

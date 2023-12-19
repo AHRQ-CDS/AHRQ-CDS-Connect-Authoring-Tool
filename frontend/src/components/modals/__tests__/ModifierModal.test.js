@@ -2,7 +2,14 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import nock from 'nock';
-import { render, userEvent, screen, waitForElementToBeRemoved, waitFor } from 'utils/test-utils';
+import {
+  render,
+  userEvent,
+  screen,
+  waitForElementToBeRemoved,
+  waitFor,
+  PointerEventsCheckLevel
+} from 'utils/test-utils';
 import { ModifierModal } from 'components/modals';
 import { updateArtifact } from 'actions/artifacts';
 import { mockArtifact } from 'mocks/artifacts';
@@ -216,41 +223,41 @@ describe('<ModifierModal />', () => {
 
   afterAll(() => nock.restore());
 
-  it('can close the modal with the "Cancel" button', () => {
+  it('can close the modal with the "Cancel" button', async () => {
     const handleCloseModal = jest.fn();
     renderComponent({ handleCloseModal });
 
     expect(screen.queryByRole('dialog')).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Cancel' })));
     expect(handleCloseModal).toHaveBeenCalled();
   });
 
   describe('Select Modifiers', () => {
-    it('can navigate to the Select Modifiers view', () => {
+    it('can navigate to the Select Modifiers view', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /select modifiers/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /select modifiers/i })));
       expect(screen.getByTestId(/select modifiers/i)).toBeInTheDocument();
     });
 
-    it('can go back to the Add Modifiers view', () => {
+    it('can go back to the Add Modifiers view', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /select modifiers/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /select modifiers/i })));
       expect(screen.getByTestId(/select modifiers/i)).toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button', { name: /go back/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /go back/i })));
       expect(screen.getByTestId(/add modifiers/i)).toBeInTheDocument();
     });
 
     it('can select a modifier to add', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /select modifiers/i }));
-      userEvent.click(screen.getByRole('button', { name: 'Select modifier... ​' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /select modifiers/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Select modifier...' })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(0);
 
-      userEvent.click(await screen.findByRole('option', { name: 'Exists' }));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Exists' })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(1);
       expect(screen.getByTestId('modifier-card')).toHaveTextContent('Exists');
     });
@@ -258,55 +265,57 @@ describe('<ModifierModal />', () => {
     it('updates the modal header with the new return type if a selected modifier changes the return type', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /select modifiers/i }));
-      userEvent.click(screen.getByRole('button', { name: 'Select modifier... ​' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /select modifiers/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Select modifier...' })));
       expect(screen.getByTestId('modifier-return-type')).toHaveTextContent('Return Type:List Of Conditions');
 
-      userEvent.click(await screen.findByRole('option', { name: 'Exists' }));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Exists' })));
       expect(screen.getByTestId('modifier-return-type')).toHaveTextContent('Return Type:List Of ConditionsBoolean');
     });
 
     it('can remove a modifier to add', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /select modifiers/i }));
-      userEvent.click(screen.getByRole('button', { name: 'Select modifier... ​' }));
-      userEvent.click(await screen.findByRole('option', { name: 'Exists' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /select modifiers/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Select modifier...' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Exists' })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(1);
 
-      userEvent.click(screen.getByRole('button', { name: /delete modifier/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /delete modifier/i })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(0);
     });
 
     it('cannot remove a modifier to add if the return type does not match the next modifier input type ', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /select modifiers/i }));
-      userEvent.click(screen.getByRole('button', { name: 'Select modifier... ​' }));
-      userEvent.click(await screen.findByRole('option', { name: 'Exists' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /select modifiers/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Select modifier...' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Exists' })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(1);
 
-      userEvent.click(screen.getByRole('button', { name: 'Select modifier... ​' }));
-      userEvent.click(await screen.findByRole('option', { name: 'Not' }));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Select modifier...' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Not' })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(2);
       expect(
         screen.getByLabelText('Cannot remove expression because return type does not match next input type.')
       ).toBeInTheDocument();
 
-      userEvent.click(screen.queryAllByRole('button', { name: /delete modifier/i })[0], undefined, {
-        skipPointerEventsCheck: true
-      });
+      await waitFor(() =>
+        userEvent.click(screen.queryAllByRole('button', { name: /delete modifier/i })[0], {
+          pointerEventsCheck: PointerEventsCheckLevel.Never
+        })
+      );
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(2);
     });
 
     it('can select a modifier to add that requires input', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /select modifiers/i }));
-      userEvent.click(screen.getByRole('button', { name: 'Select modifier... ​' }));
-      userEvent.click(await screen.findByRole('option', { name: 'Is (Not) Null?' }));
-      userEvent.click(screen.getByRole('button', { name: /check existence/i }));
-      userEvent.click(await screen.findByRole('option', { name: 'is null' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /select modifiers/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Select modifier...' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Is (Not) Null?' })));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: /check existence/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'is null' })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(1);
       expect(screen.getByTestId('modifier-card')).toHaveTextContent('is null');
     });
@@ -315,12 +324,12 @@ describe('<ModifierModal />', () => {
       const handleUpdateModifiers = jest.fn();
       renderComponent({ handleUpdateModifiers });
 
-      userEvent.click(screen.getByRole('button', { name: /select modifiers/i }));
-      userEvent.click(screen.getByRole('button', { name: 'Select modifier... ​' }));
-      userEvent.click(await screen.findByRole('option', { name: 'Exists' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /select modifiers/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Select modifier...' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Exists' })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(1);
 
-      userEvent.click(screen.getByRole('button', { name: /add/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add/i })));
       const existsModifier = mockModifiers.find(({ id }) => id === 'BooleanExists');
       expect(handleUpdateModifiers).toHaveBeenCalledWith([{ ...existsModifier, uniqueId: expect.any(String) }], ''); // '' is any fhir version
     });
@@ -329,16 +338,16 @@ describe('<ModifierModal />', () => {
       const handleUpdateModifiers = jest.fn();
       renderComponent({ handleUpdateModifiers });
 
-      userEvent.click(screen.getByRole('button', { name: /select modifiers/i }));
-      userEvent.click(screen.getByRole('button', { name: 'Select modifier... ​' }));
-      userEvent.click(await screen.findByRole('option', { name: 'Exists' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /select modifiers/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Select modifier...' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Exists' })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(1);
 
-      userEvent.click(screen.getByRole('button', { name: 'Select modifier... ​' }));
-      userEvent.click(await screen.findByRole('option', { name: 'Not' }));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: 'Select modifier...' })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Not' })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(2);
 
-      userEvent.click(screen.getByRole('button', { name: /add/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add/i })));
       const existsModifier = mockModifiers.find(({ id }) => id === 'BooleanExists');
       const notModifier = mockModifiers.find(({ id }) => id === 'BooleanNot');
       expect(handleUpdateModifiers).toHaveBeenCalledWith(
@@ -352,13 +361,13 @@ describe('<ModifierModal />', () => {
   });
 
   describe('Build Modifier', () => {
-    it('can select a fhir version and navigate to the Build Modifier view', () => {
+    it('can select a fhir version and navigate to the Build Modifier view', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
       expect(screen.getByText(/select fhir version to use:/i)).toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       expect(screen.getByTestId(/build modifier/i)).toBeInTheDocument();
     });
 
@@ -379,62 +388,62 @@ describe('<ModifierModal />', () => {
     it('can add a rule', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
       expect(screen.queryAllByTestId('modifier-rule')).toHaveLength(0);
 
-      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add rule/i })));
       expect(screen.queryAllByTestId('modifier-rule')).toHaveLength(1);
     });
 
     it('can remove a rule', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
       expect(screen.queryAllByTestId('modifier-rule')).toHaveLength(0);
 
-      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add rule/i })));
       expect(screen.queryAllByTestId('modifier-rule')).toHaveLength(1);
 
-      userEvent.click(screen.getByRole('button', { name: /remove rule/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /remove rule/i })));
       expect(screen.queryAllByTestId('modifier-rule')).toHaveLength(0);
     });
 
     it('can add a group', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
       expect(screen.queryAllByTestId('modifier-group')).toHaveLength(1);
 
-      userEvent.click(screen.getByRole('button', { name: /add group/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add group/i })));
       expect(screen.queryAllByTestId('modifier-group')).toHaveLength(2);
     });
 
     it('can remove a group', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
       expect(screen.queryAllByTestId('modifier-group')).toHaveLength(1);
 
-      userEvent.click(screen.getByRole('button', { name: /add group/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add group/i })));
       expect(screen.queryAllByTestId('modifier-group')).toHaveLength(2);
 
-      userEvent.click(screen.getByRole('button', { name: /remove group/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /remove group/i })));
       expect(screen.queryAllByTestId('modifier-group')).toHaveLength(1);
     });
 
     it('can toggle conjunction types', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
       expect(screen.getByRole('button', { name: /and/i })).toHaveAttribute('class', expect.stringContaining('active'));
       expect(screen.getByRole('button', { name: /or/i })).not.toHaveAttribute(
@@ -442,7 +451,7 @@ describe('<ModifierModal />', () => {
         expect.stringContaining('active')
       );
 
-      userEvent.click(screen.getByRole('button', { name: /or/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /or/i })));
       expect(screen.getByRole('button', { name: /and/i })).not.toHaveAttribute(
         'class',
         expect.stringContaining('active')
@@ -453,50 +462,48 @@ describe('<ModifierModal />', () => {
     it('can add a property', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
-      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
-      expect(screen.queryAllByRole('button', { name: /clinical status/i })).toHaveLength(0);
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add rule/i })));
 
-      userEvent.click(screen.getByTestId('property-select'));
-      userEvent.click(await screen.findByRole('option', { name: 'Clinical Status' }));
-      expect(screen.getByRole('button', { name: /clinical status/i })).toBeInTheDocument();
+      await waitFor(() => userEvent.click(screen.getByTestId('property-select')));
+      const clinicalStatusOption = await screen.findByRole('option', { name: 'Clinical Status' });
+      expect(clinicalStatusOption.getAttribute('aria-selected')).toBe('false');
+      await userEvent.click(clinicalStatusOption);
+      expect(clinicalStatusOption.getAttribute('aria-selected')).toBe('true');
     });
 
     it('can add an operator', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
-      await waitForElementToBeRemoved(screen.getByRole('progressbar'), { timeout: 30000 });
-      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
-      userEvent.click(screen.getByTestId('property-select'));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
+      await waitForElementToBeRemoved(screen.getByRole('progressbar'));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add rule/i })));
+      await waitFor(() => userEvent.click(screen.getByTestId('property-select')));
       const clinicalStatusOption = await screen.findByRole('option', { name: 'Clinical Status' });
-      userEvent.click(clinicalStatusOption);
-      await waitForElementToBeRemoved(clinicalStatusOption);
-      expect(screen.queryAllByRole('button', { name: /^operator is null$/i })).toHaveLength(0);
+      await userEvent.click(clinicalStatusOption);
 
-      userEvent.click(await screen.findByTestId('operator-select'));
+      await waitFor(() => userEvent.click(screen.getByTestId('operator-select')));
       const isNullOption = screen.getByRole('option', { name: /^is null$/i });
-      userEvent.click(isNullOption);
-      await waitForElementToBeRemoved(isNullOption);
-      expect(screen.getByRole('button', { name: /^operator is null$/i })).toBeInTheDocument();
+      expect(isNullOption.getAttribute('aria-selected')).toBe('false');
+      await userEvent.click(isNullOption);
+      expect(isNullOption.getAttribute('aria-selected')).toBe('true');
     });
 
     it('includes only predefined code operators when predefined codes are required and custom codes not allowed', async () => {
       renderComponent({ useObservation: true });
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
-      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
-      userEvent.click(screen.getByTestId('property-select'));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add rule/i })));
+      await waitFor(() => userEvent.click(screen.getByTestId('property-select')));
       const clinicalStatusOption = await screen.findByRole('option', { name: 'Status' });
-      userEvent.click(clinicalStatusOption);
-      await waitForElementToBeRemoved(clinicalStatusOption);
+      await userEvent.click(clinicalStatusOption);
 
-      userEvent.click(await screen.findByTestId('operator-select'));
+      await waitFor(() => userEvent.click(screen.getByTestId('operator-select')));
       expect(screen.queryAllByRole('option', { name: /^matches standard code in$/i })).toHaveLength(1);
       expect(screen.queryAllByRole('option', { name: /^matches$/i })).toHaveLength(0);
     });
@@ -504,16 +511,15 @@ describe('<ModifierModal />', () => {
     it('includes predefined code operators and custom code operators when predefined codes are required and custom codes are allowed', async () => {
       renderComponent({ useObservation: true });
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
-      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
-      userEvent.click(screen.getByTestId('property-select'));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add rule/i })));
+      await waitFor(() => userEvent.click(screen.getByTestId('property-select')));
       const clinicalStatusOption = await screen.findByRole('option', { name: 'Category' });
-      userEvent.click(clinicalStatusOption);
-      await waitForElementToBeRemoved(clinicalStatusOption);
+      await userEvent.click(clinicalStatusOption);
 
-      userEvent.click(await screen.findByTestId('operator-select'));
+      await waitFor(() => userEvent.click(screen.getByTestId('operator-select')));
       expect(screen.queryAllByRole('option', { name: /^has at least one standard code in$/i })).toHaveLength(1);
       expect(screen.queryAllByRole('option', { name: /^has only codes in$/i })).toHaveLength(1);
     });
@@ -521,16 +527,15 @@ describe('<ModifierModal />', () => {
     it('does not include predefined code operators when no predefined codes are defined', async () => {
       renderComponent({ useObservation: true });
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
-      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
-      userEvent.click(screen.getByTestId('property-select'));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add rule/i })));
+      await waitFor(() => userEvent.click(screen.getByTestId('property-select')));
       const clinicalStatusOption = await screen.findByRole('option', { name: 'Value Codeable Concept' });
-      userEvent.click(clinicalStatusOption);
-      await waitForElementToBeRemoved(clinicalStatusOption);
+      await userEvent.click(clinicalStatusOption);
 
-      userEvent.click(await screen.findByTestId('operator-select'));
+      await waitFor(() => userEvent.click(screen.getByTestId('operator-select')));
       expect(screen.queryAllByRole('option', { name: /^matches standard code in$/i })).toHaveLength(0);
       expect(screen.queryAllByRole('option', { name: /^matches$/i })).toHaveLength(1);
     });
@@ -538,20 +543,18 @@ describe('<ModifierModal />', () => {
     it('can correctly determine when a rule is complete and display the correct modifier expression', async () => {
       renderComponent();
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
-      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
-      userEvent.click(screen.getByTestId('property-select'));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add rule/i })));
+      await waitFor(() => userEvent.click(screen.getByTestId('property-select')));
       const clinicalStatusOption = await screen.findByRole('option', { name: 'Clinical Status' });
-      userEvent.click(clinicalStatusOption);
-      await waitForElementToBeRemoved(clinicalStatusOption);
+      await userEvent.click(clinicalStatusOption);
       expect(screen.queryAllByText(/clinical status is null/i)).toHaveLength(0);
 
-      userEvent.click(await screen.findByTestId('operator-select'));
+      await waitFor(() => userEvent.click(screen.getByTestId('operator-select')));
       const isNullOption = screen.getByRole('option', { name: /^is null$/i });
-      userEvent.click(isNullOption);
-      await waitForElementToBeRemoved(isNullOption);
+      await userEvent.click(isNullOption);
       expect(screen.queryAllByText(/clinical status is null/i)).toHaveLength(2);
     });
 
@@ -559,21 +562,19 @@ describe('<ModifierModal />', () => {
       const handleUpdateModifiers = jest.fn();
       renderComponent({ handleUpdateModifiers });
 
-      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
-      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /build new modifier/i })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /r4/i })));
       await waitForElementToBeRemoved(screen.getByRole('progressbar'));
-      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
-      userEvent.click(screen.getByTestId('property-select'));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /add rule/i })));
+      await waitFor(() => userEvent.click(screen.getByTestId('property-select')));
       const clinicalStatusOption = await screen.findByRole('option', { name: 'Clinical Status' });
-      userEvent.click(clinicalStatusOption);
-      await waitForElementToBeRemoved(clinicalStatusOption);
-      userEvent.click(await screen.findByTestId('operator-select'));
+      await userEvent.click(clinicalStatusOption);
+      await waitFor(() => userEvent.click(screen.getByTestId('operator-select')));
       const isNullOption = screen.getByRole('option', { name: /^is null$/i });
-      userEvent.click(isNullOption);
-      await waitForElementToBeRemoved(isNullOption);
+      await userEvent.click(isNullOption);
       expect(screen.queryAllByTestId('modifier-rule')).toHaveLength(1);
 
-      userEvent.click(screen.getByRole('button', { name: 'Add' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Add' })));
 
       await waitFor(() => {
         expect(handleUpdateModifiers).toHaveBeenCalledWith(
@@ -641,12 +642,12 @@ describe('<ModifierModal />', () => {
       expect(screen.getByTestId(/edit modifier/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();
 
-      userEvent.click(await screen.findByTestId('operator-select'));
+      await waitFor(() => userEvent.click(screen.getByTestId('operator-select')));
       const isNotNullOption = screen.getByRole('option', { name: /^is not null$/i });
-      userEvent.click(isNotNullOption);
+      await userEvent.click(isNotNullOption);
       expect(screen.queryAllByText(/clinical status is not null/i)).toHaveLength(2);
 
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Save' })));
 
       await waitFor(() => {
         expect(handleUpdateModifiers).toHaveBeenCalledWith(

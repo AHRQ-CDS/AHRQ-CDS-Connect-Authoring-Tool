@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { render, screen, userEvent } from 'utils/test-utils';
+import { render, screen, userEvent, waitFor } from 'utils/test-utils';
 import nock from 'nock';
 
 import { mockArtifact } from 'mocks/artifacts';
@@ -32,13 +32,13 @@ describe('<Tester />', () => {
 
   describe('CQL execution', () => {
     const executeCQLOnSelectedPatients = async () => {
-      userEvent.click(screen.getByRole('button', { name: /Execute CQL on Selected Patients/ }));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /Execute CQL on Selected Patients/ })));
 
       expect(await screen.findByText(/FHIR Compatible Artifacts/)).toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button', { name: /select\.\.\./i }));
-      userEvent.click(await screen.findByRole('option', { name: /Untitled Artifact/ }));
-      userEvent.click(screen.getByRole('button', { name: /Execute CQL/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('combobox', { name: /select\.\.\./i })));
+      await waitFor(() => userEvent.click(screen.getByRole('option', { name: /Untitled Artifact/ })));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: /Execute CQL/i })));
     };
 
     it('displays CQL validation errors', async () => {
@@ -69,7 +69,7 @@ describe('<Tester />', () => {
 
       expect(await screen.findByText(/Select one or more patients below and execute CQL/)).toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('checkbox', { name: /arnulfo253 mcclure239/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('checkbox', { name: /arnulfo253 mcclure239/i })));
       await executeCQLOnSelectedPatients();
 
       expect(await screen.findByText(/About your CQL/)).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe('<Tester />', () => {
 
       expect(await screen.findByText(/Select one or more patients below and execute CQL/)).toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('checkbox', { name: /arnulfo253 mcclure239/i }));
+      await waitFor(() => userEvent.click(screen.getByRole('checkbox', { name: /arnulfo253 mcclure239/i })));
       await executeCQLOnSelectedPatients();
 
       expect(await screen.findByText(new RegExp(validate404ErrorMessage))).toBeInTheDocument();
@@ -107,14 +107,14 @@ describe('<Tester />', () => {
 
         expect(await screen.findByText(/Select one or more patients below and execute CQL/)).toBeInTheDocument();
 
-        userEvent.click(screen.getByRole('checkbox', { name: /arnulfo253 mcclure239/i }));
+        await waitFor(() => userEvent.click(screen.getByRole('checkbox', { name: /arnulfo253 mcclure239/i })));
         await executeCQLOnSelectedPatients();
 
         expect(await screen.findByText(/cql execution results/i)).toBeInTheDocument();
 
         // We expect the CQL to be present in the modal ready for display, so search for some CQL text
         // NOTE: The CQL does not match the ELM in the mockElmFilesStu3 mock file, which is ok for these tests
-        userEvent.click(screen.getByRole('button', { name: 'View Detailed Results' }));
+        await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'View Detailed Results' })));
         expect(screen.getAllByText(/"Inpatient Encounter Exists"/)).toHaveLength(2);
 
         expect(screen.getByLabelText(/meets inclusion criteria:/i)).toHaveTextContent('0 of 1 patients');
@@ -140,14 +140,14 @@ describe('<Tester />', () => {
 
         expect(await screen.findByText(/Select one or more patients below and execute CQL/)).toBeInTheDocument();
 
-        userEvent.click(screen.getByRole('checkbox', { name: /geneva168 reynolds644/i }));
+        await waitFor(() => userEvent.click(screen.getByRole('checkbox', { name: /geneva168 reynolds644/i })));
         await executeCQLOnSelectedPatients();
 
         expect(await screen.findByText(/cql execution results/i)).toBeInTheDocument();
 
         // We expect the CQL to be present in the modal ready for display, so search for some CQL text
         // NOTE: The CQL does not match the ELM in the mockElmFilesR4 mock file, which is ok for these tests
-        userEvent.click(screen.getByRole('button', { name: 'View Detailed Results' }));
+        await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'View Detailed Results' })));
         expect(screen.getAllByText(/"Inpatient Encounter Exists"/)).toHaveLength(2);
 
         expect(screen.getByLabelText(/meets inclusion criteria:/i)).toHaveTextContent('0 of 1 patients');
@@ -173,14 +173,14 @@ describe('<Tester />', () => {
 
         expect(await screen.findByText(/Select one or more patients below and execute CQL/)).toBeInTheDocument();
 
-        userEvent.click(screen.getByRole('checkbox', { name: /robin67 baumbach677/i }));
+        await waitFor(() => userEvent.click(screen.getByRole('checkbox', { name: /robin67 baumbach677/i })));
         await executeCQLOnSelectedPatients();
 
         expect(await screen.findByText(/cql execution results/i)).toBeInTheDocument();
 
         // We expect the CQL to be present in the modal ready for display, so search for some CQL text
         // NOTE: The CQL does not match the ELM in the mockElmFilesDstu2 mock file, which is ok for these tests
-        userEvent.click(screen.getByRole('button', { name: 'View Detailed Results' }));
+        await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'View Detailed Results' })));
         expect(screen.getAllByText(/"Inpatient Encounter Exists"/)).toHaveLength(2);
 
         expect(screen.getByLabelText(/meets inclusion criteria:/i)).toHaveTextContent('1 of 1 patients');
