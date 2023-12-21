@@ -9,55 +9,60 @@ module.exports = {
 };
 
 // Get all patients
-function allGet(req, res) {
+async function allGet(req, res) {
   if (req.user) {
-    // eslint-disable-next-line array-callback-return
-    Patient.find({ user: req.user.uid }, (error, patients) => {
-      if (error) res.status(500).send(error);
-      else res.json(patients);
-    });
+    try {
+      const patients = await Patient.find({ user: req.user.uid }).exec();
+      res.json(patients);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
 }
 
 // Get a single patient
-function singleGet(req, res) {
+async function singleGet(req, res) {
   if (req.user) {
     const id = req.params.patient;
-    Patient.find({ user: req.user.uid, _id: id }, (error, patient) => {
-      if (error) res.status(500).send(error);
-      else if (patient.length === 0) res.sendStatus(404);
-      else res.json(patient);
-    });
+    try {
+      const patient = await Patient.find({ user: req.user.uid, _id: id }).exec();
+      patient.length === 0 ? res.sendStatus(404) : res.json(patient);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
 }
 
 // Post a single patient
-function singlePost(req, res) {
+async function singlePost(req, res) {
   if (req.user) {
     const newPatient = req.body;
     newPatient.user = req.user.uid;
-    Patient.create(newPatient, (error, response) => {
-      if (error) res.status(500).send(error);
-      else res.status(201).json(response);
-    });
+    try {
+      const response = await Patient.create(newPatient);
+      res.status(201).json(response);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
 }
 
 // Delete a single patient
-function singleDelete(req, res) {
+async function singleDelete(req, res) {
   if (req.user) {
     const id = req.params.patient;
-    Patient.deleteMany({ user: req.user.uid, _id: id }, (error, response) => {
-      if (error) res.status(500).send(error);
-      else if (response.n === 0) res.sendStatus(404);
-      else res.sendStatus(200);
-    });
+    try {
+      const response = await Patient.deleteMany({ user: req.user.uid, _id: id }).exec();
+      response.n === 0 ? res.sendStatus(404) : res.sendStatus(200);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }

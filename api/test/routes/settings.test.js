@@ -1,6 +1,6 @@
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
-const { mock, replace } = sandbox;
+const { mock, replace, fake } = sandbox;
 const { setupExpressApp } = require('./utils');
 const UserSettings = require('../../src/models/userSettings');
 
@@ -23,7 +23,9 @@ describe('Route: /authoring/api/settings', () => {
         'find',
         mock('find')
           .withArgs({ user: 'bob' })
-          .yields(null, [new UserSettings({ user: 'bob', termsAcceptedDate: '2023-04-05' })])
+          .returns({
+            exec: fake.resolves([new UserSettings({ user: 'bob', termsAcceptedDate: '2023-04-05' })])
+          })
       );
       request(app)
         .get('/authoring/api/settings')
@@ -33,16 +35,28 @@ describe('Route: /authoring/api/settings', () => {
     });
 
     it('should return HTTP 500 if there is an error finding', done => {
-      replace(UserSettings, 'find', mock('find').withArgs({ user: 'bob' }).yields('Connection Error'));
-      request(app)
-        .get('/authoring/api/settings')
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /text/)
-        .expect(500, 'Connection Error', done);
+      replace(
+        UserSettings,
+        'find',
+        mock('find')
+          .withArgs({ user: 'bob' })
+          .returns({
+            exec: fake.rejects(new Error('Connection Error'))
+          })
+      );
+      request(app).get('/authoring/api/settings').set('Accept', 'application/json').expect(500, done);
     });
 
     it('should return HTTP 404 for authenticated users without settings', done => {
-      replace(UserSettings, 'find', mock('find').withArgs({ user: 'bob' }).yields(null, []));
+      replace(
+        UserSettings,
+        'find',
+        mock('find')
+          .withArgs({ user: 'bob' })
+          .returns({
+            exec: fake.resolves([])
+          })
+      );
       request(app)
         .get('/authoring/api/settings')
         .set('Accept', 'application/json')
@@ -56,10 +70,12 @@ describe('Route: /authoring/api/settings', () => {
         'find',
         mock('find')
           .withArgs({ user: 'bob' })
-          .yields(null, [
-            new UserSettings({ user: 'bob', termsAcceptedDate: '2023-04-05' }),
-            new UserSettings({ user: 'bob', termsAcceptedDate: '2023-06-01' })
-          ])
+          .returns({
+            exec: fake.resolves([
+              new UserSettings({ user: 'bob', termsAcceptedDate: '2023-04-05' }),
+              new UserSettings({ user: 'bob', termsAcceptedDate: '2023-06-01' })
+            ])
+          })
       );
       request(app)
         .get('/authoring/api/settings')
@@ -86,7 +102,9 @@ describe('Route: /authoring/api/settings', () => {
         'findOneAndUpdate',
         mock('findOneAndUpdate')
           .withArgs({ user: 'bob' }, { $set: { termsAcceptedDate: '2023-04-05' } }, { upsert: true, new: true })
-          .yields(null, new UserSettings({ user: 'bob', termsAcceptedDate: '2023-04-05' }))
+          .returns({
+            exec: fake.resolves(new UserSettings({ user: 'bob', termsAcceptedDate: '2023-04-05' }))
+          })
       );
       request(app)
         .put('/authoring/api/settings')
@@ -103,15 +121,16 @@ describe('Route: /authoring/api/settings', () => {
         'findOneAndUpdate',
         mock('findOneAndUpdate')
           .withArgs({ user: 'bob' }, { $set: { termsAcceptedDate: '2023-04-05' } }, { upsert: true, new: true })
-          .yields('Connection Error')
+          .returns({
+            exec: fake.rejects(new Error('Connection Error'))
+          })
       );
       request(app)
         .put('/authoring/api/settings')
         .send({ termsAcceptedDate: '2023-04-05' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
-        .expect('Content-Type', /text/)
-        .expect(500, 'Connection Error', done);
+        .expect(500, done);
     });
 
     it('should return HTTP 401 for unauthenticated users', done => {

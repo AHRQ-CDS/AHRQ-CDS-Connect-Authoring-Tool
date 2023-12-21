@@ -11,13 +11,10 @@ const testExpandedContext = require('./fixtures/artifact/Library-Test-Expanded-C
 describe('Artifact', () => {
   describe('#validate', () => {
     // There isn't much to test, so just check it validates without errors
-    it('should validate without errors', done => {
+    it('should validate without errors', async () => {
       const artifact = new Artifact({ name: 'Empty Artifact' });
       expect(artifact.name).to.equal('Empty Artifact');
-      artifact.validate(err => {
-        expect(err).to.be.null;
-        done();
-      });
+      return artifact.validate();
     });
   });
 

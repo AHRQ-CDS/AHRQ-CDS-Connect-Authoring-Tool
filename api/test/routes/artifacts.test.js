@@ -26,7 +26,9 @@ describe('Route: /authoring/api/artifacts/', () => {
         'find',
         mock('find')
           .withArgs({ user: 'bob' })
-          .yields(null, [new Artifact({ name: 'Artifact A' }), new Artifact({ name: 'Artifact B' })])
+          .returns({
+            exec: fake.resolves([new Artifact({ name: 'Artifact A' }), new Artifact({ name: 'Artifact B' })])
+          })
       );
       request(app)
         .get('/authoring/api/artifacts')
@@ -42,7 +44,13 @@ describe('Route: /authoring/api/artifacts/', () => {
     });
 
     it('should return HTTP 500 if there is an error finding artifacts', done => {
-      replace(Artifact, 'find', mock('find').withArgs({ user: 'bob' }).yields(new Error('Connection Error')));
+      replace(
+        Artifact,
+        'find',
+        mock('find')
+          .withArgs({ user: 'bob' })
+          .returns({ exec: fake.rejects(new Error('Connection Error')) })
+      );
       request(app).get('/authoring/api/artifacts').set('Accept', 'application/json').expect(500, done);
     });
 
@@ -63,7 +71,7 @@ describe('Route: /authoring/api/artifacts/', () => {
         'create',
         mock('create')
           .withArgs({ user: 'bob', name: 'Artifact A' })
-          .yields(null, new Artifact({ user: 'bob', name: 'Artifact A' }))
+          .resolves(new Artifact({ user: 'bob', name: 'Artifact A' }))
       );
       request(app)
         .post('/authoring/api/artifacts')
@@ -82,7 +90,7 @@ describe('Route: /authoring/api/artifacts/', () => {
       replace(
         Artifact,
         'create',
-        mock('create').withArgs({ user: 'bob', name: 'Artifact A' }).yields(new Error('Connection Error'))
+        mock('create').withArgs({ user: 'bob', name: 'Artifact A' }).rejects(new Error('Connection Error'))
       );
       request(app)
         .post('/authoring/api/artifacts')
@@ -111,7 +119,7 @@ describe('Route: /authoring/api/artifacts/', () => {
         'updateOne',
         mock('updateOne')
           .withArgs({ user: 'bob', _id: '123' }, { $set: { _id: '123', name: 'Artifact A' } })
-          .yields(null, { n: 1 })
+          .returns({ exec: fake.resolves({ n: 1 }) })
       );
       request(app)
         .put('/authoring/api/artifacts')
@@ -126,7 +134,7 @@ describe('Route: /authoring/api/artifacts/', () => {
         'updateOne',
         mock('updateOne')
           .withArgs({ user: 'bob', _id: '123' }, { $set: { _id: '123', name: 'Artifact A' } })
-          .yields(null, { n: 0 })
+          .returns({ exec: fake.resolves({ n: 0 }) })
       );
       request(app)
         .put('/authoring/api/artifacts')
@@ -141,7 +149,7 @@ describe('Route: /authoring/api/artifacts/', () => {
         'updateOne',
         mock('updateOne')
           .withArgs({ user: 'bob', _id: '123' }, { $set: { _id: '123', name: 'Artifact A' } })
-          .yields(new Error('Connection Error'))
+          .returns({ exec: fake.rejects(new Error('Connection Error')) })
       );
       request(app)
         .put('/authoring/api/artifacts')
@@ -181,7 +189,7 @@ describe('Route: /authoring/api/artifacts/:artifact', () => {
         'find',
         mock('find')
           .withArgs({ user: 'bob', _id: '123' })
-          .yields(null, [new Artifact({ name: 'Artifact A' })])
+          .returns({ exec: fake.resolves([new Artifact({ name: 'Artifact A' })]) })
       );
       request(app)
         .get('/authoring/api/artifacts/123')
@@ -196,7 +204,13 @@ describe('Route: /authoring/api/artifacts/:artifact', () => {
     });
 
     it('should return HTTP 404 if the artifact is not found', done => {
-      replace(Artifact, 'find', mock('find').withArgs({ user: 'bob', _id: '123' }).yields(null, []));
+      replace(
+        Artifact,
+        'find',
+        mock('find')
+          .withArgs({ user: 'bob', _id: '123' })
+          .returns({ exec: fake.resolves([]) })
+      );
       request(app).get('/authoring/api/artifacts/123').set('Accept', 'application/json').expect(404, done);
     });
 
@@ -204,7 +218,9 @@ describe('Route: /authoring/api/artifacts/:artifact', () => {
       replace(
         Artifact,
         'find',
-        mock('find').withArgs({ user: 'bob', _id: '123' }).yields(new Error('Connection Error'))
+        mock('find')
+          .withArgs({ user: 'bob', _id: '123' })
+          .returns({ exec: fake.rejects(new Error('Connection Error')) })
       );
       request(app).get('/authoring/api/artifacts/123').set('Accept', 'application/json').expect(500, done);
     });
@@ -221,27 +237,49 @@ describe('Route: /authoring/api/artifacts/:artifact', () => {
 
   describe('DELETE', () => {
     it('delete an artifact and associated libraries for authenticated users', done => {
-      replace(Artifact, 'deleteMany', mock('deleteMany').withArgs({ user: 'bob', _id: '123' }).yields(null, { n: 1 }));
+      replace(
+        Artifact,
+        'deleteMany',
+        mock('deleteMany')
+          .withArgs({ user: 'bob', _id: '123' })
+          .returns({ exec: fake.resolves({ n: 1 }) })
+      );
       replace(
         CQLLibrary,
         'deleteMany',
-        mock('deleteMany').withArgs({ user: 'bob', linkedArtifactId: '123' }).yields(null, { n: 2 })
+        mock('deleteMany')
+          .withArgs({ user: 'bob', linkedArtifactId: '123' })
+          .returns({ exec: fake.resolves({ n: 2 }) })
       );
       request(app).delete('/authoring/api/artifacts/123').expect(200, done);
     });
 
     it('delete an artifact with no associated libraries for authenticated users', done => {
-      replace(Artifact, 'deleteMany', mock('deleteMany').withArgs({ user: 'bob', _id: '123' }).yields(null, { n: 1 }));
+      replace(
+        Artifact,
+        'deleteMany',
+        mock('deleteMany')
+          .withArgs({ user: 'bob', _id: '123' })
+          .returns({ exec: fake.resolves({ n: 1 }) })
+      );
       replace(
         CQLLibrary,
         'deleteMany',
-        mock('deleteMany').withArgs({ user: 'bob', linkedArtifactId: '123' }).yields(null, { n: 0 })
+        mock('deleteMany')
+          .withArgs({ user: 'bob', linkedArtifactId: '123' })
+          .returns({ exec: fake.resolves({ n: 0 }) })
       );
       request(app).delete('/authoring/api/artifacts/123').expect(200, done);
     });
 
     it('should return HTTP 404 if the artifact does not exist', done => {
-      replace(Artifact, 'deleteMany', mock('deleteMany').withArgs({ user: 'bob', _id: '123' }).yields(null, { n: 0 }));
+      replace(
+        Artifact,
+        'deleteMany',
+        mock('deleteMany')
+          .withArgs({ user: 'bob', _id: '123' })
+          .returns({ exec: fake.resolves({ n: 0 }) })
+      );
       request(app).delete('/authoring/api/artifacts/123').expect(404, done);
     });
 
@@ -249,17 +287,21 @@ describe('Route: /authoring/api/artifacts/:artifact', () => {
       replace(
         Artifact,
         'deleteMany',
-        mock('deleteMany').withArgs({ user: 'bob', _id: '123' }).yields(new Error('Connection Error'))
+        mock('deleteMany')
+          .withArgs({ user: 'bob', _id: '123' })
+          .returns({ exec: fake.rejects(new Error('Connection Error')) })
       );
       request(app).delete('/authoring/api/artifacts/123').expect(500, done);
     });
 
     it('should return HTTP 500 if there is an error deleting the associated libraries', done => {
-      replace(Artifact, 'deleteMany', mock('deleteMany').withArgs({ user: 'bob', _id: '123' }).yields(null, { n: 1 }));
+      replace(Artifact, 'deleteMany', mock('deleteMany').withArgs({ user: 'bob', _id: '123' }).resolves({ n: 1 }));
       replace(
         CQLLibrary,
         'deleteMany',
-        mock('deleteMany').withArgs({ user: 'bob', linkedArtifactId: '123' }).yields(new Error('Unexpected Error'))
+        mock('deleteMany')
+          .withArgs({ user: 'bob', linkedArtifactId: '123' })
+          .returns({ exec: fake.rejects(new Error('Connection Error')) })
       );
       request(app).delete('/authoring/api/artifacts/123').expect(500, done);
     });
@@ -291,27 +333,30 @@ describe('Route: /authoring/api/artifacts/:artifact/duplicate', () => {
         'find',
         mock('find')
           .withArgs({ user: 'bob' })
-          .resolves([
-            new Artifact({ _id: '123', user: 'bob', name: 'Artifact A' }),
-            new Artifact({ _id: '456', user: 'bob', name: 'Artifact B' }),
-            new Artifact({ _id: '789', user: 'bob', name: 'Artifact C' })
-          ])
+          .returns({
+            exec: fake.resolves([
+              new Artifact({ _id: '123', user: 'bob', name: 'Artifact A' }),
+              new Artifact({ _id: '456', user: 'bob', name: 'Artifact B' }),
+              new Artifact({ _id: '789', user: 'bob', name: 'Artifact C' })
+            ])
+          })
       );
       replace(
         Artifact,
         'findById',
         mock('findById')
           .withArgs('456')
-          .yields(
-            null,
-            new Artifact({
-              _id: '456',
-              user: 'bob',
-              name: 'Artifact B',
-              createdAt: new Date('2021-04-20T12:16:46.683Z'),
-              updatedAt: new Date('2023-02-06T08:56:17.508Z')
-            })
-          )
+          .returns({
+            exec: fake.resolves(
+              new Artifact({
+                _id: '456',
+                user: 'bob',
+                name: 'Artifact B',
+                createdAt: new Date('2021-04-20T12:16:46.683Z'),
+                updatedAt: new Date('2023-02-06T08:56:17.508Z')
+              })
+            )
+          })
       );
       const fakeArtifactCreate = fake.resolves(new Artifact({ user: 'bob', name: 'Copy of Artifact B' }));
       replace(Artifact, 'create', fakeArtifactCreate);
@@ -320,24 +365,26 @@ describe('Route: /authoring/api/artifacts/:artifact/duplicate', () => {
         'find',
         mock('find')
           .withArgs({ linkedArtifactId: '456' })
-          .yields(null, [
-            new CQLLibrary({
-              _id: 'lib1-for-456',
-              linkedArtifactId: '456',
-              createdAt: new Date('2021-04-22T13:56:45.673Z'),
-              updatedAt: new Date('2023-02-06T09:42:17.008Z'),
-              name: 'CQL Library X'
-            }),
-            new CQLLibrary({
-              _id: 'lib2-for-456',
-              linkedArtifactId: '456',
-              createdAt: new Date('2021-04-22T13:57:12.597Z'),
-              updatedAt: new Date('2023-02-06T09:42:56.386Z'),
-              name: 'CQL Library Y'
-            })
-          ])
+          .returns({
+            exec: fake.resolves([
+              new CQLLibrary({
+                _id: 'lib1-for-456',
+                linkedArtifactId: '456',
+                createdAt: new Date('2021-04-22T13:56:45.673Z'),
+                updatedAt: new Date('2023-02-06T09:42:17.008Z'),
+                name: 'CQL Library X'
+              }),
+              new CQLLibrary({
+                _id: 'lib2-for-456',
+                linkedArtifactId: '456',
+                createdAt: new Date('2021-04-22T13:57:12.597Z'),
+                updatedAt: new Date('2023-02-06T09:42:56.386Z'),
+                name: 'CQL Library Y'
+              })
+            ])
+          })
       );
-      const fakeLibraryCreate = fake.yields();
+      const fakeLibraryCreate = fake.resolves();
       replace(CQLLibrary, 'create', fakeLibraryCreate);
       request(app)
         .post('/authoring/api/artifacts/456/duplicate')
@@ -386,32 +433,41 @@ describe('Route: /authoring/api/artifacts/:artifact/duplicate', () => {
         'find',
         mock('find')
           .withArgs({ user: 'bob' })
-          .resolves([
-            new Artifact({ _id: '123', user: 'bob', name: 'Artifact A' }),
-            new Artifact({ _id: '456', user: 'bob', name: 'Artifact B' }),
-            new Artifact({ _id: '789', user: 'bob', name: 'Artifact C' })
-          ])
+          .returns({
+            exec: fake.resolves([
+              new Artifact({ _id: '123', user: 'bob', name: 'Artifact A' }),
+              new Artifact({ _id: '456', user: 'bob', name: 'Artifact B' }),
+              new Artifact({ _id: '789', user: 'bob', name: 'Artifact C' })
+            ])
+          })
       );
       replace(
         Artifact,
         'findById',
         mock('findById')
           .withArgs('456')
-          .yields(
-            null,
-            new Artifact({
-              _id: '456',
-              user: 'bob',
-              name: 'Artifact B',
-              createdAt: new Date('2021-04-20T12:16:46.683Z'),
-              updatedAt: new Date('2023-02-06T08:56:17.508Z')
-            })
-          )
+          .returns({
+            exec: fake.resolves(
+              new Artifact({
+                _id: '456',
+                user: 'bob',
+                name: 'Artifact B',
+                createdAt: new Date('2021-04-20T12:16:46.683Z'),
+                updatedAt: new Date('2023-02-06T08:56:17.508Z')
+              })
+            )
+          })
       );
       const fakeArtifactCreate = fake.resolves(new Artifact({ user: 'bob', name: 'Copy of Artifact B' }));
       replace(Artifact, 'create', fakeArtifactCreate);
-      replace(CQLLibrary, 'find', mock('find').withArgs({ linkedArtifactId: '456' }).yields(null, []));
-      const fakeLibraryCreate = fake.yields();
+      replace(
+        CQLLibrary,
+        'find',
+        mock('find')
+          .withArgs({ linkedArtifactId: '456' })
+          .returns({ exec: fake.resolves([]) })
+      );
+      const fakeLibraryCreate = fake.resolves();
       replace(CQLLibrary, 'create', fakeLibraryCreate);
       request(app)
         .post('/authoring/api/artifacts/456/duplicate')
@@ -444,18 +500,32 @@ describe('Route: /authoring/api/artifacts/:artifact/duplicate', () => {
         'find',
         mock('find')
           .withArgs({ user: 'bob' })
-          .resolves([
-            new Artifact({ _id: '123', user: 'bob', name: 'Artifact A' }),
-            new Artifact({ _id: '456', user: 'bob', name: 'Artifact B' }),
-            new Artifact({ _id: '789', user: 'bob', name: 'Artifact C' })
-          ])
+          .returns({
+            exec: fake.resolves([
+              new Artifact({ _id: '123', user: 'bob', name: 'Artifact A' }),
+              new Artifact({ _id: '456', user: 'bob', name: 'Artifact B' }),
+              new Artifact({ _id: '789', user: 'bob', name: 'Artifact C' })
+            ])
+          })
       );
-      replace(Artifact, 'findById', mock('findById').withArgs('456').yields(null, []));
+      replace(
+        Artifact,
+        'findById',
+        mock('findById')
+          .withArgs('456')
+          .returns({ exec: fake.resolves([]) })
+      );
       request(app).post('/authoring/api/artifacts/456/duplicate').set('Accept', 'application/json').expect(404, done);
     });
 
     it("should return HTTP 500 if there is an error finding the user's artifacts", done => {
-      replace(Artifact, 'find', mock('find').withArgs({ user: 'bob' }).rejects(new Error('Connection Error')));
+      replace(
+        Artifact,
+        'find',
+        mock('find')
+          .withArgs({ user: 'bob' })
+          .returns({ exec: fake.rejects(new Error('Connection Error')) })
+      );
       request(app).post('/authoring/api/artifacts/456/duplicate').set('Accept', 'application/json').expect(500, done);
     });
 
@@ -471,7 +541,13 @@ describe('Route: /authoring/api/artifacts/:artifact/duplicate', () => {
             new Artifact({ _id: '789', user: 'bob', name: 'Artifact C' })
           ])
       );
-      replace(Artifact, 'findById', mock('findById').withArgs('456').yields(new Error('Connection Error')));
+      replace(
+        Artifact,
+        'findById',
+        mock('findById')
+          .withArgs('456')
+          .returns({ exec: fake.rejects(new Error('Connection Error')) })
+      );
       request(app).post('/authoring/api/artifacts/456/duplicate').set('Accept', 'application/json').expect(500, done);
     });
 
@@ -492,8 +568,7 @@ describe('Route: /authoring/api/artifacts/:artifact/duplicate', () => {
         'findById',
         mock('findById')
           .withArgs('456')
-          .yields(
-            null,
+          .resolves(
             new Artifact({
               _id: '456',
               user: 'bob',
@@ -526,8 +601,7 @@ describe('Route: /authoring/api/artifacts/:artifact/duplicate', () => {
         'findById',
         mock('findById')
           .withArgs('456')
-          .yields(
-            null,
+          .resolves(
             new Artifact({
               _id: '456',
               user: 'bob',
@@ -544,7 +618,7 @@ describe('Route: /authoring/api/artifacts/:artifact/duplicate', () => {
         'find',
         mock('find')
           .withArgs({ linkedArtifactId: '456' })
-          .yields(null, [
+          .resolves([
             new CQLLibrary({
               _id: 'lib1-for-456',
               linkedArtifactId: '456',
@@ -554,7 +628,7 @@ describe('Route: /authoring/api/artifacts/:artifact/duplicate', () => {
             })
           ])
       );
-      const fakeLibraryCreate = fake.yields(new Error('Connection Error'));
+      const fakeLibraryCreate = fake.rejects(new Error('Connection Error'));
       replace(CQLLibrary, 'create', fakeLibraryCreate);
       request(app).post('/authoring/api/artifacts/456/duplicate').set('Accept', 'application/json').expect(500, done);
     });

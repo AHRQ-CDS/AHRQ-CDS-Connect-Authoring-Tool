@@ -379,7 +379,7 @@ function mockCQLLibraryFindForSimpleArtifact(err) {
     'find',
     mock('find')
       .withArgs({ user: 'bob', linkedArtifactId: { $ne: null, $eq: '64c2ccf67124220b222f5f91' } })
-      .yields(err, err ? undefined : [])
+      .returns({ exec: err ? fake.rejects(err) : fake.resolves([]) })
   );
 }
 

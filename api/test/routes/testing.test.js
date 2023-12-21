@@ -1,6 +1,6 @@
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
-const { mock, replace } = sandbox;
+const { mock, replace, fake } = sandbox;
 const { expect } = require('chai');
 const { setupExpressApp } = require('./utils');
 const Patient = require('../../src/models/patient');
@@ -27,7 +27,9 @@ describe('Route: /authoring/api/testing', () => {
         'find',
         mock('find')
           .withArgs({ user: 'bob' })
-          .yields(null, [new Patient(patientIncluded), new Patient(patientExcluded)])
+          .returns({
+            exec: fake.resolves([new Patient(patientIncluded), new Patient(patientExcluded)])
+          })
       );
       request(app)
         .get('/authoring/api/testing')
@@ -43,7 +45,15 @@ describe('Route: /authoring/api/testing', () => {
     });
 
     it('should return HTTP 500 if there is an error finding test patients', done => {
-      replace(Patient, 'find', mock('find').withArgs({ user: 'bob' }).yields(new Error('Connection Error')));
+      replace(
+        Patient,
+        'find',
+        mock('find')
+          .withArgs({ user: 'bob' })
+          .returns({
+            exec: fake.rejects(new Error('Connection Error'))
+          })
+      );
       request(app).get('/authoring/api/testing').set('Accept', 'application/json').expect(500, done);
     });
 
@@ -59,7 +69,7 @@ describe('Route: /authoring/api/testing', () => {
 
   describe('POST', () => {
     it('should create a new test patient for authenticated users', done => {
-      replace(Patient, 'create', mock('create').withArgs(patientIncluded).yields(null, new Patient(patientIncluded)));
+      replace(Patient, 'create', mock('create').withArgs(patientIncluded).resolves(new Patient(patientIncluded)));
       const patientIncludedNoUser = cloneDeep(patientIncluded);
       delete patientIncludedNoUser.user;
       request(app)
@@ -77,7 +87,7 @@ describe('Route: /authoring/api/testing', () => {
     });
 
     it('should return HTTP 500 if there is an error creating the test patient', done => {
-      replace(Patient, 'create', mock('create').withArgs(patientIncluded).yields(new Error('Connection Error')));
+      replace(Patient, 'create', mock('create').withArgs(patientIncluded).rejects(new Error('Connection Error')));
       const patientIncludedNoUser = cloneDeep(patientIncluded);
       delete patientIncludedNoUser.user;
       request(app)
@@ -122,7 +132,9 @@ describe('Route: /authoring/api/testing/:patient', () => {
         'find',
         mock('find')
           .withArgs({ user: 'bob', _id: '1629d0f315a38860011068c9323' })
-          .yields(null, [new Patient(patientIncluded)])
+          .returns({
+            exec: fake.resolves([new Patient(patientIncluded)])
+          })
       );
       request(app)
         .get('/authoring/api/testing/1629d0f315a38860011068c9323')
@@ -137,7 +149,15 @@ describe('Route: /authoring/api/testing/:patient', () => {
     });
 
     it('should return HTTP 404 if the test patient is not found', done => {
-      replace(Patient, 'find', mock('find').withArgs({ user: 'bob', _id: '789' }).yields(null, []));
+      replace(
+        Patient,
+        'find',
+        mock('find')
+          .withArgs({ user: 'bob', _id: '789' })
+          .returns({
+            exec: fake.resolves([])
+          })
+      );
       request(app).get('/authoring/api/testing/789').set('Accept', 'application/json').expect(404, done);
     });
 
@@ -145,7 +165,11 @@ describe('Route: /authoring/api/testing/:patient', () => {
       replace(
         Patient,
         'find',
-        mock('find').withArgs({ user: 'bob', _id: '1629d0f315a38860011068c9323' }).yields(new Error('Connection Error'))
+        mock('find')
+          .withArgs({ user: 'bob', _id: '1629d0f315a38860011068c9323' })
+          .returns({
+            exec: fake.rejects(new Error('Connection Error'))
+          })
       );
       request(app)
         .get('/authoring/api/testing/1629d0f315a38860011068c9323')
@@ -165,12 +189,28 @@ describe('Route: /authoring/api/testing/:patient', () => {
 
   describe('DELETE', () => {
     it('delete a test patient for authenticated users', done => {
-      replace(Patient, 'deleteMany', mock('deleteMany').withArgs({ user: 'bob', _id: '123' }).yields(null, { n: 1 }));
+      replace(
+        Patient,
+        'deleteMany',
+        mock('deleteMany')
+          .withArgs({ user: 'bob', _id: '123' })
+          .returns({
+            exec: fake.resolves({ n: 1 })
+          })
+      );
       request(app).delete('/authoring/api/testing/123').expect(200, done);
     });
 
     it('should return HTTP 404 if the test patient does not exist', done => {
-      replace(Patient, 'deleteMany', mock('deleteMany').withArgs({ user: 'bob', _id: '123' }).yields(null, { n: 0 }));
+      replace(
+        Patient,
+        'deleteMany',
+        mock('deleteMany')
+          .withArgs({ user: 'bob', _id: '123' })
+          .returns({
+            exec: fake.resolves({ n: 0 })
+          })
+      );
       request(app).delete('/authoring/api/testing/123').expect(404, done);
     });
 
@@ -178,7 +218,11 @@ describe('Route: /authoring/api/testing/:patient', () => {
       replace(
         Patient,
         'deleteMany',
-        mock('deleteMany').withArgs({ user: 'bob', _id: '123' }).yields(new Error('Connection Error'))
+        mock('deleteMany')
+          .withArgs({ user: 'bob', _id: '123' })
+          .returns({
+            exec: fake.rejects(new Error('Connection Error'))
+          })
       );
       request(app).delete('/authoring/api/testing/123').expect(500, done);
     });

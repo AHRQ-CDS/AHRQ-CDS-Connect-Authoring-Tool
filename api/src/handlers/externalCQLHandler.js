@@ -372,27 +372,29 @@ module.exports = {
 };
 
 // Get all libraries for a given artifact
-function allGet(req, res) {
+async function allGet(req, res) {
   if (req.user) {
-    // eslint-disable-next-line array-callback-return
-    CQLLibrary.find({ user: req.user.uid, linkedArtifactId: req.params.artifactId }, (error, libraries) => {
-      if (error) res.status(500).send(error);
-      else res.json(libraries);
-    });
+    try {
+      const libraries = await CQLLibrary.find({ user: req.user.uid, linkedArtifactId: req.params.artifactId }).exec();
+      res.json(libraries);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
 }
 
 // Get a single external CQL library
-function singleGet(req, res) {
+async function singleGet(req, res) {
   if (req.user) {
     const { id } = req.params;
-    CQLLibrary.find({ user: req.user.uid, _id: id }, (error, library) => {
-      if (error) res.status(500).send(error);
-      else if (library.length === 0) res.sendStatus(404);
-      else res.json(library);
-    });
+    try {
+      const library = await CQLLibrary.find({ user: req.user.uid, _id: id }).exec();
+      library.length === 0 ? res.sendStatus(404) : res.json(library);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
@@ -491,7 +493,7 @@ function singlePost(req, res) {
               return Promise.resolve({ filename: fileName, type: 'text/plain', text: buffer.toString() });
             })
           );
-          makeCQLtoELMRequest(files, [], false, (err, elmFiles) => {
+          makeCQLtoELMRequest(files, [], false, async (err, elmFiles) => {
             if (err) {
               res.status(500).send(err);
               return;
@@ -528,191 +530,180 @@ function singlePost(req, res) {
               return;
             }
 
-            CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
-              if (error) res.status(500).send(error);
-              else {
-                const nonAuthoringToolExportLibraries = _.differenceWith(
-                  elmResultsToSave,
-                  authoringToolExports,
-                  (a, b) => a.name === b.name
-                );
-                const authoringToolExportLibraries = _.difference(elmResultsToSave, nonAuthoringToolExportLibraries);
+            try {
+              const libraries = await CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }).exec();
+              const nonAuthoringToolExportLibraries = _.differenceWith(
+                elmResultsToSave,
+                authoringToolExports,
+                (a, b) => a.name === b.name
+              );
+              const authoringToolExportLibraries = _.difference(elmResultsToSave, nonAuthoringToolExportLibraries);
 
-                const nonDuplicateLibraries = _.differenceWith(
-                  nonAuthoringToolExportLibraries,
-                  libraries,
-                  (a, b) => a.name === b.name && a.version === b.version
-                );
-                const duplicateLibraries = _.difference(nonAuthoringToolExportLibraries, nonDuplicateLibraries);
+              const nonDuplicateLibraries = _.differenceWith(
+                nonAuthoringToolExportLibraries,
+                libraries,
+                (a, b) => a.name === b.name && a.version === b.version
+              );
+              const duplicateLibraries = _.difference(nonAuthoringToolExportLibraries, nonDuplicateLibraries);
 
-                const librariesToInsert = _.differenceWith(
-                  nonDuplicateLibraries,
-                  libraries,
-                  (a, b) => a.name === b.name && a.version !== b.version
-                );
-                const librariesToUpdate = _.difference(nonDuplicateLibraries, librariesToInsert);
+              const librariesToInsert = _.differenceWith(
+                nonDuplicateLibraries,
+                libraries,
+                (a, b) => a.name === b.name && a.version !== b.version
+              );
+              const librariesToUpdate = _.difference(nonDuplicateLibraries, librariesToInsert);
 
-                const newLibFHIRVersion = getCurrentFHIRVersion(elmResultsToSave);
-                const fhirVersion = getCurrentFHIRVersion(libraries);
-                // If the artifact FHIR version is R4 wildcard, set it to whatever R4 is being used.
-                if (artifactFHIRVersion === '4.0.x') {
-                  if (newLibFHIRVersion && newLibFHIRVersion.startsWith('4.0.')) {
-                    artifactFHIRVersion = newLibFHIRVersion;
-                  } else if (fhirVersion && fhirVersion.startsWith('4.0.')) {
-                    artifactFHIRVersion = fhirVersion;
-                  }
-                }
-
-                // If no FHIR version locked, any version can be uploaded.
-                // If no FHIR version on any libraries being added, they can be added
-                const fhirVersionsMatch = fhirVersion && newLibFHIRVersion ? fhirVersion === newLibFHIRVersion : true;
-
-                // If FHIR Version is locked by the artifact itself, only matching versions can be uploaded.
-                // If the version is unlocked by artifact, any artifact can be uploaded.
-                const artifactFHIRVersionsMatch =
-                  newLibFHIRVersion && artifactFHIRVersion ? newLibFHIRVersion === artifactFHIRVersion : true;
-
-                // If new libraries have no FHIR version or it matches a supported FHIR version, we support it
-                const supportedFHIRVersion =
-                  newLibFHIRVersion === '' || supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
-
-                //If repeats of the same library are being uploaded (regardless of version), we will not support this
-                const hasRepeats =
-                  nonAuthoringToolExportLibraries.length !==
-                  new Set(nonAuthoringToolExportLibraries.map(l => l.name)).size;
-                const exportLibrariesNotUploaded = authoringToolExportLibraries
-                  .map(lib => `library ${lib.name}`)
-                  .join(', ');
-                const exportLibrariesNotUploadedMessage =
-                  'The following libraries were not uploaded because the CDS Authoring Tool already includes a ' +
-                  `version of the same library by default:  ${exportLibrariesNotUploaded}. No further action is ` +
-                  'necessary.';
-                // If any file has an error, upload nothing.
-                if (elmErrors.length > 0) {
-                  res.status(400).send(elmErrors);
-                } else if (!fhirVersionsMatch) {
-                  const message =
-                    'Unable to upload external CQL because a library using a different version of FHIR® is already ' +
-                    'uploaded. Only one FHIR® version can be supported at a time. To fix this, either remove the ' +
-                    'previously uploaded FHIR® libraries or upload new libraries that use the same version of FHIR®.';
-                  res.status(400).send(message);
-                } else if (!artifactFHIRVersionsMatch) {
-                  const message =
-                    'Unable to upload external CQL because it uses a different version of FHIR® than this artifact ' +
-                    `requires. To fix this, only upload libraries that use FHIR ${artifactFHIRVersion}.`;
-                  res.status(400).send(message);
-                } else if (!supportedFHIRVersion) {
-                  res
-                    .status(400)
-                    .send(
-                      'Unable to upload external CQL because it uses an unsupported FHIR® version. The CDS Authoring ' +
-                        'Tool currently supports CQL using the following FHIR® versions: 1.0.2, 3.0.0, 4.0.0, or ' +
-                        '4.0.1. To fix this, upload a new library that uses one of the supported versions.'
-                    );
-                } else if (hasRepeats) {
-                  const message =
-                    'Unable to upload external CQL because more than one library in this package has the same name. ' +
-                    'Only one library of the same name can be uploaded at a time. To fix this, ensure that you only ' +
-                    'upload zip files that contain CQL libraries with unique names.';
-                  res.status(400).send(message);
-                } else {
-                  // If a library to update has contents whose names or return types have changed, and the
-                  // artifact is using these contents, we cannot update it and we shouldn't make any upload/update
-                  let shouldUpdate = true;
-                  for (const library of librariesToUpdate) {
-                    shouldUpdate = shouldLibraryBeUpdated(library, artifact);
-                    if (!shouldUpdate) break;
-                  }
-
-                  if (shouldUpdate) {
-                    // Emulates the functionality of Promise.allSettled() which is only supported as of Node 12.
-                    // Any error that is thrown through updating should either be the same as an error
-                    // encountered by the insertion below, or would have already been caught in the
-                    // process above to determine whether we should update
-                    Promise.all(
-                      librariesToUpdate
-                        .map(async library => {
-                          return CQLLibrary.updateOne({ user: req.user.uid, name: library.name }, library);
-                        })
-                        .map(p => p.catch(e => null))
-                    );
-
-                    CQLLibrary.insertMany(librariesToInsert, (error, response) => {
-                      if (error) {
-                        res.status(500).send(error);
-                      } else if (duplicateLibraries.length > 0) {
-                        // NOTE: Really, we should re-run cql-to-elm with the existing version of the duplicate files to
-                        // confirm they work with the non-duplicate libraries.
-                        const librariesNotUploaded = duplicateLibraries
-                          .map(lib => `library ${lib.name} version ${lib.version}`)
-                          .join(', ');
-                        let message =
-                          'Unable to upload external CQL because a library with an identical name and version ' +
-                          `already exists: ${librariesNotUploaded}.`;
-                        if (exportLibrariesNotUploaded.length > 0) {
-                          message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
-                        }
-                        if (newLibFHIRVersion) {
-                          Artifact.updateOne(
-                            { user: req.user.uid, _id: artifactId },
-                            { fhirVersion: newLibFHIRVersion },
-                            (error, response) => {
-                              if (error) res.status(500).send(error);
-                              else if (response.n === 0) res.sendStatus(404);
-                              else res.status(201).send(message);
-                            }
-                          );
-                        } else {
-                          res.status(201).send(message);
-                        }
-                      } else {
-                        if (exportLibrariesNotUploaded.length > 0) {
-                          if (newLibFHIRVersion) {
-                            Artifact.updateOne(
-                              { user: req.user.uid, _id: artifactId },
-                              { fhirVersion: newLibFHIRVersion },
-                              (error, response) => {
-                                if (error) res.status(500).send(error);
-                                else if (response.n === 0) res.sendStatus(404);
-                                else res.status(201).send(exportLibrariesNotUploadedMessage);
-                              }
-                            );
-                          } else {
-                            res.status(201).send(exportLibrariesNotUploadedMessage);
-                          }
-                        } else {
-                          let updateMessage;
-                          if (librariesToUpdate.length > 0)
-                            updateMessage = 'One or more of the libraries in this artifact have been updated.';
-                          if (newLibFHIRVersion) {
-                            Artifact.updateOne(
-                              { user: req.user.uid, _id: artifactId },
-                              { fhirVersion: newLibFHIRVersion },
-                              (error, response) => {
-                                if (error) res.status(500).send(error);
-                                else if (response.n === 0) res.sendStatus(404);
-                                else if (updateMessage) res.status(201).send(updateMessage);
-                                else res.status(201).json(response);
-                              }
-                            );
-                          } else {
-                            if (updateMessage) res.status(201).send(updateMessage);
-                            else res.status(201).json(response);
-                          }
-                        }
-                      }
-                    });
-                  } else {
-                    const message =
-                      'Unable to upload external CQL because the updated CQL contains incompatible modifications to ' +
-                      'definitions/functions that this CDS artifact currently uses. To fix this, remove uses of the ' +
-                      'affected CQL definitions/functions in this artifact or update the external CQL to retain ' +
-                      'compatible versions of the definitions/functions that this artifact uses.';
-                    res.status(400).send(message);
-                  }
+              const newLibFHIRVersion = getCurrentFHIRVersion(elmResultsToSave);
+              const fhirVersion = getCurrentFHIRVersion(libraries);
+              // If the artifact FHIR version is R4 wildcard, set it to whatever R4 is being used.
+              if (artifactFHIRVersion === '4.0.x') {
+                if (newLibFHIRVersion && newLibFHIRVersion.startsWith('4.0.')) {
+                  artifactFHIRVersion = newLibFHIRVersion;
+                } else if (fhirVersion && fhirVersion.startsWith('4.0.')) {
+                  artifactFHIRVersion = fhirVersion;
                 }
               }
-            });
+
+              // If no FHIR version locked, any version can be uploaded.
+              // If no FHIR version on any libraries being added, they can be added
+              const fhirVersionsMatch = fhirVersion && newLibFHIRVersion ? fhirVersion === newLibFHIRVersion : true;
+
+              // If FHIR Version is locked by the artifact itself, only matching versions can be uploaded.
+              // If the version is unlocked by artifact, any artifact can be uploaded.
+              const artifactFHIRVersionsMatch =
+                newLibFHIRVersion && artifactFHIRVersion ? newLibFHIRVersion === artifactFHIRVersion : true;
+
+              // If new libraries have no FHIR version or it matches a supported FHIR version, we support it
+              const supportedFHIRVersion =
+                newLibFHIRVersion === '' || supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
+
+              //If repeats of the same library are being uploaded (regardless of version), we will not support this
+              const hasRepeats =
+                nonAuthoringToolExportLibraries.length !==
+                new Set(nonAuthoringToolExportLibraries.map(l => l.name)).size;
+              const exportLibrariesNotUploaded = authoringToolExportLibraries
+                .map(lib => `library ${lib.name}`)
+                .join(', ');
+              const exportLibrariesNotUploadedMessage =
+                'The following libraries were not uploaded because the CDS Authoring Tool already includes a ' +
+                `version of the same library by default:  ${exportLibrariesNotUploaded}. No further action is ` +
+                'necessary.';
+              // If any file has an error, upload nothing.
+              if (elmErrors.length > 0) {
+                res.status(400).send(elmErrors);
+              } else if (!fhirVersionsMatch) {
+                const message =
+                  'Unable to upload external CQL because a library using a different version of FHIR® is already ' +
+                  'uploaded. Only one FHIR® version can be supported at a time. To fix this, either remove the ' +
+                  'previously uploaded FHIR® libraries or upload new libraries that use the same version of FHIR®.';
+                res.status(400).send(message);
+              } else if (!artifactFHIRVersionsMatch) {
+                const message =
+                  'Unable to upload external CQL because it uses a different version of FHIR® than this artifact ' +
+                  `requires. To fix this, only upload libraries that use FHIR ${artifactFHIRVersion}.`;
+                res.status(400).send(message);
+              } else if (!supportedFHIRVersion) {
+                res
+                  .status(400)
+                  .send(
+                    'Unable to upload external CQL because it uses an unsupported FHIR® version. The CDS Authoring ' +
+                      'Tool currently supports CQL using the following FHIR® versions: 1.0.2, 3.0.0, 4.0.0, or ' +
+                      '4.0.1. To fix this, upload a new library that uses one of the supported versions.'
+                  );
+              } else if (hasRepeats) {
+                const message =
+                  'Unable to upload external CQL because more than one library in this package has the same name. ' +
+                  'Only one library of the same name can be uploaded at a time. To fix this, ensure that you only ' +
+                  'upload zip files that contain CQL libraries with unique names.';
+                res.status(400).send(message);
+              } else {
+                // If a library to update has contents whose names or return types have changed, and the
+                // artifact is using these contents, we cannot update it and we shouldn't make any upload/update
+                let shouldUpdate = true;
+                for (const library of librariesToUpdate) {
+                  shouldUpdate = shouldLibraryBeUpdated(library, artifact);
+                  if (!shouldUpdate) break;
+                }
+
+                if (shouldUpdate) {
+                  Promise.allSettled(
+                    librariesToUpdate.map(library => {
+                      return CQLLibrary.updateOne({ user: req.user.uid, name: library.name }, library).exec();
+                    })
+                  );
+
+                  const response = await CQLLibrary.insertMany(librariesToInsert);
+                  if (duplicateLibraries.length > 0) {
+                    // NOTE: Really, we should re-run cql-to-elm with the existing version of the duplicate files to
+                    // confirm they work with the non-duplicate libraries.
+                    const librariesNotUploaded = duplicateLibraries
+                      .map(lib => `library ${lib.name} version ${lib.version}`)
+                      .join(', ');
+                    let message =
+                      'Unable to upload external CQL because a library with an identical name and version ' +
+                      `already exists: ${librariesNotUploaded}.`;
+                    if (exportLibrariesNotUploaded.length > 0) {
+                      message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
+                    }
+                    if (newLibFHIRVersion) {
+                      const response = await Artifact.updateOne(
+                        { user: req.user.uid, _id: artifactId },
+                        { fhirVersion: newLibFHIRVersion }
+                      ).exec();
+                      response.n === 0 ? res.sendStatus(404) : res.status(201).send(message);
+                    } else {
+                      res.status(201).send(message);
+                    }
+                  } else {
+                    if (exportLibrariesNotUploaded.length > 0) {
+                      if (newLibFHIRVersion) {
+                        const response = await Artifact.updateOne(
+                          { user: req.user.uid, _id: artifactId },
+                          { fhirVersion: newLibFHIRVersion }
+                        ).exec();
+                        response.n === 0
+                          ? res.sendStatus(404)
+                          : res.status(201).send(exportLibrariesNotUploadedMessage);
+                      } else {
+                        res.status(201).send(exportLibrariesNotUploadedMessage);
+                      }
+                    } else {
+                      let updateMessage;
+                      if (librariesToUpdate.length > 0)
+                        updateMessage = 'One or more of the libraries in this artifact have been updated.';
+                      if (newLibFHIRVersion) {
+                        const response = await Artifact.updateOne(
+                          { user: req.user.uid, _id: artifactId },
+                          { fhirVersion: newLibFHIRVersion }
+                        ).exec();
+                        if (response.n === 0) {
+                          res.sendStatus(404);
+                        } else if (updateMessage) {
+                          res.status(201).send(updateMessage);
+                        } else {
+                          res.status(201).json(response);
+                        }
+                      } else {
+                        if (updateMessage) {
+                          res.status(201).send(updateMessage);
+                        } else {
+                          res.status(201).json(response);
+                        }
+                      }
+                    }
+                  }
+                } else {
+                  const message =
+                    'Unable to upload external CQL because the updated CQL contains incompatible modifications to ' +
+                    'definitions/functions that this CDS artifact currently uses. To fix this, remove uses of the ' +
+                    'affected CQL definitions/functions in this artifact or update the external CQL to retain ' +
+                    'compatible versions of the definitions/functions that this artifact uses.';
+                  res.status(400).send(message);
+                }
+              }
+            } catch (err) {
+              res.status(500).send(err);
+            }
           });
         })
         .catch(err => res.status(500).send(err));
@@ -725,7 +716,7 @@ function singlePost(req, res) {
 
       const files = [cqlJson];
 
-      makeCQLtoELMRequest(files, [], false, (err, elmFiles) => {
+      makeCQLtoELMRequest(files, [], false, async (err, elmFiles) => {
         if (err) {
           res.status(500).send(err);
           return;
@@ -761,111 +752,101 @@ function singlePost(req, res) {
           return;
         }
 
-        CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
-          if (error) res.status(500).send(error);
-          else {
-            const elmResult = elmResultsToSave[0]; // This is the single file upload case, so elmResultsToSave will only ever have one item.
-            const defaultLibrary = authoringToolExports.map(l => l.name).includes(elmResult.name);
-            const dupName = libraries.find(lib => lib.name === elmResult.name);
-            const dupVersion = libraries.find(lib => lib.version === elmResult.version);
-            const newLibFHIRVersion = elmResult.fhirVersion;
-            const fhirVersion = getCurrentFHIRVersion(libraries);
-            // If the artifact FHIR version is R4 wildcard, set it to whatever R4 is being used.
-            if (artifactFHIRVersion === '4.0.x') {
-              if (newLibFHIRVersion && newLibFHIRVersion.startsWith('4.0.')) {
-                artifactFHIRVersion = newLibFHIRVersion;
-              } else if (fhirVersion && fhirVersion.startsWith('4.0.')) {
-                artifactFHIRVersion = fhirVersion;
-              }
+        try {
+          const libraries = await CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }).exec();
+          const elmResult = elmResultsToSave[0]; // This is the single file upload case, so elmResultsToSave will only ever have one item.
+          const defaultLibrary = authoringToolExports.map(l => l.name).includes(elmResult.name);
+          const dupName = libraries.find(lib => lib.name === elmResult.name);
+          const dupVersion = libraries.find(lib => lib.version === elmResult.version);
+          const newLibFHIRVersion = elmResult.fhirVersion;
+          const fhirVersion = getCurrentFHIRVersion(libraries);
+          // If the artifact FHIR version is R4 wildcard, set it to whatever R4 is being used.
+          if (artifactFHIRVersion === '4.0.x') {
+            if (newLibFHIRVersion && newLibFHIRVersion.startsWith('4.0.')) {
+              artifactFHIRVersion = newLibFHIRVersion;
+            } else if (fhirVersion && fhirVersion.startsWith('4.0.')) {
+              artifactFHIRVersion = fhirVersion;
             }
+          }
 
-            // If no FHIR version locked, any version can be uploaded.
-            // If no FHIR version used by the library, it can be uploaded
-            const fhirVersionsMatch = fhirVersion && newLibFHIRVersion ? fhirVersion === newLibFHIRVersion : true;
-            // If new library has no FHIR version or it matches a supported FHIR version, we support it
-            const supportedFHIRVersion =
-              newLibFHIRVersion === '' || supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
+          // If no FHIR version locked, any version can be uploaded.
+          // If no FHIR version used by the library, it can be uploaded
+          const fhirVersionsMatch = fhirVersion && newLibFHIRVersion ? fhirVersion === newLibFHIRVersion : true;
+          // If new library has no FHIR version or it matches a supported FHIR version, we support it
+          const supportedFHIRVersion =
+            newLibFHIRVersion === '' || supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
 
-            const artifactFHIRVersionsMatch =
-              newLibFHIRVersion && artifactFHIRVersion ? newLibFHIRVersion === artifactFHIRVersion : true;
+          const artifactFHIRVersionsMatch =
+            newLibFHIRVersion && artifactFHIRVersion ? newLibFHIRVersion === artifactFHIRVersion : true;
 
-            if (elmErrors.length > 0) {
-              res.status(400).send(elmErrors);
-            } else if (defaultLibrary) {
+          if (elmErrors.length > 0) {
+            res.status(400).send(elmErrors);
+          } else if (defaultLibrary) {
+            res
+              .status(200)
+              .send(
+                'The following library was not uploaded because the CDS Authoring Tool already includes a ' +
+                  `version of the same library by default: ${elmResult.name}. No further action is ` +
+                  'necessary.'
+              );
+          } else if (!fhirVersionsMatch) {
+            const message =
+              'Unable to upload external CQL because a library using a different version of FHIR® is already ' +
+              'uploaded. Only one FHIR® version can be supported at a time. To fix this, either remove the ' +
+              'previously uploaded FHIR® libraries or upload new libraries that use the same version of FHIR®.';
+            res.status(400).send(message);
+          } else if (!supportedFHIRVersion) {
+            res
+              .status(400)
+              .send(
+                'Unable to upload external CQL because it uses an unsupported FHIR® version. The CDS Authoring ' +
+                  'Tool currently supports CQL using the following FHIR® versions: 1.0.2, 3.0.0, 4.0.0, or ' +
+                  '4.0.1. To fix this, upload a new library that uses one of the supported versions.'
+              );
+          } else if (!artifactFHIRVersionsMatch) {
+            const message =
+              'Unable to upload external CQL because it uses a different version of FHIR® than this artifact ' +
+              `requires. To fix this, only upload libraries that use FHIR ${artifactFHIRVersion}.`;
+            res.status(400).send(message);
+          } else if (dupName) {
+            if (dupVersion) {
               res
                 .status(200)
                 .send(
-                  'The following library was not uploaded because the CDS Authoring Tool already includes a ' +
-                    `version of the same library by default: ${elmResult.name}. No further action is ` +
-                    'necessary.'
+                  'Unable to upload external CQL because a library with an identical name and version ' +
+                    `already exists: ${elmResult.name}.`
                 );
-            } else if (!fhirVersionsMatch) {
-              const message =
-                'Unable to upload external CQL because a library using a different version of FHIR® is already ' +
-                'uploaded. Only one FHIR® version can be supported at a time. To fix this, either remove the ' +
-                'previously uploaded FHIR® libraries or upload new libraries that use the same version of FHIR®.';
-              res.status(400).send(message);
-            } else if (!supportedFHIRVersion) {
-              res
-                .status(400)
-                .send(
-                  'Unable to upload external CQL because it uses an unsupported FHIR® version. The CDS Authoring ' +
-                    'Tool currently supports CQL using the following FHIR® versions: 1.0.2, 3.0.0, 4.0.0, or ' +
-                    '4.0.1. To fix this, upload a new library that uses one of the supported versions.'
-                );
-            } else if (!artifactFHIRVersionsMatch) {
-              const message =
-                'Unable to upload external CQL because it uses a different version of FHIR® than this artifact ' +
-                `requires. To fix this, only upload libraries that use FHIR ${artifactFHIRVersion}.`;
-              res.status(400).send(message);
-            } else if (dupName) {
-              if (dupVersion) {
-                res
-                  .status(200)
-                  .send(
-                    'Unable to upload external CQL because a library with an identical name and version ' +
-                      `already exists: ${elmResult.name}.`
-                  );
-              } else {
-                if (shouldLibraryBeUpdated(elmResult, artifact)) {
-                  CQLLibrary.updateOne({ user: req.user.uid, name: elmResult.name }, elmResult, error => {
-                    const message = `Library ${elmResult.name} successfully updated to version ${elmResult.version}.`;
-                    if (error) res.status(500).send(error);
-                    else res.status(200).send(message);
-                  });
-                } else {
-                  const message =
-                    'Unable to upload external CQL because the updated CQL contains incompatible modifications to ' +
-                    'definitions/functions that this CDS artifact currently uses. To fix this, remove uses of the ' +
-                    'affected CQL definitions/functions in this artifact or update the external CQL to retain ' +
-                    'compatible versions of the definitions/functions that this artifact uses.';
-                  res.status(400).send(message);
-                }
-              }
             } else {
-              CQLLibrary.insertMany(elmResult, (error, response) => {
-                if (error) res.status(500).send(error);
-                else {
-                  // If the new library has a FHIR version, it can only be added if it either first sets a FHIR version
-                  // or it matches so update the artifact to that FHIR version
-                  if (newLibFHIRVersion) {
-                    Artifact.updateOne(
-                      { user: req.user.uid, _id: artifactId },
-                      { fhirVersion: newLibFHIRVersion },
-                      (error, response) => {
-                        if (error) res.status(500).send(error);
-                        else if (response.n === 0) res.sendStatus(404);
-                        else res.status(201).json(response);
-                      }
-                    );
-                  } else {
-                    res.status(201).json(response);
-                  }
-                }
-              });
+              if (shouldLibraryBeUpdated(elmResult, artifact)) {
+                await CQLLibrary.updateOne({ user: req.user.uid, name: elmResult.name }, elmResult).exec();
+                const message = `Library ${elmResult.name} successfully updated to version ${elmResult.version}.`;
+                res.status(200).send(message);
+              } else {
+                const message =
+                  'Unable to upload external CQL because the updated CQL contains incompatible modifications to ' +
+                  'definitions/functions that this CDS artifact currently uses. To fix this, remove uses of the ' +
+                  'affected CQL definitions/functions in this artifact or update the external CQL to retain ' +
+                  'compatible versions of the definitions/functions that this artifact uses.';
+                res.status(400).send(message);
+              }
+            }
+          } else {
+            const response = await CQLLibrary.insertMany(elmResult);
+            // If the new library has a FHIR version, it can only be added if it either first sets a FHIR version
+            // or it matches so update the artifact to that FHIR version
+            if (newLibFHIRVersion) {
+              const updateResponse = await Artifact.updateOne(
+                { user: req.user.uid, _id: artifactId },
+                { fhirVersion: newLibFHIRVersion }
+              ).exec();
+              updateResponse.n === 0 ? res.sendStatus(404) : res.status(201).json(updateResponse);
+            } else {
+              res.status(201).json(response);
             }
           }
-        });
+        } catch (err) {
+          res.status(500).send(err);
+        }
       });
     }
   } else {
@@ -926,50 +907,43 @@ const artifactHasServiceRequest = artifact => {
 };
 
 // Delete a single external CQL library
-function singleDelete(req, res) {
+async function singleDelete(req, res) {
   if (req.user) {
     const { id } = req.params;
-    CQLLibrary.findOneAndRemove({ user: req.user.uid, _id: id }, (error, response) => {
-      if (error) res.status(500).send(error);
-      else if (response === null) res.sendStatus(404);
-      else {
+    try {
+      const response = await CQLLibrary.findOneAndDelete({ user: req.user.uid, _id: id }).exec();
+      if (response == null) {
+        res.sendStatus(404);
+      } else {
         const linkedArtifactId = response.linkedArtifactId;
-        CQLLibrary.find({ user: req.user.uid, linkedArtifactId }, (error, libraries) => {
-          if (error) res.status(500).send(error);
-          else {
-            let currentFHIRVersion;
-            Artifact.findById(linkedArtifactId, (error, response) => {
-              if (error) res.status(500).send(error);
-              else if (response) {
-                if (artifactHasServiceRequest(response)) {
-                  currentFHIRVersion = '4.0.x';
-                } else if (artifactHasCustomModifiers(response)) {
-                  currentFHIRVersion = response.fhirVersion;
-                } else {
-                  currentFHIRVersion = getCurrentFHIRVersion(libraries);
-                }
-                // If the version is 4.0.0 or 4.0.1, but we don't have any external CQL files,
-                // then we can safely treat it as 4.0.x since nothing else is 4.0.0/4.0.1-specific.
-                if (/4\.0\.[01]/.test(currentFHIRVersion) && libraries.length === 0) {
-                  currentFHIRVersion = '4.0.x';
-                }
-
-                Artifact.updateOne(
-                  { user: req.user.uid, _id: linkedArtifactId },
-                  { fhirVersion: currentFHIRVersion },
-                  (error, response) => {
-                    if (error) res.status(500).send(error);
-                    else if (response.n === 0) res.sendStatus(404);
-                    else res.status(200);
-                  }
-                );
-              }
-            });
+        const libraries = await CQLLibrary.find({ user: req.user.uid, linkedArtifactId }).exec();
+        const artifactResponse = await Artifact.findById(linkedArtifactId).exec();
+        if (artifactResponse) {
+          let currentFHIRVersion;
+          if (artifactHasServiceRequest(artifactResponse)) {
+            currentFHIRVersion = '4.0.x';
+          } else if (artifactHasCustomModifiers(artifactResponse)) {
+            currentFHIRVersion = artifactResponse.fhirVersion;
+          } else {
+            currentFHIRVersion = getCurrentFHIRVersion(libraries);
           }
-        });
-        res.sendStatus(200);
+          // If the version is 4.0.0 or 4.0.1, but we don't have any external CQL files,
+          // then we can safely treat it as 4.0.x since nothing else is 4.0.0/4.0.1-specific.
+          if (/4\.0\.[01]/.test(currentFHIRVersion) && libraries.length === 0) {
+            currentFHIRVersion = '4.0.x';
+          }
+          const updateResponse = await Artifact.updateOne(
+            { user: req.user.uid, _id: linkedArtifactId },
+            { fhirVersion: currentFHIRVersion }
+          ).exec();
+          updateResponse.n === 0 ? res.sendStatus(404) : res.sendStatus(200);
+        } else {
+          res.sendStatus(200);
+        }
       }
-    });
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }

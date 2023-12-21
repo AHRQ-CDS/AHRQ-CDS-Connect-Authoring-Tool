@@ -12,75 +12,81 @@ module.exports = {
 };
 
 // Get all artifacts
-function allGet(req, res) {
+async function allGet(req, res) {
   if (req.user) {
-    // eslint-disable-next-line array-callback-return
-    Artifact.find({ user: req.user.uid }, (error, artifacts) => {
-      if (error) res.status(500).send(error);
-      else res.json(artifacts);
-    });
+    try {
+      const artifacts = await Artifact.find({ user: req.user.uid }).exec();
+      res.json(artifacts);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
 }
 
 // Get a single artifact
-function singleGet(req, res) {
+async function singleGet(req, res) {
   if (req.user) {
     const id = req.params.artifact;
-    Artifact.find({ user: req.user.uid, _id: id }, (error, artifact) => {
-      if (error) res.status(500).send(error);
-      else if (artifact.length === 0) res.sendStatus(404);
-      else res.json(artifact);
-    });
+    try {
+      const artifact = await Artifact.find({ user: req.user.uid, _id: id }).exec();
+      artifact.length === 0 ? res.sendStatus(404) : res.json(artifact);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
 }
 
 // Post a single artifact
-function singlePost(req, res) {
+async function singlePost(req, res) {
   if (req.user) {
     const newArtifact = req.body;
     newArtifact.user = req.user.uid;
-    Artifact.create(newArtifact, (error, response) => {
-      if (error) res.status(500).send(error);
-      else res.status(201).json(response);
-    });
+    try {
+      const response = await Artifact.create(newArtifact);
+      res.status(201).json(response);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
 }
 
 // Update a single artifact
-function singlePut(req, res) {
+async function singlePut(req, res) {
   if (req.user) {
     const id = req.body._id;
     const artifact = req.body;
-    Artifact.updateOne({ user: req.user.uid, _id: id }, { $set: artifact }, (error, response) => {
-      if (error) res.status(500).send(error);
-      else if (response.n === 0) res.sendStatus(404);
-      else res.sendStatus(200);
-    });
+    try {
+      const response = await Artifact.updateOne({ user: req.user.uid, _id: id }, { $set: artifact }).exec();
+      response.n === 0 ? res.sendStatus(404) : res.sendStatus(200);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
 }
 
 // Delete a single artifact
-function singleDelete(req, res) {
+async function singleDelete(req, res) {
   if (req.user) {
     const id = req.params.artifact;
-    Artifact.deleteMany({ user: req.user.uid, _id: id }, (error, response) => {
-      if (error) res.status(500).send(error);
-      else if (response.n === 0) res.sendStatus(404);
-      else {
-        CQLLibrary.deleteMany({ user: req.user.uid, linkedArtifactId: id }, (error, response) => {
-          if (error) res.status(500).send(error);
-          else res.sendStatus(200);
-        });
+    try {
+      const response = await Artifact.deleteMany({ user: req.user.uid, _id: id }).exec();
+      if (response.n === 0) {
+        res.sendStatus(404);
+      } else {
+        await CQLLibrary.deleteMany({ user: req.user.uid, linkedArtifactId: id }).exec();
+        res.sendStatus(200);
       }
-    });
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
@@ -112,49 +118,37 @@ async function duplicate(req, res, next) {
   if (req.user) {
     let artifactNames;
     try {
-      artifactNames = await Artifact.find({ user: req.user.uid });
-    } catch (e) {
-      res.status(500).send(e);
-      return;
-    }
-    const parentID = req.params.artifact;
-    Artifact.findById(parentID, (error, artifact) => {
-      if (error) res.status(500).send(error);
-      else if (artifact.length === 0) res.sendStatus(404);
-      else {
-        let duplicateToInsert = prepareDuplicateArtifact(
+      artifactNames = await Artifact.find({ user: req.user.uid }).exec();
+      const parentID = req.params.artifact;
+      const artifact = await Artifact.findById(parentID).exec();
+      if (artifact.length === 0) {
+        res.sendStatus(404);
+      } else {
+        const duplicateToInsert = prepareDuplicateArtifact(
           artifact._doc, // eslint-disable-line
           artifactNames
         );
 
-        Artifact.create(duplicateToInsert)
-          .then(duplicateResponse => {
-            CQLLibrary.find({ linkedArtifactId: parentID }, (error, library) => {
-              if (!error && library.length !== 0) {
-                library.map(lib => {
-                  const newLib = {
-                    ...lib._doc, // eslint-disable-line
-                    linkedArtifactId: duplicateResponse._id
-                  };
-                  delete newLib['createdAt'];
-                  delete newLib['updatedAt'];
-                  delete newLib['_id'];
-                  CQLLibrary.create(newLib, error => {
-                    if (error) {
-                      res.status(500).send(error);
-                      return;
-                    }
-                  });
-                });
-              }
-            });
-            res.status(200).json(duplicateResponse);
-          })
-          .catch(error => {
-            res.status(500).send(error);
-            return;
+        const duplicateResponse = await Artifact.create(duplicateToInsert);
+        const library = await CQLLibrary.find({ linkedArtifactId: parentID }).exec();
+        if (library.length !== 0) {
+          const promises = library.map(lib => {
+            const newLib = {
+              ...lib._doc, // eslint-disable-line
+              linkedArtifactId: duplicateResponse._id
+            };
+            delete newLib['createdAt'];
+            delete newLib['updatedAt'];
+            delete newLib['_id'];
+            return CQLLibrary.create(newLib);
           });
+          await Promise.all(promises);
+        }
+        res.status(200).json(duplicateResponse);
       }
-    });
+    } catch (err) {
+      res.status(500).send(err);
+      return;
+    }
   } else sendUnauthorized(res);
 }

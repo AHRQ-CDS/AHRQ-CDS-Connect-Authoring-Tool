@@ -1,6 +1,6 @@
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
-const { mock, replace } = sandbox;
+const { mock, fake, replace } = sandbox;
 const { expect } = require('chai');
 const { setupExpressApp } = require('./utils');
 const CQLLibrary = require('../../src/models/cqlLibrary');
@@ -20,7 +20,15 @@ describe('Route: /authoring/api/modifiers/:artifact', () => {
 
   describe('GET', () => {
     it('should return standard modifiers for authenticated users when there are no linked external libraries', done => {
-      replace(CQLLibrary, 'find', mock('find').withArgs({ user: 'bob', linkedArtifactId: '123' }).yields(null, []));
+      replace(
+        CQLLibrary,
+        'find',
+        mock('find')
+          .withArgs({ user: 'bob', linkedArtifactId: '123' })
+          .returns({
+            exec: fake.resolves([])
+          })
+      );
       request(app)
         .get('/authoring/api/modifiers/123')
         .set('Accept', 'application/json')
@@ -67,7 +75,9 @@ describe('Route: /authoring/api/modifiers/:artifact', () => {
         'find',
         mock('find')
           .withArgs({ user: 'bob', linkedArtifactId: '603e453ad6242800116cfd6c' })
-          .yields(null, [multiFunctionLib])
+          .returns({
+            exec: fake.resolves([multiFunctionLib])
+          })
       );
       request(app)
         .get('/authoring/api/modifiers/603e453ad6242800116cfd6c')
@@ -124,7 +134,11 @@ describe('Route: /authoring/api/modifiers/:artifact', () => {
       replace(
         CQLLibrary,
         'find',
-        mock('find').withArgs({ user: 'bob', linkedArtifactId: '123' }).yields('Connection Error')
+        mock('find')
+          .withArgs({ user: 'bob', linkedArtifactId: '123' })
+          .returns({
+            exec: fake.rejects('Connection Error')
+          })
       );
       request(app)
         .get('/authoring/api/modifiers/123')

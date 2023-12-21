@@ -171,8 +171,6 @@ module.exports = {
   objToELM,
   makeCQLtoELMRequest,
   formatCQL,
-  idToObj,
-  writeZip,
   buildCQL
 };
 
@@ -182,17 +180,6 @@ function getFieldWithType(fields, type) {
 
 function getFieldWithId(fields, id) {
   return fields.find(f => f.id === id);
-}
-
-// Creates the cql file from an artifact ID
-function idToObj(req, res, next) {
-  Artifact.findOne({ _id: req.params.artifact }, (error, artifact) => {
-    if (error) console.log(error);
-    else {
-      req.body = artifact;
-      next();
-    }
-  });
 }
 
 function loadTemplates(pathToTemplates) {
@@ -1538,9 +1525,9 @@ function objConvert(req, res, callback) {
   artifactFromRequest.externalLibs = [];
   const externalLibs = [];
   // Add all external libraries
-  CQLLibrary.find({ user: user, linkedArtifactId: { $ne: null, $eq: artifactId } }, (error, libraries) => {
-    if (error) res.status(500).send({ error: error.message });
-    else {
+  CQLLibrary.find({ user: user, linkedArtifactId: { $ne: null, $eq: artifactId } })
+    .exec()
+    .then(libraries => {
       libraries.forEach(lib => {
         artifactFromRequest.externalLibs.push({
           name: lib.name,
@@ -1599,8 +1586,10 @@ function objConvert(req, res, callback) {
           }
         });
       }
-    }
-  });
+    })
+    .catch(err => {
+      res.status(500).send({ error: err.message });
+    });
 }
 
 // While the artifact argument is not used, it's required because the callback
@@ -1637,23 +1626,21 @@ function validateELM(artifact, artifactJson, externalLibs, includeCQL, writeStre
 }
 
 //given a CQLArtifact, find the associated Artifact in the DB, convert it to a CPG Publishable Library
-function convertToCPGPL(cqlArtifact, cqlText) {
-  return Artifact.findOne({ _id: { $ne: null, $eq: cqlArtifact._id } })
-    .exec()
-    .then(artifact => {
-      let cpg = artifact.toPublishableLibrary();
-      let cqlBuffer = Buffer.from(cqlText);
-      cpg['content'] = [
-        {
-          contentType: 'application/cql',
-          data: cqlBuffer.toString('base64')
-        }
-      ];
-      return JSON.stringify(cpg, null, 2);
-    })
-    .catch(err => {
-      return { error: err };
-    });
+async function convertToCPGPL(cqlArtifact, cqlText) {
+  try {
+    const artifact = await Artifact.findOne({ _id: { $ne: null, $eq: cqlArtifact._id } }).exec();
+    let cpg = artifact.toPublishableLibrary();
+    let cqlBuffer = Buffer.from(cqlText);
+    cpg['content'] = [
+      {
+        contentType: 'application/cql',
+        data: cqlBuffer.toString('base64')
+      }
+    ];
+    return JSON.stringify(cpg, null, 2);
+  } catch (err) {
+    return { error: err };
+  }
 }
 
 // Note: This callback ignores an argument (via a _ placeholder) specifying whether CQL should be included

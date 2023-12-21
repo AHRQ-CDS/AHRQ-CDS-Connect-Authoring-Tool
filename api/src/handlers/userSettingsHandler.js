@@ -7,12 +7,11 @@ module.exports = {
 };
 
 // Get current user's settings
-function get(req, res) {
+async function get(req, res) {
   if (req.user) {
-    UserSettings.find({ user: req.user.uid }, (error, results) => {
-      if (error) {
-        res.status(500).send(error);
-      } else if (results.length === 0) {
+    try {
+      const results = await UserSettings.find({ user: req.user.uid }).exec();
+      if (results.length === 0) {
         res.sendStatus(404);
       } else if (results.length > 1) {
         // There should never be multiple settings for a single user
@@ -23,28 +22,30 @@ function get(req, res) {
         };
         res.json(settings);
       }
-    });
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }
 }
 
 // Update current user's settings
-function put(req, res) {
+async function put(req, res) {
   if (req.user) {
     const settings = { ...req.body };
-    UserSettings.findOneAndUpdate(
-      { user: req.user.uid },
-      { $set: settings },
-      { upsert: true, new: true },
-      (error, response) => {
-        if (error) res.status(500).send(error);
-        else
-          res.json({
-            termsAcceptedDate: response ? response.termsAcceptedDate : null
-          });
-      }
-    );
+    try {
+      const response = await UserSettings.findOneAndUpdate(
+        { user: req.user.uid },
+        { $set: settings },
+        { upsert: true, new: true }
+      ).exec();
+      res.json({
+        termsAcceptedDate: response ? response.termsAcceptedDate : null
+      });
+    } catch (err) {
+      res.status(500).send(err);
+    }
   } else {
     sendUnauthorized(res);
   }

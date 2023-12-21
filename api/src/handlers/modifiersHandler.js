@@ -6,7 +6,7 @@ module.exports = {
   allGet
 };
 
-function allGet(req, res) {
+async function allGet(req, res) {
   if (req.user) {
     const editorTypes = [
       'boolean',
@@ -24,8 +24,9 @@ function allGet(req, res) {
       'interval_of_quantity'
     ];
     const parentID = req.params.artifact;
-    CQLLibrary.find({ user: req.user.uid, linkedArtifactId: parentID }, (error, libraries) => {
-      if (!error && libraries.length !== 0) {
+    try {
+      const libraries = await CQLLibrary.find({ user: req.user.uid, linkedArtifactId: parentID }).exec();
+      if (libraries.length !== 0) {
         const externalModifiers = [];
         libraries.map(lib => {
           if (
@@ -72,7 +73,9 @@ function allGet(req, res) {
       } else {
         res.json(modifiers);
       }
-    });
+    } catch (err) {
+      res.json(modifiers);
+    }
   } else {
     sendUnauthorized(res);
   }
