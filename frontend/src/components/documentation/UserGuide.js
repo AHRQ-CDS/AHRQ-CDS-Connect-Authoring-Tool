@@ -2087,8 +2087,8 @@ const UserGuide = () => {
             <div>
               To view a summary of a synthetic test patient's data, click on the "View" button. This will display a
               modal window with the patient's demographic data and the individual entries within the patient's health
-              record. The entries are grouped according to type (e.g., Conditions, Medications, Encounters, etc.).
-              Groups can be expanded and collapsed using the right arrow{' '}
+              record under the "Summary" tab. The entries are grouped according to type (e.g., Conditions, Medications,
+              Encounters, etc.). Groups can be expanded and collapsed using the right arrow{' '}
               <FontAwesomeIcon icon={faChevronRight} aria-hidden="true" /> and down arrow{' '}
               <FontAwesomeIcon icon={faChevronDown} aria-hidden="true" /> (respectively). When expanded, each group
               shows a table with the most relevant data for that type (e.g., conditions show onset and abatement,
@@ -2097,19 +2097,19 @@ const UserGuide = () => {
             <div>
               <img
                 alt=""
-                src={screenshotUrl('Patient_Details')}
+                src={screenshotUrl('Patient_Details_Summary_Tab')}
                 className="img-fluid img-thumbnail rounded mx-auto d-block"
               />
             </div>
             <div>
-              At the bottom of the patient details view, an object browsers allows authors to see the exact FHIR
-              representation. This can be helpful for more detailed debugging or when the patient view summary data does
-              not show the relevant fields of interest.
+              To view the full details of a synthetic test patient's data, click the "Details" tab in the modal window.
+              This will display the exact FHIR representation of the patient. This can be helpful for more detailed
+              debugging or when the patient view summary data does not show the relevant fields of interest.
             </div>
             <div>
               <img
                 alt=""
-                src={screenshotUrl('Patient_Details_Object_Browser')}
+                src={screenshotUrl('Patient_Details_Details_Tab')}
                 className="img-fluid img-thumbnail rounded mx-auto d-block"
               />
             </div>

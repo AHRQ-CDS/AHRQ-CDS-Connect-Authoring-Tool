@@ -104,4 +104,41 @@ describe('<PatientDetailsModal />', () => {
       );
     });
   });
+
+  describe('All patients', () => {
+    // These tests apply to all FHIR version patients, but just use R4 for convenience
+    const patient = mockPatientR4;
+
+    it('renders tabs with summary and details', async () => {
+      renderComponent({ patient });
+
+      const tabs = screen.getAllByRole('tab');
+      expect(tabs).toHaveLength(2);
+      expect(tabs[0].textContent).toEqual('Summary');
+      expect(tabs[1].textContent).toEqual('Details');
+
+      // Summary is selected by default
+      expect(tabs[0].getAttribute('aria-selected')).toBe('true');
+      expect(tabs[1].getAttribute('aria-selected')).toBe('false');
+
+      // Switch to Details Tab
+      await waitFor(() => userEvent.click(tabs[1]));
+
+      // Default is selected after clicking
+      expect(tabs[0].getAttribute('aria-selected')).toBe('false');
+      expect(tabs[1].getAttribute('aria-selected')).toBe('true');
+    });
+
+    it('renders all patient data on details tab', async () => {
+      renderComponent({ patient });
+
+      const detailsTab = screen.getByRole('tab', { name: 'Details' });
+      await waitFor(() => userEvent.click(detailsTab));
+      expect(detailsTab.getAttribute('aria-selected')).toBe('true');
+
+      const panels = screen.getAllByRole('tabpanel');
+      const detailsPanelContent = panels[1].textContent;
+      expect(JSON.parse(detailsPanelContent)).toEqual(mockPatientR4.patient);
+    });
+  });
 });

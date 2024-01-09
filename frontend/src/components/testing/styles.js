@@ -28,6 +28,55 @@ export default makeStyles(
     patientCardName: {
       fontSize: '1.5em'
     },
+    patientDataTabList: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      margin: '0rem',
+      marginBottom: '1em',
+      padding: '0rem',
+      top: '0',
+      zIndex: '2'
+    },
+    patientDataTab: {
+      alignItems: 'center',
+      borderRadius: '0.2em 0.2em 0 0',
+      cursor: 'pointer',
+      display: 'flex',
+      flexGrow: '1',
+      justifyContent: 'space-around',
+      listStyle: 'none',
+      margin: '0 0.25em',
+      padding: '0.65em',
+      textAlign: 'center',
+      whiteSpace: 'nowrap',
+      backgroundColor: theme.palette.common.grayLightest,
+      '&:first-child': {
+        marginLeft: '0em'
+      },
+      '&:last-child': {
+        marginRight: '0em'
+      },
+      '&:hover': {
+        backgroundColor: theme.palette.common.grayLighter
+      },
+      fontSize: '0.72em',
+      [theme.breakpoints.down('xxl')]: {
+        fontSize: '1em'
+      },
+      [theme.breakpoints.down('xl')]: {
+        fontSize: '0.85em'
+      },
+      [theme.breakpoints.down('lg')]: {
+        fontSize: '0.72em'
+      }
+    },
+    patientDataTabSelected: {
+      backgroundColor: theme.palette.common.grayLighter,
+      '&:hover': {
+        // Don't change the background when selected tab is hovered
+        backgroundColor: theme.palette.common.grayLighter
+      }
+    },
     patientsTableButtons: {
       margin: '2em 0',
       '& button': {
