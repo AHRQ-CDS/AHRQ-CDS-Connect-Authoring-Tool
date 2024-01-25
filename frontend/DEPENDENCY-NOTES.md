@@ -16,7 +16,6 @@ dependencies are currently fixed to older versions:
   These errors increased after version `v4.17.3`.
   [This commit](https://github.com/tscanlin/tocbot/commit/be66ad95284ebd21299a203d5479e12d85e34d62) may be related to new errors.
   Eventually, it will be good upgrade this package, but it may require reaching out for input on Github.
-- **date-fns**: A new major version of date-fns (3.x) was very recently released. However, Material UI Date Picker is still being updated to support this latest version, with some discussion on [this issue](https://github.com/mui/mui-x/issues/11454). Once it does, this package should be updated.
 
 ## Notes about overrides
 
