@@ -1,13 +1,26 @@
 const lodash = require('lodash');
 const nock = require('nock');
 const chai = require('chai');
-//const chaiAsPromised = require("chai-as-promised");
-chai.use(require('chai-as-promised'));
 const expect = chai.expect;
 
 const client = require('../../src/vsac/FHIRClient');
 
 const FHIRMocks = require('./fixtures/FHIRfixtures');
+
+// Helper function for testing promises that are expected to return an error
+function shouldThrowError(result, errorCode) {
+  const errorMessage = `expected a response with status ${errorCode}`;
+  return result
+    .then(() => {
+      throw new Error(errorMessage);
+    })
+    .catch(err => {
+      if (err.message === errorMessage) {
+        throw err;
+      }
+      expect(err.response?.status).to.equal(errorCode);
+    });
+}
 
 describe('FHIRClient', () => {
   // before the tests, disable network connections to ensure tests never hit real network
@@ -37,22 +50,24 @@ describe('FHIRClient', () => {
 
       // Invoke the request and verify the result
       const result = client.getValueSet('1234', username, password);
-      return expect(result).to.eventually.eql({
-        oid: '1234',
-        version: '1',
-        displayName: 'foo',
-        codes: [
-          {
-            code: '250.00',
-            codeSystemName: 'ICD9CM',
-            codeSystemURI: 'http://hl7.org/fhir/sid/icd-9-cm',
-            codeSystemVersion: '2013',
-            displayName:
-              'Diabetes mellitus without mention of complication, type II or unspecified type, ' +
-              'not stated as uncontrolled'
-          }
-        ]
-      });
+      return result.then(res =>
+        expect(res).to.eql({
+          oid: '1234',
+          version: '1',
+          displayName: 'foo',
+          codes: [
+            {
+              code: '250.00',
+              codeSystemName: 'ICD9CM',
+              codeSystemURI: 'http://hl7.org/fhir/sid/icd-9-cm',
+              codeSystemVersion: '2013',
+              displayName:
+                'Diabetes mellitus without mention of complication, type II or unspecified type, ' +
+                'not stated as uncontrolled'
+            }
+          ]
+        })
+      );
     });
 
     it('should get a value set by OID and strip |{version}', () => {
@@ -65,22 +80,24 @@ describe('FHIRClient', () => {
 
       // Invoke the request and verify the result
       const result = client.getValueSet('2468', username, password);
-      return expect(result).to.eventually.eql({
-        oid: '2468',
-        version: '1',
-        displayName: 'foo',
-        codes: [
-          {
-            code: '250.00',
-            codeSystemName: 'ICD9CM',
-            codeSystemURI: 'http://hl7.org/fhir/sid/icd-9-cm',
-            codeSystemVersion: '2013',
-            displayName:
-              'Diabetes mellitus without mention of complication, type II or unspecified type, ' +
-              'not stated as uncontrolled'
-          }
-        ]
-      });
+      return result.then(res =>
+        expect(res).to.eql({
+          oid: '2468',
+          version: '1',
+          displayName: 'foo',
+          codes: [
+            {
+              code: '250.00',
+              codeSystemName: 'ICD9CM',
+              codeSystemURI: 'http://hl7.org/fhir/sid/icd-9-cm',
+              codeSystemVersion: '2013',
+              displayName:
+                'Diabetes mellitus without mention of complication, type II or unspecified type, ' +
+                'not stated as uncontrolled'
+            }
+          ]
+        })
+      );
     });
 
     it('should get a value set by OID and strip -{version}', () => {
@@ -94,22 +111,24 @@ describe('FHIRClient', () => {
 
       // Invoke the request and verify the result
       const result = client.getValueSet('9876', username, password);
-      return expect(result).to.eventually.eql({
-        oid: '9876',
-        version: '1',
-        displayName: 'foo',
-        codes: [
-          {
-            code: '250.00',
-            codeSystemName: 'ICD9CM',
-            codeSystemURI: 'http://hl7.org/fhir/sid/icd-9-cm',
-            codeSystemVersion: '2013',
-            displayName:
-              'Diabetes mellitus without mention of complication, type II or unspecified type, ' +
-              'not stated as uncontrolled'
-          }
-        ]
-      });
+      return result.then(res =>
+        expect(res).to.eql({
+          oid: '9876',
+          version: '1',
+          displayName: 'foo',
+          codes: [
+            {
+              code: '250.00',
+              codeSystemName: 'ICD9CM',
+              codeSystemURI: 'http://hl7.org/fhir/sid/icd-9-cm',
+              codeSystemVersion: '2013',
+              displayName:
+                'Diabetes mellitus without mention of complication, type II or unspecified type, ' +
+                'not stated as uncontrolled'
+            }
+          ]
+        })
+      );
     });
 
     it('should get a value set by OID and NOT strip anything after a - if it is just part of the id', () => {
@@ -123,22 +142,24 @@ describe('FHIRClient', () => {
 
       // Invoke the request and verify the result
       const result = client.getValueSet('9876-6789-321', username, password);
-      return expect(result).to.eventually.eql({
-        oid: '9876-6789-321',
-        version: '1',
-        displayName: 'foo',
-        codes: [
-          {
-            code: '250.00',
-            codeSystemName: 'ICD9CM',
-            codeSystemURI: 'http://hl7.org/fhir/sid/icd-9-cm',
-            codeSystemVersion: '2013',
-            displayName:
-              'Diabetes mellitus without mention of complication, type II or unspecified type, ' +
-              'not stated as uncontrolled'
-          }
-        ]
-      });
+      return result.then(res =>
+        expect(res).to.eql({
+          oid: '9876-6789-321',
+          version: '1',
+          displayName: 'foo',
+          codes: [
+            {
+              code: '250.00',
+              codeSystemName: 'ICD9CM',
+              codeSystemURI: 'http://hl7.org/fhir/sid/icd-9-cm',
+              codeSystemVersion: '2013',
+              displayName:
+                'Diabetes mellitus without mention of complication, type II or unspecified type, ' +
+                'not stated as uncontrolled'
+            }
+          ]
+        })
+      );
     });
   });
 
@@ -152,15 +173,18 @@ describe('FHIRClient', () => {
 
       // Invoke the request and verify the result
       const result = client.getCode('1963-8', 'http://loinc.org', username, password);
-      return expect(result).to.eventually.eql({
-        system: 'http://loinc.org',
-        systemName: 'LOINC',
-        systemOID: '2.16.840.1.113883.6.1',
-        version: '2.63',
-        code: '1963-8',
-        display: 'Bicarbonate [Moles/volume] in Serum'
-      });
+      return result.then(res =>
+        expect(res).to.eql({
+          system: 'http://loinc.org',
+          systemName: 'LOINC',
+          systemOID: '2.16.840.1.113883.6.1',
+          version: '2.63',
+          code: '1963-8',
+          display: 'Bicarbonate [Moles/volume] in Serum'
+        })
+      );
     });
+
     it('should 404', () => {
       const [username, password] = ['test-user', 'test-pass'];
 
@@ -168,7 +192,7 @@ describe('FHIRClient', () => {
         .get('/fhir/CodeSystem/$lookup?code=abcd&system=http://not-a-system.org')
         .reply(404, FHIRMocks.Code);
       const result = client.getCode('abcd', 'http://not-a-system.org', username, password);
-      return expect(result).to.be.rejectedWith(404);
+      return shouldThrowError(result, 404);
     });
   });
 
@@ -176,7 +200,7 @@ describe('FHIRClient', () => {
     const [username, password] = ['bad-test-user', 'bad-test-pass'];
     nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/1234/$expand').reply(401, '');
     const result = client.getValueSet('1234', username, password);
-    return expect(result).to.be.rejectedWith(401);
+    return shouldThrowError(result, 401);
   });
 
   describe('#searchForValueSets', () => {
@@ -206,7 +230,7 @@ describe('FHIRClient', () => {
           purpose: null // Note: purpose construction tested separately
         };
       });
-      return expect(result).to.eventually.eql({ total: 67, count: 50, page: 1, results: expResults });
+      return result.then(res => expect(res).to.eql({ total: 67, count: 50, page: 1, results: expResults }));
     });
 
     it('should get a list of OIDs and strip versions', () => {
@@ -241,7 +265,7 @@ describe('FHIRClient', () => {
           purpose: null // Note: purpose construction tested separately
         };
       });
-      return expect(result).to.eventually.eql({ total: 67, count: 50, page: 1, results: expResults });
+      return result.then(res => expect(res).to.eql({ total: 67, count: 50, page: 1, results: expResults }));
     });
 
     it('should construct purpose object if specified purpose matches expected format', () => {
@@ -285,7 +309,7 @@ describe('FHIRClient', () => {
       // expResults[2] has no purpose, so it stays null
       // expResults[3] has no meaningful content within the expected format, so it stays null
 
-      return expect(result).to.eventually.eql({ total: 4, count: 4, page: 1, results: expResults });
+      return result.then(res => expect(res).to.eql({ total: 4, count: 4, page: 1, results: expResults }));
     });
   });
 
@@ -295,7 +319,7 @@ describe('FHIRClient', () => {
       nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/2.16.840.1.113762.1.4.1').reply(200, '');
       const result = client.getOneValueSet(username, password);
       // No data manipulation happens in this function. The request should succeed and return the result.
-      return expect(result).to.eventually.be.fulfilled;
+      return result.then(res => expect(res).to.exist);
     });
 
     it('should handle bad authentication and send 401 back', () => {
@@ -303,7 +327,7 @@ describe('FHIRClient', () => {
       nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/2.16.840.1.113762.1.4.1').reply(401, '');
       const result = client.getOneValueSet(username, password);
       // No data manipulation happens in this function. The request should success and return the result.
-      return expect(result).to.be.rejectedWith(/401/);
+      return shouldThrowError(result, 401);
     });
   });
 });

@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "archiver": "^6.0.1",
-    "axios": "^1.6.2",
+    "axios": "^1.6.5",
     "basic-auth": "^2.0.1",
     "busboy": "^1.6.0",
     "connect-mongo": "^5.1.0",
@@ -20,7 +20,7 @@
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
     "migrate-mongo": "^11.0.0",
-    "mongoose": "^8.0.3",
+    "mongoose": "^8.1.0",
     "morgan": "^1.10.0",
     "passport": "^0.7.0",
     "passport-ldapauth": "^3.0.1",
@@ -31,20 +31,19 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "chai": "^4.3.10",
-    "chai-as-promised": "^7.1.1",
+    "chai": "^4.4.1",
     "chai-exclude": "^2.1.0",
     "eslint": "^8.56.0",
     "eslint-plugin-flowtype": "^8.0.3",
     "mocha": "^10.2.0",
-    "nock": "^13.4.0",
-    "nodemon": "^3.0.2",
+    "nock": "^13.5.0",
+    "nodemon": "^3.0.3",
     "nyc": "^15.1.0",
     "opener": "^1.5.2",
-    "prettier": "^3.1.1",
+    "prettier": "^3.2.4",
     "rewire": "^7.0.0",
     "sinon": "^17.0.1",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.4"
   },
   "scripts": {
     "lint:fix": "eslint --fix .; exit 0",
