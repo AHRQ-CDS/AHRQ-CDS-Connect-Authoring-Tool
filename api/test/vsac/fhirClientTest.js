@@ -161,6 +161,26 @@ describe('FHIRClient', () => {
         })
       );
     });
+
+    it('should get a value set and use the title field as displayName if it is available', async () => {
+      const [username, password] = ['test-user', 'test-pass'];
+      const valueSetWithTitle = lodash.cloneDeep(FHIRMocks.valueSetWithTitle);
+      const valueSetWithEmptyTitle = lodash.cloneDeep(FHIRMocks.valueSetWithTitle);
+      valueSetWithEmptyTitle.title = '';
+      const valueSetWithNoTitle = lodash.cloneDeep(FHIRMocks.valueSetWithTitle);
+      delete valueSetWithNoTitle.title;
+
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/123.45/$expand').reply(200, valueSetWithTitle);
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/123.45/$expand').reply(200, valueSetWithEmptyTitle);
+      nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/123.45/$expand').reply(200, valueSetWithNoTitle);
+
+      const resultWithTitle = await client.getValueSet('123.45', username, password);
+      expect(resultWithTitle.displayName).to.equal('Diabetes Mellitus Screening'); // title, not name
+      const resultWithEmptyTitle = await client.getValueSet('123.45', username, password);
+      expect(resultWithEmptyTitle.displayName).to.equal('DiabetesMellitusScreening'); // fall back to name when title is ''
+      const resultWithNoTitle = await client.getValueSet('123.45', username, password);
+      expect(resultWithNoTitle.displayName).to.equal('DiabetesMellitusScreening'); // fall back to name when title is undefined
+    });
   });
 
   describe('#getCode', () => {
@@ -211,13 +231,13 @@ describe('FHIRClient', () => {
         .reply(200, FHIRMocks.Search);
       nock('https://cts.nlm.nih.gov')
         .get(/expand/)
-        .times(67)
+        .times(3)
         .reply(200, FHIRMocks.ValueSetWithCounts);
       const result = client.searchForValueSets('Diabetes', username, password);
       const expResults = FHIRMocks.Search.entry.map(v => {
         return {
           codeSystem: [],
-          name: v.resource.name,
+          name: v.resource.title || v.resource.name,
           steward: v.resource.publisher,
           oid: v.resource.id,
           codeCount: 33,
@@ -230,13 +250,18 @@ describe('FHIRClient', () => {
           purpose: null // Note: purpose construction tested separately
         };
       });
-      return result.then(res => expect(res).to.eql({ total: 67, count: 50, page: 1, results: expResults }));
+      return result.then(res => expect(res).to.eql({ total: 3, count: 3, page: 1, results: expResults }));
     });
 
     it('should get a list of OIDs and strip versions', () => {
       const searchWithVersions = lodash.cloneDeep(FHIRMocks.Search);
-      searchWithVersions.entry.forEach(entry => {
-        entry.resource.id = `${entry.resource.id}|12345`;
+      searchWithVersions.entry.forEach((entry, i) => {
+        if (i % 2 === 0) {
+          entry.resource.id = `${entry.resource.id}|12345`;
+        } else {
+          entry.resource.id = `${entry.resource.id}-12345`;
+          entry.resource.version = '12345';
+        }
       });
 
       const [username, password] = ['test-user', 'test-pass'];
@@ -245,14 +270,14 @@ describe('FHIRClient', () => {
         .reply(200, searchWithVersions);
       nock('https://cts.nlm.nih.gov')
         .get(/expand/)
-        .times(67)
+        .times(3)
         .reply(200, FHIRMocks.ValueSetWithCounts);
       const result = client.searchForValueSets('Diabetes', username, password);
       // Build results using original (non-modified / non-versioned results mock)
       const expResults = FHIRMocks.Search.entry.map(v => {
         return {
           codeSystem: [],
-          name: v.resource.name,
+          name: v.resource.title || v.resource.name,
           steward: v.resource.publisher,
           oid: v.resource.id,
           codeCount: 33,
@@ -265,7 +290,25 @@ describe('FHIRClient', () => {
           purpose: null // Note: purpose construction tested separately
         };
       });
-      return result.then(res => expect(res).to.eql({ total: 67, count: 50, page: 1, results: expResults }));
+      return result.then(res => expect(res).to.eql({ total: 3, count: 3, page: 1, results: expResults }));
+    });
+
+    it('should return results with value set title but fall back to name if necessary', () => {
+      const [username, password] = ['test-user', 'test-pass'];
+      nock('https://cts.nlm.nih.gov')
+        .get(/ValueSet/)
+        .reply(200, FHIRMocks.Search);
+      nock('https://cts.nlm.nih.gov')
+        .get(/expand/)
+        .times(3)
+        .reply(200, FHIRMocks.ValueSetWithCounts);
+      const result = client.searchForValueSets('Diabetes', username, password);
+      return result.then(res => {
+        expect(res.results).to.have.lengthOf(3);
+        expect(res.results[0].name).to.equal('AETNA Diabetes Hemoglobin A1c testing CPT codes'); // title and name are both present but use title
+        expect(res.results[1].name).to.equal('Diabetes'); // title is empty string so use name instead
+        expect(res.results[2].name).to.equal('DiabetesMellitus'); // title undefined so use name instead
+      });
     });
 
     it('should construct purpose object if specified purpose matches expected format', () => {
@@ -275,13 +318,13 @@ describe('FHIRClient', () => {
         .reply(200, FHIRMocks.SearchWithPurpose);
       nock('https://cts.nlm.nih.gov')
         .get(/expand/)
-        .times(67)
+        .times(4)
         .reply(200, FHIRMocks.ValueSetWithCounts);
       const result = client.searchForValueSets('Diabetes', username, password);
       const expResults = FHIRMocks.SearchWithPurpose.entry.map(v => {
         return {
           codeSystem: [],
-          name: v.resource.name,
+          name: v.resource.title || v.resource.name,
           steward: v.resource.publisher,
           oid: v.resource.id,
           codeCount: 33,

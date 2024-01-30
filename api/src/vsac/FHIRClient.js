@@ -121,7 +121,7 @@ async function getValueSet(oid, username, password) {
   return {
     oid: cleanId(response.id, response.version),
     version: response.meta.versionId,
-    displayName: response.name,
+    displayName: response.title || response.name,
     codes: response.expansion.contains.map(c => {
       return {
         code: c.code,
@@ -170,7 +170,7 @@ async function searchForValueSets(search, username, password) {
   const results = (response.entry || []).map(async (v, i) => {
     const oid = cleanId(v.resource.id, v.resource.version);
     return {
-      name: v.resource.name,
+      name: v.resource.title || v.resource.name,
       steward: v.resource.publisher,
       oid,
       description: v.resource.description || '',
