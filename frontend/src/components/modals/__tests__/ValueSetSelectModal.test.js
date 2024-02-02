@@ -18,6 +18,7 @@ describe('<ValueSetSelectModal />', () => {
       lastReviewDate: '2023-10-21',
       description: 'A test value set',
       experimental: true,
+      status: 'active',
       purpose: {
         clinicalFocus: 'Example clinical focus',
         dataElementScope: 'Example data element scope',
@@ -31,9 +32,18 @@ describe('<ValueSetSelectModal />', () => {
       oid: '3.2.1',
       codeCount: 2,
       codeSystem: ['Other CS'],
+      status: 'draft',
       purpose: { purpose: 'A generic purpose in any format string' }
     },
-    { name: 'New VS', steward: 'New Steward', oid: '3.4.5', codeCount: 8, codeSystem: ['New CS'] }
+    {
+      name: 'Retired VS',
+      steward: 'Retired Steward',
+      oid: '7.8.9',
+      codeCount: 2,
+      codeSystem: ['Retired CS'],
+      status: 'retired'
+    },
+    { name: 'New VS', steward: 'New Steward', oid: '3.4.5', codeCount: 8, codeSystem: ['New CS'], status: '' }
   ];
   const testVsacDetails = [
     {
@@ -136,6 +146,10 @@ describe('<ValueSetSelectModal />', () => {
     expect(dialog.getAllByText(/Reviewed:/)).toHaveLength(1);
     expect(dialog.getAllByText(/Updated:/)).toHaveLength(1);
     expect(dialog.getAllByLabelText('Experimental')).toHaveLength(1);
+
+    // One VS has status retired, one has status draft. Active and blank statuses don't render anything.
+    expect(dialog.getAllByLabelText('Retired')).toHaveLength(1);
+    expect(dialog.getAllByLabelText('Draft')).toHaveLength(1);
 
     await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'Expand details for Test VS' })));
     expect(dialog.getByText('Description:').parentElement.textContent).toEqual('Description: A test value set');

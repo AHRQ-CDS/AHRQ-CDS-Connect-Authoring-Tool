@@ -247,6 +247,7 @@ describe('FHIRClient', () => {
           lastReviewDate:
             v.resource.extension?.find(e => e.url === 'http://hl7.org/fhir/StructureDefinition/resource-lastReviewDate')
               ?.valueDate || '',
+          status: v.resource.status,
           purpose: null // Note: purpose construction tested separately
         };
       });
@@ -287,6 +288,7 @@ describe('FHIRClient', () => {
           lastReviewDate:
             v.resource.extension?.find(e => e.url === 'http://hl7.org/fhir/StructureDefinition/resource-lastReviewDate')
               ?.valueDate || '',
+          status: v.resource.status,
           purpose: null // Note: purpose construction tested separately
         };
       });
@@ -334,6 +336,7 @@ describe('FHIRClient', () => {
           lastReviewDate:
             v.resource.extension?.find(e => e.url === 'http://hl7.org/fhir/StructureDefinition/resource-lastReviewDate')
               ?.valueDate || '',
+          status: v.resource.status,
           purpose: null // purpose added next for the first entries where it is defined
         };
       });

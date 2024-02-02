@@ -16,9 +16,11 @@ import {
   TableRow
 } from '@mui/material';
 import {
+  BedtimeOutlined as BedtimeIcon,
   KeyboardArrowDown as DownArrowIcon,
   KeyboardArrowUp as UpArrowIcon,
-  Science as ScienceIcon,
+  PendingActions as PendingActionsIcon,
+  ScienceOutlined as ScienceIcon,
   Visibility as VisibilityIcon
 } from '@mui/icons-material';
 import moment from 'moment';
@@ -62,11 +64,23 @@ const ValueSetSearchResultRow = ({ handleViewValueSetDetails, handleSaveValueSet
               </div>
             </Stack>
 
-            {valueSet.experimental && (
-              <Tooltip title="Experimental" placement="top">
-                <ScienceIcon />
-              </Tooltip>
-            )}
+            <Stack direction="row">
+              {valueSet.experimental && (
+                <Tooltip title="Experimental" placement="top">
+                  <ScienceIcon />
+                </Tooltip>
+              )}
+              {valueSet.status === 'retired' && (
+                <Tooltip title="Retired" placement="top">
+                  <BedtimeIcon />
+                </Tooltip>
+              )}
+              {valueSet.status === 'draft' && (
+                <Tooltip title="Draft" placement="top">
+                  <PendingActionsIcon />
+                </Tooltip>
+              )}
+            </Stack>
           </Stack>
         </TableCell>
         <TableCell>{valueSet.steward}</TableCell>

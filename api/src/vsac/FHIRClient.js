@@ -142,7 +142,7 @@ async function getValueSetCodeCount(username, password, oid) {
   const options = {
     method: 'GET',
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet/${oid}/$expand?count=1`,
-    timeout: 2500, // There are lots of these requests, and any one hanging can hold things up, so use a timeout
+    timeout: 3500, // There are lots of these requests, and any one hanging can hold things up, so use a timeout
     headers: {
       Accept: 'application/json',
       Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
@@ -180,6 +180,7 @@ async function searchForValueSets(search, username, password) {
         v.resource.extension?.find(e => e.url === 'http://hl7.org/fhir/StructureDefinition/resource-lastReviewDate')
           ?.valueDate || '',
       purpose: parsePurpose(v.resource.purpose),
+      status: v.resource.status || '',
       codeSystem: [],
       // The code counts are not currently returned in the response from the original request, so if we don't
       // see a code count send a separate request to get the counts for this value set; this results in 1+n
