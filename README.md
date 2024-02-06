@@ -116,7 +116,7 @@ Once the configuration is updated and the API has been restarted the translation
 locally in docker via:
 
 ```bash
-docker run -p 8080:8080 cqframework/cql-translation-service:v2.1.0
+docker run -p 8080:8080 cqframework/cql-translation-service:v2.3.0
 ```
 
 ### Running tests
@@ -150,7 +150,7 @@ docker build -t cdsauthoringtool .
 For the Authoring Tool to run in a docker container, MongoDB and CQL-to-ELM docker containers must be linked. The following commands run the necessary containers, with the required links and exposed ports:
 
 ```bash
-docker run --name cat-cql2elm -d cqframework/cql-translation-service:v2.1.0
+docker run --name cat-cql2elm -d cqframework/cql-translation-service:v2.3.0
 docker run --name cat-mongo -d mongo:6.0
 docker run --name cat \
   --link cat-cql2elm:cql2elm \
