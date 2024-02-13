@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useQueryClient } from 'react-query';
-import { Button, Checkbox, TableRow, TableCell } from '@mui/material';
-import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
+import { Checkbox, IconButton, TableRow, TableCell } from '@mui/material';
+import { Delete as DeleteIcon, Download as DownloadIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
+import FileSaver from 'file-saver';
 
 import PatientCard from './PatientCard';
 import PatientDetailsModal from './modals/PatientDetailsModal';
@@ -10,8 +11,22 @@ import { DeleteConfirmationModal } from 'components/modals';
 import { Tooltip } from 'components/elements';
 import { deletePatient } from 'queries/testing';
 import { renderDate } from 'utils/dates';
-import { getPatientBirthDate, getPatientGender, getPatientFullName, getPatientVersion } from 'utils/patients';
+import {
+  getPatientBirthDate,
+  getPatientFirstName,
+  getPatientFullName,
+  getPatientGender,
+  getPatientLastName,
+  getPatientVersion
+} from 'utils/patients';
 import { useTableStyles } from 'styles/hooks';
+
+function savePatientBundle(patient) {
+  FileSaver.saveAs(
+    new Blob([JSON.stringify(patient.patient, null, 2)], { type: 'application/json' }),
+    `Bundle-${getPatientFirstName(patient)}-${getPatientLastName(patient)}.json`
+  );
+}
 
 const PatientsTableRow = ({ isDisabled, isSelected, patient, togglePatient }) => {
   const [showConfirmDeleteModal, setConfirmDeleteModal] = useState(false);
@@ -48,25 +63,31 @@ const PatientsTableRow = ({ isDisabled, isSelected, patient, togglePatient }) =>
       <TableCell>{renderDate(patient.updatedAt)}</TableCell>
 
       <TableCell align="right" className={tableStyles.buttonsCell}>
-        <Button
-          color="primary"
-          onClick={() => setShowPatientDetailsModal(true)}
-          startIcon={<VisibilityIcon />}
-          variant="contained"
-        >
-          View
-        </Button>
+        <Tooltip title="View">
+          <IconButton
+            aria-label="view patient details"
+            color="primary"
+            onClick={() => setShowPatientDetailsModal(true)}
+          >
+            <VisibilityIcon />
+          </IconButton>
+        </Tooltip>
 
-        <Tooltip enabled={isSelected} placement="top" title="To delete this patient, first deselect it.">
-          <Button
+        <Tooltip title="Download">
+          <IconButton aria-label="download patient details" color="primary" onClick={() => savePatientBundle(patient)}>
+            <DownloadIcon />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title={isSelected ? 'To delete this patient, first deselect it.' : 'Delete'}>
+          <IconButton
+            aria-label="delete patient"
             color="secondary"
             disabled={isSelected}
             onClick={() => setConfirmDeleteModal(true)}
-            startIcon={<DeleteIcon />}
-            variant="contained"
           >
-            Delete
-          </Button>
+            <DeleteIcon />
+          </IconButton>
         </Tooltip>
 
         {showPatientDetailsModal && (

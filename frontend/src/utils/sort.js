@@ -1,4 +1,4 @@
-import { getPatientLastName } from 'utils/patients';
+import { getPatientFirstName } from 'utils/patients';
 
 const sortDifference = (a, b) => {
   if (a < b) return -1;
@@ -19,8 +19,8 @@ export function sortAlphabeticallyByKey(key, key2 = undefined) {
 }
 
 export function sortAlphabeticallyByPatientName(a, b) {
-  const aName = getPatientLastName(a);
-  const bName = getPatientLastName(b);
+  const aName = getPatientFirstName(a);
+  const bName = getPatientFirstName(b);
 
   if (aName > bName || (aName && !bName)) {
     return 1;

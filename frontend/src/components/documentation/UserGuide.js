@@ -3,6 +3,7 @@ import React from 'react';
 import { Waypoint } from 'react-waypoint';
 import {
   Delete as DeleteIcon,
+  Download as DownloadIcon,
   Edit as EditIcon,
   FileCopy as CopyIcon,
   MenuBook as MenuBookIcon,
@@ -299,9 +300,15 @@ const UserGuide = () => {
                 <li>Version</li>
                 <li>When it was last updated</li>
                 <li>When it was created</li>
-                <li>"Edit Info" button</li>
-                <li>"Duplicate" button</li>
-                <li>"Delete" button</li>
+                <li>
+                  Edit Info button <EditIcon color="primary" fontSize="small" aria-hidden="true" />
+                </li>
+                <li>
+                  Duplicate button <CopyIcon color="primary" fontSize="small" aria-hidden="true" />
+                </li>
+                <li>
+                  Delete button <DeleteIcon color="secondary" fontSize="small" aria-hidden="true" />
+                </li>
               </ul>
             </div>
             <div>
@@ -316,20 +323,20 @@ const UserGuide = () => {
               "Workspace" view.
             </div>
             <div>
-              To edit an artifact's name or version, click its "Edit Info" button{' '}
-              <EditIcon color="primary" fontSize="small" aria-hidden="true" />. This will open a modal dialog with a
-              form for editing the name and version.
+              To edit an artifact's name or version, click its Edit Info{' '}
+              <EditIcon color="primary" fontSize="small" aria-hidden="true" /> button. This will open a modal dialog
+              with a form for editing the name and version.
             </div>
             <div>
-              To duplicate an artifact, click its "Duplicate" button{' '}
-              <CopyIcon color="primary" fontSize="small" aria-hidden="true" />. This will create a completely new copy
-              of your artifact in the artifact table.
+              To duplicate an artifact, click its Duplicate{' '}
+              <CopyIcon color="primary" fontSize="small" aria-hidden="true" /> button. This will create a completely new
+              copy of your artifact in the artifact table.
             </div>
             <div>
-              To delete an artifact, click its "Delete" button{' '}
-              <DeleteIcon color="secondary" fontSize="small" aria-hidden="true" />. This will open a modal dialog asking
-              you to confirm that you would like to delete the artifact. After clicking the "Delete" button to confirm,
-              the artifact will be permanently deleted. This cannot be undone.
+              To delete an artifact, click its Delete{' '}
+              <DeleteIcon color="secondary" fontSize="small" aria-hidden="true" /> button. This will open a modal dialog
+              asking you to confirm that you would like to delete the artifact. After clicking the "Delete" button to
+              confirm, the artifact will be permanently deleted. This cannot be undone.
             </div>
             <div>
               To sort the table by any of the columns simply click the column name. To reverse the order of the sort,
@@ -1790,7 +1797,9 @@ const UserGuide = () => {
                   <li>
                     View Details button <FontAwesomeIcon icon={faEye} aria-hidden="true" />
                   </li>
-                  <li>"Delete" button</li>
+                  <li>
+                    Delete button <DeleteIcon color="secondary" fontSize="small" aria-hidden="true" />
+                  </li>
                 </ul>
               </div>
               <div>
@@ -1801,10 +1810,11 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                To view a summary of the contents of the External CQL library, click on the eye icon{' '}
-                <FontAwesomeIcon icon={faEye} aria-hidden="true" />. This will display a modal window with high-level
-                metadata about the library and a listing of the library's definitions, parameters, and functions. For
-                each of these, the name and return type are shown. For functions, the list of arguments is also shown.
+                To view a summary of the contents of the External CQL library, click on the View Details{' '}
+                <FontAwesomeIcon icon={faEye} aria-hidden="true" /> button. This will display a modal window with
+                high-level metadata about the library and a listing of the library's definitions, parameters, and
+                functions. For each of these, the name and return type are shown. For functions, the list of arguments
+                is also shown.
               </div>
               <div>
                 <img
@@ -1814,9 +1824,10 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                To delete an External CQL library, click its "Delete" button. This will open a modal dialog asking you
-                to confirm that you would like to delete the External CQL file. After clicking the "Delete" button to
-                confirm, the External CQL library will be permanently deleted. This cannot be undone.
+                To delete an External CQL library, click its Delete{' '}
+                <DeleteIcon color="secondary" fontSize="small" aria-hidden="true" /> button. This will open a modal
+                dialog asking you to confirm that you would like to delete the External CQL file. After clicking the
+                "Delete" button to confirm, the External CQL library will be permanently deleted. This cannot be undone.
               </div>
               <div>
                 <img
@@ -1826,10 +1837,10 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                If the "Delete" button is disabled, then this CQL library is being used within the artifact or is
-                declared as a dependency of one of the other External CQL libraries. To delete an External CQL library
-                in this case, you must first delete any uses of it in the artifact and/or the external libraries that
-                declare it as a dependency.
+                If the Delete <DeleteIcon color="disabled" fontSize="small" aria-hidden="true" /> button is disabled,
+                then this CQL library is being used within the artifact or is declared as a dependency of one of the
+                other External CQL libraries. To delete an External CQL library in this case, you must first delete any
+                uses of it in the artifact and/or the external libraries that declare it as a dependency.
               </div>
             </div>
 
@@ -2073,8 +2084,15 @@ const UserGuide = () => {
                   FHIR<sup>®</sup> Version
                 </li>
                 <li>Last Updated</li>
-                <li>"View" button</li>
-                <li>"Delete" button</li>
+                <li>
+                  View button <VisibilityIcon fontSize="small" />
+                </li>
+                <li>
+                  Download button <DownloadIcon fontSize="small" />
+                </li>
+                <li>
+                  Delete button <DeleteIcon color="secondary" fontSize="small" />
+                </li>
               </ul>
             </div>
             <div>
@@ -2085,14 +2103,14 @@ const UserGuide = () => {
               />
             </div>
             <div>
-              To view a summary of a synthetic test patient's data, click on the "View" button. This will display a
-              modal window with the patient's demographic data and the individual entries within the patient's health
-              record under the "Summary" tab. The entries are grouped according to type (e.g., Conditions, Medications,
-              Encounters, etc.). Groups can be expanded and collapsed using the right arrow{' '}
-              <FontAwesomeIcon icon={faChevronRight} aria-hidden="true" /> and down arrow{' '}
-              <FontAwesomeIcon icon={faChevronDown} aria-hidden="true" /> (respectively). When expanded, each group
-              shows a table with the most relevant data for that type (e.g., conditions show onset and abatement,
-              medications show date written, etc.).
+              To view a summary of a synthetic test patient's data, click on the View{' '}
+              <VisibilityIcon fontSize="small" /> button. This will display a modal window with the patient's
+              demographic data and the individual entries within the patient's health record under the "Summary" tab.
+              The entries are grouped according to type (e.g., Conditions, Medications, Encounters, etc.). Groups can be
+              expanded and collapsed using the right arrow <FontAwesomeIcon icon={faChevronRight} aria-hidden="true" />{' '}
+              and down arrow <FontAwesomeIcon icon={faChevronDown} aria-hidden="true" /> (respectively). When expanded,
+              each group shows a table with the most relevant data for that type (e.g., conditions show onset and
+              abatement, medications show date written, etc.).
             </div>
             <div>
               <img
@@ -2114,9 +2132,14 @@ const UserGuide = () => {
               />
             </div>
             <div>
-              To delete a patient, click its "Delete" button. This will open a modal dialog asking you to confirm that
-              you would like to delete the patient. After clicking the "Delete" button to confirm, the patient will be
-              permanently deleted. This cannot be undone.
+              To download a bundle with the synthetic test patient's data, click the Download
+              <DownloadIcon fontSize="small" /> button. This will download a JSON file with a FHIR Bundle containing the
+              synthetic patient's data.
+            </div>
+            <div>
+              To delete a patient, click its Delete <DeleteIcon color="secondary" fontSize="small" /> button. This will
+              open a modal dialog asking you to confirm that you would like to delete the patient. After clicking the
+              "Delete" button to confirm, the patient will be permanently deleted. This cannot be undone.
             </div>
             <div>
               <img

@@ -66,17 +66,17 @@ const ValueSetSearchResultRow = ({ handleViewValueSetDetails, handleSaveValueSet
 
             <Stack direction="row">
               {valueSet.experimental && (
-                <Tooltip title="Experimental" placement="top">
+                <Tooltip title="Experimental">
                   <ScienceIcon />
                 </Tooltip>
               )}
               {valueSet.status === 'retired' && (
-                <Tooltip title="Retired" placement="top">
+                <Tooltip title="Retired">
                   <BedtimeIcon />
                 </Tooltip>
               )}
               {valueSet.status === 'draft' && (
-                <Tooltip title="Draft" placement="top">
+                <Tooltip title="Draft">
                   <PendingActionsIcon />
                 </Tooltip>
               )}

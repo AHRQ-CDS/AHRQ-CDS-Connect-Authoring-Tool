@@ -97,30 +97,28 @@ export function getPatientId(patientData) {
     .value();
 }
 
-export function getPatientLastName(patientData) {
+export function getPatientFirstName(patientData) {
   return (
-    _.chain(patientData)
-      .get('patient.entry')
-      .find({ resource: { resourceType: 'Patient' } })
-      .get('resource.name[0].given')
-      .value() || 'family_placeholder'
-  );
-}
-
-export function getPatientFullName(patientData) {
-  return `${
     _.chain(patientData)
       .get('patient.entry')
       .find({ resource: { resourceType: 'Patient' } })
       .get('resource.name[0].given[0]')
       .value() || 'given_placeholder'
-  } ${
+  );
+}
+
+export function getPatientLastName(patientData) {
+  return (
     _.chain(patientData)
       .get('patient.entry')
       .find({ resource: { resourceType: 'Patient' } })
       .get('resource.name[0].family')
       .value() || 'family_placeholder'
-  }`;
+  );
+}
+
+export function getPatientFullName(patientData) {
+  return `${getPatientFirstName(patientData)} ${getPatientLastName(patientData)}`;
 }
 
 export function getPatientResource(patientData) {
