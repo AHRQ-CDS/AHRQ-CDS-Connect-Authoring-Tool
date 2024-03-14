@@ -1,4 +1,3 @@
-/* eslint max-len: ["error", 130] */
 import React from 'react';
 import { Waypoint } from 'react-waypoint';
 import clsx from 'clsx';

@@ -796,9 +796,6 @@ const reduxState = {
     isLoggingOut: false,
     username: ''
   },
-  errors: {
-    errorMessage: ''
-  },
   externalCQL: {
     addExternalCqlLibrary: {
       isAdding: false

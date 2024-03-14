@@ -1,7 +1,5 @@
-/* eslint max-len: ["error", 130] */
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button } from '@mui/material';
 import clsx from 'clsx';
@@ -34,7 +32,8 @@ const LandingButton = ({ isAuthenticated }) => {
   );
 };
 
-const Landing = ({ isAuthenticated }) => {
+const Landing = () => {
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const styles = useStyles();
   const spacingStyles = useSpacingStyles();
 
@@ -156,14 +155,4 @@ const Landing = ({ isAuthenticated }) => {
   );
 };
 
-Landing.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired
-};
-
-function mapStateToProps(state) {
-  return {
-    isAuthenticated: state.auth.isAuthenticated
-  };
-}
-
-export default connect(mapStateToProps)(Landing);
+export default Landing;

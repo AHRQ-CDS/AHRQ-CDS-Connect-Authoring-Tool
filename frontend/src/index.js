@@ -5,7 +5,7 @@ import { render } from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import configureStore from './store/configureStore';
-import Root from './containers/Root';
+import Root from './components/root/Root';
 import '@fontsource/open-sans/latin.css';
 import '@fontsource/open-sans/latin-300-italic.css';
 import '@fontsource/open-sans/latin-400-italic.css';
