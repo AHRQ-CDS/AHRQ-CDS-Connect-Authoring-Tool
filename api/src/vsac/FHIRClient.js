@@ -158,7 +158,7 @@ async function getValueSetCodeCount(username, password, oid) {
 async function searchForValueSets(search, username, password) {
   const options = {
     method: 'GET',
-    url: `${VSAC_FHIR_ENDPOINT}/ValueSet?name:contains=${search}`,
+    url: `${VSAC_FHIR_ENDPOINT}/ValueSet?title:contains=${search}`,
     headers: {
       Accept: 'application/json',
       Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`

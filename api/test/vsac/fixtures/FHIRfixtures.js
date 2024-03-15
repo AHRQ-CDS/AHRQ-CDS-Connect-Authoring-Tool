@@ -8,15 +8,15 @@ const Search = {
   link: [
     {
       relation: 'self',
-      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?name:contains=Diabetes&_offset=0&_count=50'
+      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?title:contains=Diabetes&_offset=0&_count=50'
     },
     {
       relation: 'next',
-      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?name:contains=Diabetes&_offset=50&_count=50'
+      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?title:contains=Diabetes&_offset=50&_count=50'
     },
     {
       relation: 'last',
-      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?name:contains=Diabetes&_offset=17&_count=50'
+      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?title:contains=Diabetes&_offset=17&_count=50'
     }
   ],
   entry: [
@@ -213,15 +213,15 @@ let SearchWithPurpose = {
   link: [
     {
       relation: 'self',
-      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?name:contains=Diabetes&_offset=0&_count=50'
+      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?title:contains=Diabetes&_offset=0&_count=50'
     },
     {
       relation: 'next',
-      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?name:contains=Diabetes&_offset=50&_count=50'
+      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?title:contains=Diabetes&_offset=50&_count=50'
     },
     {
       relation: 'last',
-      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?name:contains=Diabetes&_offset=17&_count=50'
+      url: 'http://cts.nlm.nih.gov/fhir/ValueSet?title:contains=Diabetes&_offset=17&_count=50'
     }
   ],
   entry: [
