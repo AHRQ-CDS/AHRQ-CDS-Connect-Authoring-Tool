@@ -54,7 +54,7 @@ const Artifact = () => {
             <Button color="primary" onClick={() => setShowModal(true)} startIcon={<AddIcon />} variant="contained">
               Create New Artifact
             </Button>
-            <HelpLink linkPath="documentation#Creating_and_Managing_Artifacts" showText />
+            <HelpLink linkPath="documentation/userguide#Creating_and_Managing_Artifacts" showText />
           </div>
 
           {artifacts.length > 0 ? (

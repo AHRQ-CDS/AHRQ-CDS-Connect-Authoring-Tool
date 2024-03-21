@@ -4,6 +4,21 @@ import React from 'react';
 const whatsNewData = [
   {
     id: 1,
+    name: 'Authoring Tool Tutorial',
+    ariaLabel: 'Authoring Tool Tutorial',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-tutorial.png`,
+    description: (
+      <>
+        The new CDS Authoring Tool Tutorial provides a walkthrough of creating a simple, but realistic, artifact. The
+        tutorial can be used to get an introduction to the Authoring Tool and allows authors to become familiar with the
+        features of the tool they may use when creating their own artifacts.
+      </>
+    ),
+    linkText: 'Tutorial',
+    link: `${process.env.PUBLIC_URL}/documentation/tutorial`
+  },
+  {
+    id: 2,
     name: 'ONC Tech Forum',
     ariaLabel: 'ONC Tech Forum: Clinical Decision Support Series',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-onc-forum.png`,
@@ -19,7 +34,7 @@ const whatsNewData = [
     link: `https://youtu.be/boZT7CHln5g?si=IIZjsqSUkL-p1gZr&t=1789`
   },
   {
-    id: 2,
+    id: 3,
     name: 'Enhanced Value Set Search',
     ariaLabel: 'Enhanced Value Set Search',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-value-set-search.png`,
@@ -31,10 +46,10 @@ const whatsNewData = [
       </>
     ),
     linkText: 'Add Value Set Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation#Add_Value_Set`
+    link: `${process.env.PUBLIC_URL}/documentation/userguide#Add_Value_Set`
   },
   {
-    id: 3,
+    id: 4,
     name: 'View CQL',
     ariaLabel: 'View CQL',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-view-cql.png`,
@@ -47,25 +62,7 @@ const whatsNewData = [
       </>
     ),
     linkText: 'View CQL Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation#Building_Artifacts`
-  },
-  {
-    id: 4,
-    name: 'Detailed CQL Results',
-    ariaLabel: 'Detailed CQL Results',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-detailed-cql.png`,
-    description: (
-      <>
-        In addition to seeing high level CQL execution results when testing artifacts, authors can now see the detailed
-        results of executing each CQL statement within an artifact. This new feature extends the existing testing
-        functionality to allow the CQL for an artifact to be viewed directly in the CDS Authoring Tool. The CQL is
-        displayed with syntax highlighting to increase readability. In addition to the CQL itself, the result of each
-        CQL expression is displayed for the selected patient record. Results can include boolean values, numerical
-        values, strings, quantities, codes, and FHIR object type and ID references.
-      </>
-    ),
-    linkText: 'Detailed CQL Results Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation#Detailed_Test_Execution_Results`
+    link: `${process.env.PUBLIC_URL}/documentation/userguide#Building_Artifacts`
   }
 ];
 

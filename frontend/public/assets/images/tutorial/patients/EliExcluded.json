@@ -1,0 +1,128 @@
+{
+  "resourceType": "Bundle",
+  "id": "Excluded - Myocardial Infarction",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "e8867f6a-95c5-4510-9f8f-7493878125a4",
+        "name": [
+          {
+            "given": ["Eli"],
+            "family": "Excluded"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "2002-03-14"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "4c8758fb-8f22-40cc-9f3e-2452ac57218a",
+        "subject": {
+          "reference": "Patient/e8867f6a-95c5-4510-9f8f-7493878125a4"
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "39156-5",
+              "display": "Body mass index (BMI) [Ratio]"
+            }
+          ],
+          "text": "Body mass index (BMI) [Ratio]"
+        },
+        "valueQuantity": {
+          "value": 25,
+          "unit": "kg/m2",
+          "system": "http://unitsofmeasure.org",
+          "code": "kg/m2"
+        },
+        "effectiveDateTime": "2021-04-05T16:00:00.000Z"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "9c5ea881-3b0b-495b-9f22-45f2cf6729ab",
+        "subject": {
+          "reference": "Patient/e8867f6a-95c5-4510-9f8f-7493878125a4"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active",
+              "display": "Active"
+            }
+          ],
+          "text": "Active"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed",
+              "display": "Confirmed"
+            }
+          ],
+          "text": "Confirmed"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "I10",
+              "display": "Essential (primary) hypertension"
+            }
+          ],
+          "text": "Essential (primary) hypertension"
+        },
+        "onsetDateTime": "2020-04-05T00:00:00.000Z"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "fa103702-483c-4fe6-a378-d40a061a5b7e",
+        "subject": {
+          "reference": "Patient/e8867f6a-95c5-4510-9f8f-7493878125a4"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active",
+              "display": "Active"
+            }
+          ],
+          "text": "Active"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed",
+              "display": "Confirmed"
+            }
+          ],
+          "text": "Confirmed"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "I21.9",
+              "display": "Acute myocardial infarction, unspecified"
+            }
+          ],
+          "text": "Acute myocardial infarction, unspecified"
+        },
+        "onsetDateTime": "2020-12-02T16:00:00.000Z"
+      }
+    }
+  ]
+}

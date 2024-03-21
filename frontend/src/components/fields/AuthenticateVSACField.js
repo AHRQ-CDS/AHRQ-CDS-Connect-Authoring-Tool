@@ -38,7 +38,7 @@ const AuthenticateVSACField = () => {
         <div className={styles.listItem}>
           Need an account?
           <Link
-            href={`${process.env.PUBLIC_URL}/documentation#Requesting_UTS_Account`}
+            href={`${process.env.PUBLIC_URL}/documentation/userguide#Requesting_UTS_Account`}
             text="Request a UMLS Terminology Services account."
           />
         </div>
@@ -46,7 +46,7 @@ const AuthenticateVSACField = () => {
         <div className={styles.listItem}>
           Don't know your UMLS API key?
           <Link
-            href={`${process.env.PUBLIC_URL}/documentation#Accessing_UMLS_API_Key`}
+            href={`${process.env.PUBLIC_URL}/documentation/userguide#Accessing_UMLS_API_Key`}
             text="Find your UMLS Terminology Services API key."
           />
         </div>

@@ -16,8 +16,13 @@ const a11yProps = index => ({
 const tabNavigationValue = ({ pathname, isAuthenticated }) => {
   switch (pathname) {
     case '/':
-    case '/documentation':
       return pathname;
+    case '/documentation':
+    case '/documentation/userguide':
+    case '/documentation/tutorial':
+    case '/documentation/datatypes':
+    case '/documentation/terms':
+      return '/documentation';
     case '/artifacts':
     case '/build':
     case '/testing':

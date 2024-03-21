@@ -1,0 +1,88 @@
+{
+  "resourceType": "Bundle",
+  "id": "Included - BMI 25 and Hypertension",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "8319a1e5-4d12-4b2e-89af-ca4dea04b243",
+        "name": [
+          {
+            "given": ["Isabel"],
+            "family": "Included"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "2002-02-16"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "541a0c89-c664-429f-b3b7-0b97c5e4ce51",
+        "subject": {
+          "reference": "Patient/8319a1e5-4d12-4b2e-89af-ca4dea04b243"
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "39156-5",
+              "display": "Body mass index (BMI) [Ratio]"
+            }
+          ],
+          "text": "Body mass index (BMI) [Ratio]"
+        },
+        "valueQuantity": {
+          "value": 25,
+          "unit": "kg/m2",
+          "system": "http://unitsofmeasure.org",
+          "code": "kg/m2"
+        },
+        "effectiveDateTime": "2021-04-05T16:00:00.000Z"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "a0aba968-3b9c-4d75-88ed-3d1bd2e5595f",
+        "subject": {
+          "reference": "Patient/8319a1e5-4d12-4b2e-89af-ca4dea04b243"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active",
+              "display": "Active"
+            }
+          ],
+          "text": "Active"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed",
+              "display": "Confirmed"
+            }
+          ],
+          "text": "Confirmed"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "I10",
+              "display": "Essential (primary) hypertension"
+            }
+          ],
+          "text": "Essential (primary) hypertension"
+        },
+        "onsetDateTime": "2020-04-05T00:00:00.000Z"
+      }
+    }
+  ]
+}

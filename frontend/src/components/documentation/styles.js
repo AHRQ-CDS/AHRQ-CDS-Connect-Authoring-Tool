@@ -66,6 +66,9 @@ export default makeStyles(
     h4Wrapper: {
       borderLeft: `3px solid ${theme.palette.common.ahrqLightBlue}`,
       paddingLeft: '20px'
+    },
+    italic: {
+      fontStyle: 'italic'
     }
   }),
   { name: 'Documentation', index: 1 }

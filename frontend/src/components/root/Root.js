@@ -40,6 +40,15 @@ const Root = ({ store }) => (
                 <PrivateRoute path="/build" component={Workspace} />
                 <PrivateRoute path="/artifacts" component={Artifact} />
                 <PrivateRoute path="/testing" component={Tester} />
+                <Route path="/documentation/tutorial">
+                  <Documentation activeTab={1} />
+                </Route>
+                <Route path="/documentation/datatypes">
+                  <Documentation activeTab={2} />
+                </Route>
+                <Route path="/documentation/terms">
+                  <Documentation activeTab={3} />
+                </Route>
                 <Route path="/documentation">
                   <Documentation />
                 </Route>

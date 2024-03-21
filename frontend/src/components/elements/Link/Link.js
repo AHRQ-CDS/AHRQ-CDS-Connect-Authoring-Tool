@@ -19,7 +19,7 @@ function onVisitExternalLink(e) {
   }
 }
 
-const Link = ({ external = false, href, sameTab = false, text }) => {
+const Link = ({ external = false, download = false, href, sameTab = false, text }) => {
   if (external) {
     return (
       <MuiLink target="_blank" rel="nofollow noopener noreferrer" onClick={onVisitExternalLink} href={href}>
@@ -29,7 +29,15 @@ const Link = ({ external = false, href, sameTab = false, text }) => {
     );
   }
 
-  if (!external && !sameTab) {
+  if (download) {
+    return (
+      <MuiLink href={href} download>
+        {text}
+      </MuiLink>
+    );
+  }
+
+  if (!sameTab) {
     return (
       <MuiLink target="_blank" rel="nofollow noopener noreferrer" href={href}>
         {text}
@@ -37,7 +45,7 @@ const Link = ({ external = false, href, sameTab = false, text }) => {
     );
   }
 
-  if (!external && sameTab) return <MuiLink href={href}>{text}</MuiLink>;
+  return <MuiLink href={href}>{text}</MuiLink>;
 };
 
 Link.propTypes = {

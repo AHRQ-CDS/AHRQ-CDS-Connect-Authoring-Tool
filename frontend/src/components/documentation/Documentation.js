@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { AppBar, Tabs, Tab } from '@mui/material';
 import clsx from 'clsx';
 
 import DataTypeGuide from './DataTypeGuide';
 import UserGuide from './UserGuide';
 import TermsAndConditions from './TermsAndConditions';
+import Tutorial from './Tutorial';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from './styles';
 
@@ -25,10 +27,10 @@ const a11yProps = index => ({
   'aria-controls': `tabpanel-${index}`
 });
 
-const Documentation = () => {
+const Documentation = ({ activeTab = 0 }) => {
   const styles = useStyles();
   const spacingStyles = useSpacingStyles();
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(activeTab);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -47,9 +49,34 @@ const Documentation = () => {
               aria-label="documentation tabs"
               variant="fullWidth"
             >
-              <Tab className={styles.tab} label="User Guide" {...a11yProps(0)} />
-              <Tab className={styles.tab} label="Data Types" {...a11yProps(1)} />
-              <Tab className={styles.tab} label="Terms & Conditions" {...a11yProps(2)} />
+              <Tab
+                className={styles.tab}
+                component={NavLink}
+                to="/documentation/userguide"
+                label="User Guide"
+                {...a11yProps(0)}
+              />
+              <Tab
+                className={styles.tab}
+                component={NavLink}
+                to="/documentation/tutorial"
+                label="Tutorial"
+                {...a11yProps(1)}
+              />
+              <Tab
+                className={styles.tab}
+                component={NavLink}
+                to="/documentation/datatypes"
+                label="Data Types"
+                {...a11yProps(2)}
+              />
+              <Tab
+                className={styles.tab}
+                component={NavLink}
+                to="/documentation/terms"
+                label="Terms & Conditions"
+                {...a11yProps(3)}
+              />
             </Tabs>
           </AppBar>
         </div>
@@ -59,10 +86,14 @@ const Documentation = () => {
         </TabPanel>
 
         <TabPanel value={value} index={1}>
-          <DataTypeGuide />
+          <Tutorial />
         </TabPanel>
 
         <TabPanel value={value} index={2}>
+          <DataTypeGuide />
+        </TabPanel>
+
+        <TabPanel value={value} index={3}>
           <TermsAndConditions />
         </TabPanel>
       </div>

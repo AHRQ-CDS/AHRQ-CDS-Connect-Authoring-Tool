@@ -63,7 +63,7 @@ const PatientsTable = ({ handleExecuteCQL, patients }) => {
         </div>
 
         <div className={styles.helpLink}>
-          <HelpLink linkPath="documentation#Testing_Artifacts" showText />
+          <HelpLink linkPath="documentation/userguide#Testing_Artifacts" showText />
         </div>
       </div>
 
