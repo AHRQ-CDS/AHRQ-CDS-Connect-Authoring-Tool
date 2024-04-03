@@ -106,7 +106,7 @@ const ValueSetSearchResultRow = ({ handleViewValueSetDetails, handleSaveValueSet
           <div className={textStyles.noWrap}>
             {valueSet.codeCount}
             <IconButton
-              aria-label="View Value Set"
+              aria-label={`View Value Set ${valueSet.name}`}
               color="primary"
               onClick={event => handleViewValueSetDetails(event, { name: valueSet.name, oid: valueSet.oid })}
               size="large"

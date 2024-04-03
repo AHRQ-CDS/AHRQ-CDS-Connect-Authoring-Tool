@@ -8,6 +8,7 @@ import ValueSetSelectModal from '../ValueSetSelectModal';
 describe('<ValueSetSelectModal />', () => {
   const apiKey = 'api-123';
   const testVsacSearchResults = [
+    // NOTE: This is the order value sets are displayed because results are sorted by VSAC API
     {
       name: 'Test VS',
       steward: 'Test Steward',
@@ -142,7 +143,7 @@ describe('<ValueSetSelectModal />', () => {
     expect(dialog.getByText('Jan 1, 2020').parentElement.textContent).toEqual('Updated:Jan 1, 2020');
     expect(dialog.getByLabelText('Experimental')).toBeInTheDocument();
 
-    // the second vs without dates or experimental doesn't render blanks
+    // the three vs without dates or experimental doesn't render blanks
     expect(dialog.getAllByText(/Reviewed:/)).toHaveLength(1);
     expect(dialog.getAllByText(/Updated:/)).toHaveLength(1);
     expect(dialog.getAllByLabelText('Experimental')).toHaveLength(1);
@@ -191,7 +192,7 @@ describe('<ValueSetSelectModal />', () => {
     expect(dialog.getByText('Test VS')).toBeInTheDocument();
     expect(dialog.getByText('New VS')).toBeInTheDocument();
 
-    await waitFor(() => userEvent.click(dialog.getAllByRole('button', { name: 'View Value Set' })[0]));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'View Value Set New VS' })));
 
     expect(await dialog.findByText('Code System')).toBeInTheDocument();
     expect(dialog.getByRole('textbox')).toHaveValue('New VS (3.4.5)');
@@ -217,7 +218,7 @@ describe('<ValueSetSelectModal />', () => {
     expect(dialog.getByText('Test VS')).toBeInTheDocument();
     expect(dialog.getByText('New VS')).toBeInTheDocument();
 
-    await waitFor(() => userEvent.click(dialog.getAllByRole('button', { name: 'View Value Set' })[0]));
+    await waitFor(() => userEvent.click(dialog.getByRole('button', { name: 'View Value Set New VS' })));
 
     expect(await dialog.findByText('Code System')).toBeInTheDocument();
 
