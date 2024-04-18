@@ -16,6 +16,7 @@ dependencies are currently fixed to older versions:
   These errors increased after version `v4.17.3`.
   [This commit](https://github.com/tscanlin/tocbot/commit/be66ad95284ebd21299a203d5479e12d85e34d62) may be related to new errors.
   Eventually, it will be good upgrade this package, but it may require reaching out for input on Github.
+- **eslint**: ESLint v9 was released recently. However, eslint-config-airbnb still requires ESLint v8. Based on [this issue](https://github.com/airbnb/javascript/issues/2961), they are working on updating to support v9. Hopefully, it will be supported soon, and when it is, we can update to the latest ESLint.
 
 ## Notes about overrides
 
