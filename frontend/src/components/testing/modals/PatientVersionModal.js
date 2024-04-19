@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 import { Modal } from 'components/elements';
 import useStyles from '../styles';
 
-const PatientVersionModal = ({ handleCloseModal, handleSelectVersion }) => {
+const PatientVersionModal = ({ handleCloseModal, handleSelectVersion, versionOptions = ['R4', 'STU3', 'DSTU2'] }) => {
   const styles = useStyles();
 
   return (
@@ -21,13 +21,28 @@ const PatientVersionModal = ({ handleCloseModal, handleSelectVersion }) => {
         <div>Please select the FHIR version of this patient from the options below.</div>
 
         <div className={styles.versionButtons}>
-          <Button color="primary" onClick={() => handleSelectVersion('R4')} variant="contained">
+          <Button
+            color="primary"
+            onClick={() => handleSelectVersion('R4')}
+            variant="contained"
+            disabled={!versionOptions.includes('R4')}
+          >
             R4
           </Button>
-          <Button color="primary" onClick={() => handleSelectVersion('STU3')} variant="contained">
+          <Button
+            color="primary"
+            onClick={() => handleSelectVersion('STU3')}
+            variant="contained"
+            disabled={!versionOptions.includes('STU3')}
+          >
             STU3
           </Button>
-          <Button color="primary" onClick={() => handleSelectVersion('DSTU2')} variant="contained">
+          <Button
+            color="primary"
+            onClick={() => handleSelectVersion('DSTU2')}
+            variant="contained"
+            disabled={!versionOptions.includes('DSTU2')}
+          >
             DSTU2
           </Button>
         </div>

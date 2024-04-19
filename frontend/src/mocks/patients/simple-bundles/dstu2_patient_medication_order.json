@@ -1,0 +1,57 @@
+{
+  "resourceType": "Bundle",
+  "id": "DSTU2 Example Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "example-patient",
+        "name": [
+          {
+            "given": ["Peter", "NoLastName"]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "2002-03-14"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "example-observation",
+        "subject": {
+          "reference": "Patient/example-patient"
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "39156-5",
+              "display": "Body mass index (BMI) [Ratio]"
+            }
+          ]
+        },
+        "valueQuantity": {
+          "value": 25,
+          "unit": "kg/m2",
+          "system": "http://unitsofmeasure.org",
+          "code": "kg/m2"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationOrder",
+        "id": "example-medication-order",
+        "subject": {
+          "reference": "Patient/example-patient"
+        },
+        "medicationReference": {
+          "reference": "Medication/example-medication"
+        }
+      }
+    }
+  ]
+}

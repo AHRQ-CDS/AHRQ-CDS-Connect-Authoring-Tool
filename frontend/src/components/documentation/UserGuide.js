@@ -2056,10 +2056,14 @@ const UserGuide = () => {
               />
             </div>
             <div>
-              When you upload a patient, the CDS Authoring Tool will display a modal dialog asking you to indicate which
-              version of FHIR the patient data conforms to. Choose DSTU2, STU3, or R4. This may affect what artifacts
-              can be tested using this patient and/or what FHIR version of the artifact will be used to do the testing
-              on this patient.
+              When you upload a patient, the CDS Authoring Tool will try to determine which version of FHIR the patient
+              data conforms to. If it can detect a FHIR version, the patient will be added and the FHIR version will be
+              chosen automatically. If the FHIR version cannot be detected, a modal dialog will be displayed asking you
+              to indicate which version of FHIR the patient data conforms to. Choose DSTU2, STU3, or R4.
+            </div>
+            <div>
+              This may affect what artifacts can be tested using this patient and/or what FHIR version of the artifact
+              will be used to do the testing on this patient.
             </div>
             <div>
               <img

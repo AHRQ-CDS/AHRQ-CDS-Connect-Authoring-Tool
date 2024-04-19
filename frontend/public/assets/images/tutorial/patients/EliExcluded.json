@@ -81,7 +81,8 @@
           ],
           "text": "Essential (primary) hypertension"
         },
-        "onsetDateTime": "2020-04-05T00:00:00.000Z"
+        "onsetDateTime": "2020-04-05T00:00:00.000Z",
+        "recordedDate": "2020-04-05T00:00:00.000Z"
       }
     },
     {
@@ -121,7 +122,8 @@
           ],
           "text": "Acute myocardial infarction, unspecified"
         },
-        "onsetDateTime": "2020-12-02T16:00:00.000Z"
+        "onsetDateTime": "2020-12-02T16:00:00.000Z",
+        "recordedDate": "2020-12-02T16:00:00.000Z"
       }
     }
   ]

@@ -1,0 +1,57 @@
+{
+  "resourceType": "Bundle",
+  "id": "R4 Service Request Example Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "example-patient",
+        "name": [
+          {
+            "family": "Chalmers",
+            "given": ["Peter", "James"]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "2002-03-14"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "example-observation",
+        "subject": {
+          "reference": "Patient/example-patient"
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "39156-5",
+              "display": "Body mass index (BMI) [Ratio]"
+            }
+          ]
+        },
+        "valueQuantity": {
+          "value": 25,
+          "unit": "kg/m2",
+          "system": "http://unitsofmeasure.org",
+          "code": "kg/m2"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "example-service-request",
+        "status": "completed",
+        "intent": "order",
+        "subject": {
+          "reference": "Patient/example-patient"
+        }
+      }
+    }
+  ]
+}

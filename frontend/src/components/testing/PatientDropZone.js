@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import PatientVersionModal from './modals/PatientVersionModal';
 import { addPatient } from 'queries/testing';
-import { getPatientResource, getPatientResourceType } from 'utils/patients';
+import { autoDetectFHIRVersion, getPatientResource, getPatientResourceType } from 'utils/patients';
 import { useDropZoneStyles, useSpacingStyles } from 'styles/hooks';
 
 const PatientDropZone = () => {
@@ -15,6 +15,7 @@ const PatientDropZone = () => {
   const [showPatientVersionModal, setShowPatientVersionModal] = useState(false);
   const [showUploadError, setShowUploadError] = useState(false);
   const [patientData, setPatientData] = useState(null);
+  const [versionOptions, setVersionOptions] = useState(['R4', 'STU3', 'DSTU2']);
   const queryClient = useQueryClient();
   const { mutateAsync: asyncAddPatient, isLoading: isAddingPatient } = useMutation(addPatient, {
     onSuccess: () => {
@@ -33,36 +34,47 @@ const PatientDropZone = () => {
   const handleSelectVersion = version => {
     asyncAddPatient({ patient: patientData, fhirVersion: version });
     setShowPatientVersionModal(false);
+    setVersionOptions(['R4', 'STU3', 'DSTU2']);
   };
 
-  const handleOnDrop = useCallback(patient => {
-    setPatientData(null);
-    setShowPatientUploadedMessage(false);
-    setShowUploadError(false);
+  const handleOnDrop = useCallback(
+    patient => {
+      setPatientData(null);
+      setShowPatientUploadedMessage(false);
+      setShowUploadError(false);
 
-    const reader = new FileReader();
-    reader.onload = event => {
-      try {
-        const parsedPatientData = JSON.parse(event.target.result);
+      const reader = new FileReader();
+      reader.onload = event => {
+        try {
+          const parsedPatientData = JSON.parse(event.target.result);
 
-        if (getPatientResourceType(parsedPatientData) === 'Bundle' && getPatientResource(parsedPatientData)) {
-          setPatientData(parsedPatientData);
-          setShowPatientVersionModal(true);
-        } else {
-          setShowUploadError(true); // no patient could be found
+          if (getPatientResourceType(parsedPatientData) === 'Bundle' && getPatientResource(parsedPatientData)) {
+            setPatientData(parsedPatientData);
+            const versions = autoDetectFHIRVersion({ patient: parsedPatientData });
+            if (versions.length === 1) {
+              // If version detected, add the patient right away
+              asyncAddPatient({ patient: parsedPatientData, fhirVersion: versions[0] });
+            } else {
+              setVersionOptions(versions);
+              setShowPatientVersionModal(true);
+            }
+          } else {
+            setShowUploadError(true); // no patient could be found
+          }
+        } catch (error) {
+          setShowUploadError(true); // invalid file type
         }
-      } catch (error) {
-        setShowUploadError(true); // invalid file type
-      }
-    };
+      };
 
-    try {
-      reader.readAsText(patient[0]);
-    } catch (error) {
-      console.error(error);
-      setShowUploadError(true);
-    }
-  }, []);
+      try {
+        reader.readAsText(patient[0]);
+      } catch (error) {
+        console.error(error);
+        setShowUploadError(true);
+      }
+    },
+    [asyncAddPatient]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -115,6 +127,7 @@ const PatientDropZone = () => {
         <PatientVersionModal
           handleCloseModal={() => setShowPatientVersionModal(false)}
           handleSelectVersion={handleSelectVersion}
+          versionOptions={versionOptions}
         />
       )}
     </div>
