@@ -1,7 +1,5 @@
 const config = require('../config');
 
-/*eslint-disable max-len*/
-
 module.exports = (req, res) => {
   res.type('js');
   // If ForeSee is not active, just send a (mostly) blank response.

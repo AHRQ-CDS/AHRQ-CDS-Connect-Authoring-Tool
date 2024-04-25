@@ -1,5 +1,3 @@
-/* eslint-disable object-curly-newline */
-
 // NOTE -- Any cqlTemplates/cqlLibraryFunctions that are `null` are currently in development
 // Any id's that are the same as cqlTemplates are pure coincidence. The id matches within
 // src/components/builder/modifiers while the cqlTemplate matches the cqlTemplate in app/data/cql/modifiers

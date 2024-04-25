@@ -32,7 +32,7 @@ function getLdapConfiguration(req, callback) {
       .map(f => {
         try {
           return fs.readFileSync(f);
-        } catch (e) {
+        } catch {
           console.error(`Failed to load certificate for LDAP: ${f}`);
         }
       })

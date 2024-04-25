@@ -20,7 +20,6 @@ if (useHTTPS) {
   const sslFilesExist = sslKeyFile && fs.existsSync(sslKeyFile) && sslCrtFile && fs.existsSync(sslCrtFile);
   if (!sslFilesExist) {
     console.error(
-      // eslint-disable-next-line max-len
       'HTTPS mode detected, but SSL_KEY_FILE and/or SSL_CRT_FILE environment variables do not resolve to valid file paths.'
     );
     process.exit(1);

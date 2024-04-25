@@ -9,7 +9,7 @@ const addExternalCql = async library => {
     const statusText = typeof error.response?.data === 'string' ? error.response.data : '';
     return Promise.reject({
       statusText,
-      cqlErrors: typeof error.response?.data === 'object' ? error.response.data : null
+      cqlErrors: Array.isArray(error.response?.data) ? error.response.data : null
     });
   }
 };

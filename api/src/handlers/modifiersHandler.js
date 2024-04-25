@@ -73,7 +73,7 @@ async function allGet(req, res) {
       } else {
         res.json(modifiers);
       }
-    } catch (err) {
+    } catch {
       res.json(modifiers);
     }
   } else {
