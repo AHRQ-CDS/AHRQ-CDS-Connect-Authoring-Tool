@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "archiver": "^7.0.1",
-    "axios": "^1.6.8",
+    "axios": "^1.7.2",
     "basic-auth": "^2.0.1",
     "busboy": "^1.6.0",
     "connect-mongo": "^5.1.0",
@@ -20,22 +20,22 @@
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
     "migrate-mongo": "^11.0.0",
-    "mongoose": "^8.3.2",
+    "mongoose": "^8.4.0",
     "morgan": "^1.10.0",
     "passport": "^0.7.0",
     "passport-ldapauth": "^3.0.1",
     "passport-local": "^1.0.0",
     "slug": "^9.0.0",
-    "unzipper": "^0.11.4",
+    "unzipper": "^0.11.6",
     "uuid": "^9.0.1",
-    "validator": "^13.11.0"
+    "validator": "^13.12.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.1.1",
+    "@eslint/js": "^9.3.0",
     "chai": "^4.4.1",
     "chai-exclude": "^2.1.0",
-    "eslint": "^9.1.1",
-    "globals": "^15.0.0",
+    "eslint": "^9.3.0",
+    "globals": "^15.3.0",
     "mocha": "^10.4.0",
     "nock": "^13.5.4",
     "nodemon": "^3.1.0",
@@ -43,7 +43,7 @@
     "opener": "^1.5.2",
     "prettier": "^3.2.5",
     "rewire": "^7.0.0",
-    "sinon": "^17.0.1",
+    "sinon": "^18.0.0",
     "supertest": "^7.0.0"
   },
   "scripts": {
