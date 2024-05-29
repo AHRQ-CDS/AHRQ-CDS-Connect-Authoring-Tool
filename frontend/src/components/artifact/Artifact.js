@@ -46,13 +46,14 @@ const Artifact = () => {
         <div className={clsx(spacingStyles.minHeight, spacingStyles.verticalPadding)}>
           {/* NOTE: This alert can be used to provide a quick notice to AT users. To use it, uncomment the div and update the text. */}
           {/* To conditionally render the banner (e.g. to dismiss it after a certain time), uncomment the conditional portion before the div as well. */}
-          {/* {new Date() < new Date('May 24, 2024') && ( */}
-          {/* <div className={spacingStyles.verticalPadding}>
-            <Alert severity={'error'}>
-              Note: Some important message to AT users
-            </Alert>
-          </div> */}
-          {/* )} */}
+          {new Date() < new Date('May 31, 2024') && (
+            <div className={spacingStyles.verticalPadding}>
+              <Alert severity={'error'}>
+                The CDS Authoring Tool will be offline for maintenance Wednesday, May 29 and Thursday, May 30 from
+                4:00pm to 8:00pm US Eastern Time.
+              </Alert>
+            </div>
+          )}
           <div className={styles.helpLink}>
             <Button color="primary" onClick={() => setShowModal(true)} startIcon={<AddIcon />} variant="contained">
               Create New Artifact
