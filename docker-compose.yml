@@ -5,6 +5,7 @@ services:
     environment:
       MONGO_URL: mongodb://cat-mongo/cds_authoring
       CQL_TO_ELM_URL: http://cat-cql2elm:8080/cql/translator
+      CQL_FORMATTER_URL: http://cat-cql2elm:8080/cql/formatter
       NODE_ENV: development
     volumes:
       - ./api/config:/usr/src/app/api/config

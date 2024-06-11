@@ -18,8 +18,10 @@ const config = [
       'no-unused-vars': ['error', { args: 'none' }], // don't check function arguments
       'no-use-before-define': ['error', 'nofunc'],
       'no-plusplus': ['error', { allowForLoopAfterthoughts: true }] // allow ++ in for loop expression
-    },
-    ignores: ['localDependencies/*']
+    }
+  },
+  {
+    ignores: ['src/cql-merge/import/grammar/']
   }
 ];
 

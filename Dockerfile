@@ -27,7 +27,6 @@ FROM base as install_backend
 # redownloading them all.
 COPY ./api/package.json /usr/src/app/api/package.json
 COPY ./api/package-lock.json /usr/src/app/api/package-lock.json
-COPY ./api/localDependencies /usr/src/app/api/localDependencies
 WORKDIR /usr/src/app/api
 RUN npm install
 

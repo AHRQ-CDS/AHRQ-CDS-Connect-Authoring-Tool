@@ -1,6 +1,9 @@
 const config = require('../config');
 const Artifact = require('../models/artifact');
 const CQLLibrary = require('../models/cqlLibrary');
+const { exportCQL } = require('../cql-merge/export/exportCQL');
+const { importCQL } = require('../cql-merge/import/importCQL');
+const { RawCQL } = require('../cql-merge/utils/RawCQL');
 const { sendUnauthorized } = require('./common');
 const _ = require('lodash');
 const slug = require('slug');
@@ -11,7 +14,6 @@ const path = require('path');
 const axios = require('axios');
 const FormData = require('form-data');
 const busboy = require('busboy');
-const { exportCQL, importCQL, RawCQL } = require('cql-merge');
 
 const queryResources = {
   dstu2_resources: require('../data/query_builder/dstu2_resources.json'),
