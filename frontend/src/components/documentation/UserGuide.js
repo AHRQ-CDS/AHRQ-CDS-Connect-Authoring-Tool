@@ -66,8 +66,8 @@ const UserGuide = () => {
         <div>
           The CDS Authoring Tool is part of the <a href="https://cds.ahrq.gov/cdsconnect">CDS Connect</a> project,
           sponsored by the Agency for Healthcare Research and Quality (AHRQ), and developed under contract with AHRQ by
-          MITRE's CMS Alliance to Modernize Healthcare (CAMH) FFRDC. For an overview of CDS Connect and how the CDS
-          Authoring Tool fits in to the CDS Connect lifecycle, watch the{' '}
+          MITRE's Health FFRDC. For an overview of CDS Connect and how the CDS Authoring Tool fits in to the CDS Connect
+          lifecycle, watch the{' '}
           <Link
             external
             href="https://youtu.be/boZT7CHln5g?si=IIZjsqSUkL-p1gZr&t=1789"
