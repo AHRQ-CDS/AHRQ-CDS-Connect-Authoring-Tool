@@ -1,6 +1,9 @@
 'use strict';
 
-const { v4: uuid } = require('uuid');
+// NOTE: This dependency was removed from the api module in Jun 2024.
+// If this migration needs to be run, first run `npm install uuid`
+// to add the dependency back, and then uncomment the line below.
+// const { v4: uuid } = require('uuid');
 
 module.exports.id = 'error-statement-data-structure-change';
 
@@ -9,6 +12,7 @@ const convertNestedStatement = ({ condition, child, thenClause }) => ({
   statements: child
     ? [
         {
+          // eslint-disable-next-line no-undef
           id: uuid(),
           ifThenClauses: child.statements.map(statement => convertNestedStatement(statement)),
           elseClause: child.elseClause || ''

@@ -7,7 +7,9 @@ chai.use(require('chai-exclude'));
 
 const { expect } = chai;
 
-describe('Error Statement Data Migration', () => {
+// Skipping this test since migration 17 will not work unless uuid is manually installed.
+// This is by design to reduce dependencies for code that is no longer considered active.
+describe.skip('Error Statement Data Migration', () => {
   it('should convert an artifacts error statement document to the new format', () => {
     const result = convertArtifactErrorStatement({
       errorStatement: {

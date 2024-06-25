@@ -1,4 +1,4 @@
-// Generated from cql.g4 by ANTLR 4.7.1
+// Generated from cql.g4 by ANTLR 4.8
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
 
