@@ -1,7 +1,6 @@
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
-const { expect } = require('chai');
-const { setupExpressApp } = require('./utils');
+const { setupExpressApp, importChaiExpect } = require('../utils');
 
 // NOTE: Most of the data exposed by /query is NOT user-dependent; therefore
 // authentication is not required. In normal use, however, the use will be
@@ -51,10 +50,11 @@ describe('Route: /authoring/api/query/implicitconversion', () => {
 
 // Usage: /authoring/api/query/operator?typeSpecifier=<Type>&elementType=<elementType>
 describe('Route: /authoring/api/query/operator', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {

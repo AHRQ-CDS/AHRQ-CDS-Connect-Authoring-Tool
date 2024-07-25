@@ -1,4 +1,3 @@
-const { expect } = require('chai');
 const { isEqual, isObject, transform } = require('lodash');
 
 const Artifact = require('../../src/models/artifact');
@@ -7,8 +6,14 @@ const testPublishableLibraryWithDates = require('./fixtures/artifact/Library-Tes
 const testPublishableLibraryWithDatesAndContext = require('./fixtures/artifact/Library-Test-Artifact-With-Dates-And-Context');
 const testPublishableLibrary = require('./fixtures/artifact/Library-Test-CPG-Export');
 const testExpandedContext = require('./fixtures/artifact/Library-Test-Expanded-Context');
+const { importChaiExpect } = require('../utils');
 
 describe('Artifact', () => {
+  let expect;
+  before(async () => {
+    expect = await importChaiExpect();
+  });
+
   describe('#validate', () => {
     // There isn't much to test, so just check it validates without errors
     it('should validate without errors', async () => {

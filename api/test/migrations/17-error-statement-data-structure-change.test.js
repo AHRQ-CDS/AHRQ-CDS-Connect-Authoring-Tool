@@ -1,15 +1,16 @@
-const chai = require('chai');
 const {
   convertArtifactErrorStatement
 } = require('../../src/migrations/old-migrations/17-error-statement-data-structure-change');
-
-chai.use(require('chai-exclude'));
-
-const { expect } = chai;
+const { importChaiExpect } = require('../utils');
 
 // Skipping this test since migration 17 will not work unless uuid is manually installed.
 // This is by design to reduce dependencies for code that is no longer considered active.
 describe.skip('Error Statement Data Migration', () => {
+  let expect;
+  before(async () => {
+    expect = await importChaiExpect();
+  });
+
   it('should convert an artifacts error statement document to the new format', () => {
     const result = convertArtifactErrorStatement({
       errorStatement: {

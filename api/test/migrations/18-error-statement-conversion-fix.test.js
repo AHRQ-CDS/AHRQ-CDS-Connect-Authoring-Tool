@@ -1,11 +1,12 @@
-const chai = require('chai');
 const { fixArtifactErrorStatement } = require('../../src/migrations/old-migrations/18-error-statement-conversion-fix');
-
-chai.use(require('chai-exclude'));
-
-const { expect } = chai;
+const { importChaiExpect } = require('../utils');
 
 describe('Error Statement Conversion Fix', () => {
+  let expect;
+  before(async () => {
+    expect = await importChaiExpect();
+  });
+
   it('should correct the data format for an empty error statement', () => {
     const result = fixArtifactErrorStatement({
       errorStatement: {

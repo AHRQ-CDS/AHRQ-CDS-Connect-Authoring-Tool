@@ -2,11 +2,14 @@ const request = require('supertest');
 const passport = require('passport');
 const sandbox = require('sinon').createSandbox();
 const { assert, fake, replace } = sandbox;
-const { expect } = require('chai');
-const { setupExpressApp } = require('./utils');
+const { setupExpressApp, importChaiExpect } = require('../utils');
 
 describe('Route: /authoring/api/auth/login', () => {
-  let app, options, fakeLogout;
+  let app, options, fakeLogout, expect;
+
+  before(async () => {
+    expect = await importChaiExpect();
+  });
 
   beforeEach(() => {
     fakeLogout = fake.yields();
@@ -136,10 +139,11 @@ describe('Route: /authoring/api/auth/logout', () => {
 });
 
 describe('Route: /authoring/api/auth/user', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {

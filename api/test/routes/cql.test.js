@@ -4,8 +4,7 @@ const unzipper = require('unzipper');
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
 const { fake, mock, replace, match } = sandbox;
-const { expect } = require('chai');
-const { setupExpressApp } = require('./utils');
+const { setupExpressApp, importChaiExpect } = require('../utils');
 const Artifact = require('../../src/models/artifact');
 const cqlHandler = require('../../src/handlers/cqlHandler');
 const CQLLibrary = require('../../src/models/cqlLibrary');
@@ -16,10 +15,11 @@ const simpleArtifactWithDataModel = Object.assign({ dataModel: { name: 'FHIR', v
 // TODO: More tests when CQL-to-ELM returns ELM w/ errors in annotations
 
 describe('Route: /authoring/api/cql/', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -157,10 +157,11 @@ describe('Route: /authoring/api/cql/', () => {
 });
 
 describe('Route: /authoring/api/cql/validate', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -257,10 +258,11 @@ describe('Route: /authoring/api/cql/validate', () => {
 });
 
 describe('Route: /authoring/api/cql/viewCql', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {

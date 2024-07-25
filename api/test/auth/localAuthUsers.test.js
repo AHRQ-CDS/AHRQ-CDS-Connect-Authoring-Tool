@@ -1,5 +1,5 @@
-const { expect } = require('chai');
 const rewire = require('rewire');
+const { importChaiExpect } = require('../utils');
 
 // rewire localAuthUsers so we can set private module variables
 const localAuthUsers = rewire('../../src/auth/localAuthUsers');
@@ -13,6 +13,11 @@ localAuthUsers.__set__({
 const findByUsername = localAuthUsers.findByUsername;
 
 describe('localAuthUsers', () => {
+  let expect;
+  before(async () => {
+    expect = await importChaiExpect();
+  });
+
   describe('#findByUsername', () => {
     it('should callback with a user object when a user is found', done => {
       findByUsername('bob', (err, user) => {

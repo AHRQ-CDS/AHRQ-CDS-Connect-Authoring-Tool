@@ -1,33 +1,34 @@
 const lodash = require('lodash');
 const nock = require('nock');
-const chai = require('chai');
-const expect = chai.expect;
 
 const client = require('../../src/vsac/FHIRClient');
-
 const FHIRMocks = require('./fixtures/FHIRfixtures');
-
-// Helper function for testing promises that are expected to return an error
-function shouldThrowError(result, errorCode) {
-  const errorMessage = `expected a response with status ${errorCode}`;
-  return result
-    .then(() => {
-      throw new Error(errorMessage);
-    })
-    .catch(err => {
-      if (err.message === errorMessage) {
-        throw err;
-      }
-      expect(err.response?.status).to.equal(errorCode);
-    });
-}
+const { importChaiExpect } = require('../utils');
 
 describe('FHIRClient', () => {
+  let expect;
+
+  // Helper function for testing promises that are expected to return an error
+  const shouldThrowError = (result, errorCode) => {
+    const errorMessage = `expected a response with status ${errorCode}`;
+    return result
+      .then(() => {
+        throw new Error(errorMessage);
+      })
+      .catch(err => {
+        if (err.message === errorMessage) {
+          throw err;
+        }
+        expect(err.response?.status).to.equal(errorCode);
+      });
+  };
+
   // before the tests, disable network connections to ensure tests never hit real network
-  before(() => {
+  before(async () => {
     // if another test suite de-activated nock, we need to re-activate it
     if (!nock.isActive()) nock.activate();
     nock.disableNetConnect();
+    expect = await importChaiExpect();
   });
 
   // after the tests, re-enable network connections

@@ -1,18 +1,18 @@
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
 const { mock, replace, fake } = sandbox;
-const { expect } = require('chai');
-const { setupExpressApp } = require('./utils');
+const { setupExpressApp, importChaiExpect } = require('../utils');
 const Patient = require('../../src/models/patient');
 const patientIncluded = require('./fixtures/patient-included.json');
 const patientExcluded = require('./fixtures/patient-excluded.json');
 const { cloneDeep } = require('lodash');
 
 describe('Route: /authoring/api/testing', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -114,10 +114,11 @@ describe('Route: /authoring/api/testing', () => {
 });
 
 describe('Route: /authoring/api/testing/:patient', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {

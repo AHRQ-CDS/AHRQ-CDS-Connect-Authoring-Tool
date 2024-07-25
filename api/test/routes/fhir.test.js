@@ -1,7 +1,7 @@
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
 const { assert, fake, mock, replace } = sandbox;
-const { setupExpressApp } = require('./utils');
+const { setupExpressApp } = require('../utils');
 const FHIRClient = require('../../src/vsac/FHIRClient');
 const HL7AdministrativeGenderVS = require('./fixtures/hl7-administrative-gender-vs.json');
 const HyperproinsulinemiaCode = require('./fixtures/hyperproinsulinemia-code.json');

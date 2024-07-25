@@ -1,7 +1,12 @@
-const { expect } = require('chai');
 const CQLLibrary = require('../../src/models/cqlLibrary');
+const { importChaiExpect } = require('../utils');
 
 describe('CQLLibrary', () => {
+  let expect;
+  before(async () => {
+    expect = await importChaiExpect();
+  });
+
   describe('#validate', () => {
     // There isn't much to test, so just check it validates without errors
     it('should validate without errors', async () => {

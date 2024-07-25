@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const nock = require('nock');
-const { expect } = require('chai');
-const { buildCQL, makeCQLtoELMRequest, formatCQL } = require('../../src/handlers/cqlHandler');
 const _ = require('lodash');
+const { buildCQL, makeCQLtoELMRequest, formatCQL } = require('../../src/handlers/cqlHandler');
+const { importChaiExpect } = require('../utils');
 
 const baseArtifact = {
   name: 'a test',
@@ -19,6 +19,11 @@ const baseArtifact = {
 };
 
 describe('cqlHandler', () => {
+  let expect;
+  before(async () => {
+    expect = await importChaiExpect();
+  });
+
   describe('#buildCQL', () => {
     describe('Element Names', () => {
       const raw = _.cloneDeep(baseArtifact);

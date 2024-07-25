@@ -1,16 +1,16 @@
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
 const { mock, fake, replace } = sandbox;
-const { expect } = require('chai');
-const { setupExpressApp } = require('./utils');
+const { setupExpressApp, importChaiExpect } = require('../utils');
 const CQLLibrary = require('../../src/models/cqlLibrary');
 const multiFunctionLib = require('./fixtures/multifunction-external-lib.json');
 
 describe('Route: /authoring/api/modifiers/:artifact', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {

@@ -1,17 +1,17 @@
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
-const { expect } = require('chai');
-const { setupExpressApp } = require('./utils');
+const { setupExpressApp, importChaiExpect } = require('../utils');
 
 // NOTE: Most of the data exposed by /config is NOT user-dependent; therefore
 // authentication is not required. In normal use, however, the use will be
 // authenticated; so we test w/ authentication, but don't worry about testing
 // without authentication since no sensitive data is at risk.
 describe('Route: /authoring/api/config/templates', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -53,10 +53,11 @@ describe('Route: /authoring/api/config/templates', () => {
 });
 
 describe('Route: /authoring/api/config/valuesets', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -84,10 +85,11 @@ describe('Route: /authoring/api/config/valuesets', () => {
 });
 
 describe('Route: /authoring/api/config/valuesets/:valueset*', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -159,10 +161,11 @@ describe('Route: /authoring/api/config/conversions', () => {
 });
 
 describe('Route: /authoring/api/config/query/resources/dstu2', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -189,10 +192,11 @@ describe('Route: /authoring/api/config/query/resources/dstu2', () => {
 });
 
 describe('Route: /authoring/api/config/query/resources/stu3', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -219,10 +223,11 @@ describe('Route: /authoring/api/config/query/resources/stu3', () => {
 });
 
 describe('Route: /authoring/api/config/query/resources/r4', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -249,10 +254,11 @@ describe('Route: /authoring/api/config/query/resources/r4', () => {
 });
 
 describe('Route: /authoring/api/config/query/resources/operators', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {

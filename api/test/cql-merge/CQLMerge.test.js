@@ -1,24 +1,29 @@
 const path = require('path');
 const fs = require('fs');
-const { expect } = require('chai');
 
 const { importCQL } = require('../../src/cql-merge/import/importCQL');
 const { exportCQL } = require('../../src/cql-merge/export/exportCQL');
 const { RawCQL } = require('../../src/cql-merge/utils/RawCQL');
+const { importChaiExpect } = require('../utils');
 
 const dependencyRawCQLs = [
   new RawCQL(fs.readFileSync(path.join(__dirname, 'fixtures', 'CDS_Connect_Commons_for_FHIRv400.cql'), 'utf-8')),
   new RawCQL(fs.readFileSync(path.join(__dirname, 'fixtures', 'CDS_Connect_Conversions.cql'), 'utf-8'))
 ];
 
-const assertCQLOutput = inputName => {
-  const inputText = fs.readFileSync(path.join(__dirname, 'fixtures', 'in', inputName), 'utf-8');
-  const outputText = fs.readFileSync(path.join(__dirname, 'fixtures', 'out', inputName), 'utf-8');
-  const mergedCQL = exportCQL(importCQL(new RawCQL(inputText), dependencyRawCQLs));
-  expect(mergedCQL.split(/\r?\n/g)).to.deep.equal(outputText.split(/\r?\n/g));
-};
-
 describe('cql-merge', () => {
+  let expect;
+  before(async () => {
+    expect = await importChaiExpect();
+  });
+
+  const assertCQLOutput = inputName => {
+    const inputText = fs.readFileSync(path.join(__dirname, 'fixtures', 'in', inputName), 'utf-8');
+    const outputText = fs.readFileSync(path.join(__dirname, 'fixtures', 'out', inputName), 'utf-8');
+    const mergedCQL = exportCQL(importCQL(new RawCQL(inputText), dependencyRawCQLs));
+    expect(mergedCQL.split(/\r?\n/g)).to.deep.equal(outputText.split(/\r?\n/g));
+  };
+
   it('should output for a CQL file', () => {
     assertCQLOutput('Standard.cql');
   });

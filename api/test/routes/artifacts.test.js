@@ -2,16 +2,16 @@ const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
 const mongoose = require('mongoose');
 const { fake, mock, replace } = sandbox;
-const { expect } = require('chai');
-const { setupExpressApp } = require('./utils');
+const { setupExpressApp, importChaiExpect } = require('../utils');
 const Artifact = require('../../src/models/artifact');
 const CQLLibrary = require('../../src/models/cqlLibrary');
 
 describe('Route: /authoring/api/artifacts/', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -171,10 +171,11 @@ describe('Route: /authoring/api/artifacts/', () => {
 });
 
 describe('Route: /authoring/api/artifacts/:artifact', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
@@ -314,10 +315,11 @@ describe('Route: /authoring/api/artifacts/:artifact', () => {
 });
 
 describe('Route: /authoring/api/artifacts/:artifact/duplicate', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {

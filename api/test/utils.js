@@ -1,7 +1,7 @@
 const express = require('express');
-const routes = require('../../src/routes');
+const routes = require('../src/routes');
 
-module.exports = { setupExpressApp };
+module.exports = { setupExpressApp, importChaiExpect };
 
 class Options {
   constructor() {
@@ -29,4 +29,12 @@ function setupExpressApp(...configurers) {
   }
   routes(app);
   return [app, options];
+}
+
+async function importChaiExpect() {
+  // Chai dynamic import. See: https://github.com/chaijs/chai/issues/1561#issuecomment-1933171936
+  const chai = await import('chai');
+  const chaiExclude = await import('chai-exclude');
+  chai.use(chaiExclude.default);
+  return chai.expect;
 }

@@ -1,7 +1,7 @@
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
 const { mock, replace, fake } = sandbox;
-const { setupExpressApp } = require('./utils');
+const { setupExpressApp } = require('../utils');
 const UserSettings = require('../../src/models/userSettings');
 
 describe('Route: /authoring/api/settings', () => {

@@ -1,7 +1,7 @@
 const path = require('path');
-const { expect } = require('chai');
 const rewire = require('rewire');
 const sinon = require('sinon');
+const { importChaiExpect } = require('../utils');
 
 // rewire configPassport so we can set private module variables
 const configPassport = rewire('../../src/auth/configPassport');
@@ -11,6 +11,11 @@ const getLdapConfiguration = configPassport.__get__('getLdapConfiguration');
 const getLocalConfiguration = configPassport.__get__('getLocalConfiguration');
 
 describe('configPassport', () => {
+  let expect;
+  before(async () => {
+    expect = await importChaiExpect();
+  });
+
   describe('#getLdapConfiguration', () => {
     let config;
     beforeEach(() => {

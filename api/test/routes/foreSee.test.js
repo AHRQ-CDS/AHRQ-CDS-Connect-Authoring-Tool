@@ -1,15 +1,15 @@
 const request = require('supertest');
 const sandbox = require('sinon').createSandbox();
 const { stub } = sandbox;
-const { expect } = require('chai');
-const { setupExpressApp } = require('./utils');
+const { setupExpressApp, importChaiExpect } = require('../utils');
 const config = require('../../src/config');
 
 describe('Route: /authoring/api/foresee.js', () => {
-  let app, options;
+  let app, options, expect;
 
-  before(() => {
+  before(async () => {
     [app, options] = setupExpressApp();
+    expect = await importChaiExpect();
   });
 
   afterEach(() => {
