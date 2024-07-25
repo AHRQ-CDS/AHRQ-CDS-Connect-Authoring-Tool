@@ -45,7 +45,7 @@ const ConjunctionGroup = ({
 
   const conjunctionGroupOptions = templates.find(t => t.name === 'Operations').entries ?? [];
   const listOperationOptions = templates.find(t => t.name === 'List Operations').entries ?? [];
-  const selectOptions = options === 'listOperations' ? listOperationOptions : conjunctionGroupOptions ?? [];
+  const selectOptions = options === 'listOperations' ? listOperationOptions : (conjunctionGroupOptions ?? []);
   const hasDuplicateNameWarning = hasDuplicateName(instance, instanceNames, baseElements, parameters, allElements);
   const hasNestedWarning = hasGroupNestedWarning(
     instance.childInstances,
