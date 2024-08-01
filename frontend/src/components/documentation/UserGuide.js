@@ -1,6 +1,7 @@
 import React from 'react';
 import { Waypoint } from 'react-waypoint';
 import {
+  Clear as ClearIcon,
   Delete as DeleteIcon,
   Download as DownloadIcon,
   Edit as EditIcon,
@@ -1433,6 +1434,13 @@ const UserGuide = () => {
                 this, click on the "Add rationale" button in any recommendation element. This will display another text
                 field which can be used to enter the rationale.
               </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Recommendation_Rationale')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
             </div>
 
             <div className={styles.h4Wrapper}>
@@ -1475,6 +1483,10 @@ const UserGuide = () => {
             <div className={styles.h4Wrapper}>
               <h4 id="Adding_Links_to_Recommendations">3.10.3 Adding Links to Recommendations</h4>
               <div>
+                Recommendations can include links to reference information, educational materials, or SMART
+                applications. This capability fits well with implementations that deliver CDS using HL7 CDS Hooks.
+              </div>
+              <div>
                 To add links to a recommendation, click the "Add Link" button. For each link, you must select either
                 'absolute' or 'smart' for the link type. Then enter the link text (the text to display) and the link
                 address/url (the destination when clicking on the link). You may add more than one link.
@@ -1489,7 +1501,57 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Managing_Recommendations">3.10.4 Re-ordering and Deleting Recommendations</h4>
+              <h4 id="Adding_Suggestions_to_Recommendations">3.10.4 Adding Suggestions to Recommendations</h4>
+              <div>
+                Suggestions present clinicians with one or more actions that they may choose to take as part of the
+                recommendation. Common examples might include prescribing a medication or referring to a specialist.
+                This capability fits well with implementations that deliver CDS using HL7 CDS Hooks.
+              </div>
+              <div>
+                To add suggestions to a recommendation, click the "Add Suggestion" button. For each suggestion, you
+                should add a label for the suggestion.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Recommendation_Suggestion')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+              <div>
+                Each suggestion can have one or more actions. To add an action, use the "Add Action" button. Currently,
+                only "create" actions are supported, and only MedicationRequest and ServiceRequest resources can be
+                created by these actions. Select the resource type that will be created for this action. This will open
+                a dialog where you can add values for the elements of the chosen resource. Click "Create" to add the
+                action to the suggestion.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Recommendation_New_Action')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+              <div>
+                Each action is displayed within the suggestion. To edit an action, click its Edit{' '}
+                <EditIcon color="primary" fontSize="small" aria-hidden="true" /> button. To delete an action, click its
+                Delete <ClearIcon color="primary" fontSize="small" aria-hidden="true" /> button.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Recommendation_Suggestion_Summary')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+              <div>
+                You may add multiple suggestions for each recommendation, and you may add multiple actions for each
+                suggestion.
+              </div>
+            </div>
+
+            <div className={styles.h4Wrapper}>
+              <h4 id="Managing_Recommendations">3.10.5 Re-ordering and Deleting Recommendations</h4>
               <div>
                 Since patients will receive the first recommendation that applies to them, the order that
                 recommendations are listed will affect how the CDS artifact behaves. In some cases, authors may need to

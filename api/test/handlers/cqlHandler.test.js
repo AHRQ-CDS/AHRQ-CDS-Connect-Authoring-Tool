@@ -2436,6 +2436,513 @@ describe('cqlHandler', () => {
         );
       });
     });
+
+    describe('Suggestions', () => {
+      let raw;
+      beforeEach(() => {
+        raw = _.cloneDeep(baseArtifact);
+        raw.expTreeInclude = {
+          id: 'And',
+          name: 'And',
+          conjunction: true,
+          returnType: 'boolean',
+          fields: [
+            {
+              id: 'element_name',
+              type: 'string',
+              name: 'Group Name',
+              value: 'MeetsInclusionCriteria'
+            },
+            {
+              id: 'comment',
+              type: 'textarea',
+              name: 'Comment'
+            }
+          ],
+          uniqueId: 'And-01',
+          childInstances: [],
+          path: ''
+        };
+        raw.expTreeExclude = {
+          id: 'Or',
+          name: 'Or',
+          conjunction: true,
+          returnType: 'boolean',
+          fields: [
+            {
+              id: 'element_name',
+              type: 'string',
+              name: 'Group Name',
+              value: 'MeetsExclusionCriteria'
+            },
+            {
+              id: 'comment',
+              type: 'textarea',
+              name: 'Comment'
+            }
+          ],
+          uniqueId: 'Or-01',
+          childInstances: [],
+          path: ''
+        };
+        raw.errorStatement = {
+          id: 'root',
+          ifThenClauses: [
+            {
+              ifCondition: {
+                label: null,
+                value: null
+              },
+              statements: [],
+              thenClause: ''
+            }
+          ],
+          elseClause: ''
+        };
+        raw.recommendations = [
+          {
+            uid: 'rec-01',
+            grade: 'A',
+            subpopulations: [],
+            text: 'First recommendation',
+            rationale: '',
+            comment: '',
+            links: [],
+            suggestions: []
+          }
+        ];
+      });
+
+      it('should export no suggestions when none included', () => {
+        const artifact = buildCQL(raw);
+        const converted = artifact.toString();
+
+        const expectedSuggestion = `
+define "Suggestions":\r
+  if "InPopulation" then null\r
+  else null`;
+        expect(converted).to.contain(expectedSuggestion);
+      });
+
+      it('should export all suggestions for each recommendation that has them', () => {
+        raw.recommendations = [
+          {
+            uid: 'rec-01',
+            grade: 'A',
+            subpopulations: [],
+            text: 'First recommendation',
+            rationale: '',
+            comment: '',
+            links: [],
+            suggestions: [
+              {
+                uid: 'suggestion-01-01',
+                label: 'First suggestion for first recommendation',
+                actions: []
+              },
+              {
+                uid: 'suggestion-01-02',
+                label: 'Second suggestion for first recommendation',
+                actions: []
+              }
+            ]
+          },
+          {
+            uid: 'rec-02',
+            grade: 'A',
+            subpopulations: [],
+            text: 'Second recommendation',
+            rationale: '',
+            comment: '',
+            links: [],
+            suggestions: [
+              {
+                uid: 'suggestion-02-01',
+                label: 'First suggestion for second recommendation',
+                actions: []
+              }
+            ]
+          },
+          {
+            uid: 'rec-03',
+            grade: 'A',
+            subpopulations: [],
+            text: 'Third recommendation',
+            rationale: '',
+            comment: '',
+            links: [],
+            suggestions: []
+          }
+        ];
+        const artifact = buildCQL(raw);
+        const converted = artifact.toString();
+
+        // Note: actions list is included and empty when no actions are present
+        const expectedSuggestion = `
+define "Suggestions":\r
+  if "InPopulation" then List { Tuple { label: 'First suggestion for first recommendation', actions: List {  } }, Tuple { label: 'Second suggestion for first recommendation', actions: List {  } } }\r
+  else if "InPopulation" then List { Tuple { label: 'First suggestion for second recommendation', actions: List {  } } }\r
+  else if "InPopulation" then null\r
+  else null`;
+        expect(converted).to.contain(expectedSuggestion);
+      });
+
+      it('should export a suggestion with a minimal MedicationRequest action', () => {
+        raw.recommendations[0].suggestions = [
+          {
+            uid: 'suggestion-01-01',
+            label: 'First suggestion for first recommendation',
+            actions: [
+              {
+                type: 'create',
+                description: 'First action - a MedicationRequest',
+                resource: {
+                  resourceType: 'MedicationRequest',
+                  medicationCodeableConcept: {
+                    text: 'Any code for ABC',
+                    code: '',
+                    display: '',
+                    system: '',
+                    uri: ''
+                  },
+                  status: 'draft',
+                  intent: 'proposal',
+                  priority: '',
+                  reasonCode: {
+                    text: '',
+                    code: '',
+                    display: '',
+                    system: '',
+                    uri: ''
+                  },
+                  category: {
+                    text: '',
+                    code: '',
+                    display: '',
+                    system: '',
+                    uri: ''
+                  }
+                }
+              }
+            ]
+          }
+        ];
+        const artifact = buildCQL(raw);
+        const converted = artifact.toString();
+
+        const expectedSuggestion = `
+define "Suggestions":\r
+  if "InPopulation" then List { Tuple { label: 'First suggestion for first recommendation', actions: List { Tuple { type: 'create', description: 'First action - a MedicationRequest', resource: \r
+MedicationRequest {\r
+  medication: FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for ABC' } },\r
+  status: FHIR.MedicationRequestStatus { value: 'draft' },\r
+  intent: FHIR.MedicationRequestIntent { value: 'proposal' },\r
+  \r
+  \r
+  \r
+  subject: FHIR.Reference { reference: FHIR.string { value: 'Patient/' + Patient.id } }\r
+} } } } }\r
+  else null`;
+        expect(converted).to.contain(expectedSuggestion);
+      });
+
+      it('should export a suggestion with an action with all MedicationRequest fields', () => {
+        raw.recommendations[0].suggestions = [
+          {
+            uid: 'suggestion-01-01',
+            label: 'First suggestion for first recommendation',
+            actions: [
+              {
+                type: 'create',
+                description: 'First action - a MedicationRequest',
+                resource: {
+                  resourceType: 'MedicationRequest',
+                  medicationCodeableConcept: {
+                    text: 'Any code for LDL',
+                    code: '12773-8',
+                    display: 'Cholesterol in LDL [Units/volume] in Serum or Plasma by Electrophoresis',
+                    system: 'LOINC',
+                    uri: 'http://loinc.org'
+                  },
+                  status: 'draft',
+                  intent: 'proposal',
+                  priority: 'routine',
+                  reasonCode: {
+                    text: 'Any code for reason',
+                    code: '123',
+                    display: '',
+                    system: 'ICD-9-CM',
+                    uri: 'http://hl7.org/fhir/sid/icd-9-cm'
+                  },
+                  category: {
+                    text: 'Any code for category',
+                    code: '345',
+                    display: '',
+                    system: 'NCI',
+                    uri: 'http://ncimeta.nci.nih.gov'
+                  }
+                }
+              }
+            ]
+          }
+        ];
+        const artifact = buildCQL(raw);
+        const converted = artifact.toString();
+
+        const expectedSuggestion = `
+define "Suggestions":\r
+  if "InPopulation" then List { Tuple { label: 'First suggestion for first recommendation', actions: List { Tuple { type: 'create', description: 'First action - a MedicationRequest', resource: \r
+MedicationRequest {\r
+  medication: FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for LDL' }, coding: List { C3F.ToCoding("12773-8 code") } },\r
+  status: FHIR.MedicationRequestStatus { value: 'draft' },\r
+  intent: FHIR.MedicationRequestIntent { value: 'proposal' },\r
+  priority: FHIR.MedicationRequestPriority { value: 'routine' },\r
+  reasonCode: List { FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for reason' }, coding: List { C3F.ToCoding("123 code") } } },\r
+  category: List { FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for category' }, coding: List { C3F.ToCoding("345 code") } } },\r
+  subject: FHIR.Reference { reference: FHIR.string { value: 'Patient/' + Patient.id } }\r
+} } } } }\r
+  else null`;
+        expect(converted).to.contain(expectedSuggestion);
+        expect(converted).to.contain(
+          `code "12773-8 code": '12773-8' from "LOINC" display 'Cholesterol in LDL [Units/volume] in Serum or Plasma by Electrophoresis'`
+        );
+        expect(converted).to.contain(`code "123 code": '123' from "ICD-9-CM" display 'ICD-9-CM 123 Display'`);
+        expect(converted).to.contain(`code "345 code": '345' from "NCI" display 'NCI 345 Display'`);
+      });
+
+      it('should export a suggestion with a minimal ServiceRequest action', () => {
+        raw.recommendations[0].suggestions = [
+          {
+            uid: 'suggestion-01-01',
+            label: 'First suggestion for first recommendation',
+            actions: [
+              {
+                type: 'create',
+                description: 'First action - a ServiceRequest',
+                resource: {
+                  resourceType: 'ServiceRequest',
+                  code: {
+                    text: '',
+                    code: 'example-code',
+                    display: '',
+                    system: 'LOINC',
+                    uri: 'http://loinc.org'
+                  },
+                  status: 'draft',
+                  intent: 'proposal',
+                  priority: '',
+                  reasonCode: {
+                    text: '',
+                    code: '',
+                    display: '',
+                    system: '',
+                    uri: ''
+                  },
+                  category: {
+                    text: '',
+                    code: '',
+                    display: '',
+                    system: '',
+                    uri: ''
+                  }
+                }
+              }
+            ]
+          }
+        ];
+        const artifact = buildCQL(raw);
+        const converted = artifact.toString();
+
+        const expectedSuggestion = `
+define "Suggestions":\r
+  if "InPopulation" then List { Tuple { label: 'First suggestion for first recommendation', actions: List { Tuple { type: 'create', description: 'First action - a ServiceRequest', resource: \r
+ServiceRequest {\r
+  code: FHIR.CodeableConcept { coding: List { C3F.ToCoding("example-code code") } },\r
+  status: FHIR.ServiceRequestStatus { value: 'draft' },\r
+  intent: FHIR.ServiceRequestIntent { value: 'proposal' },\r
+  \r
+  \r
+  \r
+  subject: FHIR.Reference { reference: FHIR.string { value: 'Patient/' + Patient.id } }\r
+} } } } }\r
+  else null`;
+        expect(converted).to.contain(expectedSuggestion);
+        expect(converted).to.contain(
+          `code "example-code code": 'example-code' from "LOINC" display 'LOINC example-code Display'`
+        );
+      });
+
+      it('should export a suggestion with an action with all ServiceRequest fields', () => {
+        raw.recommendations[0].suggestions = [
+          {
+            uid: 'suggestion-01-01',
+            label: 'First suggestion for first recommendation',
+            actions: [
+              {
+                type: 'create',
+                description: 'First action - a ServiceRequest',
+                resource: {
+                  resourceType: 'ServiceRequest',
+                  code: {
+                    text: 'Any code for LDL',
+                    code: '12773-8',
+                    display: 'Cholesterol in LDL [Units/volume] in Serum or Plasma by Electrophoresis',
+                    system: 'LOINC',
+                    uri: 'http://loinc.org'
+                  },
+                  status: 'draft',
+                  intent: 'proposal',
+                  priority: 'routine',
+                  reasonCode: {
+                    text: 'Any code for reason',
+                    code: '123',
+                    display: '',
+                    system: 'ICD-9-CM',
+                    uri: 'http://hl7.org/fhir/sid/icd-9-cm'
+                  },
+                  category: {
+                    text: 'Any code for category',
+                    code: '345',
+                    display: '',
+                    system: 'NCI',
+                    uri: 'http://ncimeta.nci.nih.gov'
+                  }
+                }
+              }
+            ]
+          }
+        ];
+        const artifact = buildCQL(raw);
+        const converted = artifact.toString();
+
+        const expectedSuggestion = `
+define "Suggestions":\r
+  if "InPopulation" then List { Tuple { label: 'First suggestion for first recommendation', actions: List { Tuple { type: 'create', description: 'First action - a ServiceRequest', resource: \r
+ServiceRequest {\r
+  code: FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for LDL' }, coding: List { C3F.ToCoding("12773-8 code") } },\r
+  status: FHIR.ServiceRequestStatus { value: 'draft' },\r
+  intent: FHIR.ServiceRequestIntent { value: 'proposal' },\r
+  priority: FHIR.ServiceRequestPriority { value: 'routine' },\r
+  reasonCode: List { FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for reason' }, coding: List { C3F.ToCoding("123 code") } } },\r
+  category: List { FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for category' }, coding: List { C3F.ToCoding("345 code") } } },\r
+  subject: FHIR.Reference { reference: FHIR.string { value: 'Patient/' + Patient.id } }\r
+} } } } }\r
+  else null`;
+        expect(converted).to.contain(expectedSuggestion);
+        expect(converted).to.contain(
+          `code "12773-8 code": '12773-8' from "LOINC" display 'Cholesterol in LDL [Units/volume] in Serum or Plasma by Electrophoresis'`
+        );
+        expect(converted).to.contain(`code "123 code": '123' from "ICD-9-CM" display 'ICD-9-CM 123 Display'`);
+        expect(converted).to.contain(`code "345 code": '345' from "NCI" display 'NCI 345 Display'`);
+      });
+
+      it('should export a suggestion with a List of multiple actions', () => {
+        raw.recommendations[0].suggestions = [
+          {
+            uid: 'suggestion-01-01',
+            label: 'First suggestion for first recommendation',
+            actions: [
+              {
+                type: 'create',
+                description: 'First action - a MedicationRequest',
+                resource: {
+                  resourceType: 'MedicationRequest',
+                  medicationCodeableConcept: {
+                    text: 'Any code for example med1',
+                    code: 'example-med1',
+                    display: '',
+                    system: 'RXNORM',
+                    uri: 'http://www.nlm.nih.gov/research/umls/rxnorm'
+                  },
+                  status: 'draft',
+                  intent: 'proposal',
+                  priority: 'routine',
+                  reasonCode: {
+                    text: 'Any code for reason',
+                    code: '123',
+                    display: '',
+                    system: 'ICD-9-CM',
+                    uri: 'http://hl7.org/fhir/sid/icd-9-cm'
+                  },
+                  category: {
+                    text: 'Any code for category',
+                    code: '345',
+                    display: '',
+                    system: 'NCI',
+                    uri: 'http://ncimeta.nci.nih.gov'
+                  }
+                }
+              },
+              {
+                type: 'create',
+                description: 'Second action - a ServiceRequest',
+                resource: {
+                  resourceType: 'ServiceRequest',
+                  code: {
+                    text: 'Any code for lab1',
+                    code: 'example-lab1',
+                    display: '',
+                    system: 'LOINC',
+                    uri: 'http://loinc.org'
+                  },
+                  status: 'draft',
+                  intent: 'proposal',
+                  priority: 'routine',
+                  reasonCode: {
+                    text: 'Any code for reason',
+                    code: '123',
+                    display: '',
+                    system: 'ICD-9-CM',
+                    uri: 'http://hl7.org/fhir/sid/icd-9-cm'
+                  },
+                  category: {
+                    text: 'Any code for category',
+                    code: '345',
+                    display: '',
+                    system: 'NCI',
+                    uri: 'http://ncimeta.nci.nih.gov'
+                  }
+                }
+              }
+            ]
+          }
+        ];
+        const artifact = buildCQL(raw);
+        const converted = artifact.toString();
+
+        const expectedSuggestion = `
+define "Suggestions":\r
+  if "InPopulation" then List { Tuple { label: 'First suggestion for first recommendation', actions: List { Tuple { type: 'create', description: 'First action - a MedicationRequest', resource: \r
+MedicationRequest {\r
+  medication: FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for example med1' }, coding: List { C3F.ToCoding("example-med1 code") } },\r
+  status: FHIR.MedicationRequestStatus { value: 'draft' },\r
+  intent: FHIR.MedicationRequestIntent { value: 'proposal' },\r
+  priority: FHIR.MedicationRequestPriority { value: 'routine' },\r
+  reasonCode: List { FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for reason' }, coding: List { C3F.ToCoding("123 code") } } },\r
+  category: List { FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for category' }, coding: List { C3F.ToCoding("345 code") } } },\r
+  subject: FHIR.Reference { reference: FHIR.string { value: 'Patient/' + Patient.id } }\r
+} },Tuple { type: 'create', description: 'Second action - a ServiceRequest', resource: \r
+ServiceRequest {\r
+  code: FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for lab1' }, coding: List { C3F.ToCoding("example-lab1 code") } },\r
+  status: FHIR.ServiceRequestStatus { value: 'draft' },\r
+  intent: FHIR.ServiceRequestIntent { value: 'proposal' },\r
+  priority: FHIR.ServiceRequestPriority { value: 'routine' },\r
+  reasonCode: List { FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for reason' }, coding: List { C3F.ToCoding("123 code") } } },\r
+  category: List { FHIR.CodeableConcept { text: FHIR.string { value: 'Any code for category' }, coding: List { C3F.ToCoding("345 code") } } },\r
+  subject: FHIR.Reference { reference: FHIR.string { value: 'Patient/' + Patient.id } }\r
+} } } } }\r
+  else null`;
+        expect(converted).to.contain(expectedSuggestion);
+        expect(converted).to.contain(
+          `code "example-med1 code": 'example-med1' from "RXNORM" display 'RXNORM example-med1 Display'`
+        );
+        expect(converted).to.contain(
+          `code "example-lab1 code": 'example-lab1' from "LOINC" display 'LOINC example-lab1 Display'`
+        );
+        expect(converted).to.contain(`code "123 code": '123' from "ICD-9-CM" display 'ICD-9-CM 123 Display'`);
+        expect(converted).to.contain(`code "345 code": '345' from "NCI" display 'NCI 345 Display'`);
+      });
+    });
   });
 
   describe('#makeCQLtoELMRequest', () => {

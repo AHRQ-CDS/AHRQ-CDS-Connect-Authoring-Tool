@@ -650,3 +650,12 @@ define function FirstImmunization(ImmunizationList List<Immunization>):
 define function ActiveDevice(DeviceList List<Device>):
   DeviceList D
     where D.status.value = 'active'
+
+// ----------------------------------------------------- FHIR ---------------------------------------------------------
+
+define function ToCoding(code System.Code):
+  FHIR.Coding {
+    code: FHIR.code { value: code.code },
+    system: FHIR.uri { value: code.system },
+    display: FHIR.string { value: code.display }
+  }

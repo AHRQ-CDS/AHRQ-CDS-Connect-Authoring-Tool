@@ -12,7 +12,7 @@ import {
 import { Tooltip } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
 
-const RecommendationActions = ({
+const RecommendationControls = ({
   canMoveDown,
   canMoveUp,
   comment,
@@ -86,7 +86,7 @@ const RecommendationActions = ({
   );
 };
 
-RecommendationActions.propTypes = {
+RecommendationControls.propTypes = {
   canMoveDown: PropTypes.bool.isRequired,
   canMoveUp: PropTypes.bool.isRequired,
   comment: PropTypes.string.isRequired,
@@ -97,4 +97,4 @@ RecommendationActions.propTypes = {
   text: PropTypes.string.isRequired
 };
 
-export default RecommendationActions;
+export default RecommendationControls;

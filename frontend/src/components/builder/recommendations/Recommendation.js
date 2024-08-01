@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import { Box, Button, Card, CardActions, CardContent, CardHeader, TextField } from '@mui/material';
 import { produce } from 'immer';
 import { v4 as uuidv4 } from 'uuid';
+import { useSelector } from 'react-redux';
 
-import RecommendationActions from './RecommendationActions';
+import { Tooltip } from 'components/elements';
+import RecommendationControls from './RecommendationControls';
 import RecommendationField from './RecommendationField';
 import RecommendationLink from './RecommendationLink';
 import RecommendationSubpopulations from './RecommendationSubpopulations';
+import RecommendationSuggestion from './RecommendationSuggestion';
 
 const updateRecommendation = produce((recommendation, field, value) => {
   recommendation[field] = value;
@@ -21,6 +24,35 @@ const updateLink = produce((recommendation, index, field, value) => {
   recommendation.links[index][field] = value;
 });
 
+const addAction = produce((recommendation, index, action) => {
+  recommendation.suggestions[index].actions.push({
+    type: 'create',
+    description: action.description,
+    resource: { ...action.resource }
+  });
+});
+
+const updateAction = produce((recommendation, index, action, actionIndex) => {
+  recommendation.suggestions[index].actions[actionIndex] = {
+    type: 'create',
+    description: action.description,
+    resource: { ...action.resource }
+  };
+});
+
+// since actions are handled separately and uid doesn't change, this only updates the label
+const updateSuggestion = produce((recommendation, index, label) => {
+  recommendation.suggestions[index].label = label;
+});
+
+const deleteAction = produce((recommendation, index, actionIndex) => {
+  recommendation.suggestions[index].actions.splice(actionIndex, 1);
+});
+
+const deleteSuggestion = produce((recommendation, index) => {
+  recommendation.suggestions.splice(index, 1);
+});
+
 const Recommendation = ({
   artifactSubpopulations,
   canMoveUp,
@@ -31,7 +63,8 @@ const Recommendation = ({
   recommendation,
   setScrollTo
 }) => {
-  const { comment, links, rationale, subpopulations, text } = recommendation;
+  const artifact = useSelector(state => state.artifacts.artifact);
+  const { comment, links, rationale, subpopulations, suggestions = [], text } = recommendation;
   const [showRationale, setShowRationale] = useState(rationale !== '');
   const [showComment, setShowComment] = useState(false);
   const [showAddSubpopulation, setShowAddSubpopulation] = useState(false);
@@ -63,11 +96,19 @@ const Recommendation = ({
     );
   };
 
+  const addSuggestion = () => {
+    handleUpdateRecommendation(
+      produce(recommendation, draftRecommendation => {
+        draftRecommendation.suggestions.push({ uid: uuidv4(), label: '', actions: [] });
+      })
+    );
+  };
+
   return (
     <Card>
       <CardHeader
         action={
-          <RecommendationActions
+          <RecommendationControls
             canMoveDown={canMoveDown}
             canMoveUp={canMoveUp}
             comment={comment}
@@ -151,6 +192,21 @@ const Recommendation = ({
             link={link}
           />
         ))}
+
+        {suggestions.map((suggestion, index) => (
+          <RecommendationSuggestion
+            key={suggestion.uid || index}
+            addAction={action => handleUpdateRecommendation(addAction(recommendation, index, action))}
+            updateAction={(action, actionIndex) =>
+              handleUpdateRecommendation(updateAction(recommendation, index, action, actionIndex))
+            }
+            updateSuggestion={label => handleUpdateRecommendation(updateSuggestion(recommendation, index, label))}
+            deleteAction={actionIndex => handleUpdateRecommendation(deleteAction(recommendation, index, actionIndex))}
+            deleteSuggestion={() => handleUpdateRecommendation(deleteSuggestion(recommendation, index))}
+            index={index}
+            suggestion={suggestion}
+          />
+        ))}
       </CardContent>
 
       <CardActions>
@@ -163,6 +219,20 @@ const Recommendation = ({
         <Button color="primary" onClick={addLink} variant="contained">
           Add link
         </Button>
+
+        <Tooltip
+          enabled={!(artifact.fhirVersion === '' || artifact.fhirVersion.startsWith('4.0.'))}
+          title={'Suggestions are only supported for FHIR R4 artifacts'}
+        >
+          <Button
+            color="primary"
+            onClick={addSuggestion}
+            variant="contained"
+            disabled={!(artifact.fhirVersion === '' || artifact.fhirVersion.startsWith('4.0.'))}
+          >
+            Add suggestion
+          </Button>
+        </Tooltip>
 
         {subpopulationOptions.length > 0 && subpopulations.length === 0 && !showAddSubpopulation && (
           <Button color="primary" onClick={addSubpopulation} variant="contained">

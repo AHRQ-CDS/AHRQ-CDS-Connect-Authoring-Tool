@@ -1028,6 +1028,58 @@ class CqlArtifact {
     });
   }
 
+  suggestions() {
+    let suggestionsText = this.recommendations.map(recommendation => {
+      const conditional = constructOneRecommendationConditional(recommendation);
+      return (
+        conditional +
+        (_.isEmpty(recommendation.suggestions) ? 'null' : this.constructSuggestion(recommendation.suggestions))
+      );
+    });
+    suggestionsText = _.isEmpty(suggestionsText) ? 'null' : suggestionsText.join('\n  else ').concat('\n  else null');
+    return ejs.render(templateMap.BaseTemplate, {
+      element_name: 'Suggestions',
+      cqlString: suggestionsText
+    });
+  }
+
+  constructSuggestion(suggestions) {
+    let suggestionsText = '';
+    if (!_.isEmpty(suggestions)) {
+      suggestionsText += 'List { ';
+      suggestionsText += suggestions
+        .map(suggestion => {
+          const suggestionText = `Tuple { label: '${sanitizeCQLString(suggestion.label)}', actions: List { `;
+          const actionsText = suggestion.actions.map(action => {
+            const renderData = { ...action.resource };
+            Object.keys(action.resource)
+              .filter(key => typeof action.resource[key] === 'object') // the only objects are CodeableConcepts
+              .forEach(key => {
+                if (!(action.resource[key].code === '' && action.resource[key].system === '')) {
+                  const concepts = [];
+                  buildConceptObjectForCodes([action.resource[key]], concepts);
+                  const conceptAdded = addConcepts(concepts[0], this.codeSystemMap, this.codeMap, this.conceptMap);
+                  renderData[key].name = conceptAdded.name;
+                }
+              });
+            let template;
+            if (action.resource.resourceType === 'ServiceRequest') {
+              template = templateMap.ServiceRequestResource;
+            } else if (action.resource.resourceType === 'MedicationRequest') {
+              template = templateMap.MedicationRequestResource;
+            }
+            const resourceText = ejs.render(template, renderData);
+            const actionText = `Tuple { type: 'create', description: '${sanitizeCQLString(action.description)}', resource: ${resourceText} }`;
+            return actionText;
+          });
+          return suggestionText + actionsText + ' } }';
+        })
+        .join(', ')
+        .concat(' }');
+    }
+    return suggestionsText;
+  }
+
   /*
     this function handles a condition in which the error statement is notionally null, but isn't exactly null
     if this function returns true,  the cql generated will be:
@@ -1058,11 +1110,12 @@ class CqlArtifact {
   // Produces the cql in string format
   toString() {
     // Create the header after the body because elements in the body can add new value sets and codes to be used.
+    const suggestionsString = this.suggestions();
     const bodyString = this.body();
     const headerString = this.header();
     let fullString =
       `${headerString}${bodyString}\n${this.population()}\n${this.recommendation()}\n` +
-      `${this.rationale()}\n${this.links()}\n${this.errors()}`;
+      `${this.rationale()}\n${this.links()}\n${suggestionsString}\n${this.errors()}`;
     fullString = fullString.replace(/\r\n|\r|\n/g, '\r\n'); // Make all line endings CRLF
     return fullString;
   }

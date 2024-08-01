@@ -43,7 +43,8 @@ const Summary = ({ handleSaveArtifact }) => {
           subpopulations: recommendation.subpopulations.map(subpopulation => subpopulation.subpopulationName),
           links: recommendation.links.map(link => {
             return { label: link.label, address: link.type + ':<' + link.url + '>' };
-          })
+          }),
+          suggestions: recommendation.suggestions.map(suggestion => ({ label: suggestion.label }))
         }))
       };
     }

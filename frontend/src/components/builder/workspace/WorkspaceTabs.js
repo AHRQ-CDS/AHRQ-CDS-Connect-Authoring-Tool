@@ -220,6 +220,19 @@ const WorkspaceTabs = ({ externalCqlList, handleSaveArtifact }) => {
     handleUpdateArtifact(artifact, artifactPropsToUpdate);
   };
 
+  const updateRecommendations = recommendations => {
+    const artifactPropsToUpdate = { recommendations };
+    if (artifact.fhirVersion === '' && recommendations.some(rec => rec.suggestions.length > 0)) {
+      // Once a suggestion is added, only FHIR R4 versions are allowed
+      artifactPropsToUpdate.fhirVersion = '4.0.x';
+    } else if (recommendations.every(rec => rec.suggestions.length === 0)) {
+      // If there are no suggestions, recalculate the FHIR version based on the rest of the artifact
+      const updatedArtifact = { ...artifact, ...artifactPropsToUpdate };
+      artifactPropsToUpdate.fhirVersion = getFHIRVersion(updatedArtifact, externalCqlList, artifact._id);
+    }
+    handleUpdateArtifact(artifact, artifactPropsToUpdate);
+  };
+
   const TabIcon = ({ hasContent, hasError }) => {
     if (hasContent && !hasError) return <CheckCircleIcon className={styles.tabIndicator} />;
     else if (hasError) return <ErrorIcon className={styles.tabIndicatorError} />;
@@ -314,9 +327,7 @@ const WorkspaceTabs = ({ externalCqlList, handleSaveArtifact }) => {
           </TabPanel>
           <TabPanel>
             <WorkspaceBlurb {...blurbs.recommendations} />
-            <Recommendations
-              handleUpdateRecommendations={recommendations => handleUpdateArtifact(artifact, { recommendations })}
-            />
+            <Recommendations handleUpdateRecommendations={updateRecommendations} />
           </TabPanel>
           <TabPanel>
             <WorkspaceBlurb {...blurbs.parameters} />

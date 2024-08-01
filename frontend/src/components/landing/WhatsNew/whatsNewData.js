@@ -4,6 +4,21 @@ import React from 'react';
 const whatsNewData = [
   {
     id: 1,
+    name: 'Recommendation Suggestions',
+    ariaLabel: 'Recommendation Suggestions',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-structured-recommendations.png`,
+    description: (
+      <>
+        Recommendations have been enhanced to allow authors to provided a structured suggestion as part of a
+        recommendation. Suggestions allow authors to add actions to create MedicationRequests and ServiceRequests when a
+        recommendation is provided.
+      </>
+    ),
+    linkText: 'Recommendation Documentation',
+    link: `${process.env.PUBLIC_URL}/documentation/userguide#Adding_Suggestions_to_Recommendations`
+  },
+  {
+    id: 2,
     name: 'Authoring Tool Tutorial',
     ariaLabel: 'Authoring Tool Tutorial',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-tutorial.png`,
@@ -18,7 +33,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation/tutorial`
   },
   {
-    id: 2,
+    id: 3,
     name: 'ONC Tech Forum',
     ariaLabel: 'ONC Tech Forum: Clinical Decision Support Series',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-onc-forum.png`,
@@ -34,7 +49,7 @@ const whatsNewData = [
     link: `https://youtu.be/boZT7CHln5g?si=IIZjsqSUkL-p1gZr&t=1789`
   },
   {
-    id: 3,
+    id: 4,
     name: 'Enhanced Value Set Search',
     ariaLabel: 'Enhanced Value Set Search',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-value-set-search.png`,
@@ -47,22 +62,6 @@ const whatsNewData = [
     ),
     linkText: 'Add Value Set Documentation',
     link: `${process.env.PUBLIC_URL}/documentation/userguide#Add_Value_Set`
-  },
-  {
-    id: 4,
-    name: 'View CQL',
-    ariaLabel: 'View CQL',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-view-cql.png`,
-    description: (
-      <>
-        Authors can now quickly see the CQL for their artifacts directly within the CDS Authoring Tool. This new feature
-        adds a "View CQL" button to the artifact "Workspace" view. This button allows an author to select their desired
-        version of FHIR (DSTU2, STU3, or R4) and then instantly view the CQL for their artifact. The CQL is displayed
-        with syntax highlighting to increase readability.
-      </>
-    ),
-    linkText: 'View CQL Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation/userguide#Building_Artifacts`
   }
 ];
 

@@ -43,7 +43,8 @@ const Recommendations = ({ handleUpdateRecommendations }) => {
           text: '',
           rationale: '',
           comment: '',
-          links: []
+          links: [],
+          suggestions: []
         }
       ])
     );

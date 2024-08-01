@@ -28,6 +28,16 @@ const formatResult = result => {
       const type = result.getTypeInfo()?.name || 'Unknown type';
       return [`${type} with ID ${result.id?.value}`];
     }
+  } else if (result?.label && result?.type && result?.url) {
+    // It's a link, so print a simple representation
+    return `${_.upperFirst(result.type)} link: [${result.label}](${result.url})`;
+  } else if (Array.isArray(result?.actions)) {
+    // It's a suggestion, so just print a simple summary
+    if (result.label) {
+      return `Suggestion: "${result.label}" with ${result.actions.length} actions`;
+    } else {
+      return `Unlabeled suggestion with ${result.actions.length} actions`;
+    }
   } else {
     // For everything else we just rely on native string conversion
     return [String(result)];

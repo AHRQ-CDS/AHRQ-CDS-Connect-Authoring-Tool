@@ -96,6 +96,14 @@ export default makeStyles(
     helperText: {
       fontSize: '0.7em',
       color: theme.palette.common.gray
+    },
+    required: {
+      fontSize: '0.7em',
+      color: theme.palette.common.red
+    },
+    group: {
+      backgroundColor: theme.palette.common.grayLighter,
+      padding: '2em'
     }
   }),
   { name: 'Fields', index: 1 }

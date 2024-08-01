@@ -1,0 +1,22 @@
+<%
+const writeCodeableConcept = function (code) {
+    const codeableConcept = [];
+    if (code.text !== '') {
+      codeableConcept.push(`text: FHIR.string { value: '${code.text}' }`);
+    }
+    if (code.name != null) {
+      codeableConcept.push(`coding: List { C3F.ToCoding("${code.name}") }`);
+    }
+    return codeableConcept.join(', ');
+  };
+-%>
+
+MedicationRequest {
+  <%if (medicationCodeableConcept.text !== '' || medicationCodeableConcept.name != null) {%>medication: FHIR.CodeableConcept { <%- writeCodeableConcept(medicationCodeableConcept) %> },<%}%>
+  <%if (status !== '') {%>status: FHIR.MedicationRequestStatus { value: '<%-status%>' },<%}%>
+  <%if (intent !== '') {%>intent: FHIR.MedicationRequestIntent { value: '<%-intent%>' },<%}%>
+  <%if (priority !== '') {%>priority: FHIR.MedicationRequestPriority { value: '<%-priority%>' },<%}%>
+  <%if (reasonCode.text !== '' || reasonCode.name != null) {%>reasonCode: List { FHIR.CodeableConcept { <%- writeCodeableConcept(reasonCode) %> } },<%}%>
+  <%if (category.text !== '' || category.name != null) {%>category: List { FHIR.CodeableConcept { <%- writeCodeableConcept(category) %> } },<%}%>
+  subject: FHIR.Reference { reference: FHIR.string { value: 'Patient/' + Patient.id } }
+}

@@ -45,6 +45,10 @@ const RecommendationCard = ({ depth, label, linkId, recommendation, text }) => {
               text={"label: '" + link.label + "', url: '" + link.address + "'"}
             />
           ))}
+
+          {recommendation?.suggestions.map((suggestion, index) => (
+            <RecommendationCard key={index} depth={1} label="Suggestion" text={suggestion.label} />
+          ))}
         </div>
 
         {recommendation && (
