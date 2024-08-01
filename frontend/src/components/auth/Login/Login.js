@@ -106,7 +106,7 @@ const Login = () => {
           </div>
 
           <div className={styles.forgotPassword}>
-            <a href="https://cds-pass.ahrq.gov/?action=sendtoken" onClick={onVisitExternalForm}>
+            <a href="https://cepi-pass.ahrq.gov/" onClick={onVisitExternalForm}>
               Forgot password?
             </a>
           </div>
