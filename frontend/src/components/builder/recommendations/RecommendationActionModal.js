@@ -11,9 +11,7 @@ import { allRequests, typesInitialValues } from './structuredRequestFields';
 const getInitialAction = type => {
   const request = allRequests[type];
   const initialAction = { description: '', resource: { resourceType: request.name } };
-  request.elements.forEach(e =>
-    e.isArray ? (initialAction.resource[e.name] = []) : (initialAction.resource[e.name] = typesInitialValues[e.type])
-  );
+  request.elements.forEach(e => (initialAction.resource[e.name] = typesInitialValues[e.type]));
   return initialAction;
 };
 
