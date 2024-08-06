@@ -26,7 +26,7 @@ describe('<Documentation />', () => {
     const { getAllByText } = render(<Documentation />);
     await waitFor(() => userEvent.click(screen.getByRole('tab', { name: 'Data Types' })));
 
-    expect(getAllByText('Data Types and Expressions')).not.toBeNull();
+    expect(getAllByText('Data Types and Modifiers')).not.toBeNull();
   });
 
   it('renders the terms and conditions guide', async () => {
@@ -41,7 +41,7 @@ describe('<Documentation />', () => {
       const { getAllByText, queryAllByText } = render(<Documentation activeTab={0} />);
       expect(getAllByText('CDS Authoring Tool User Guide')).not.toBeNull();
       expect(queryAllByText('CDS Authoring Tool Tutorial')).toHaveLength(0);
-      expect(queryAllByText('Data Types and Expressions')).toHaveLength(0);
+      expect(queryAllByText('Data Types and Modifiers')).toHaveLength(0);
       expect(queryAllByText('CDS Authoring Tool Terms and Conditions')).toHaveLength(0);
     });
 
@@ -49,7 +49,7 @@ describe('<Documentation />', () => {
       const { getAllByText, queryAllByText } = render(<Documentation activeTab={1} />);
       expect(queryAllByText('CDS Authoring Tool User Guide')).toHaveLength(0);
       expect(getAllByText('CDS Authoring Tool Tutorial')).not.toBeNull();
-      expect(queryAllByText('Data Types and Expressions')).toHaveLength(0);
+      expect(queryAllByText('Data Types and Modifiers')).toHaveLength(0);
       expect(queryAllByText('CDS Authoring Tool Terms and Conditions')).toHaveLength(0);
     });
 
@@ -57,7 +57,7 @@ describe('<Documentation />', () => {
       const { getAllByText, queryAllByText } = render(<Documentation activeTab={2} />);
       expect(queryAllByText('CDS Authoring Tool User Guide')).toHaveLength(0);
       expect(queryAllByText('CDS Authoring Tool Tutorial')).toHaveLength(0);
-      expect(getAllByText('Data Types and Expressions')).not.toBeNull();
+      expect(getAllByText('Data Types and Modifiers')).not.toBeNull();
       expect(queryAllByText('CDS Authoring Tool Terms and Conditions')).toHaveLength(0);
     });
 
@@ -65,7 +65,7 @@ describe('<Documentation />', () => {
       const { getAllByText, queryAllByText } = render(<Documentation activeTab={3} />);
       expect(queryAllByText('CDS Authoring Tool User Guide')).toHaveLength(0);
       expect(queryAllByText('CDS Authoring Tool Tutorial')).toHaveLength(0);
-      expect(queryAllByText('Data Types and Expressions')).toHaveLength(0);
+      expect(queryAllByText('Data Types and Modifiers')).toHaveLength(0);
       expect(getAllByText('CDS Authoring Tool Terms and Conditions')).not.toBeNull();
     });
   });

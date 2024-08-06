@@ -14,12 +14,12 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
       <div className={clsx(styles.toc, 'toc')} id="toc"></div>
 
       <div className={clsx(styles.tocWrapper, 'toc-wrapper')}>
-        <h1 id="data-types-and-expressions">Data Types and Expressions</h1>
+        <h1 id="data-types-and-modifiers">Data Types and Modifiers</h1>
 
         <p>
-          The following is a list of all data types available in the CDS Authoring Tool and the expressions available
-          for each data type. Each expression describes the CQL function that is applied when the expression is used,
-          briefly what the function does, and the the type that is returned after the expression is applied.
+          The following is a list of all data types available in the CDS Authoring Tool and the modifiers available for
+          each data type. Each modifier describes the CQL function that is applied when the modifier is used, briefly
+          what the function does, and the the type that is returned after the modifier is applied.
         </p>
 
         <p>
@@ -36,7 +36,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
           <h2 id="any-type">Any Type</h2>
 
           <div className={styles.h3Wrapper}>
-            <p>The following expressions can be applied to any data type:</p>
+            <p>The following modifiers can be applied to any data type:</p>
             <ul>
               <li>
                 Is (Not) Null?
@@ -59,7 +59,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
           <h2 id="list-types">List Types</h2>
 
           <div className={styles.h3Wrapper}>
-            <p>The following expressions can be applied to any list:</p>
+            <p>The following modifiers can be applied to any list:</p>
 
             <ul>
               <li>
@@ -86,11 +86,11 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
-            <p>Other expressions that can only be applied to specific types of lists are outlined below.</p>
+            <p>Other modifiers that can only be applied to specific types of lists are outlined below.</p>
 
             <h3 id="list-of-allergy-intolerances">List of Allergy Intolerances</h3>
 
@@ -118,7 +118,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -151,7 +151,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -296,7 +296,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -304,7 +304,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -312,7 +312,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -341,7 +341,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -374,7 +374,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -474,7 +474,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -482,7 +482,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -535,7 +535,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -584,7 +584,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -711,7 +711,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
             <h3 id="list-of-procedures">List of Procedures</h3>
@@ -808,7 +808,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
             <h3 id="list-of-service-requests">List of Service Requests</h3>
@@ -863,7 +863,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -871,7 +871,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -879,7 +879,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -887,7 +887,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -895,7 +895,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -903,7 +903,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -911,7 +911,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
 
@@ -919,7 +919,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#list-types">any list</a>
+                See modifiers that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
           </div>
@@ -929,7 +929,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
           <h2 id="interval-types">Interval Types</h2>
 
           <div className={styles.h3Wrapper}>
-            <p>The following expressions can be applied to any interval:</p>
+            <p>The following modifiers can be applied to any interval:</p>
 
             <ul>
               <li>
@@ -969,7 +969,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -977,8 +977,8 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#interval-types">any interval</a>. User specifies an
-                integer for each input value of the expression.
+                See modifiers that can be applied to <a href="#interval-types">any interval</a>. User specifies an
+                integer for each input value of the modifier.
               </li>
             </ul>
 
@@ -986,8 +986,8 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#interval-types">any interval</a>. User specifies a
-                datetime for each input value of the expression.
+                See modifiers that can be applied to <a href="#interval-types">any interval</a>. User specifies a
+                datetime for each input value of the modifier.
               </li>
             </ul>
 
@@ -995,8 +995,8 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#interval-types">any interval</a>. User specifies a
-                decimal for each input value of the expression.
+                See modifiers that can be applied to <a href="#interval-types">any interval</a>. User specifies a
+                decimal for each input value of the modifier.
               </li>
             </ul>
 
@@ -1004,8 +1004,8 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#interval-types">any interval</a>. User specifies a
-                quantity value and unit for each input value of the expression.
+                See modifiers that can be applied to <a href="#interval-types">any interval</a>. User specifies a
+                quantity value and unit for each input value of the modifier.
               </li>
             </ul>
           </div>
@@ -1019,7 +1019,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1054,7 +1054,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1062,7 +1062,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1090,7 +1090,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1112,7 +1112,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1120,7 +1120,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1128,7 +1128,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1136,7 +1136,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1158,7 +1158,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1166,7 +1166,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1174,7 +1174,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1223,7 +1223,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1231,7 +1231,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1272,7 +1272,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1294,7 +1294,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1316,7 +1316,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1356,7 +1356,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1384,7 +1384,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1392,7 +1392,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
 
@@ -1400,7 +1400,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
 
             <ul>
               <li>
-                See expressions that can be applied to <a href="#any-type">any type</a>
+                See modifiers that can be applied to <a href="#any-type">any type</a>
               </li>
             </ul>
           </div>

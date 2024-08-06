@@ -56,7 +56,7 @@ const ModifierTemplate = ({
 
         <Tooltip enabled={!canBeRemoved} placement="left" title={tooltipText}>
           <IconButton
-            aria-label="remove expression"
+            aria-label="remove modifier"
             disabled={!canBeRemoved}
             color="primary"
             onClick={() => setShowDeleteConfirmationModal(true)}

@@ -297,7 +297,7 @@ describe('<ModifierModal />', () => {
       await waitFor(() => userEvent.click(screen.getByRole('option', { name: 'Not' })));
       expect(screen.queryAllByTestId('modifier-card')).toHaveLength(2);
       expect(
-        screen.getByLabelText('Cannot remove expression because return type does not match next input type.')
+        screen.getByLabelText('Cannot remove modifier because return type does not match next input type.')
       ).toBeInTheDocument();
 
       await waitFor(() =>

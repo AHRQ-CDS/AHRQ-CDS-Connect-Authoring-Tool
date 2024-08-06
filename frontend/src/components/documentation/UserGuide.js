@@ -1385,9 +1385,9 @@ const UserGuide = () => {
                 of its uses.
               </div>
               <div>
-                Another restriction is that applied expressions cannot be removed if doing so would change the Base
+                Another restriction is that applied modifiers cannot be removed if doing so would change the Base
                 Element's return type. This ensures that modifying a base element does not make its uses become invalid.
-                In order to remove the expression, first delete all uses of the Base Element in the artifact.
+                In order to remove the modifier, first delete all uses of the Base Element in the artifact.
               </div>
               <div>
                 In addition, modifiers cannot be added to base elements that are being used, unless the modifier does
@@ -2006,8 +2006,8 @@ const UserGuide = () => {
                   </li>
                 </ul>
                 If these conditions are met, the modifier will appear just like any other after selecting the "Add
-                Expression" button. The expression will be labeled with the function's name and the library's name, as
-                well as a book icon <MenuBookIcon fontSize="small" aria-hidden="true" /> to indicate that it is from an
+                Modifier" button. The modifier will be labeled with the function's name and the library's name, as well
+                as a book icon <MenuBookIcon fontSize="small" aria-hidden="true" /> to indicate that it is from an
                 External CQL library.
               </div>
               <div>

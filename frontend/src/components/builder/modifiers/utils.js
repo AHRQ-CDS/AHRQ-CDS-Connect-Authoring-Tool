@@ -18,17 +18,17 @@ export const modifierCanBeRemoved = (baseElementIsUsed, index, returnType, modif
   if (hasMultipleModifiers) {
     if (isFirstModifier) {
       canBeRemoved = nextModifierAllowsReturnType;
-      if (!canBeRemoved) tooltipText = 'Cannot remove expression because return type does not match next input type.';
+      if (!canBeRemoved) tooltipText = 'Cannot remove modifier because return type does not match next input type.';
     } else if (isLastModifier) {
       canBeRemoved = baseElementIsUsed ? nextToLastModifierReturnTypeMatchesElement : true;
-      if (!canBeRemoved) tooltipText = 'Cannot remove expression because final return type would change while in use.';
+      if (!canBeRemoved) tooltipText = 'Cannot remove modifier because final return type would change while in use.';
     } else {
       canBeRemoved = nextModifierAllowsPreviousReturnType;
-      if (!canBeRemoved) tooltipText = 'Cannot remove expression because return type does not match next input type.';
+      if (!canBeRemoved) tooltipText = 'Cannot remove modifier because return type does not match next input type.';
     }
   } else if (baseElementIsUsed) {
     canBeRemoved = lastModifierReturnTypeMatchesElement;
-    if (!canBeRemoved) tooltipText = 'Cannot remove expression because final return type would change while in use.';
+    if (!canBeRemoved) tooltipText = 'Cannot remove modifier because final return type would change while in use.';
   }
 
   return { canBeRemoved, tooltipText };

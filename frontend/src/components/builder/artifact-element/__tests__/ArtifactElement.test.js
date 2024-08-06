@@ -251,7 +251,7 @@ describe('<ArtifactElement />', () => {
       });
 
       updateModifiers.mockClear();
-      fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[0]);
+      fireEvent.click(screen.getAllByRole('button', { name: 'remove modifier' })[0]);
       await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Delete' })));
 
       expect(updateModifiers).toBeCalled();
@@ -269,7 +269,7 @@ describe('<ArtifactElement />', () => {
       });
 
       updateModifiers.mockClear();
-      fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[1]);
+      fireEvent.click(screen.getAllByRole('button', { name: 'remove modifier' })[1]);
 
       expect(updateModifiers).not.toBeCalled();
     });
@@ -285,7 +285,7 @@ describe('<ArtifactElement />', () => {
       });
 
       updateModifiers.mockClear();
-      fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[2]);
+      fireEvent.click(screen.getAllByRole('button', { name: 'remove modifier' })[2]);
       await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Delete' })));
 
       expect(updateModifiers).toHaveBeenCalledWith(genericInstanceWithModifiers.modifiers.slice(0, -1));
@@ -357,10 +357,10 @@ describe('<ArtifactElement />', () => {
       // The top most base element's type
       expect(screen.getByText(/observation:/i)).toBeInTheDocument();
 
-      // Only the current elements expressions are listed
+      // Only the current elements modifiers are listed
       expect(document.getElementById('modifiers-template')).toHaveTextContent('Exists');
 
-      // All expressions and VS included in the phrase
+      // All modifiers and VS included in the phrase
       expect(container.querySelector('[class^="ElementCard-expressionPhrase"]')).toHaveTextContent(
         'Thereexistsanobservationwith a code fromVS,VS2,123-4 (TestName),or...'
       );
@@ -388,7 +388,7 @@ describe('<ArtifactElement />', () => {
 
         updateModifiers.mockClear();
 
-        await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[2]));
+        await waitFor(() => userEvent.click(screen.getAllByRole('button', { name: 'remove modifier' })[2]));
         await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Delete' })));
 
         expect(updateModifiers).toHaveBeenCalledWith(templateWithModifiersInstance.modifiers.slice(0, -1));
@@ -407,7 +407,7 @@ describe('<ArtifactElement />', () => {
 
         updateModifiers.mockClear();
 
-        const removeButton = screen.getAllByRole('button', { name: 'remove expression' })[1];
+        const removeButton = screen.getAllByRole('button', { name: 'remove modifier' })[1];
         fireEvent.click(removeButton);
 
         expect(updateModifiers).not.toBeCalled();
