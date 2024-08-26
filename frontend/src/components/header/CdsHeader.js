@@ -13,6 +13,14 @@ const CdsHeader = () => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={darkTheme}>
+        <div className="cds-header-alert">
+          Planned for August 29, 2024, the CDS Connect Project will be transitioning into a temporary hiatus. This
+          transition is part of establishing a new sustainment model for CDS Connect related to the recent Challenge
+          Competition and Request for Information. The creation of new user accounts will continue routinely until
+          09/12/2024. After that time, account creation may be delayed. Platform services are expected to remain
+          available during this time but may experience occasional outages during this hiatus. For updates on the hiatus
+          or to report an issue, please contact the AHRQ team at clinicaldecisionsupport@ahrq.hhs.gov.
+        </div>
         <header className="cds-header">
           <div className="cds-header__cdsbanner">
             <div className="cds-header__cdsbanner-wrapper">
