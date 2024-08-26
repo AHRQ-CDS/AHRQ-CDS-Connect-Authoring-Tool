@@ -83,7 +83,7 @@ export const definitions = (
     </li>
     <li>
       <strong>Governor</strong>: Oversees and administers all activity within CDS Connect from a technical, process, and
-      systems perspective (currently The MITRE Corporation).
+      systems perspective.
     </li>
     <li>
       <strong>Patient Centered Outcomes Research (PCOR)</strong>: Research that compares the impact of two or more
