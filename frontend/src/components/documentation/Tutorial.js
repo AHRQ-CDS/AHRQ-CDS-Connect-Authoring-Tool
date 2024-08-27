@@ -224,7 +224,7 @@ const Tutorial = () => {
               element using a value set containing all of the codes we want to allow as a match. Click the "Add Value
               Set" button to add a value set for hypertension. Use the search bar to search for value sets from NLM's
               VSAC. For our artifact, we'll search for "hypertension". You can click the "eye" icon to view the codes in
-              each value set. Scroll down and select the Hypertension value set from the MITRE Steward (OID
+              each value set. Scroll down and select the Hypertension value set from the AHRQ CDS Connect Steward (OID
               2.16.840.1.113762.1.4.1032.9).
             </div>
             <div>
