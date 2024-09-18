@@ -12,7 +12,7 @@
     "connect-mongo": "^5.1.0",
     "convict": "^6.2.4",
     "ejs": "^3.1.10",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "express-session": "^1.18.0",
     "form-data": "^4.0.0",
     "fs-extra": "^11.2.0",
