@@ -30,7 +30,7 @@
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
     "dotenv-flow": "^4.1.0",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "express-http-proxy": "^2.0.0",
     "file-saver": "^2.0.5",
     "formik": "^2.4.6",
